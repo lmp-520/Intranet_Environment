@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xdmd.IntranetEnvironment.achievementManagement.mapper.AchievementMapper">
+    <select id="QueryAchievement" resultType="com.xdmd.IntranetEnvironment.achievementManagement.pojo.OutcomeInformation">
+        SELECT
+        id,
+        topic_number,
+        topic_name,
+        application_unit_name,
+        postal_address,
+        correspondence_code,
+        achievement_start_time,
+        economic_performance,
+        enclosure,
+        achievement_end_time
+        FROM
+        outcome_information
+        <where>
+            <if test="topicName != null">
+                topic_name like CONCAT('%',#{topicName},'%')
+            </if>
+
+            <if test="applicationUnitName != null">
+                and application_unit_name like CONCAT('%',#{applicationUnitName},'%')
+            </if>
+        </where>
+        limit #{page},#{total}
+    </select>
+
+    <select id="queryAlltotal" resultType="Integer">
+        select count(*) from outcome_information
+        <where>
+            <if test="topicName != null">
+                topic_name like CONCAT('%',#{topicName},'%')
+            </if>
+
+            <if test="applicationUnitName != null">
+                and project_leader like CONCAT('%',#{applicationUnitName},'%')
+            </if>
+        </where>
+    </select>
+
+</mapper>
