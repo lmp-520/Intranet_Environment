@@ -29,4 +29,8 @@ public class ResultMap extends HashMap<String, Object> {
         this.put("data", message);
         return this;
     }
+    public ResultMap message() {
+        this.put("data", null);
+        return this;
+    }
 }
