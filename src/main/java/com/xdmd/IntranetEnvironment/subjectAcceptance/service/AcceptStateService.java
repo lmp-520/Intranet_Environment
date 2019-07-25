@@ -9,5 +9,5 @@ public interface AcceptStateService {
     ResultMap acceptApplyQuery(String topicName, String subjectUndertakingUnit, Integer unitNature, String projectLeader, Integer page, Integer total);
 
     //验收审核
-    ResultMap acceptState(String token, HttpServletResponse response, Boolean type, String reason, Integer id);
+    ResultMap acceptState(String token, HttpServletResponse response, Boolean type, String reason, Integer id) throws Exception;
 }

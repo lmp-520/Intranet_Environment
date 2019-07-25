@@ -1,6 +1,9 @@
 package com.xdmd.IntranetEnvironment.subjectAcceptance.controller;
 
 import com.xdmd.IntranetEnvironment.common.ResultMap;
+import com.xdmd.IntranetEnvironment.subjectAcceptance.exception.InsertSqlException;
+import com.xdmd.IntranetEnvironment.subjectAcceptance.exception.UpdateAcceptancePhaseException;
+import com.xdmd.IntranetEnvironment.subjectAcceptance.exception.UpdateSqlException;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.service.AcceptStateService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -54,7 +57,25 @@ public class AcceptStateController {
         if (StringUtils.isEmpty(token)) {
             return resultMap.fail().message("请先登录");
         }
-        resultMap = acceptStateService.acceptState(token, response, type, reason,id);
+        try {
+            resultMap = acceptStateService.acceptState(token, response, type, reason, id);
+        } catch (UpdateSqlException e) {
+            e.printStackTrace();
+            log.error("AcceptStateController 中 acceptState 方法 -- " + e.getMessage());
+            return resultMap.fail().message("系统异常");
+        } catch (InsertSqlException e) {
+            e.printStackTrace();
+            log.error("AcceptStateController 中 acceptState 方法 -- " + e.getMessage());
+            return resultMap.fail().message("系统异常");
+        } catch (UpdateAcceptancePhaseException e){
+            e.printStackTrace();
+            log.error("AcceptStateController 中 acceptState 方法 -- "+e.getMessage());
+            return resultMap.fail().message("系统异常");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("AcceptStateController 中 acceptState 方法 出错");
+            return resultMap.fail().message("系统异常");
+        }
         return resultMap;
     }
 }

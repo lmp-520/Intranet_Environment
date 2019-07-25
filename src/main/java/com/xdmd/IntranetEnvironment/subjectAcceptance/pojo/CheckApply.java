@@ -163,8 +163,11 @@ public class CheckApply implements Serializable {
 //    @Transient
 //    private Integer submitId;
 
-    //验收审核状态（0：等待验收初审  1：等待课题验收  2：课题结束）
-    private Integer acceptancePhase;
+    //验收审核状态Id（1：等待员工提交 2：等待企业管理员提交 3：等待验收初审  4：通过初审，等待专家表提交  5：等待环保厅审核公司上传的专家文件  6：结束验收）
+    private Integer acceptancePhaseId;
+
+    //验收审核状态名称
+    private String acceptancePhaseName;
 
     private Date createTime;
 
@@ -191,11 +194,14 @@ public class CheckApply implements Serializable {
     //验收申请表上传文件的id
     private Integer applicationUrlId;
 
+    //验收状态id
+    private Integer acceptanceConclusionId;
+
     //每条数据的审核状态集合
     @Transient
     private List<CheckApplyState> checkApplyStateList;
 
-    public CheckApply(@NotNull(message = "课题名称不能为空") String topicName, @NotNull(message = "课题编号不能为空") String topicNumber, @NotNull(message = "课题承担单位不能为空") String subjectUndertakingUnit, @NotNull(message = "单位性质不能为空") Integer unitNature, @NotNull(message = "单位负责人不能为空") String projectLeader, @NotNull(message = "课题负责人联系电话不能为空") @Pattern(regexp = "^1[34578]\\d{9}$", message = "课题负责人手机号格式不正确") String projectLeaderPhone, @NotNull(message = "课题负责人联系邮箱") @Email @Pattern(regexp = "^[0-9|A-z|]{6,18}[@][0-9|A-z]{1,3}.(com)$", message = "课题负责人邮箱格式不正确") String projectLeaderMail, @NotNull(message = "通讯地址不能为空") String postalAddress, String agreementStartTime, String agreementEndTime, String applicationAcceptanceTime, @NotNull(message = "申请验收方式不能为空") Integer applicationAcceptanceMode, @NotNull(message = "申请验收地点不能为空") String applicationAcceptancePlace, @NotNull(message = "验收联系人不能为空") String acceptanceContact, @Pattern(regexp = "^1[34578]\\d{9}$", message = "验收联系人手机号格式不正确") @NotNull(message = "验收联系人联系电话不能为空") String acceptanceContactPhone, @Size(min = 1, max = 500, message = "请输入范围内字数") @NotNull(message = "主要研究内容完成情况不能为空") String mainContentSituation, @NotNull(message = "提交成果情况不能为空") @Size(min = 1, max = 500, message = "请输入范围内字数") String submissionAchievementsSituation, @NotNull(message = "课题承担单位意见不能为空") @Size(min = 1, max = 500, message = "请输入范围内字数") String subjectUndertakingUnitOpinion, @NotNull(message = "所在环保部门意见不能为空") @Size(min = 1, max = 500, message = "请输入范围内字数") String environmentalDepartmentsOpinion, @NotNull(message = "省生态环境评估中心初审意见不能为空") @Size(min = 1, max = 500, message = "请输入范围内字数") String provinceAssessmentCenterOpinion, @NotNull(message = "省环保厅主管部门意见不能为空") @Size(min = 1, max = 500, message = "请输入范围内字数") String competentDepartmentOinion, @NotNull(message = "提交资料清单不能为空") String submitInventory, String submitInventoryUrl, String applicationAcceptanceUrl, String achievementsUrl, String specialAuditUrl, String firstInspectionUrl, String expertGroupCommentsUrl, String expertAcceptanceFormUrl, Integer acceptancePhase, Date createTime, String createAuthor, Integer achievementUrlId, Integer submitUrlId, Integer auditReportUrlId, Integer firstInspectionReportUrlId, Integer expertGroupCommentsUrlId, Integer expertAcceptanceFormId, Integer applicationUrlId, List<CheckApplyState> checkApplyStateList) {
+    public CheckApply(@NotNull(message = "课题名称不能为空") String topicName, @NotNull(message = "课题编号不能为空") String topicNumber, @NotNull(message = "课题承担单位不能为空") String subjectUndertakingUnit, @NotNull(message = "单位性质不能为空") Integer unitNature, @NotNull(message = "单位负责人不能为空") String projectLeader, @NotNull(message = "课题负责人联系电话不能为空") @Pattern(regexp = "^1[34578]\\d{9}$", message = "课题负责人手机号格式不正确") String projectLeaderPhone, @NotNull(message = "课题负责人联系邮箱") @Email @Pattern(regexp = "^[0-9|A-z|]{6,18}[@][0-9|A-z]{1,3}.(com)$", message = "课题负责人邮箱格式不正确") String projectLeaderMail, @NotNull(message = "通讯地址不能为空") String postalAddress, String agreementStartTime, String agreementEndTime, String applicationAcceptanceTime, @NotNull(message = "申请验收方式不能为空") Integer applicationAcceptanceMode, @NotNull(message = "申请验收地点不能为空") String applicationAcceptancePlace, @NotNull(message = "验收联系人不能为空") String acceptanceContact, @Pattern(regexp = "^1[34578]\\d{9}$", message = "验收联系人手机号格式不正确") @NotNull(message = "验收联系人联系电话不能为空") String acceptanceContactPhone, @Size(min = 1, max = 500, message = "请输入范围内字数") @NotNull(message = "主要研究内容完成情况不能为空") String mainContentSituation, @NotNull(message = "提交成果情况不能为空") @Size(min = 1, max = 500, message = "请输入范围内字数") String submissionAchievementsSituation, @NotNull(message = "课题承担单位意见不能为空") @Size(min = 1, max = 500, message = "请输入范围内字数") String subjectUndertakingUnitOpinion, @NotNull(message = "所在环保部门意见不能为空") @Size(min = 1, max = 500, message = "请输入范围内字数") String environmentalDepartmentsOpinion, @NotNull(message = "省生态环境评估中心初审意见不能为空") @Size(min = 1, max = 500, message = "请输入范围内字数") String provinceAssessmentCenterOpinion, @NotNull(message = "省环保厅主管部门意见不能为空") @Size(min = 1, max = 500, message = "请输入范围内字数") String competentDepartmentOinion, @NotNull(message = "提交资料清单不能为空") String submitInventory, String submitInventoryUrl, String applicationAcceptanceUrl, String achievementsUrl, String specialAuditUrl, String firstInspectionUrl, String expertGroupCommentsUrl, String expertAcceptanceFormUrl, Integer acceptancePhaseId, String acceptancePhaseName, Date createTime, String createAuthor, Integer achievementUrlId, Integer submitUrlId, Integer auditReportUrlId, Integer firstInspectionReportUrlId, Integer expertGroupCommentsUrlId, Integer expertAcceptanceFormId, Integer applicationUrlId, Integer acceptanceConclusionId, List<CheckApplyState> checkApplyStateList) {
         this.topicName = topicName;
         this.topicNumber = topicNumber;
         this.subjectUndertakingUnit = subjectUndertakingUnit;
@@ -225,7 +231,8 @@ public class CheckApply implements Serializable {
         this.firstInspectionUrl = firstInspectionUrl;
         this.expertGroupCommentsUrl = expertGroupCommentsUrl;
         this.expertAcceptanceFormUrl = expertAcceptanceFormUrl;
-        this.acceptancePhase = acceptancePhase;
+        this.acceptancePhaseId = acceptancePhaseId;
+        this.acceptancePhaseName = acceptancePhaseName;
         this.createTime = createTime;
         this.createAuthor = createAuthor;
         this.achievementUrlId = achievementUrlId;
@@ -235,6 +242,7 @@ public class CheckApply implements Serializable {
         this.expertGroupCommentsUrlId = expertGroupCommentsUrlId;
         this.expertAcceptanceFormId = expertAcceptanceFormId;
         this.applicationUrlId = applicationUrlId;
+        this.acceptanceConclusionId = acceptanceConclusionId;
         this.checkApplyStateList = checkApplyStateList;
     }
 

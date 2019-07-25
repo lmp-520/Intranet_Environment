@@ -1,6 +1,7 @@
 package com.xdmd.IntranetEnvironment.user.service.impl;
 
 import com.xdmd.IntranetEnvironment.common.ResultMap;
+import com.xdmd.IntranetEnvironment.user.exception.ClaimsNullException;
 import com.xdmd.IntranetEnvironment.user.exception.UserNameNotExistentException;
 import com.xdmd.IntranetEnvironment.user.mapper.MenuMapper;
 import com.xdmd.IntranetEnvironment.user.mapper.UserMapper;
@@ -33,6 +34,9 @@ public class MenuServiceImpl implements MenuService {
             e.printStackTrace();
             return resultMap.fail().message("请先登录");
         } catch (UserNameNotExistentException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        }catch (ClaimsNullException e){
             e.printStackTrace();
             return resultMap.fail().message("请先登录");
         } catch (Exception e) {

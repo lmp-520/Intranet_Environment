@@ -3,6 +3,7 @@ package com.xdmd.IntranetEnvironment.user.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
+import com.xdmd.IntranetEnvironment.user.exception.ClaimsNullException;
 import com.xdmd.IntranetEnvironment.user.exception.UserNameNotExistentException;
 import com.xdmd.IntranetEnvironment.user.mapper.UserMapper;
 import com.xdmd.IntranetEnvironment.user.pojo.User;
@@ -29,6 +30,9 @@ public class TokenService {
 
         //对token中的内容进行解析
         Claims claims = JwtUtil.checkJWT(token);
+        if (claims == null){
+            throw new ClaimsNullException("请先登录");
+        }
         Object id = claims.get("id");
         int newid = Integer.parseInt(id.toString());
         Object username = claims.get("username");

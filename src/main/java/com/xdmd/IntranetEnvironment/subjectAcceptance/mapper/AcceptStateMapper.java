@@ -2,9 +2,12 @@ package com.xdmd.IntranetEnvironment.subjectAcceptance.mapper;
 
 import com.xdmd.IntranetEnvironment.subjectAcceptance.pojo.CheckApply;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.pojo.CheckApplyState;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
+import java.util.Date;
 import java.util.List;
 
 public interface AcceptStateMapper {
@@ -23,9 +26,19 @@ public interface AcceptStateMapper {
     @Select("SELECT * FROM check_apply_state where check_apply_id = #{id} ORDER BY first_handle_time ")
     List<CheckApplyState> queryAcceptApplyState(@Param("id") Integer id);
 
-    @Select("SELECT second_handler FROM check_apply_state where check_apply_id = #{id}ORDER BY first_handle_time desc limit 1")
-    String queryLastInformationSubmitName(@Param("id") Integer id);
+//    @Select("SELECT second_handler FROM check_apply_state where check_apply_id = #{id}ORDER BY first_handle_time desc limit 1")
+//    String queryLastInformationSubmitName(@Param("id") Integer id);
+//
+//
+//    String queryLastTime(@Param("id") Integer id);
 
+    @Update("update check_apply_state set state =#{state},second_handler =#{username} ,handle_content = #{handleContent} ,second_handle_time = #{date} where check_apply_id =  #{id} order by first_handle_time desc limit 1")
+    int UpdateCheckApplyState(@Param("id") Integer id, @Param("username") String username, @Param("state") String state, @Param("handleContent") String handleContent, @Param("date") Date date);
 
-    String queryLastTime(@Param("id") Integer id);
+    @Select("SELECT second_handle_time FROM check_apply_state where check_apply_id = #{id} order by first_handle_time desc limit 1")
+    String queryCheckApplyLastTime(@Param("id") Integer id);
+
+    @Insert("INSERT INTO check_apply_state(check_apply_id, fist_handler, audit_step, first_handle_time, state) VALUES (#{id},#{username},#{auditStep},#{firstHandleTime},#{newState});")
+    int addNewCheckApplyState(@Param("id") Integer id, @Param("auditStep") String auditStep, @Param("newState") String newState, @Param("username") String username, @Param("firstHandleTime") String firstHandleTime);
+
 }

@@ -4,6 +4,7 @@ import com.xdmd.IntranetEnvironment.subjectAcceptance.pojo.CheckApply;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.pojo.CheckApplyState;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -23,6 +24,11 @@ public interface AcceptApplyMapper {
     @Select("SELECT * FROM check_apply_state where check_apply_id = #{id} ORDER BY first_handle_time ")
     List<CheckApplyState> queryAcceptApplyState(@Param("id") Integer id);
 
-//    @Select("select * from check_apply_state where id = #{id} ")
-//    CheckApplyState queryAcceptApplyState(@Param("id") int i);
+    @Update("update check_apply set acceptance_phase = #{acceptancePhaseNum} where id = #{id}")
+    int updateAcceptancePhaseById(@Param("id") Integer id, @Param("acceptancePhaseNum") int acceptancePhaseNum);
+
+    //获取审核状态id获取审核状态的名称
+    @Select("select ap_name from acceptance_phase where ap_id = #{acceptancePhaseId}")
+    String queryAcceptancePhaseNameByApId(@Param("acceptancePhaseId") Integer acceptancePhaseId);
+
 }

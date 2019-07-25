@@ -18,7 +18,7 @@
                 and project_leader like CONCAT('%',#{projectLeader},'%')
             </if>
             <if test="0 == 0">
-                and acceptance_phase =0
+                and acceptance_phase_id =3
             </if>
         </where>
     </select>
@@ -48,7 +48,7 @@
         province_assessment_center_opinion,
         competent_department_oinion,
         submit_inventory ,
-        acceptance_phase ,
+        acceptance_phase_id ,
         create_time ,
         create_author,
         achievement_url_id ,
@@ -74,7 +74,7 @@
                 and project_leader like CONCAT('%',#{projectLeader},'%')
             </if>
             <if test="0 == 0">
-                and acceptance_phase =0
+                and acceptance_phase_id =3
             </if>
         </where>
         limit #{newpage},#{total}
