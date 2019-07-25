@@ -11,11 +11,31 @@
  Target Server Version : 80016
  File Encoding         : 65001
 
- Date: 24/07/2019 18:00:57
+ Date: 25/07/2019 18:08:03
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for acceptance_phase
+-- ----------------------------
+DROP TABLE IF EXISTS `acceptance_phase`;
+CREATE TABLE `acceptance_phase`  (
+  `ap_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `ap_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '审核状态名称',
+  PRIMARY KEY (`ap_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of acceptance_phase
+-- ----------------------------
+INSERT INTO `acceptance_phase` VALUES (1, '等待员工提交');
+INSERT INTO `acceptance_phase` VALUES (2, '等待企业管理员提交');
+INSERT INTO `acceptance_phase` VALUES (3, '等待验收初审');
+INSERT INTO `acceptance_phase` VALUES (4, '通过初审，等待公司提交专家表');
+INSERT INTO `acceptance_phase` VALUES (5, '等待审核公司上传文件');
+INSERT INTO `acceptance_phase` VALUES (6, '验收结束');
 
 -- ----------------------------
 -- Table structure for check_apply
@@ -45,7 +65,7 @@ CREATE TABLE `check_apply`  (
   `province_assessment_center_opinion` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '省生态环境评估中心初审意见',
   `competent_department_oinion` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '省环保厅主管部门意见',
   `submit_inventory` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '提交资料清单',
-  `acceptance_phase` int(50) NOT NULL COMMENT '验收审核状态（0：等待验收初审 ， 1：等待课题验收  2：课题结束）',
+  `acceptance_phase_id` int(50) NOT NULL COMMENT '验收审核状态（1：等待员工提交 2：等待企业管理员提交 3：等待验收初审  4：通过初审，等待专家表提交  5：等待环保厅审核公司上传的专家文件  6：结束验收）',
   `create_time` datetime(0) NOT NULL COMMENT '该表创建时间',
   `create_author` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '创建该表的人',
   `achievement_url_id` int(11) NULL DEFAULT NULL COMMENT '成果附件上传文件的id',
@@ -55,13 +75,15 @@ CREATE TABLE `check_apply`  (
   `expert_group_comments_url_id` int(11) NULL DEFAULT NULL COMMENT '专家组意见上传文件的id',
   `expert_acceptance_form_id` int(11) NULL DEFAULT NULL COMMENT '专家验收评议表上传文件的id',
   `application_url_id` int(11) NULL DEFAULT NULL COMMENT '验收申请表上传文件的id',
+  `acceptance_conclusion_id` int(11) NULL DEFAULT NULL COMMENT '验收结论的id (在字典表中)',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 50 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 51 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of check_apply
 -- ----------------------------
-INSERT INTO `check_apply` VALUES (50, '课题名称1', '123', 4, 3, '项目负责人名1', '15588865919', '158965512@qq.com', '公司地址1', '2019-07-01', '2019-07-03', '2019-07-04', 6, '申请验收地点', '验收联系人1', '13566678482', '主要研究内容完成情况1', '提交成果情况1', '课题承担单位意见', '所在环保部门意见1', '省生态环境评估中心初审意见1', '省环保厅主管部门意见1', '提交资料清单1', 0, '2019-07-18 10:15:20', '创建人1', 77, 78, NULL, NULL, NULL, NULL, 76);
+INSERT INTO `check_apply` VALUES (50, '课题名称1', '123', 4, 3, '项目负责人名1', '15588865919', '158965512@qq.com', '公司地址1', '2019-07-01', '2019-07-03', '2019-07-04', 6, '申请验收地点', '验收联系人1', '13566678482', '主要研究内容完成情况1', '提交成果情况1', '课题承担单位意见', '所在环保部门意见1', '省生态环境评估中心初审意见1', '省环保厅主管部门意见1', '提交资料清单1', 3, '2019-07-18 10:15:20', '创建人1', 77, 78, NULL, NULL, NULL, NULL, 76, NULL);
+INSERT INTO `check_apply` VALUES (51, '课题名称1', '123', 4, 3, '项目负责人名1', '15588865919', '158965512@qq.com', '公司地址1', '2019-07-01', '2019-07-03', '2019-07-04', 6, '申请验收地点', '验收联系人1', '13566678482', '主要研究内容完成情况1', '提交成果情况1', '课题承担单位意见', '所在环保部门意见1', '省生态环境评估中心初审意见1', '省环保厅主管部门意见1', '提交资料清单1', 4, '2019-07-18 10:15:20', '创建人1', 77, 78, NULL, NULL, NULL, NULL, 76, NULL);
 
 -- ----------------------------
 -- Table structure for check_apply_state
@@ -78,13 +100,16 @@ CREATE TABLE `check_apply_state`  (
   `handle_content` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '处理内容',
   `second_handle_time` datetime(0) NULL DEFAULT NULL COMMENT '处理时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of check_apply_state
 -- ----------------------------
-INSERT INTO `check_apply_state` VALUES (1, 50, '交办人1', '处理人1', '公司提交', '2019-07-11 14:21:21', '已处理', '审核通过', '2019-07-24 14:05:00');
-INSERT INTO `check_apply_state` VALUES (2, 50, '处理人1', '处理人2', '验收初审科室', '2019-07-24 14:05:00', '等待处理', NULL, NULL);
+INSERT INTO `check_apply_state` VALUES (1, 50, '公司员工', '公司老板', '公司审批', '2019-06-20 14:21:21', '已处理', '审核通过', '2019-06-22 14:05:00');
+INSERT INTO `check_apply_state` VALUES (3, 50, '公司老板', 'admin', '验收初审', '2019-06-22 14:05:00', '已处理', '审核通过', '2019-07-25 10:05:57');
+INSERT INTO `check_apply_state` VALUES (4, 50, 'admin', 'admin', '等待公司提交文件', '2019-07-25 10:05:57', '已退回', '1111', '2019-07-25 10:24:07');
+INSERT INTO `check_apply_state` VALUES (5, 50, 'admin', 'admin', '公司员工重新提交', '2019-07-25 10:24:07', '已退回', '2222', '2019-07-25 11:11:13');
+INSERT INTO `check_apply_state` VALUES (6, 50, 'admin', NULL, '公司员工重新提交', '2019-07-25 11:11:13', '等待处理', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for dictionary
@@ -188,6 +213,86 @@ INSERT INTO `dictionary` VALUES (82, '所属领域', '固废与辐射污染防�
 INSERT INTO `dictionary` VALUES (83, '所属领域', '自然与生态领域', 19, 5, 1);
 INSERT INTO `dictionary` VALUES (84, '所属领域', '标准政策法规', 19, 6, 1);
 INSERT INTO `dictionary` VALUES (85, '所属领域', '其他', 19, 7, 1);
+INSERT INTO `dictionary` VALUES (86, '验收结论', '通过验收', 20, 1, 1);
+INSERT INTO `dictionary` VALUES (87, '验收结论', '结题', 20, 2, 1);
+INSERT INTO `dictionary` VALUES (88, '验收结论', '不通过验收', 20, 3, 1);
+
+-- ----------------------------
+-- Table structure for expert_acceptance_review
+-- ----------------------------
+DROP TABLE IF EXISTS `expert_acceptance_review`;
+CREATE TABLE `expert_acceptance_review`  (
+  `ar_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `ac_id` int(11) NULL DEFAULT NULL COMMENT '验收申请表id',
+  `topic_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '课题名称',
+  `topic_number` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '课题编号',
+  `project_leader` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '课题负责人',
+  `subject_undertaking_unit` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '课题承担单位',
+  `research_content_grade` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '研究内容完成分数',
+  `technical_indicator_grade` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '技术经济指标分数',
+  `environment_objective_grade` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '环保目标及效益分数',
+  `outcome_level_grade` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '成果水平及应用情况分数',
+  `plan_progress_grade` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '计划进度分数',
+  `technical_information_grade` varchar(0) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '组织实施与技术资料分数',
+  `financial_situation_grade` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '经费执行情况分数',
+  `total_score` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '总分',
+  `acceptance_conclusion_id` int(10) NULL DEFAULT NULL COMMENT '验收结论id',
+  `opinion` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '意见',
+  `expert_name` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '专家姓名',
+  `date` date NULL DEFAULT NULL COMMENT '日期',
+  `create_author` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime(6) NULL DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`ar_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of expert_acceptance_review
+-- ----------------------------
+INSERT INTO `expert_acceptance_review` VALUES (1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+
+-- ----------------------------
+-- Table structure for expert_group_comments
+-- ----------------------------
+DROP TABLE IF EXISTS `expert_group_comments`;
+CREATE TABLE `expert_group_comments`  (
+  `egc_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `ca_id` int(11) NULL DEFAULT NULL COMMENT '验收申请表id',
+  `topic_name` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '课题名称',
+  `topic_number` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '课题编号',
+  `project_leader` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '课题负责人',
+  `subject_undertaking_unit` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '课题承担单位',
+  `acceptance_expert_number` int(11) NULL DEFAULT NULL COMMENT '验收专家人数',
+  `expert_one_grade` decimal(5, 2) NULL DEFAULT NULL COMMENT '专家1评分',
+  `expert_two_grade` decimal(5, 2) NULL DEFAULT NULL COMMENT '专家2评分',
+  `expert_three_grade` decimal(5, 2) NULL DEFAULT NULL COMMENT '专家3评分',
+  `expert_four_grade` decimal(5, 2) NULL DEFAULT NULL COMMENT '专家4评分',
+  `expert_five_grade` decimal(5, 2) NULL DEFAULT NULL COMMENT '专家5评分',
+  `expert_six_grade` decimal(5, 2) NULL DEFAULT NULL COMMENT '专家6评分',
+  `expert_seven_grade` decimal(5, 2) NULL DEFAULT NULL COMMENT '专家7评分',
+  `synthesize_grade` decimal(5, 1) NULL DEFAULT NULL COMMENT '综合得分',
+  `topic_overall_evaluation` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '对课题情况的总体评价',
+  `suggest` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '建议',
+  `acceptance_conclusion_id` int(11) NULL DEFAULT NULL COMMENT '验收结论id',
+  `expert_leader` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '专家组组长姓名',
+  `date` date NULL DEFAULT NULL COMMENT '日期',
+  `create_time` datetime(6) NULL DEFAULT NULL COMMENT '创建时间',
+  `create_author` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建人',
+  PRIMARY KEY (`egc_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for expert_group_comments_name_list
+-- ----------------------------
+DROP TABLE IF EXISTS `expert_group_comments_name_list`;
+CREATE TABLE `expert_group_comments_name_list`  (
+  `egc_nid` int(10) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `egc_id` int(10) NULL DEFAULT NULL COMMENT '专家意见表id',
+  `expert_name` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '专家姓名',
+  `company_name` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '单位名称',
+  `major` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '专业',
+  `job` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '职务',
+  PRIMARY KEY (`egc_nid`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for menu
