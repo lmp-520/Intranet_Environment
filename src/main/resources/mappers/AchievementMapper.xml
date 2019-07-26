@@ -35,7 +35,7 @@
             </if>
 
             <if test="applicationUnitName != null">
-                and project_leader like CONCAT('%',#{applicationUnitName},'%')
+                and application_unit_name like CONCAT('%',#{applicationUnitName},'%')
             </if>
         </where>
     </select>

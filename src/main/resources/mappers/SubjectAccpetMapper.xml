@@ -23,7 +23,7 @@
         </where>
     </select>
 
-    <select id="subjectAcceptQuery">
+    <select id="subjectAcceptQuery" resultType="com.xdmd.IntranetEnvironment.subjectAcceptance.pojo.CheckApply">
         select
         id,
         topic_name,
@@ -79,5 +79,26 @@
         </where>
         limit #{newpage},#{total}
     </select>
+
+    <insert id="insertFile" parameterType="com.xdmd.IntranetEnvironment.common.UploadFile" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO upload_file(
+        upload_file_address,
+        upload_file_name,
+        date_file_name,
+        upload_file_type,
+        upload_suffix_name,
+        file_size,
+        create_time,
+        create_author)
+        VALUES(
+        #{uploadExpertGroupComments.uploadFileAddress},
+        #{uploadExpertGroupComments.uploadFileName},
+        #{uploadExpertGroupComments.dateFileName},
+        #{uploadExpertGroupComments.uploadFileType},
+        #{uploadExpertGroupComments.uploadSuffixName},
+        #{uploadExpertGroupComments.fileSize},
+        #{uploadExpertGroupComments.createAuthor},
+        #{uploadExpertGroupComments.createTime});
+    </insert>
 
 </mapper>

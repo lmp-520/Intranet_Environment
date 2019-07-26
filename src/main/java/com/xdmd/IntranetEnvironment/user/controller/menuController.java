@@ -17,7 +17,7 @@ public class menuController {
     private MenuService menuService;
     ResultMap resultMap = new ResultMap();
 
-    @GetMapping("query")
+    @PostMapping("query")
     @ResponseBody
     public ResultMap queryMenu(@CookieValue("IntranecToken") String token, HttpServletResponse response){
         //判断token是否存在

@@ -24,7 +24,7 @@ public interface AcceptApplyMapper {
     @Select("SELECT * FROM check_apply_state where check_apply_id = #{id} ORDER BY first_handle_time ")
     List<CheckApplyState> queryAcceptApplyState(@Param("id") Integer id);
 
-    @Update("update check_apply set acceptance_phase = #{acceptancePhaseNum} where id = #{id}")
+    @Update("update check_apply set acceptance_phase_id = #{acceptancePhaseNum} where id = #{id}")
     int updateAcceptancePhaseById(@Param("id") Integer id, @Param("acceptancePhaseNum") int acceptancePhaseNum);
 
     //获取审核状态id获取审核状态的名称

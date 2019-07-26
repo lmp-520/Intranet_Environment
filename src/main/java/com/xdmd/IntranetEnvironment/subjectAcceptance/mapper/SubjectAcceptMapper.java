@@ -1,10 +1,14 @@
 package com.xdmd.IntranetEnvironment.subjectAcceptance.mapper;
 
+import com.xdmd.IntranetEnvironment.common.UploadFile;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.pojo.CheckApply;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.pojo.CheckApplyState;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
+import java.util.Date;
 import java.util.List;
 
 public interface SubjectAcceptMapper {
@@ -18,7 +22,7 @@ public interface SubjectAcceptMapper {
     //获取验收申请表的集合
     List<CheckApply> subjectAcceptQuery(@Param("newpage") int newpage, @Param("total") Integer total, @Param("topicName") String topicName, @Param("cid") int cid, @Param("unitNature") Integer unitNature, @Param("projectLeader") String projectLeader);
 
-    //通过验收申请表id获取文件的地址
+    //通过文件id获取文件的地址
     @Select("select upload_file_address from upload_file where id = #{id}")
     String queryFileUrlByFileId(@Param("id") Integer applicationUrlId);
 
@@ -31,9 +35,39 @@ public interface SubjectAcceptMapper {
 
     //根据验收申请表的id获取对应的 专家组意见文件的id
     @Select("select expert_group_comments_url_id from check_apply where id = #{id}")
-    int queryExpertGroupCommentsUrlId(@Param("id") Integer id);
+    Integer queryExpertGroupCommentsUrlId(@Param("id") Integer id);
 
     //根据验收申请表的id获取对应的 专家验收评议表文件的id
     @Select("select expert_acceptance_form_id from check_apply where id = #{id}")
-    int queryExpertAcceptanceFormId(@Param("id") Integer id);
+    Integer queryExpertAcceptanceFormId(@Param("id") Integer id);
+
+    //通过验收申请表id，找到公司id
+    @Select("select subject_undertaking_unit_id from check_apply where id = #{id}")
+    int queryCompanyIdByid(@Param("id") Integer id);
+
+    @Select("select company_name from shiro_company_name where id = #{cid}")
+    //通过公司的id，查询公司的名称
+    String queryCompanyNameByCid(@Param("cid") int cid);
+
+    //上传文件
+    UploadFile insertFile(UploadFile uploadExpertGroupComments);
+
+    @Update("update check_apply set expert_group_comments_url_id = #{fileId} where id = #{id}")
+    void updateExpertGroupCommentsUrlById(@Param("id") Integer id, @Param("fileId") Integer id1);
+
+    //根据验收申请表的id，把专家评议文件id更新上去
+    @Update("update check_apply set expert_acceptance_form_id = #{fileId} where id = #{id}")
+    void updateExpertAcceptanceFormUrlById(@Param("id") Integer id, @Param("fileId") Integer id1);
+
+
+    //根据数据的id 把处理人，审核状态，审核内容，处理时间更新
+    @Update("update check_apply_state set state =#{state},second_handler =#{username} ,handle_content = #{handleContent} ,second_handle_time = #{date} where check_apply_id =  #{id} order by first_handle_time desc limit 1")
+    int UpdateCheckApplyState(@Param("id") Integer id, @Param("username") String username, @Param("state") String state, @Param("handleContent") String handleContent, @Param("date") Date date);
+
+    //获取上一次该状态信息的最后提交处理时间，作为新增数据的交办时间
+    @Select("SELECT second_handle_time FROM check_apply_state where check_apply_id = #{id} order by first_handle_time desc limit 1")
+    String queryCheckApplyLastTime(@Param("id") Integer id);
+
+    @Insert("INSERT INTO check_apply_state(check_apply_id, fist_handler, audit_step, first_handle_time, state) VALUES (#{id},#{username},#{auditStep},#{firstHandleTime},#{newState})")
+    int addNewCheckApplyState(@Param("id") Integer id, @Param("auditStep") String auditStep, @Param("newState") String newState, @Param("username") String username, @Param("firstHandleTime") String firstHandleTime);
 }

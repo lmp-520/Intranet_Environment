@@ -21,7 +21,7 @@ public class UserController {
 
     //内网用户的登陆
     @ResponseBody
-    @GetMapping("login")
+    @PostMapping("login")
     public ResultMap login(@RequestParam("name")String name,
                            @RequestParam("password")String password,
                            @RequestParam("code")String code,

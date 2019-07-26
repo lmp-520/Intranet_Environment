@@ -31,13 +31,11 @@ public class AchievementServiceImpl implements AchievementService {
         } else {
             page = (page - 1) * total;
         }
-
+        //根据
         List<OutcomeInformation> outcomeInformationList = achievementMapper.QueryAchievement(topicName, applicationUnitName, page, total);
 
         //查询总条数
         Integer alltotal = achievementMapper.queryAlltotal(topicName,applicationUnitName);
-
-
 
         return resultMap.success().message(outcomeInformationList);
     }

@@ -2,6 +2,7 @@ package com.xdmd.IntranetEnvironment.user.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.imageio.ImageIO;
@@ -17,7 +18,7 @@ import java.util.Random;
 @RequestMapping("code")
 public class CodeController {
 
-    @GetMapping("checkCode")
+    @PostMapping("checkCode")
     public void Code(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // 服务器通知浏览器不要缓存
         response.setHeader("pragma", "no-cache");
