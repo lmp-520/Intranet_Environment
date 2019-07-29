@@ -51,25 +51,25 @@ public class SubjectAcceptServiceImpl implements SubjectAcceptSerivce {
         } else {
             newpage = (page - 1) * total;
         }
-        //通过承担单位名，获取承担单位的id
-        int cid = 0;
-        Integer newcid = null;
-        newcid = subjectAcceptMapper.queryCidByCompanyName(subjectUndertakingUnit);
-        if (newcid == null) {
-            cid = 0;
-        } else {
-            cid = newcid.intValue();
-        }
+//        //通过承担单位名，获取承担单位的id
+//        int cid = 0;
+//        Integer newcid = null;
+//        newcid = subjectAcceptMapper.queryCidByCompanyName(subjectUndertakingUnit);
+//        if (newcid == null) {
+//            cid = 0;
+//        } else {
+//            cid = newcid.intValue();
+//        }
 
         //获取验收申请表的总数
         int alltotal = 0;
-        alltotal = subjectAcceptMapper.queryAllSubjectAccept(topicName, cid, unitNature, projectLeader);
+        alltotal = subjectAcceptMapper.queryAllSubjectAccept(topicName, subjectUndertakingUnit, unitNature, projectLeader);
         if (alltotal == 0) {
             return resultMap.fail().message();
         }
 
         //获取验收申请表的集合
-        List<CheckApply> checkApplyList = subjectAcceptMapper.subjectAcceptQuery(newpage, total, topicName, cid, unitNature, projectLeader);
+        List<CheckApply> checkApplyList = subjectAcceptMapper.subjectAcceptQuery(newpage, total, topicName, subjectUndertakingUnit, unitNature, projectLeader);
 
         //判断用户输入的页数是否超过总页数
         int allPage = 0;
@@ -138,6 +138,8 @@ public class SubjectAcceptServiceImpl implements SubjectAcceptSerivce {
                 jsonObject.put("expertGroupCommentsUrl", null);
                 jsonObject.put("expertAcceptanceFormUrl", null);
             }
+
+            jsonObject.put("alltotal", alltotal);
             jsonObject.remove("achievementUrlId");
             jsonObject.remove("submitUrlId");
             jsonObject.remove("auditReportUrlId");
@@ -157,7 +159,7 @@ public class SubjectAcceptServiceImpl implements SubjectAcceptSerivce {
 
     //课题验收中的审核
     @Override
-    public ResultMap SubjectAcceptState(String token, HttpServletResponse response, Boolean type, String reason, Integer id, MultipartFile expertGroupCommentsFile, MultipartFile expertAcceptanceFormFile) {
+    public ResultMap SubjectAcceptState(String token, HttpServletResponse response, Boolean type, String reason, Integer id, MultipartFile expertGroupCommentsFile, MultipartFile expertAcceptanceFormFile, Integer acceptanceFinalResultId) throws Exception {
         User user = new User();
         try {
             user = tokenService.compare(response, token);
@@ -187,72 +189,237 @@ public class SubjectAcceptServiceImpl implements SubjectAcceptSerivce {
             expertAcceptanceFormId = subjectAcceptMapper.queryExpertAcceptanceFormId(id);  //判断专家评议表文件在验收申请表中是否存在
 
             //如果这两个不存在，则意味着这两个文件，都是内网上传的，则要把这个文件上传到对应的文件夹中
-            if(expertGroupCommentsId == null || expertAcceptanceFormId == null){
+            if (expertGroupCommentsId == null || expertAcceptanceFormId == null) {
                 int cid = subjectAcceptMapper.queryCompanyIdByid(id);//根据验收申请表id找到对应的公司id
                 String companyName = subjectAcceptMapper.queryCompanyNameByCid(cid);//根据公司的id，找到公司的名称
 
                 //判断这两个上传的文件后缀名是否正确
                 String expertGroupCommentsFilename = expertGroupCommentsFile.getOriginalFilename();      //获取专家意见表文件名
-                List<String> expertGroupCommentsSuffixList = new ArrayList<String>(Arrays.asList(".doc",".docx")); //定义专家组意见表允许上传的类型
-                Boolean flag1 = FileSuffixJudgeUtil.SuffixJudge(expertGroupCommentsFilename,expertGroupCommentsSuffixList);  //判断专家组意见表后缀名是否有误
+                List<String> expertGroupCommentsSuffixList = new ArrayList<String>(Arrays.asList(".doc", ".docx")); //定义专家组意见表允许上传的类型
+                Boolean flag1 = FileSuffixJudgeUtil.SuffixJudge(expertGroupCommentsFilename, expertGroupCommentsSuffixList);  //判断专家组意见表后缀名是否有误
                 //获取专家评议表的文件名
                 String expertAcceptanceFormFilename = expertAcceptanceFormFile.getOriginalFilename();
-                List<String> expertAcceptanceFormSuffixList = new ArrayList<String>(Arrays.asList(".zip",".7z",".rar"));//定义专家评议表的允许上传的类型
-                Boolean flag2 = FileSuffixJudgeUtil.SuffixJudge(expertAcceptanceFormFilename,expertAcceptanceFormSuffixList);//判断专家评议表上传的类型是否有误
+                List<String> expertAcceptanceFormSuffixList = new ArrayList<String>(Arrays.asList(".zip", ".7z", ".rar"));//定义专家评议表的允许上传的类型
+                Boolean flag2 = FileSuffixJudgeUtil.SuffixJudge(expertAcceptanceFormFilename, expertAcceptanceFormSuffixList);//判断专家评议表上传的类型是否有误
 
-                if(flag1 ==false || flag2 ==false){
+                if (flag1 == false || flag2 == false) {
                     //两个文件中有一个错误，就意味着有文件上传格式不正确
                     return resultMap.fail().message("请上传正确的文件格式");
                 }
                 try {
-                    String expertGroupCommentsUrl = FileUploadUtil.fileUpload(expertGroupCommentsFile,companyName,"专家组意见",expertGroupCommentsSuffixList); //上传专家组意见表，并获取专家组意见表存放的url
-                    UploadFile UploadExpertGroupComments = IntegrationFile.IntegrationFile(expertGroupCommentsFile,expertGroupCommentsUrl, "专家组意见", username);
-                    UploadExpertGroupComments =  subjectAcceptMapper.insertFile(UploadExpertGroupComments);//把专家组意见文件新增到文件表中
-                    subjectAcceptMapper.updateExpertGroupCommentsUrlById(id,UploadExpertGroupComments.getId());    //根据验收申请表的id，把专家组意见文件id更新上去
+                    String expertGroupCommentsUrl = FileUploadUtil.fileUpload(expertGroupCommentsFile, companyName, "专家组意见", expertGroupCommentsSuffixList); //上传专家组意见表，并获取专家组意见表存放的url
+                    UploadFile UploadExpertGroupComments = IntegrationFile.IntegrationFile(expertGroupCommentsFile, expertGroupCommentsUrl, "专家组意见", username);
+                    subjectAcceptMapper.insertFile(UploadExpertGroupComments);//把专家组意见文件新增到文件表中
+                    subjectAcceptMapper.updateExpertGroupCommentsUrlById(id, UploadExpertGroupComments.getId());    //根据验收申请表的id，把专家组意见文件id更新上去
 
-                    String expertAcceptanceFormUrl = FileUploadUtil.fileUpload(expertAcceptanceFormFile,companyName,"专家组评议",expertAcceptanceFormSuffixList); //上传专家评议压缩包，并获取专家组意见表存放的url
-                    UploadFile UploadExpertAcceptanceForm = IntegrationFile.IntegrationFile(expertAcceptanceFormFile,expertAcceptanceFormUrl, "专家组评议", username);
-                    UploadExpertAcceptanceForm =  subjectAcceptMapper.insertFile(UploadExpertAcceptanceForm);        //把专家评议压缩包文件新增到文件表中
-                    subjectAcceptMapper.updateExpertAcceptanceFormUrlById(id,UploadExpertAcceptanceForm.getId());    //根据验收申请表的id，把专家评议文件id更新上去
+                    String expertAcceptanceFormUrl = FileUploadUtil.fileUpload(expertAcceptanceFormFile, companyName, "专家组评议", expertAcceptanceFormSuffixList); //上传专家评议压缩包，并获取专家组意见表存放的url
+                    UploadFile UploadExpertAcceptanceForm = IntegrationFile.IntegrationFile(expertAcceptanceFormFile, expertAcceptanceFormUrl, "专家组评议", username);
+                    subjectAcceptMapper.insertFile(UploadExpertAcceptanceForm);        //把专家评议压缩包文件新增到文件表中
+                    subjectAcceptMapper.updateExpertAcceptanceFormUrlById(id, UploadExpertAcceptanceForm.getId());    //根据验收申请表的id，把专家评议文件id更新上去
                 } catch (Exception e) {
-                    log.error("SubjectAcceptServiceImpl 中 SubjectAcceptState方法中 文件上传出现异常");
+                    log.error("SubjectAcceptServiceImpl 中 SubjectAcceptState方法中 文件上传出现异常: -------" + e.getMessage());
                     e.printStackTrace();
                     return resultMap.fail().message("系统异常");
                 }
 
-//                //审核通过时,先把上一条数据进行更新，再新增下一条数据
-//                String state = "已处理";
-//                String handleContent = "审核通过";
-//                Date date = new Date();
-//                //根据数据的id 把处理人，审核状态，审核内容，处理时间更新
-//                int num = 0;
-//                num = subjectAcceptMapper.UpdateCheckApplyState(id, username, state, handleContent, date);
-//                if (num == 0) {
-//                    throw new UpdateSqlException("在更新审核状态，更新上一条数据时出错");
-//                }
-//
-//                //新增下一条数据的处理
-//                //获取上一次该状态信息的最后提交处理时间，作为新增数据的交办时间
-//                String firstHandleTime = subjectAcceptMapper.queryCheckApplyLastTime(id);
-//                String auditStep = "等待公司提交文件";
-//                String newState = "等待处理";
-//                int num2 = 0;
-//                num2 = subjectAcceptMapper.addNewCheckApplyState(id, auditStep, newState, username, firstHandleTime);
-//                if (num2 == 0) {
-//                    throw new InsertSqlException("审核通过时，在新增审核状态时，新增下一条数据时出错");
-//                }
-//
-//                //当把审核状态表更新完成后，更新验收申请表中这条数据的验收审核状态
-//                int num3 = 0;
-//                int acceptancePhaseNum = 4;
-//                num3 = subjectAcceptMapper.updateAcceptancePhaseById(id,acceptancePhaseNum);
-//                if(num3 ==0){
-//                    throw new UpdateAcceptancePhaseException("更新验收申请表的验收审核状态字段时出错");
-//                }
+                //此时审核已经通过了，但是要做一个最终结果的判断
+                //如果审核通过，则继续走后面的流程，需要公司上传最终的验收报告
+                //如果审核不通过，则直接结束所有验收流程
+                //如果审核结题，则直接结束所有的验收流程
+
+                //通过最终结果的验收报告id，来获取最终的验收结果(从字典表里进行查询)
+                String acceptanceFinalResult = subjectAcceptMapper.queryAcceptanceFinalResultByAfrId(acceptanceFinalResultId);
+
+                if (acceptanceFinalResult.equals("不通过验收")) {
+                    //此时不通过验收
+                    //审核通过时,把上一条数据进行更新
+                    String state = "已处理";
+                    String handleContent = "审核通过";
+                    Date date = new Date();
+                    //根据数据的id 把处理人，审核状态，审核内容，处理时间更新
+                    int num = 0;
+                    num = subjectAcceptMapper.UpdateCheckApplyState(id, username, state, handleContent, date);
+                    if (num == 0) {
+                        throw new UpdateSqlException("在更新审核状态，更新上一条数据时出错");
+                    }
+
+                    //此时把这条验收申请的状态更新为，99：验收不通过
+                    int acceptancePhaseNum = 99; //  99：验收不通过
+                    int num4 = 0;
+                    num4 = subjectAcceptMapper.updateAcceptancePhaseById(id, acceptancePhaseNum);
+                    if (num4 == 0) {
+                        throw new UpdateAcceptancePhaseException("更新验收申请表的验收审核状态字段时出错");
+                    }
+                    return resultMap.success().message("审核成功");
+                } else if (acceptanceFinalResult.equals("结题")) {
+                    //此时结题
+                    //审核通过时,把上一条数据进行更新
+                    String state = "已处理";
+                    String handleContent = "审核通过";
+                    Date date = new Date();
+                    //根据数据的id 把处理人，审核状态，审核内容，处理时间更新
+                    int num = 0;
+                    num = subjectAcceptMapper.UpdateCheckApplyState(id, username, state, handleContent, date);
+                    if (num == 0) {
+                        throw new UpdateSqlException("在更新审核状态，更新上一条数据时出错");
+                    }
+
+                    //此时把这条验收申请的状态更新为，88：验收结题
+                    int acceptancePhaseNum = 88; //  88：验收结题
+                    int num4 = 0;
+                    num4 = subjectAcceptMapper.updateAcceptancePhaseById(id, acceptancePhaseNum);
+                    if (num4 == 0) {
+                        throw new UpdateAcceptancePhaseException("更新验收申请表的验收审核状态字段时出错");
+                    }
+                    return resultMap.success().message("审核成功");
+                } else {
+
+                    //审核通过时,先把上一条数据进行更新，再新增下一条数据
+                    String state = "已处理";
+                    String handleContent = "审核通过";
+                    Date date = new Date();
+                    //根据数据的id 把处理人，审核状态，审核内容，处理时间更新
+                    int num = 0;
+                    num = subjectAcceptMapper.UpdateCheckApplyState(id, username, state, handleContent, date);
+                    if (num == 0) {
+                        throw new UpdateSqlException("在更新审核状态，更新上一条数据时出错");
+                    }
+
+                    //新增下一条数据的处理
+                    //获取上一次该状态信息的最后提交处理时间，作为新增数据的交办时间
+                    String firstHandleTime = subjectAcceptMapper.queryCheckApplyLastTime(id);
+                    String auditStep = "等待公司上传最终验收报告";
+                    String newState = "等待处理";
+                    int num2 = 0;
+                    num2 = subjectAcceptMapper.addNewCheckApplyState(id, auditStep, newState, username, firstHandleTime);
+                    if (num2 == 0) {
+                        throw new InsertSqlException("审核通过时，在新增审核状态时，新增下一条数据时出错");
+                    }
+
+                    //当把审核状态表更新完成后，更新验收申请表中这条数据的验收审核状态
+                    int num3 = 0;
+                    int acceptancePhaseNum = 6; //6:等待公司上传最终的验收报告
+                    num3 = subjectAcceptMapper.updateAcceptancePhaseById(id, acceptancePhaseNum);
+                    if (num3 == 0) {
+                        throw new UpdateAcceptancePhaseException("更新验收申请表的验收审核状态字段时出错");
+                    }
+
+                    return resultMap.success().message("审核成功");
+                }
+
+
+            } else {
+                //此时为审核通过，查询出来的信息中，有这两个文件的地址，那么意味着，这两个文件是公司上传的
+                //通过最终结果的验收报告id，来获取最终的验收结果(从字典表里进行查询)
+                String acceptanceFinalResult = subjectAcceptMapper.queryAcceptanceFinalResultByAfrId(acceptanceFinalResultId);
+
+                if (acceptanceFinalResult.equals("不通过验收")) {
+                    //此时不通过验收
+                    //审核通过时,把上一条数据进行更新
+                    String state = "已处理";
+                    String handleContent = "审核通过";
+                    Date date = new Date();
+                    //根据数据的id 把处理人，审核状态，审核内容，处理时间更新
+                    int num = 0;
+                    num = subjectAcceptMapper.UpdateCheckApplyState(id, username, state, handleContent, date);
+                    if (num == 0) {
+                        throw new UpdateSqlException("在更新审核状态，更新上一条数据时出错");
+                    }
+
+                    //此时把这条验收申请的状态更新为，99：验收不通过
+                    int acceptancePhaseNum = 99; //  99：验收不通过
+                    int num4 = 0;
+                    num4 = subjectAcceptMapper.updateAcceptancePhaseById(id, acceptancePhaseNum);
+                    if (num4 == 0) {
+                        throw new UpdateAcceptancePhaseException("更新验收申请表的验收审核状态字段时出错");
+                    }
+                    return resultMap.success().message("审核成功");
+                } else if (acceptanceFinalResult.equals("结题")) {
+                    //此时结题
+                    //审核通过时,把上一条数据进行更新
+                    String state = "已处理";
+                    String handleContent = "审核通过";
+                    Date date = new Date();
+                    //根据数据的id 把处理人，审核状态，审核内容，处理时间更新
+                    int num = 0;
+                    num = subjectAcceptMapper.UpdateCheckApplyState(id, username, state, handleContent, date);
+                    if (num == 0) {
+                        throw new UpdateSqlException("在更新审核状态，更新上一条数据时出错");
+                    }
+
+                    //此时把这条验收申请的状态更新为，88：验收结题
+                    int acceptancePhaseNum = 88; //  88：验收结题
+                    int num4 = 0;
+                    num4 = subjectAcceptMapper.updateAcceptancePhaseById(id, acceptancePhaseNum);
+                    if (num4 == 0) {
+                        throw new UpdateAcceptancePhaseException("更新验收申请表的验收审核状态字段时出错");
+                    }
+                    return resultMap.success().message("审核成功");
+                } else {
+                    //审核通过时,先把上一条数据进行更新，再新增下一条数据
+                    String state = "已处理";
+                    String handleContent = "审核通过";
+                    Date date = new Date();
+                    //根据数据的id 把处理人，审核状态，审核内容，处理时间更新
+                    int num = 0;
+                    num = subjectAcceptMapper.UpdateCheckApplyState(id, username, state, handleContent, date);
+                    if (num == 0) {
+                        throw new UpdateSqlException("在更新审核状态，更新上一条数据时出错");
+                    }
+
+                    //新增下一条数据的处理
+                    //获取上一次该状态信息的最后提交处理时间，作为新增数据的交办时间
+                    String firstHandleTime = subjectAcceptMapper.queryCheckApplyLastTime(id);
+                    String auditStep = "等待公司上传最终验收报告";
+                    String newState = "等待处理";
+                    int num2 = 0;
+                    num2 = subjectAcceptMapper.addNewCheckApplyState(id, auditStep, newState, username, firstHandleTime);
+                    if (num2 == 0) {
+                        throw new InsertSqlException("审核通过时，在新增审核状态时，新增下一条数据时出错");
+                    }
+
+                    //当把审核状态表更新完成后，更新验收申请表中这条数据的验收审核状态
+                    int num3 = 0;
+                    int acceptancePhaseNum = 6; //6:等待公司上传最终的验收报告
+                    num3 = subjectAcceptMapper.updateAcceptancePhaseById(id, acceptancePhaseNum);
+                    if (num3 == 0) {
+                        throw new UpdateAcceptancePhaseException("更新验收申请表的验收审核状态字段时出错");
+                    }
+                    return resultMap.success().message("审核成功");
+                }
 
             }
-        }
-        return resultMap;
+        } else {
+            //此时为审核未通过 先把上一条数据进行更新，再新增下一条数据
+            String state = "已退回";
+            String handleContent = reason;
+            Date date = new Date();
+            //根据数据的id 把处理人，审核状态，审核内容，处理时间更新
+            int num = 0;
+            num = subjectAcceptMapper.UpdateCheckApplyState(id, username, state, handleContent, date);
+            if (num == 0) {
+                throw new UpdateSqlException("在更新审核状态，更新上一条数据时出错");
+            }
 
+            //新增下一条数据的处理
+            //获取上一次该状态信息的最后提交处理时间，作为新增数据的交办时间
+            String firstHandleTime = subjectAcceptMapper.queryCheckApplyLastTime(id);
+            String auditStep = "通过初审，等待提交专家表";
+            String newState = "等待处理";
+            int num2 = 0;
+            num2 = subjectAcceptMapper.addNewCheckApplyState(id, auditStep, newState, username, firstHandleTime);
+            if (num2 == 0) {
+                throw new InsertSqlException("审核通过时，在新增审核状态时，新增下一条数据时出错");
+            }
+
+            //当把审核状态表更新完成后，更新验收申请表中这条数据的验收审核状态
+            int num3 = 0;
+            int acceptancePhaseNum = 4; //5：通过初审，等待提交专家表
+            num3 = subjectAcceptMapper.updateAcceptancePhaseById(id, acceptancePhaseNum);
+            if (num3 == 0) {
+                throw new UpdateAcceptancePhaseException("更新验收申请表的验收审核状态字段时出错");
+            }
+            return resultMap.success().message("审核成功");
+        }
     }
 }

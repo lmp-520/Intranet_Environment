@@ -17,10 +17,10 @@ public interface SubjectAcceptMapper {
     Integer queryCidByCompanyName(@Param("subjectUndertakingUnit") String subjectUndertakingUnit);
 
     //获取验收申请表的总数
-    int queryAllSubjectAccept(@Param("topicName") String topicName, @Param("cid") int cid, @Param("unitNature") Integer unitNature, @Param("projectLeader") String projectLeader);
+  //  int queryAllSubjectAccept(@Param("topicName") String topicName, @Param("cid") int cid, @Param("unitNature") Integer unitNature, @Param("projectLeader") String projectLeader);
 
     //获取验收申请表的集合
-    List<CheckApply> subjectAcceptQuery(@Param("newpage") int newpage, @Param("total") Integer total, @Param("topicName") String topicName, @Param("cid") int cid, @Param("unitNature") Integer unitNature, @Param("projectLeader") String projectLeader);
+//    List<CheckApply> subjectAcceptQuery(@Param("newpage") int newpage, @Param("total") Integer total, @Param("topicName") String topicName, @Param("cid") int cid, @Param("unitNature") Integer unitNature, @Param("projectLeader") String projectLeader);
 
     //通过文件id获取文件的地址
     @Select("select upload_file_address from upload_file where id = #{id}")
@@ -50,7 +50,7 @@ public interface SubjectAcceptMapper {
     String queryCompanyNameByCid(@Param("cid") int cid);
 
     //上传文件
-    UploadFile insertFile(UploadFile uploadExpertGroupComments);
+    void insertFile(@Param("uploadExpertGroupComments") UploadFile uploadExpertGroupComments);
 
     @Update("update check_apply set expert_group_comments_url_id = #{fileId} where id = #{id}")
     void updateExpertGroupCommentsUrlById(@Param("id") Integer id, @Param("fileId") Integer id1);
@@ -70,4 +70,18 @@ public interface SubjectAcceptMapper {
 
     @Insert("INSERT INTO check_apply_state(check_apply_id, fist_handler, audit_step, first_handle_time, state) VALUES (#{id},#{username},#{auditStep},#{firstHandleTime},#{newState})")
     int addNewCheckApplyState(@Param("id") Integer id, @Param("auditStep") String auditStep, @Param("newState") String newState, @Param("username") String username, @Param("firstHandleTime") String firstHandleTime);
+
+    //当把审核状态表更新完成后，更新验收申请表中这条数据的验收审核状态
+    @Update("update check_apply set acceptance_phase_id = #{acceptancePhaseNum} where id = #{id}")
+    int updateAcceptancePhaseById(@Param("id") Integer id, @Param("acceptancePhaseNum") int acceptancePhaseNum);
+
+    //获取验收申请表的总数
+    int queryAllSubjectAccept(@Param("topicName") String topicName, @Param("subjectUndertakingUnit") String subjectUndertakingUnit, @Param("unitNature") Integer unitNature, @Param("projectLeader") String projectLeader);
+
+    //获取验收申请表的集合
+    List<CheckApply> subjectAcceptQuery(@Param("newpage") int newpage, @Param("total") Integer total, @Param("topicName") String topicName, @Param("subjectUndertakingUnit") String subjectUndertakingUnit, @Param("unitNature") Integer unitNature, @Param("projectLeader") String projectLeader);
+
+    //通过最终结果的验收报告id，来获取最终的验收结果
+    @Select("SELECT content FROM dictionary where id = #{acceptanceFinalResultId}")
+    String queryAcceptanceFinalResultByAfrId(@Param("acceptanceFinalResultId") Integer acceptanceFinalResultId);
 }

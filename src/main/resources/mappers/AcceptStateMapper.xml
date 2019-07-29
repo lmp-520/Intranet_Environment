@@ -8,8 +8,8 @@
             <if test="topicName != null">
                 topic_name like CONCAT('%',#{topicName},'%')
             </if>
-            <if test="cid != 0">
-                and subject_undertaking_unit_id like CONCAT('%',#{cid},'%')
+            <if test="subjectUndertakingUnit != null">
+                and subject_undertaking_unit like CONCAT('%',#{subjectUndertakingUnit},'%')
             </if>
             <if test="unitNature != null">
                 and unit_nature like CONCAT('%',#{unitNature},'%')
@@ -25,47 +25,48 @@
 
     <select id="acceptApplyQuery" resultType="com.xdmd.IntranetEnvironment.subjectAcceptance.pojo.CheckApply">
         select
-        id,
-        topic_name,
-        topic_number ,
-        subject_undertaking_unit_id,
-        unit_nature ,
-        project_leader ,
-        project_leader_phone ,
-        project_leader_mail ,
-        postal_address ,
-        agreement_start_time,
-        agreement_end_time,
-        application_acceptance_time ,
-        application_acceptance_mode,
-        application_acceptance_place,
-        acceptance_contact ,
-        acceptance_contact_phone ,
-        main_content_situation,
-        submission_achievements_situation ,
-        subject_undertaking_unit_opinion,
-        environmental_departments_opinion ,
-        province_assessment_center_opinion,
-        competent_department_oinion,
-        submit_inventory ,
-        acceptance_phase_id ,
-        create_time ,
-        create_author,
-        achievement_url_id ,
-        submit_url_id ,
-        audit_report_url_id ,
-        first_inspection_report_url_id,
-        expert_group_comments_url_id ,
-        expert_acceptance_form_id,
-        application_url_id
+          *
+--         id,
+--         topic_name,
+--         topic_number ,
+--         subject_undertaking_unit_id,
+--         unit_nature ,
+--         project_leader ,
+--         project_leader_phone ,
+--         project_leader_mail ,
+--         postal_address ,
+--         agreement_start_time,
+--         agreement_end_time,
+--         application_acceptance_time ,
+--         application_acceptance_mode,
+--         application_acceptance_place,
+--         acceptance_contact ,
+--         acceptance_contact_phone ,
+--         main_content_situation,
+--         submission_achievements_situation ,
+--         subject_undertaking_unit_opinion,
+--         environmental_departments_opinion ,
+--         province_assessment_center_opinion,
+--         competent_department_oinion,
+--         submit_inventory ,
+--         acceptance_phase_id ,
+--         create_time ,
+--         create_author,
+--         achievement_url_id ,
+--         submit_url_id ,
+--         audit_report_url_id ,
+--         first_inspection_report_url_id,
+--         expert_group_comments_url_id ,
+--         expert_acceptance_form_id,
+--         application_url_id
         from
         check_apply
         <where>
             <if test="topicName != null">
                 topic_name like CONCAT('%',#{topicName},'%')
             </if>
-            <if test="cid != 0">
-                and subject_undertaking_unit_id like CONCAT('%',#{cid},'%')
+            <if test="subjectUndertakingUnit != null">
+                and subject_undertaking_unit like CONCAT('%',#{subjectUndertakingUnit},'%')
             </if>
             <if test="unitNature != null">
                 and unit_nature like CONCAT('%',#{unitNature},'%')

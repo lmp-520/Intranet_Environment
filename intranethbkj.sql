@@ -11,7 +11,7 @@
  Target Server Version : 80016
  File Encoding         : 65001
 
- Date: 26/07/2019 16:52:45
+ Date: 29/07/2019 17:56:56
 */
 
 SET NAMES utf8mb4;
@@ -25,7 +25,7 @@ CREATE TABLE `acceptance_phase`  (
   `ap_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `ap_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '审核状态名称',
   PRIMARY KEY (`ap_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of acceptance_phase
@@ -33,9 +33,13 @@ CREATE TABLE `acceptance_phase`  (
 INSERT INTO `acceptance_phase` VALUES (1, '等待员工提交');
 INSERT INTO `acceptance_phase` VALUES (2, '等待企业管理员提交');
 INSERT INTO `acceptance_phase` VALUES (3, '等待验收初审');
-INSERT INTO `acceptance_phase` VALUES (4, '通过初审，等待公司提交专家表');
-INSERT INTO `acceptance_phase` VALUES (5, '等待审核公司上传文件');
-INSERT INTO `acceptance_phase` VALUES (6, '验收结束');
+INSERT INTO `acceptance_phase` VALUES (4, '通过初审，等待提交专家表');
+INSERT INTO `acceptance_phase` VALUES (5, '等待环保厅审核公司上传的专家文件');
+INSERT INTO `acceptance_phase` VALUES (6, '公司上传最终验收报告');
+INSERT INTO `acceptance_phase` VALUES (7, '审核最终验收报告');
+INSERT INTO `acceptance_phase` VALUES (77, '验收通过');
+INSERT INTO `acceptance_phase` VALUES (88, '验收结题');
+INSERT INTO `acceptance_phase` VALUES (99, '验收不通过');
 
 -- ----------------------------
 -- Table structure for check_apply
@@ -46,6 +50,7 @@ CREATE TABLE `check_apply`  (
   `topic_name` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '课题名称',
   `topic_number` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '课题编号',
   `subject_undertaking_unit_id` int(10) NOT NULL COMMENT '课题承担单位id',
+  `subject_undertaking_unit` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '承担单位名称',
   `unit_nature` int(10) NOT NULL COMMENT '单位性质',
   `project_leader` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '课题负责人',
   `project_leader_phone` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '课题负责人联系电话',
@@ -76,18 +81,21 @@ CREATE TABLE `check_apply`  (
   `expert_acceptance_form_id` int(11) NULL DEFAULT NULL COMMENT '专家验收评议表上传文件的id',
   `application_url_id` int(11) NULL DEFAULT NULL COMMENT '验收申请表上传文件的id',
   `acceptance_conclusion_id` int(11) NULL DEFAULT NULL COMMENT '验收结论的id (在字典表中)',
+  `acceptance_certificate_id` int(11) NULL DEFAULT NULL COMMENT '最终验收证书文件的id',
+  `acceptance_final_result_id` int(11) NULL DEFAULT NULL COMMENT '最终验收结果id',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 52 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 55 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of check_apply
 -- ----------------------------
-INSERT INTO `check_apply` VALUES (50, '课题名称1', '123', 4, 3, '项目负责人名1', '15588865919', '158965512@qq.com', '公司地址1', '2019-07-01', '2019-07-03', '2019-07-04', 6, '申请验收地点', '验收联系人1', '13566678482', '主要研究内容完成情况1', '提交成果情况1', '课题承担单位意见1', '所在环保部门意见1', '省生态环境评估中心初审意见1', '省环保厅主管部门意见1', '提交资料清单1', 3, '2019-07-18 10:15:20', '创建人1', 77, 78, NULL, NULL, 4, NULL, 76, NULL);
-INSERT INTO `check_apply` VALUES (51, '课题名称2', '123', 6, 2, '项目负责人名2', '15588865911', '158965512@163.com', '公司地址2', '2019-07-01', '2019-07-03', '2019-07-04', 6, '申请验收地点', '验收联系人2', '13566678482', '主要研究内容完成情况2', '提交成果情况2', '课题承担单位意见2', '所在环保部门意见2', '省生态环境评估中心初审意见2', '省环保厅主管部门意见2', '提交资料清单2', 3, '2019-07-18 10:15:20', '创建人2', 77, 78, NULL, NULL, 4, NULL, 76, NULL);
-INSERT INTO `check_apply` VALUES (52, '课题名称3', '1234', 2, 2, '项目负责人名2', '15588865741', '158965512@wixing.com', '公司地址2', '2019-07-01', '2019-07-03', '2019-07-04', 4, '申请验收地点3', '验收联系人3', '13566678485', '主要研究内容完成情况3', '提交成果情况3', '课题承担单位意见3', '所在环保部门意见3', '省生态环境评估中心初审意见3', '省环保厅主管部门意见3', '提交资料清单3', 1, '2019-07-18 10:15:20', '创建人1', 77, 78, NULL, NULL, 4, NULL, 76, NULL);
-INSERT INTO `check_apply` VALUES (53, '课题名称5', '12345', 2, 2, '项目负责人名5', '15588865741', '158965512@wixing.com', '公司地址5', '2019-07-01', '2019-07-03', '2019-07-04', 4, '申请验收地点5', '验收联系人5', '13566678485', '主要研究内容完成情况5', '提交成果情况5', '课题承担单位意见5', '所在环保部门意见5', '省生态环境评估中心初审意见5', '省环保厅主管部门意见5', '提交资料清单5', 4, '2019-07-18 10:15:20', '创建人1', 77, 78, NULL, NULL, 4, NULL, 76, NULL);
-INSERT INTO `check_apply` VALUES (54, '课题名称7', '12345', 2, 2, '项目负责人名7', '15588865741', '158965512@wixing.com', '公司地址5', '2019-07-01', '2019-07-03', '2019-07-04', 3, '申请验收地点7', '验收联系人7', '13566678485', '主要研究内容完成情况7', '提交成果情况7', '课题承担单位意见7', '所在环保部门意见7', '省生态环境评估中心初审意见7', '省环保厅主管部门意见7', '提交资料清单7', 4, '2019-07-18 10:15:20', '创建人1', 77, 78, NULL, NULL, 4, NULL, 76, NULL);
-INSERT INTO `check_apply` VALUES (55, '课题名称666', '12345', 2, 2, '项目负责人名666', '15588865741', '158965512@wixing.com', '公司地址5', '2019-07-01', '2019-07-03', '2019-07-04', 3, '申请验收地点666', '验收联系人666', '13566678485', '主要研究内容完成情况666', '提交成果情况666', '课题承担单位意见6667', '所在环保部门意见6667', '省生态环境评估中心初审意见6667', '省环保厅主管部门意见7', '提交资料清单7', 4, '2019-07-18 10:15:20', '创建人1', 77, 78, NULL, NULL, 4, NULL, 76, NULL);
+INSERT INTO `check_apply` VALUES (50, '课题名称1', '123', 4, '公司名称1', 3, '项目负责人名1', '15588865919', '158965512@qq.com', '公司地址1', '2019-07-01', '2019-07-03', '2019-07-04', 6, '申请验收地点', '验收联系人1', '13566678482', '主要研究内容完成情况1', '提交成果情况1', '课题承担单位意见1', '所在环保部门意见1', '省生态环境评估中心初审意见1', '省环保厅主管部门意见1', '提交资料清单1', 3, '2019-07-18 10:15:20', '创建人1', 77, 78, NULL, NULL, 4, NULL, 76, NULL, NULL, NULL);
+INSERT INTO `check_apply` VALUES (51, '课题名称2', '123', 6, '公司名称2', 2, '项目负责人名2', '15588865911', '158965512@163.com', '公司地址2', '2019-07-01', '2019-07-03', '2019-07-04', 6, '申请验收地点', '验收联系人2', '13566678482', '主要研究内容完成情况2', '提交成果情况2', '课题承担单位意见2', '所在环保部门意见2', '省生态环境评估中心初审意见2', '省环保厅主管部门意见2', '提交资料清单2', 3, '2019-07-18 10:15:20', '创建人2', 77, 78, NULL, NULL, 4, NULL, 76, NULL, NULL, NULL);
+INSERT INTO `check_apply` VALUES (52, '课题名称3', '1234', 2, '公司名称3', 2, '项目负责人名2', '15588865741', '158965512@wixing.com', '公司地址2', '2019-07-01', '2019-07-03', '2019-07-04', 4, '申请验收地点3', '验收联系人3', '13566678485', '主要研究内容完成情况3', '提交成果情况3', '课题承担单位意见3', '所在环保部门意见3', '省生态环境评估中心初审意见3', '省环保厅主管部门意见3', '提交资料清单3', 1, '2019-07-18 10:15:20', '创建人1', 77, 78, NULL, NULL, 4, NULL, 76, NULL, NULL, NULL);
+INSERT INTO `check_apply` VALUES (53, '课题名称5', '12345', 2, '公司名称4', 2, '项目负责人名5', '15588865741', '158965512@wixing.com', '公司地址5', '2019-07-01', '2019-07-03', '2019-07-04', 4, '申请验收地点5', '验收联系人5', '13566678485', '主要研究内容完成情况5', '提交成果情况5', '课题承担单位意见5', '所在环保部门意见5', '省生态环境评估中心初审意见5', '省环保厅主管部门意见5', '提交资料清单5', 4, '2019-07-18 10:15:20', '创建人1', 77, 78, NULL, NULL, 4, NULL, 76, NULL, NULL, NULL);
+INSERT INTO `check_apply` VALUES (54, '课题名称7', '12345', 2, '公司名称2', 2, '项目负责人名7', '15588865741', '158965512@wixing.com', '公司地址5', '2019-07-01', '2019-07-03', '2019-07-04', 3, '申请验收地点7', '验收联系人7', '13566678485', '主要研究内容完成情况7', '提交成果情况7', '课题承担单位意见7', '所在环保部门意见7', '省生态环境评估中心初审意见7', '省环保厅主管部门意见7', '提交资料清单7', 4, '2019-07-18 10:15:20', '创建人1', 77, 78, NULL, NULL, 4, NULL, 76, NULL, NULL, NULL);
+INSERT INTO `check_apply` VALUES (55, '课题名称666', '12345', 2, '公司名称1', 2, '项目负责人名666', '15588865741', '158965512@wixing.com', '公司地址5', '2019-07-01', '2019-07-03', '2019-07-04', 3, '申请验收地点666', '验收联系人666', '13566678485', '主要研究内容完成情况666', '提交成果情况666', '课题承担单位意见6667', '所在环保部门意见6667', '省生态环境评估中心初审意见6667', '省环保厅主管部门意见7', '提交资料清单7', 7, '2019-07-18 10:15:20', '创建人1', 77, 78, NULL, NULL, 77, 78, 76, NULL, 77, NULL);
+INSERT INTO `check_apply` VALUES (56, '课题名称9999', '123453', 14, 'xdmd', 2, '项目负责人999', '9999999999', '9999999@qq.com', '公司地址999', '2019-07-01', '2019-07-11', '2019-07-15', 2, '申请验收地点9999', '验收联系人99999', '9999999999', '主要研究内容完成情况9999', '提交成果情况9999', '课题承担单位意见999999', '所在环保部门意见9999', '省生态环境评估中心初审意见99999', '省环保厅主管部门意见999999', '提交资料清单9999', 99, '2019-07-23 14:12:12', '创建人999', 77, 78, NULL, NULL, 81, 82, NULL, NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for check_apply_state
@@ -104,7 +112,7 @@ CREATE TABLE `check_apply_state`  (
   `handle_content` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '处理内容',
   `second_handle_time` datetime(0) NULL DEFAULT NULL COMMENT '处理时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 21 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 20 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of check_apply_state
@@ -127,7 +135,28 @@ INSERT INTO `check_apply_state` VALUES (16, 54, '公司老板', 'admin', '验收
 INSERT INTO `check_apply_state` VALUES (17, 54, 'admin', NULL, '等待公司提交文件', '2019-07-26 13:50:35', '等待处理', NULL, NULL);
 INSERT INTO `check_apply_state` VALUES (18, 55, '公司员工', '公司老板', '公司审批', '2019-07-01 13:52:16', '已处理', '审核通过', '2019-07-04 13:52:27');
 INSERT INTO `check_apply_state` VALUES (19, 55, '公司老板', 'admin', '验收初审', '2019-07-04 13:52:27', '已处理', '审核通过', '2019-07-26 15:33:30');
-INSERT INTO `check_apply_state` VALUES (20, 55, 'admin', NULL, '等待公司提交文件', '2019-07-26 15:33:30', '等待处理', NULL, NULL);
+INSERT INTO `check_apply_state` VALUES (20, 55, 'admin', 'admin', '等待公司提交文件', '2019-07-26 15:33:30', '已处理', '审核通过', '2019-07-29 09:47:23');
+INSERT INTO `check_apply_state` VALUES (21, 55, 'admin', 'admin', '等待公司上传最终验收报告', '2019-07-29 09:47:23', '已处理', '审核通过', '2019-07-29 09:50:26');
+INSERT INTO `check_apply_state` VALUES (22, 55, 'admin', 'admin', '等待公司上传最终验收报告', '2019-07-29 09:50:26', '已处理', '审核通过', '2019-07-29 09:52:29');
+INSERT INTO `check_apply_state` VALUES (23, 55, 'admin', 'admin', '等待公司上传最终验收报告', '2019-07-29 09:52:29', '已退回', '就是不让你通过', '2019-07-29 09:53:07');
+INSERT INTO `check_apply_state` VALUES (24, 55, 'admin', 'admin', '等待公司上传最终验收报告', '2019-07-29 09:53:07', '已退回', '就是不让你通过22222', '2019-07-29 09:53:55');
+INSERT INTO `check_apply_state` VALUES (25, 55, 'admin', 'admin', '等待公司上传最终验收报告', '2019-07-29 09:53:55', '已处理', '审核通过', '2019-07-29 09:54:20');
+INSERT INTO `check_apply_state` VALUES (26, 55, 'admin', 'admin', '等待公司上传最终验收报告', '2019-07-29 09:54:20', '已处理', '审核通过', '2019-07-29 09:55:37');
+INSERT INTO `check_apply_state` VALUES (27, 55, 'admin', 'admin', '等待公司上传最终验收报告', '2019-07-29 09:55:37', '已退回', '啦啦啦啦啦啦', '2019-07-29 09:56:03');
+INSERT INTO `check_apply_state` VALUES (28, 55, 'admin', NULL, '通过初审，等待提交专家表', '2019-07-29 09:56:03', '等待处理', NULL, NULL);
+INSERT INTO `check_apply_state` VALUES (29, 56, '公司员工', '公司老板', '等待员工提交', '2019-07-01 14:20:29', '已处理', '审核通过', '2019-07-04 14:20:48');
+INSERT INTO `check_apply_state` VALUES (30, 56, '公司老板', 'admin', '等待验收初审', '2019-07-04 14:20:48', '已处理', '审核通过', '2019-07-29 14:26:42');
+INSERT INTO `check_apply_state` VALUES (31, 56, 'admin', 'admin', '等待公司提交文件', '2019-07-29 14:26:42', '已退回', '啦啦啦啦啦啦', '2019-07-29 14:30:23');
+INSERT INTO `check_apply_state` VALUES (32, 56, 'admin', 'admin', '等待企业管理员提交', '2019-07-29 14:30:23', '已处理', '审核通过', '2019-07-29 14:32:45');
+INSERT INTO `check_apply_state` VALUES (33, 56, 'admin', 'admin', '通过初审，等待提交专家表', '2019-07-29 14:32:45', '已退回', '啦啦啦啦啦啦', '2019-07-29 14:33:29');
+INSERT INTO `check_apply_state` VALUES (34, 56, 'admin', 'admin', '等待企业管理员提交', '2019-07-29 14:33:29', '已处理', '审核通过', '2019-07-29 15:34:47');
+INSERT INTO `check_apply_state` VALUES (35, 56, 'admin', 'admin', '等待公司上传最终验收报告', '2019-07-29 15:34:47', '已处理', '审核通过', '2019-07-29 15:45:44');
+INSERT INTO `check_apply_state` VALUES (36, 56, 'admin', 'admin', '等待公司上传最终验收报告', '2019-07-29 15:45:44', '已处理', '审核通过', '2019-07-29 15:50:42');
+INSERT INTO `check_apply_state` VALUES (37, 56, 'admin', 'admin', '等待公司上传最终验收报告', '2019-07-29 15:50:42', '已处理', '审核通过', '2019-07-29 17:27:39');
+INSERT INTO `check_apply_state` VALUES (38, 56, 'admin', 'admin', '等待公司上传最终验收报告', '2019-07-29 17:27:39', '已处理', '审核通过', '2019-07-29 17:29:48');
+INSERT INTO `check_apply_state` VALUES (39, 56, 'admin', 'admin', '等待公司上传最终验收报告', '2019-07-29 17:29:48', '已处理', '审核通过', '2019-07-29 17:30:53');
+INSERT INTO `check_apply_state` VALUES (40, 56, 'admin', 'admin', '等待公司上传最终验收报告', '2019-07-29 17:30:53', '已处理', '审核通过', '2019-07-29 17:32:50');
+INSERT INTO `check_apply_state` VALUES (41, 56, 'admin', 'admin', '等待公司上传最终验收报告', '2019-07-29 17:32:50', '已处理', '审核通过', '2019-07-29 17:35:23');
 
 -- ----------------------------
 -- Table structure for dictionary
@@ -141,7 +170,7 @@ CREATE TABLE `dictionary`  (
   `content_id` int(11) NOT NULL COMMENT '内容id',
   `state` int(5) NOT NULL COMMENT '启用（0:逻辑删除  1：启用）',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 89 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 88 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of dictionary
@@ -296,7 +325,7 @@ CREATE TABLE `expert_group_comments`  (
   `create_time` datetime(6) NULL DEFAULT NULL COMMENT '创建时间',
   `create_author` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建人',
   PRIMARY KEY (`egc_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for expert_group_comments_name_list
@@ -310,7 +339,7 @@ CREATE TABLE `expert_group_comments_name_list`  (
   `major` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '专业',
   `job` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '职务',
   PRIMARY KEY (`egc_nid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for menu
@@ -322,7 +351,7 @@ CREATE TABLE `menu`  (
   `is_father` int(10) NULL DEFAULT NULL COMMENT '是否是一级菜单 0：一级 1：二级菜单',
   `father_id` int(11) NULL DEFAULT NULL COMMENT '父id',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 40 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 39 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of menu
@@ -383,7 +412,7 @@ CREATE TABLE `outcome_information`  (
   `enclosure` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '成果信息附件url',
   `achievement_end_time` date NOT NULL COMMENT '成果结束时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of outcome_information
@@ -404,7 +433,7 @@ CREATE TABLE `shiro_company_name`  (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '公司id',
   `company_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '公司名称',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of shiro_company_name
@@ -420,6 +449,7 @@ INSERT INTO `shiro_company_name` VALUES (8, '小溪迈德888912');
 INSERT INTO `shiro_company_name` VALUES (9, '小溪迈德888912333');
 INSERT INTO `shiro_company_name` VALUES (12, '新溪卖得');
 INSERT INTO `shiro_company_name` VALUES (13, '新溪卖得1');
+INSERT INTO `shiro_company_name` VALUES (14, 'xdmd');
 
 -- ----------------------------
 -- Table structure for shiro_permission
@@ -439,7 +469,7 @@ CREATE TABLE `shiro_role`  (
   `id` int(1) NOT NULL AUTO_INCREMENT COMMENT '主键Id',
   `role_name` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '角色名称',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of shiro_role
@@ -495,7 +525,7 @@ CREATE TABLE `shiro_user`  (
   `status` int(5) NULL DEFAULT NULL COMMENT '身份判断 0：管理员 1：部长 2：员工',
   `modify` int(5) NULL DEFAULT NULL COMMENT '员工修改登陆名次数 默认是1',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of shiro_user
@@ -532,7 +562,7 @@ CREATE TABLE `upload_file`  (
   `create_time` datetime(0) NOT NULL COMMENT '创建时间',
   `create_author` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '创建者',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 79 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of upload_file
@@ -567,5 +597,9 @@ INSERT INTO `upload_file` VALUES (75, 48, 'D://xdmd_environment//Extranet//公�
 INSERT INTO `upload_file` VALUES (76, 49, 'D://xdmd_environment//Extranet//公司名//验收申请表//2019-07-18//验收申请表3.docx', '验收申请表3.docx', '2019-07-18验收申请表3.docx', '验收申请表', 'docx', '0', '2019-07-18 16:16:30', '创建人');
 INSERT INTO `upload_file` VALUES (77, 49, 'D://xdmd_environment//Extranet//公司名//成果附件//2019-07-18//成果附件3.docx', '成果附件3.docx', '2019-07-18成果附件3.docx', '成果附件', 'docx', '0', '2019-07-18 16:16:30', '创建人');
 INSERT INTO `upload_file` VALUES (78, 49, 'D://xdmd_environment//Extranet//公司名//提交清单文件//2019-07-18//提交清单测试.zip', '提交清单测试.zip', '2019-07-18提交清单测试.zip', '提交清单', 'zip', '22', '2019-07-18 16:16:30', '创建人');
+INSERT INTO `upload_file` VALUES (79, NULL, 'D://xdmd_environment//Intranet//xdmd//专家组意见//成果附件3.docx', '成果附件3.docx', '2019-07-29成果附件3.docx', '专家组意见', 'docx', '0', '2019-07-29 15:24:43', 'admin');
+INSERT INTO `upload_file` VALUES (80, NULL, 'D://xdmd_environment//Intranet//xdmd//专家组意见//成果附件3.docx', '成果附件3.docx', '2019-07-29成果附件3.docx', '专家组意见', 'docx', '0', '2019-07-29 15:34:07', 'admin');
+INSERT INTO `upload_file` VALUES (81, NULL, 'D://xdmd_environment//Intranet//xdmd//专家组意见//成果附件3.docx', '成果附件3.docx', '2019-07-29成果附件3.docx', '专家组意见', 'docx', '0', '2019-07-29 15:44:44', 'admin');
+INSERT INTO `upload_file` VALUES (82, NULL, 'D://xdmd_environment//Intranet//xdmd//专家组评议//法人身份证.zip', '法人身份证.zip', '2019-07-29法人身份证.zip', '专家组评议', 'zip', '0', '2019-07-29 15:44:59', 'admin');
 
 SET FOREIGN_KEY_CHECKS = 1;

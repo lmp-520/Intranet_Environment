@@ -1,6 +1,8 @@
 package com.xdmd.IntranetEnvironment.subjectAcceptance.controller;
 
 import com.xdmd.IntranetEnvironment.common.ResultMap;
+import com.xdmd.IntranetEnvironment.subjectAcceptance.exception.InsertSqlException;
+import com.xdmd.IntranetEnvironment.subjectAcceptance.exception.UpdateSqlException;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.service.SubjectAcceptSerivce;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -51,15 +53,24 @@ public class SubjectAcceptController {
                                         @RequestParam("type") Boolean type,//审核的状态.   true为审核通过  false为审核未通过
                                         @RequestParam(value = "reason", required = false) String reason,//审核未通过原因
                                         @RequestParam("id") Integer id,//验收申请数据的id
-                                        @RequestParam("expertGroupCommentsFile")MultipartFile expertGroupCommentsFile,  //专家意见表文件
-                                        @RequestParam("expertAcceptanceFormFile")MultipartFile expertAcceptanceFormFile){ //专家评议表文件
+                                        @RequestParam("acceptanceFinalResultId") Integer acceptanceFinalResultId,   //最终验收结果id
+                                        @RequestParam(value = "expertGroupCommentsFile",required = false)MultipartFile expertGroupCommentsFile,  //专家意见表文件
+                                        @RequestParam(value = "expertAcceptanceFormFile",required = false)MultipartFile expertAcceptanceFormFile){ //专家评议表文件
         //首先判断token是否存在
         if(StringUtils.isEmpty(token)){
             return resultMap.fail().message("请先登录");
         }
         try {
-            resultMap = subjectAcceptSerivce.SubjectAcceptState(token,response,type,reason,id,expertGroupCommentsFile,expertAcceptanceFormFile);
-        } catch (Exception e) {
+            resultMap = subjectAcceptSerivce.SubjectAcceptState(token,response,type,reason,id,expertGroupCommentsFile,expertAcceptanceFormFile,acceptanceFinalResultId);
+        } catch (UpdateSqlException e){
+            e.printStackTrace();
+            log.error("SubjectAcceptServiceImpl 中出错：----"+e.getMessage());
+            return resultMap.fail().message("系统异常");
+        }catch (InsertSqlException e){
+            e.printStackTrace();
+            log.error("SubjectAcceptServiceImpl中 出错： ----"+e.getMessage());
+            return resultMap.fail().message("系统异常");
+        }catch (Exception e) {
             e.printStackTrace();
             log.error("SubjectAcceptController 中 SubjectAcceptState方法错误");
             return resultMap.fail().message("系统异常");

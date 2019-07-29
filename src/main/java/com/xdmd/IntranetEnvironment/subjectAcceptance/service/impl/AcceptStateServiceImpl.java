@@ -61,6 +61,7 @@ public class AcceptStateServiceImpl implements AcceptStateService {
 
         //判断是审核通过还是审核未通过
         if (type) {
+
             //审核通过时,先把上一条数据进行更新，再新增下一条数据
             String state = "已处理";
             String handleContent = "审核通过";
@@ -75,7 +76,7 @@ public class AcceptStateServiceImpl implements AcceptStateService {
             //新增下一条数据的处理
             //获取上一次该状态信息的最后提交处理时间，作为新增数据的交办时间
             String firstHandleTime = acceptStateMapper.queryCheckApplyLastTime(id);
-            String auditStep = "等待公司提交文件";
+            String auditStep = "通过初审，等待提交专家表";
             String newState = "等待处理";
             int num2 = 0;
             num2 = acceptStateMapper.addNewCheckApplyState(id, auditStep, newState, username, firstHandleTime);
@@ -107,7 +108,7 @@ public class AcceptStateServiceImpl implements AcceptStateService {
             //新增下一条数据的处理
             //获取上一次该状态信息的最后提交处理时间，作为新增数据的交办时间
             String firstHandleTime = acceptStateMapper.queryCheckApplyLastTime(id);
-            String auditStep = "公司员工重新提交";
+            String auditStep = "等待企业管理员提交";
             String newState = "等待处理";
             int num2 = 0;
             num2 = acceptStateMapper.addNewCheckApplyState(id, auditStep, newState, username, firstHandleTime);
@@ -117,12 +118,11 @@ public class AcceptStateServiceImpl implements AcceptStateService {
 
             //当把审核状态表更新完成后，更新验收申请表中这条数据的验收审核状态
             int num3 = 0;
-            int acceptancePhaseNum = 1;
+            int acceptancePhaseNum = 2;
             num3 = acceptApplyMapper.updateAcceptancePhaseById(id,acceptancePhaseNum);
             if(num3 ==0){
                 throw new UpdateAcceptancePhaseException("更新验收申请表的验收审核状态字段时出错");
             }
-
         }
         return resultMap.success().message("提交成功");
     }
@@ -136,25 +136,25 @@ public class AcceptStateServiceImpl implements AcceptStateService {
         } else {
             newpage = (page - 1) * total;
         }
-        //通过承担单位名，获取承担单位的id
-        int cid = 0;
-        Integer newcid = null;
-        newcid = acceptStateMapper.queryCidByCompanyName(subjectUndertakingUnit);
-        if (newcid == null) {
-            cid = 0;
-        } else {
-            cid = newcid.intValue();
-        }
+//        //通过承担单位名，获取承担单位的id
+//        int cid = 0;
+//        Integer newcid = null;
+//        newcid = acceptStateMapper.queryCidByCompanyName(subjectUndertakingUnit);
+//        if (newcid == null) {
+//            cid = 0;
+//        } else {
+//            cid = newcid.intValue();
+//        }
 
         //获取验收申请表的总数
         int alltotal = 0;
-        alltotal = acceptStateMapper.queryAllAccpetApply(topicName, cid, unitNature, projectLeader);
+        alltotal = acceptStateMapper.queryAllAccpetApply(topicName, subjectUndertakingUnit, unitNature, projectLeader);
         if (alltotal == 0) {
             return resultMap.fail().message();
         }
 
         //获取验收申请表的集合
-        List<CheckApply> checkApplyList = acceptStateMapper.acceptApplyQuery(newpage, total, topicName, cid, unitNature, projectLeader);
+        List<CheckApply> checkApplyList = acceptStateMapper.acceptApplyQuery(newpage, total, topicName, subjectUndertakingUnit, unitNature, projectLeader);
 
         //判断用户输入的页数是否超过总页数
         int allPage = 0;
@@ -199,6 +199,7 @@ public class AcceptStateServiceImpl implements AcceptStateService {
             checkApply.setAcceptancePhaseName(apName);
 
             JSONObject jsonObject = JSON.parseObject(checkApply.toString());
+            jsonObject.put("alltotal",alltotal);
             jsonObject.remove("achievementUrlId");
             jsonObject.remove("submitUrlId");
             jsonObject.remove("auditReportUrlId");
