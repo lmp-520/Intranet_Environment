@@ -1,0 +1,31 @@
+package com.xdmd.IntranetEnvironment.expert.pojo;
+
+import lombok.Data;
+
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+//获奖
+@Data
+public class ExpertInformationPrizeWinning {
+    //主键Id
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private  Integer id;
+
+    //专家信息id
+    private  Integer expertId;
+
+    //获奖名称
+    private  String prizeWinningName;
+
+    //获奖排序
+    private  String prizeWinningOrder;
+
+    //获奖部门
+    private  String prizeWinningDepartment;
+
+    //获奖时间
+    private  String prizeWinningTime;
+}

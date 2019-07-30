@@ -136,15 +136,6 @@ public class AcceptStateServiceImpl implements AcceptStateService {
         } else {
             newpage = (page - 1) * total;
         }
-//        //通过承担单位名，获取承担单位的id
-//        int cid = 0;
-//        Integer newcid = null;
-//        newcid = acceptStateMapper.queryCidByCompanyName(subjectUndertakingUnit);
-//        if (newcid == null) {
-//            cid = 0;
-//        } else {
-//            cid = newcid.intValue();
-//        }
 
         //获取验收申请表的总数
         int alltotal = 0;
@@ -197,6 +188,7 @@ public class AcceptStateServiceImpl implements AcceptStateService {
             //获取审核状态id获取审核状态的名称
             String apName = acceptApplyMapper.queryAcceptancePhaseNameByApId(checkApply.getAcceptancePhaseId());
             checkApply.setAcceptancePhaseName(apName);
+
 
             JSONObject jsonObject = JSON.parseObject(checkApply.toString());
             jsonObject.put("alltotal",alltotal);

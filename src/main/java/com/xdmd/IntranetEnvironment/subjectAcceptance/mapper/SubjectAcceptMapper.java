@@ -3,6 +3,8 @@ package com.xdmd.IntranetEnvironment.subjectAcceptance.mapper;
 import com.xdmd.IntranetEnvironment.common.UploadFile;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.pojo.CheckApply;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.pojo.CheckApplyState;
+import com.xdmd.IntranetEnvironment.subjectAcceptance.pojo.ExpertGroupComment;
+import com.xdmd.IntranetEnvironment.subjectAcceptance.pojo.ExpertGroupCommentsName;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -84,4 +86,18 @@ public interface SubjectAcceptMapper {
     //通过最终结果的验收报告id，来获取最终的验收结果
     @Select("SELECT content FROM dictionary where id = #{acceptanceFinalResultId}")
     String queryAcceptanceFinalResultByAfrId(@Param("acceptanceFinalResultId") Integer acceptanceFinalResultId);
+
+    //对专家组意见主表进行新增
+    void addExpertGroupComment(@Param("expertGroupComment") ExpertGroupComment expertGroupComment);
+
+    //对专家组意见表中的专家信息进行新增
+    void addExpertGroupCommentName(@Param("egcn") ExpertGroupCommentsName egcn);
+
+    //根据验收申请表的id，获取对应专家组意见表
+    @Select("select * from expert_group_comments where ca_id =#{id}")
+    ExpertGroupComment queryExpertGroupCommentById(@Param("id") Integer id);
+
+    //通过专家组意见表的id，获取到专家的信息
+    @Select("SELECT * FROM expert_group_comments_name  where egc_id = #{egcId}")
+    List<ExpertGroupCommentsName> queryAllExpertNameByEgcId(@Param("egcId") int egcId);
 }

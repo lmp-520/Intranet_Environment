@@ -104,4 +104,72 @@
         #{uploadExpertGroupComments.createAuthor});
     </insert>
 
+    <insert id="addExpertGroupComment" useGeneratedKeys="true" keyProperty="egcId">
+        insert into expert_group_comments(
+        egc_id,
+        ca_id,
+        topic_name,
+        topic_number,
+        project_leader,
+        subject_undertaking_unit,
+        acceptance_expert_number,
+        expert_one_grade,
+        expert_two_grade,
+        expert_three_grade,
+        expert_four_grade,
+        expert_five_grade,
+        expert_six_grade,
+        expert_seven_grade,
+        synthesize_grade,
+        topic_overall_evaluation,
+        suggest,
+        acceptance_conclusion_id,
+        expert_leader,
+        write_date,
+        create_time,
+        create_author)
+        VALUES(
+        #{expertGroupComment.egcId},
+        #{expertGroupComment.caId},
+        #{expertGroupComment.topicName},
+        #{expertGroupComment.topicNumber},
+        #{expertGroupComment.projectLeader},
+        #{expertGroupComment.subjectUndertakingUnit},
+        #{expertGroupComment.acceptanceExpertNumber},
+        #{expertGroupComment.expertOneGrade},
+        #{expertGroupComment.expertTwoGrade},
+        #{expertGroupComment.expertThreeGrade},
+        #{expertGroupComment.expertFourGrade},
+        #{expertGroupComment.expertFiveGrade},
+        #{expertGroupComment.expertSixGrade},
+        #{expertGroupComment.expertSevenGrade},
+        #{expertGroupComment.synthesizeGrade},
+        #{expertGroupComment.topicOverallEvaluation},
+        #{expertGroupComment.suggest},
+        #{expertGroupComment.acceptanceConclusionId},
+        #{expertGroupComment.expertLeader},
+        #{expertGroupComment.writeDate},
+        #{expertGroupComment.createTime},
+        #{expertGroupComment.createAuthor}
+        )
+    </insert>
+
+    <insert id="addExpertGroupCommentName" useGeneratedKeys="true" keyProperty="egcNid">
+        insert into expert_group_comments_name(
+        egc_nid,
+        egc_id,
+        expert_name,
+        company_name,
+        major,
+        job)
+        values(
+        #{egcn.egcNid},
+        #{egcn.egcId},
+        #{egcn.expertName},
+        #{egcn.companyName},
+        #{egcn.major},
+        #{egcn.job}
+        )
+    </insert>
+
 </mapper>

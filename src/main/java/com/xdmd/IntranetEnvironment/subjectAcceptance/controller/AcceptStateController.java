@@ -21,7 +21,7 @@ public class AcceptStateController {
     @Autowired
     private AcceptStateService acceptStateService;
     ResultMap resultMap = new ResultMap();
-    private static Logger log = LoggerFactory.getLogger(AcceptApplyController.class);
+    private static Logger log = LoggerFactory.getLogger(AcceptStateController.class);
 
 
     //验收审核的查询

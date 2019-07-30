@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xdmd.IntranetEnvironment.expert.mapper.ExpertMapper">
+    <insert id="distributionAccount" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO expert_information(
+            id,
+            name,
+            username,
+            password,
+            sex,
+            birth_date,
+            education,
+            present_post,
+            technical_title,
+            study_major,
+            professionalism,
+            work_unit,
+            postal_address,
+            postal_code,
+            work_telephone,
+            phone,
+            mail,
+            nature_work,
+            professional_field,
+            curriculum_vitae,
+            is_first,
+            create_author,
+            create_time)
+        VALUES(
+        #{expertInformation.id},
+        #{expertInformation.name},
+        #{expertInformation.username},
+        #{expertInformation.password},
+        #{expertInformation.sex},
+        #{expertInformation.birthDate},
+        #{expertInformation.education},
+        #{expertInformation.presentPost},
+        #{expertInformation.technicalTitle},
+        #{expertInformation.studyMajor},
+        #{expertInformation.professionalism},
+        #{expertInformation.workUnit},
+        #{expertInformation.postalAddress},
+        #{expertInformation.postalCode},
+        #{expertInformation.workTelephone},
+        #{expertInformation.phone},
+        #{expertInformation.mail},
+        #{expertInformation.natureWork},
+        #{expertInformation.professionalField},
+        #{expertInformation.curriculumVitae},
+        #{expertInformation.isFirst},
+        #{expertInformation.createAuthor},
+        #{expertInformation.createTime}
+        )
+    </insert>
+</mapper>

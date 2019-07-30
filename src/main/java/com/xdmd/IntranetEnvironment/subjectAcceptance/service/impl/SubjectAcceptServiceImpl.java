@@ -11,6 +11,8 @@ import com.xdmd.IntranetEnvironment.subjectAcceptance.mapper.AcceptApplyMapper;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.mapper.SubjectAcceptMapper;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.pojo.CheckApply;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.pojo.CheckApplyState;
+import com.xdmd.IntranetEnvironment.subjectAcceptance.pojo.ExpertGroupComment;
+import com.xdmd.IntranetEnvironment.subjectAcceptance.pojo.ExpertGroupCommentsName;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.service.SubjectAcceptSerivce;
 import com.xdmd.IntranetEnvironment.user.exception.ClaimsNullException;
 import com.xdmd.IntranetEnvironment.user.exception.UserNameNotExistentException;
@@ -21,9 +23,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -51,15 +55,6 @@ public class SubjectAcceptServiceImpl implements SubjectAcceptSerivce {
         } else {
             newpage = (page - 1) * total;
         }
-//        //通过承担单位名，获取承担单位的id
-//        int cid = 0;
-//        Integer newcid = null;
-//        newcid = subjectAcceptMapper.queryCidByCompanyName(subjectUndertakingUnit);
-//        if (newcid == null) {
-//            cid = 0;
-//        } else {
-//            cid = newcid.intValue();
-//        }
 
         //获取验收申请表的总数
         int alltotal = 0;
@@ -137,6 +132,19 @@ public class SubjectAcceptServiceImpl implements SubjectAcceptSerivce {
                 //这两个文件没有上传的话，把这两个文件的地址设置为空，返回给前端
                 jsonObject.put("expertGroupCommentsUrl", null);
                 jsonObject.put("expertAcceptanceFormUrl", null);
+            }
+
+            //查询专家组意见表，返回给前端
+            ExpertGroupComment expertGroupComment = subjectAcceptMapper.queryExpertGroupCommentById(id);//根据验收申请表的id，获取对应专家组意见表
+            if(StringUtils.isEmpty(expertGroupComment)){
+                //如果没有查询出结果，意味着公司还没有上传专家组意见表
+                jsonObject.put("expertGroupComment",null);
+            }else {
+                //此时可以查询出数据
+                int egcId = expertGroupComment.getEgcId();//获取出专家组意见表中的id
+                List<ExpertGroupCommentsName> expertGroupCommentsNameList = subjectAcceptMapper.queryAllExpertNameByEgcId(egcId);//通过专家组意见表的id，获取到专家的信息
+                expertGroupComment.setExpertGroupCommentsNameList(expertGroupCommentsNameList);
+                jsonObject.put("expertGroupComment",expertGroupComment);
             }
 
             jsonObject.put("alltotal", alltotal);
@@ -421,5 +429,72 @@ public class SubjectAcceptServiceImpl implements SubjectAcceptSerivce {
             }
             return resultMap.success().message("审核成功");
         }
+    }
+
+
+    //上传专家组意见
+    @Override
+    public ResultMap SubjectAcceptStateExpertGroup(String token, HttpServletResponse response, Boolean type, Integer id, ExpertGroupComment expertGroupComment) throws Exception {
+        User user = new User();
+        try {
+            user = tokenService.compare(response, token);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (UserNameNotExistentException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (ClaimsNullException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("MenuServiceImpl 中 TokenService 出现问题");
+            return resultMap.message("系统异常");
+        }
+        Integer uid = user.getId();
+        String username = user.getUsername();
+
+        if (type) {
+            //此时验收通过，判断外网是否已经上传过专家验收表
+            Integer egcId = null;
+            egcId = subjectAcceptMapper.queryExpertGroupCommentsUrlId(id);
+            if (egcId != null) {
+                //此时外网已经上传过专家表，就不需要再把专家组的信息写入数据库内
+                return resultMap.success().message();
+            } else {
+                //此时因为文件是由内网上传的，所以专家组意见表，也肯定是由内网填写的
+                Date nowTime = new Date();  //获取此条数据的创建时间
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                expertGroupComment.setCreateTime(sdf.format(nowTime));
+
+                expertGroupComment.setCreateAuthor(username);//获取创建此条信息的人
+                expertGroupComment.setCaId(id);//获取此条验收申请的数据id
+
+                try {
+                    subjectAcceptMapper.addExpertGroupComment(expertGroupComment);  //对专家组意见主表进行新增
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    throw new InsertSqlException("专家组意见主表进行新增时出错-- " + e.getMessage());
+                }
+
+                //遍历专家组意见表的专家姓名
+                List<ExpertGroupCommentsName> expertGroupCommentsNameList = expertGroupComment.getExpertGroupCommentsNameList();
+
+                for (ExpertGroupCommentsName egcn : expertGroupCommentsNameList) {
+                    egcn.setEgcId(expertGroupComment.getEgcId());   //把专家意见表id，插入进去
+                    //对专家组意见表中的专家信息进行新增
+                    try {
+                        subjectAcceptMapper.addExpertGroupCommentName(egcn);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        throw new InsertSqlException("专家组意见表中的专家信息进行新增时 出现错误" + e.getMessage());
+                    }
+                }
+
+            }
+        }
+
+        return resultMap.success().message();
     }
 }

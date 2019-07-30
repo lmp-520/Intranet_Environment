@@ -3,6 +3,8 @@ package com.xdmd.IntranetEnvironment.subjectAcceptance.controller;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.exception.InsertSqlException;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.exception.UpdateSqlException;
+import com.xdmd.IntranetEnvironment.subjectAcceptance.pojo.ExpertGroupComment;
+import com.xdmd.IntranetEnvironment.subjectAcceptance.pojo.ExpertGroupCommentsName;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.service.SubjectAcceptSerivce;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -13,6 +15,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 @Controller
 @RequestMapping("subjectAccept")
@@ -53,7 +58,8 @@ public class SubjectAcceptController {
                                         @RequestParam("type") Boolean type,//审核的状态.   true为审核通过  false为审核未通过
                                         @RequestParam(value = "reason", required = false) String reason,//审核未通过原因
                                         @RequestParam("id") Integer id,//验收申请数据的id
-                                        @RequestParam("acceptanceFinalResultId") Integer acceptanceFinalResultId,   //最终验收结果id
+                                        @RequestParam("acceptanceFinalResultId") Integer acceptanceFinalResultId,//最终验收结果id
+                                    //    @RequestBody ExpertGroupComment expertGroupComment, //专家组意见表
                                         @RequestParam(value = "expertGroupCommentsFile",required = false)MultipartFile expertGroupCommentsFile,  //专家意见表文件
                                         @RequestParam(value = "expertAcceptanceFormFile",required = false)MultipartFile expertAcceptanceFormFile){ //专家评议表文件
         //首先判断token是否存在
@@ -76,5 +82,32 @@ public class SubjectAcceptController {
             return resultMap.fail().message("系统异常");
         }
         return resultMap;
+    }
+
+
+    //在审核时，如果是内网上传的专家组意见，则先上传专家组意见
+    @PostMapping("ExpertGroup")
+    @ResponseBody
+    public ResultMap SubjectAcceptStateExpertGroup(@CookieValue(value = "IntranecToken") String token, HttpServletResponse response,
+                                                   @RequestParam("type") Boolean type,//审核的状态.   true为审核通过  false为审核未通过
+                                                   @RequestParam("id") Integer id,//验收申请数据的id
+                                                   @RequestBody ExpertGroupComment expertGroupComment){ //专家组意见表
+        //首先判断token是否存在
+        if(StringUtils.isEmpty(token)){
+            return resultMap.fail().message("请先登录");
+        }
+
+        try {
+            resultMap = subjectAcceptSerivce.SubjectAcceptStateExpertGroup(token,response,type,id,expertGroupComment);
+        } catch (InsertSqlException e){
+            e.printStackTrace();
+            log.error("SubjectAcceptController 中 SubjectAcceptStateExpertGroup方法--- "+e.getMessage());
+            return resultMap.fail().message("系统异常");
+        }catch (Exception e) {
+            e.printStackTrace();
+            return resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+
     }
 }
