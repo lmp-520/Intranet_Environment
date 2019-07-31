@@ -13,7 +13,6 @@ public class IntegrationFile {
 
     public static UploadFile IntegrationFile(MultipartFile file,String fileurl, String FileType, String createname) {
         UploadFile uploadFile = new UploadFile();
- //       uploadFile.setUploadSurfaceId(id);
         uploadFile.setUploadFileAddress(fileurl);
         //获取文件名
         String filename = file.getOriginalFilename();
@@ -21,10 +20,10 @@ public class IntegrationFile {
 
         //获取日期文件名
         Date date = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String format = dateFormat.format(date);
-        String dataFileName = format + filename;
-        uploadFile.setDateFileName(dataFileName);
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//        String format = dateFormat.format(date);
+//        String dataFileName = format + filename;
+//        uploadFile.setDateFileName(dataFileName);
 
         //获取文件后缀名
         String substring = filename.substring(filename.lastIndexOf(".") + 1);
@@ -48,7 +47,7 @@ public class IntegrationFile {
     }
 
     //文件在进行更新的时候 进行的操作
-    public static UploadFile IntegrationFile(MultipartFile file, Integer id, String fileurl, String FileType, String createname, Integer fileId) {
+    public static UploadFile IntegrationFile11(MultipartFile file, Integer id, String fileurl, String FileType, String createname, Integer fileId) {
         UploadFile uploadFile = new UploadFile();
   //      uploadFile.setUploadSurfaceId(id);
         uploadFile.setUploadFileAddress(fileurl);
@@ -58,10 +57,10 @@ public class IntegrationFile {
 
         //获取日期文件名
         Date date = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String format = dateFormat.format(date);
-        String dataFileName = format + filename;
-        uploadFile.setDateFileName(dataFileName);
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//        String format = dateFormat.format(date);
+//        String dataFileName = format + filename;
+//        uploadFile.setDateFileName(dataFileName);
 
         //获取文件后缀名
         String substring = filename.substring(filename.lastIndexOf(".") + 1);

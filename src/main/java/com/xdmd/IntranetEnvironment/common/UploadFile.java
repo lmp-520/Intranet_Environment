@@ -23,8 +23,8 @@ public class UploadFile {
     //上传文件名
     private  String uploadFileName;
 
-    //日期文件名
-    private  String dateFileName;
+//    //日期文件名
+//    private  String dateFileName;
 
     //上传文件类型
     private  String uploadFileType;
@@ -39,10 +39,9 @@ public class UploadFile {
 
     private Date createTime;
 
-    public UploadFile(String uploadFileAddress, String uploadFileName, String dateFileName, String uploadFileType, String uploadSuffixName, String fileSize, String createAuthor, Date createTime) {
+    public UploadFile(String uploadFileAddress, String uploadFileName, String uploadFileType, String uploadSuffixName, String fileSize, String createAuthor, Date createTime) {
         this.uploadFileAddress = uploadFileAddress;
         this.uploadFileName = uploadFileName;
-        this.dateFileName = dateFileName;
         this.uploadFileType = uploadFileType;
         this.uploadSuffixName = uploadSuffixName;
         this.fileSize = fileSize;

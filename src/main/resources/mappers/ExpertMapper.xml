@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xdmd.IntranetEnvironment.expert.mapper.ExpertMapper">
-    <insert id="distributionAccount" useGeneratedKeys="true" keyProperty="id">
+    <insert id="addExpertInformation" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO expert_information(
             id,
             name,
@@ -23,9 +23,13 @@
             nature_work,
             professional_field,
             curriculum_vitae,
+            recommendation_unit_opinion,
             is_first,
             create_author,
-            create_time)
+            create_time,
+            is_state,
+            is_delete,
+            is_province)
         VALUES(
         #{expertInformation.id},
         #{expertInformation.name},
@@ -47,9 +51,179 @@
         #{expertInformation.natureWork},
         #{expertInformation.professionalField},
         #{expertInformation.curriculumVitae},
+        #{expertInformation.recommendationUnitOpinion},
         #{expertInformation.isFirst},
         #{expertInformation.createAuthor},
-        #{expertInformation.createTime}
+        #{expertInformation.createTime},
+        #{expertInformation.isState},
+        #{expertInformation.isDelete},
+        #{expertInformation.isProvince}
+        )
+    </insert>
+
+    <insert id="addExpertInformationArticle" useGeneratedKeys="true" keyProperty="id">
+        insert into expert_information_article(
+          id,
+          expert_id,
+          article_title,
+          authorr_ranking,
+          title_articles_periodicals,
+          articles_publication_time)
+          values (
+          #{expertInformationArticle.id},
+          #{expertInformationArticle.expertId},
+          #{expertInformationArticle.articleTitle},
+          #{expertInformationArticle.authorrRanking},
+          #{expertInformationArticle.titleArticlesPeriodicals},
+          #{expertInformationArticle.articlesPublicationTime})
+    </insert>
+
+    <insert id="addExpertInformationBook" useGeneratedKeys="true" keyProperty="id">
+        insert into expert_information_book(
+        id,
+        expert_id,
+        work_name,
+        sort,
+        book_publishing_house,
+        writing_time)
+        values (
+        #{expertInformationBook.id},
+        #{expertInformationBook.expertId},
+        #{expertInformationBook.workName},
+        #{expertInformationBook.sort},
+        #{expertInformationBook.bookPublishingHouse},
+        #{expertInformationBook.writingTime})
+    </insert>
+
+    <insert id="addExpertInformationPatent" useGeneratedKeys="true" keyProperty="id">
+        insert into expert_information_patent(
+        id,
+        expert_id,
+        patent_name,
+        patent_types,
+        patent_no,
+        patent_time)
+        values(
+        #{expertInformationPatent.id},
+        #{expertInformationPatent.expertId},
+        #{expertInformationPatent.patentName},
+        #{expertInformationPatent.patentTypes},
+        #{expertInformationPatent.patentNo},
+        #{expertInformationPatent.patentTime})
+    </insert>
+    
+    <insert id="addExpertInformationPrizeWinning" useGeneratedKeys="true" keyProperty="id">
+        insert into expert_information_prize_winning(
+        id,
+        expert_id,
+        prize_winning_name,
+        prize_winning_order,
+        prize_winning_department,
+        prize_winning_time)
+        values (
+        #{expertInformationPrizeWinning.id},
+        #{expertInformationPrizeWinning.expertId},
+        #{expertInformationPrizeWinning.prizeWinningName},
+        #{expertInformationPrizeWinning.prizeWinningOrder},
+        #{expertInformationPrizeWinning.prizeWinningDepartment},
+        #{expertInformationPrizeWinning.prizeWinningTime})
+    </insert>
+
+    <insert id="addExpertInformationResearchDirection" useGeneratedKeys="true" keyProperty="id">
+        insert into expert_information_research_direction(
+          id,
+          expert_id,
+          main_research_directions)
+          values (
+          #{expertInformationResearchDirection.id},
+          #{expertInformationResearchDirection.expertId},
+          #{expertInformationResearchDirection.mainResearchDirections}
+          )
+    </insert>
+
+    <select id="queryAllExpert" resultType="Integer">
+        select count(*) from expert_information
+        <where>
+            <if test="name != null and name!='' ">
+                name like CONCAT('%',#{name},'%')
+            </if>
+            <if test="natureWork != null and natureWork!='' ">
+                and nature_work = #{natureWork}
+            </if>
+            <if test="professionalField != null and professionalField!='' ">
+                and professional_field = #{professionalField}
+            </if>
+            <if test="isProvince != null and isProvince!='' ">
+                and is_province = #{isProvince}
+            </if>
+            <if test="0 == 0">
+                and is_state in(1,2) and is_delete = 1
+            </if>
+        </where>
+    </select>
+
+    <select id="queryExpertInformation" resultType="com.xdmd.IntranetEnvironment.expert.pojo.ExpertInformation">
+      SELECT
+          id,
+          name,
+          sex,
+          birth_date,
+          education,
+          present_post,
+          technical_title,
+          study_major,
+          professionalism,
+          work_unit,
+          postal_address,
+          postal_code,
+          work_telephone,
+          phone,
+          mail,
+          nature_work,
+          professional_field,
+          curriculum_vitae,
+          recommendation_unit_opinion,
+          is_state,
+          is_province
+      from
+          expert_information
+        <where>
+            <if test="name != null and name!='' ">
+                name like CONCAT('%',#{name},'%')
+            </if>
+            <if test="natureWork != null and natureWork!='' ">
+                and nature_work = #{natureWork}
+            </if>
+            <if test="professionalField != null and professionalField!='' ">
+                and professional_field = #{professionalField}
+            </if>
+            <if test="isProvince != null and isProvince!='' ">
+                and is_province = #{isProvince}
+            </if>
+            <if test="0 == 0">
+                and is_state in(1,2) and is_delete = 1
+            </if>
+        </where>
+    </select>
+    <insert id="uploadExpertFile" useGeneratedKeys="true" keyProperty="id">
+        insert into upload_file(
+        id,
+        upload_file_address,
+        upload_file_name,
+        upload_file_type,
+        upload_suffix_name,
+        file_size,
+        create_time,
+        create_author)
+        values(
+        #{uploadFileExpert.id},
+        #{uploadFileExpert.uploadFileAddress},
+        #{uploadFileExpert.uploadFileName},
+        #{uploadFileExpert.uploadFileType},
+        #{uploadFileExpert.uploadSuffixName},
+        #{uploadFileExpert.fileSize},
+        #{uploadFileExpert.createTime},
+        #{uploadFileExpert.createAuthor},
         )
     </insert>
 </mapper>

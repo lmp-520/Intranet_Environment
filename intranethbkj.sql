@@ -11,7 +11,7 @@
  Target Server Version : 80016
  File Encoding         : 65001
 
- Date: 30/07/2019 17:58:45
+ Date: 31/07/2019 18:20:41
 */
 
 SET NAMES utf8mb4;
@@ -171,7 +171,7 @@ CREATE TABLE `dictionary`  (
   `content_id` int(11) NOT NULL COMMENT '内容id',
   `state` int(5) NOT NULL COMMENT '启用（0:逻辑删除  1：启用）',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 89 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 95 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of dictionary
@@ -264,6 +264,12 @@ INSERT INTO `dictionary` VALUES (85, '所属领域', '其他', 19, 7, 1);
 INSERT INTO `dictionary` VALUES (86, '验收结论', '通过验收', 20, 1, 1);
 INSERT INTO `dictionary` VALUES (87, '验收结论', '结题', 20, 2, 1);
 INSERT INTO `dictionary` VALUES (88, '验收结论', '不通过验收', 20, 3, 1);
+INSERT INTO `dictionary` VALUES (89, '专家省份', '省内专家', 21, 1, 1);
+INSERT INTO `dictionary` VALUES (90, '专家省份', '省外专家', 21, 2, 1);
+INSERT INTO `dictionary` VALUES (91, '专业领域', '固体废物处置', 7, 9, 1);
+INSERT INTO `dictionary` VALUES (92, '专业领域', '环保仪器装备', 7, 10, 1);
+INSERT INTO `dictionary` VALUES (93, '专业领域', '政策法规', 7, 11, 1);
+INSERT INTO `dictionary` VALUES (94, '专业领域', '环境标准及其他', 7, 12, 1);
 
 -- ----------------------------
 -- Table structure for expert_acceptance_review
@@ -326,7 +332,7 @@ CREATE TABLE `expert_group_comments`  (
   `create_time` datetime(6) NULL DEFAULT NULL COMMENT '创建时间',
   `create_author` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建人',
   PRIMARY KEY (`egc_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of expert_group_comments
@@ -345,7 +351,7 @@ CREATE TABLE `expert_group_comments_name`  (
   `major` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '专业',
   `job` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '职务',
   PRIMARY KEY (`egc_nid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of expert_group_comments_name
@@ -379,18 +385,26 @@ CREATE TABLE `expert_information`  (
   `nature_work` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '工作性质',
   `professional_field` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '专业领域',
   `curriculum_vitae` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '个人简历',
+  `recommendation_unit_opinion` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '推荐单位意见',
   `is_first` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '是否第一次登陆 （true: 默认，false:意味着已经第一次强制修改过密码了）',
   `create_author` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建此条信息的人',
-  `create_time` datetime(6) NULL DEFAULT NULL COMMENT '创建此条信息的时间',
+  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建此条信息的时间',
+  `is_state` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '是否审核通过  （1：审核通过 2：等待审核  3：审核未通过）\r\n内网分配账号时，默认为审核通过',
+  `is_delete` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '是否启用  （1：启用  0 :逻辑删除）默认为 1',
+  `is_province` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '是否省内  存放字典表中的id',
+  `reason` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '审核未通过的原因',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of expert_information
 -- ----------------------------
-INSERT INTO `expert_information` VALUES (1, '张三', NULL, '', '男', '1996-10-23', '本科', '主任', '技术部主任', '环境治理', '环境治理专业', '南京环境治理公司', '南京市江宁区', '233000', '5236478', '18532158651', '18535154865@qq.com', '研究环境', '环境治理', '18918156158gergegegregergergergergergergergregeuigueirhgeuihguei', NULL, NULL, NULL);
-INSERT INTO `expert_information` VALUES (2, '李四', NULL, '', '男', '1996-10-23', '本科', '主任', '技术部主任', '环境治理', '环境治理专业', '南京环境治理公司', '南京市江宁区', '233000', '5236478', '18532158651', '18535154865@qq.com', '研究环境', '环境治理', '18918156158gergegegregergergergergergergergregeuigueirhgeuihguei', NULL, NULL, NULL);
-INSERT INTO `expert_information` VALUES (3, '张三', NULL, '', '男', '1996-10-23', '本科', '主任', '技术部主任', '环境治理', '环境治理专业', '南京环境治理公司', '南京市江宁区', '233000', '5236478', '18532158651', '18535154865@qq.com', '研究环境', '环境治理', '18918156158gergegegregergergergergergergergregeuigueirhgeuihguei', NULL, NULL, NULL);
+INSERT INTO `expert_information` VALUES (1, '张三', NULL, '', '男', '1996-10-23', '本科', '主任', '技术部主任', '环境治理', '环境治理专业', '南京环境治理公司', '南京市江宁区', '233000', '5236478', '18532158651', '18535154865@qq.com', '研究环境', '环境治理', '18918156158gergegegregergergergergergergergregeuigueirhgeuihguei', NULL, NULL, NULL, NULL, '1', '1', NULL, NULL);
+INSERT INTO `expert_information` VALUES (2, '李四', NULL, '', '男', '1996-10-23', '本科', '主任', '技术部主任', '环境治理', '环境治理专业', '南京环境治理公司', '南京市江宁区', '233000', '5236478', '18532158651', '18535154865@qq.com', '研究环境', '环境治理', '18918156158gergegegregergergergergergergergregeuigueirhgeuihguei', NULL, NULL, NULL, NULL, '1', '1', NULL, NULL);
+INSERT INTO `expert_information` VALUES (3, '张三', NULL, '', '男', '1996-10-23', '本科', '主任', '技术部主任', '环境治理', '环境治理专业', '南京环境治理公司', '南京市江宁区', '233000', '5236478', '18532158651', '18535154865@qq.com', '研究环境', '环境治理', '18918156158gergegegregergergergergergergergregeuigueirhgeuihguei', NULL, NULL, NULL, NULL, '1', '1', NULL, NULL);
+INSERT INTO `expert_information` VALUES (4, '张三', 'zhangsan11', 'e10adc3949ba59abbe56e057f20f883e', '男', '0201-02-11', '本科', '现任职务1', '技术职称1', '所学专业1', '从事专业1', '工作单位1', '通讯地址1', '邮政编码1', '123456', '123456789', '123456@qq.com', '1', '专业领域1', '个人简历1', NULL, 'true', 'admin', '2019-07-31 09:58:09', '1', '1', NULL, NULL);
+INSERT INTO `expert_information` VALUES (7, '张三', 'zhangsan', 'e10adc3949ba59abbe56e057f20f883e', '男', '0201-02-11', '本科', '现任职务1', '技术职称1', '所学专业1', '从事专业1', '工作单位1', '通讯地址1', '邮政编码1', '123456', '123456789', '123456@qq.com', '1', '专业领域1', '个人简历1', NULL, 'true', 'admin', '2019-07-31 10:07:59', '1', '1', NULL, NULL);
+INSERT INTO `expert_information` VALUES (8, '李四', 'zhangsan222', 'e10adc3949ba59abbe56e057f20f883e', '男', '0201-02-11', '本科', '现任职务1', '技术职称1', '所学专业1', '从事专业1', '工作单位1', '通讯地址1', '邮政编码1', '123456', '123456789', '123456@qq.com', '2', '专业领域1', '个人简历1', NULL, 'true', 'admin', '2019-07-31 10:34:36', '3', '1', NULL, '就是不给你通过');
 
 -- ----------------------------
 -- Table structure for expert_information_article
@@ -404,7 +418,7 @@ CREATE TABLE `expert_information_article`  (
   `title_articles_periodicals` varchar(40) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '文章期刊名',
   `articles_publication_time` date NOT NULL COMMENT '文章发布时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 19 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of expert_information_article
@@ -412,6 +426,15 @@ CREATE TABLE `expert_information_article`  (
 INSERT INTO `expert_information_article` VALUES (1, 1, '第一文章题目', '第一作者排序', '第一文章期刊名', '1999-07-12');
 INSERT INTO `expert_information_article` VALUES (2, 2, '第二文章题目', '第二作者排序', '第二文章期刊名', '1999-07-12');
 INSERT INTO `expert_information_article` VALUES (3, 1, '第三文章题目', '第三作者排序', '第三文章期刊名', '1999-07-12');
+INSERT INTO `expert_information_article` VALUES (4, 4, '文章题目1', '作者排序1', '文章期刊名1', '2011-02-14');
+INSERT INTO `expert_information_article` VALUES (5, 4, '文章题目2', '作者排序2', '文章期刊名2', '2211-02-14');
+INSERT INTO `expert_information_article` VALUES (6, 4, '文章题目3', '作者排序3', '文章期刊名3', '3331-02-14');
+INSERT INTO `expert_information_article` VALUES (13, 7, '文章题目1', '作者排序1', '文章期刊名1', '2011-02-14');
+INSERT INTO `expert_information_article` VALUES (14, 7, '文章题目2', '作者排序2', '文章期刊名2', '2211-02-14');
+INSERT INTO `expert_information_article` VALUES (15, 7, '文章题目3', '作者排序3', '文章期刊名3', '3331-02-14');
+INSERT INTO `expert_information_article` VALUES (16, 8, '文章题目1', '作者排序1', '文章期刊名1', '2011-02-14');
+INSERT INTO `expert_information_article` VALUES (17, 8, '文章题目2', '作者排序2', '文章期刊名2', '2211-02-14');
+INSERT INTO `expert_information_article` VALUES (18, 8, '文章题目3', '作者排序3', '文章期刊名3', '3331-02-14');
 
 -- ----------------------------
 -- Table structure for expert_information_book
@@ -425,7 +448,7 @@ CREATE TABLE `expert_information_book`  (
   `book_publishing_house` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '著作出版社',
   `writing_time` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '著作时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of expert_information_book
@@ -433,6 +456,12 @@ CREATE TABLE `expert_information_book`  (
 INSERT INTO `expert_information_book` VALUES (1, 1, '第一著作名称', '第一排序', '第一著作出版社', '1856-02-23');
 INSERT INTO `expert_information_book` VALUES (2, 1, '第二著作名称', '第二排序', '第二著作出版社', '1856-02-23');
 INSERT INTO `expert_information_book` VALUES (3, 2, '第三著作名称', '第三排序', '第三著作出版社', '1856-02-23');
+INSERT INTO `expert_information_book` VALUES (4, 4, '著作名称1', '排序1', '著作出版社1', '2000-8-14');
+INSERT INTO `expert_information_book` VALUES (5, 4, '著作名称2', '排序2', '著作出版社2', '2000-8-14');
+INSERT INTO `expert_information_book` VALUES (10, 7, '著作名称1', '排序1', '著作出版社1', '2000-8-14');
+INSERT INTO `expert_information_book` VALUES (11, 7, '著作名称2', '排序2', '著作出版社2', '2000-8-14');
+INSERT INTO `expert_information_book` VALUES (12, 8, '著作名称1', '排序1', '著作出版社1', '2000-8-14');
+INSERT INTO `expert_information_book` VALUES (13, 8, '著作名称2', '排序2', '著作出版社2', '2000-8-14');
 
 -- ----------------------------
 -- Table structure for expert_information_patent
@@ -446,7 +475,7 @@ CREATE TABLE `expert_information_patent`  (
   `patent_no` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '专利号',
   `patent_time` date NOT NULL COMMENT '专利时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of expert_information_patent
@@ -454,6 +483,9 @@ CREATE TABLE `expert_information_patent`  (
 INSERT INTO `expert_information_patent` VALUES (1, 1, '第一专利名称', '第一专利类型', '第一专利号', '1523-11-23');
 INSERT INTO `expert_information_patent` VALUES (2, 1, '第二专利名称', '第二专利类型', '第二专利号', '1523-11-23');
 INSERT INTO `expert_information_patent` VALUES (3, 2, '第三专利名称', '第三专利类型', '第三专利号', '1523-11-23');
+INSERT INTO `expert_information_patent` VALUES (4, 4, '专利名称1', '专利类型1', '专利号1', '1111-05-07');
+INSERT INTO `expert_information_patent` VALUES (7, 7, '专利名称1', '专利类型1', '专利号1', '1111-05-07');
+INSERT INTO `expert_information_patent` VALUES (8, 8, '专利名称1', '专利类型1', '专利号1', '1111-05-07');
 
 -- ----------------------------
 -- Table structure for expert_information_prize_winning
@@ -467,7 +499,7 @@ CREATE TABLE `expert_information_prize_winning`  (
   `prize_winning_department` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '获奖部门',
   `prize_winning_time` date NOT NULL COMMENT '获奖时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of expert_information_prize_winning
@@ -475,6 +507,12 @@ CREATE TABLE `expert_information_prize_winning`  (
 INSERT INTO `expert_information_prize_winning` VALUES (1, 1, '第一获奖名称', '第一获奖排序', '第一颁奖部门', '1544-06-14');
 INSERT INTO `expert_information_prize_winning` VALUES (2, 1, '第二获奖名称', '第二获奖排序', '第二颁奖部门', '1544-06-14');
 INSERT INTO `expert_information_prize_winning` VALUES (3, 2, '第三获奖名称', '第三获奖排序', '第三颁奖部门', '1544-06-14');
+INSERT INTO `expert_information_prize_winning` VALUES (7, 7, '获奖名称1', '获奖排序1', '获奖部门1', '1414-05-12');
+INSERT INTO `expert_information_prize_winning` VALUES (8, 7, '获奖名称2', '获奖排序2', '获奖部门2', '2525-05-12');
+INSERT INTO `expert_information_prize_winning` VALUES (9, 7, '获奖名称3', '获奖排序3', '获奖部门3', '1315-05-12');
+INSERT INTO `expert_information_prize_winning` VALUES (10, 8, '获奖名称1', '获奖排序1', '获奖部门1', '1414-05-12');
+INSERT INTO `expert_information_prize_winning` VALUES (11, 8, '获奖名称2', '获奖排序2', '获奖部门2', '2525-05-12');
+INSERT INTO `expert_information_prize_winning` VALUES (12, 8, '获奖名称3', '获奖排序3', '获奖部门3', '1315-05-12');
 
 -- ----------------------------
 -- Table structure for expert_information_research_direction
@@ -485,13 +523,17 @@ CREATE TABLE `expert_information_research_direction`  (
   `expert_id` int(11) NULL DEFAULT NULL COMMENT '专家信息表id',
   `main_research_directions` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '主要研究方向',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of expert_information_research_direction
 -- ----------------------------
 INSERT INTO `expert_information_research_direction` VALUES (1, 1, '第一研究方向');
 INSERT INTO `expert_information_research_direction` VALUES (2, 2, '第二研究方向');
+INSERT INTO `expert_information_research_direction` VALUES (3, 7, '研究方向1');
+INSERT INTO `expert_information_research_direction` VALUES (4, 7, '研究方向2');
+INSERT INTO `expert_information_research_direction` VALUES (5, 8, '研究方向1');
+INSERT INTO `expert_information_research_direction` VALUES (6, 8, '研究方向2');
 
 -- ----------------------------
 -- Table structure for menu
@@ -707,7 +749,7 @@ CREATE TABLE `upload_file`  (
   `upload_surface_id` int(20) NULL DEFAULT NULL COMMENT '上传文件表Id',
   `upload_file_address` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '上传文件地址',
   `upload_file_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '上传文件名',
-  `date_file_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '日期文件名',
+  `date_file_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '日期文件名',
   `upload_file_type` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '上传文件类型',
   `upload_suffix_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '上传文件后缀名',
   `file_size` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '文件大小',

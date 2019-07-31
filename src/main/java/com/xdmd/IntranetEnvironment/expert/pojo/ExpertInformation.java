@@ -1,15 +1,17 @@
 package com.xdmd.IntranetEnvironment.expert.pojo;
 
+import com.alibaba.fastjson.JSON;
 import lombok.Data;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.io.Serializable;
 import java.util.List;
 
 //专家信息登陆主表
 @Data
-public class ExpertInformation {
+public class ExpertInformation implements Serializable {
     //主键Id
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -72,6 +74,9 @@ public class ExpertInformation {
     //个人简历
     private  String curriculumVitae;
 
+    //推荐单位意见
+    private String recommendationUnitOpinion;
+
     //是否是第一次登陆，默认true
     private String isFirst;
 
@@ -80,6 +85,18 @@ public class ExpertInformation {
 
     //创建此条消息的时间
     private String createTime;
+
+    //是否审核通过  （1：审核通过 2：等待审核  3：审核未通过） 内网分配账号时，默认为审核通过
+    private String isState;
+
+    //是否启用  （1：启用  0 :逻辑删除）默认为 1
+    private String isDelete;
+
+    //是否省内  存放字典表中的id
+    private String isProvince;
+
+    //审核未通过的原因
+    private String reason;
 
     //文章列表
     private List<ExpertInformationArticle> expertInformationArticleList;
@@ -96,7 +113,7 @@ public class ExpertInformation {
     //主要研究方向
     private List<ExpertInformationResearchDirection> expertInformationResearchDirectionList;
 
-    public ExpertInformation(String name, String username, String password, String sex, String birthDate, String education, String presentPost, String technicalTitle, String studyMajor, String professionalism, String workUnit, String postalAddress, String postalCode, String workTelephone, String phone, String mail, String natureWork, String professionalField, String curriculumVitae, String isFirst, String createAuthor, String createTime, List<ExpertInformationArticle> expertInformationArticleList, List<ExpertInformationBook> expertInformationBookList, List<ExpertInformationPatent> expertInformationPatentList, List<ExpertInformationPrizeWinning> expertInformationPrizeWinningList, List<ExpertInformationResearchDirection> expertInformationResearchDirectionList) {
+    public ExpertInformation(String name, String username, String password, String sex, String birthDate, String education, String presentPost, String technicalTitle, String studyMajor, String professionalism, String workUnit, String postalAddress, String postalCode, String workTelephone, String phone, String mail, String natureWork, String professionalField, String curriculumVitae, String recommendationUnitOpinion, String isFirst, String createAuthor, String createTime, String isState, String isDelete, String isProvince, String reason, List<ExpertInformationArticle> expertInformationArticleList, List<ExpertInformationBook> expertInformationBookList, List<ExpertInformationPatent> expertInformationPatentList, List<ExpertInformationPrizeWinning> expertInformationPrizeWinningList, List<ExpertInformationResearchDirection> expertInformationResearchDirectionList) {
         this.name = name;
         this.username = username;
         this.password = password;
@@ -116,9 +133,14 @@ public class ExpertInformation {
         this.natureWork = natureWork;
         this.professionalField = professionalField;
         this.curriculumVitae = curriculumVitae;
+        this.recommendationUnitOpinion = recommendationUnitOpinion;
         this.isFirst = isFirst;
         this.createAuthor = createAuthor;
         this.createTime = createTime;
+        this.isState = isState;
+        this.isDelete = isDelete;
+        this.isProvince = isProvince;
+        this.reason = reason;
         this.expertInformationArticleList = expertInformationArticleList;
         this.expertInformationBookList = expertInformationBookList;
         this.expertInformationPatentList = expertInformationPatentList;
@@ -127,5 +149,10 @@ public class ExpertInformation {
     }
 
     public ExpertInformation() {
+    }
+
+    @Override
+    public String toString() {
+        return JSON.toJSONString(this);
     }
 }

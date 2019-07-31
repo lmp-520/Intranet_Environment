@@ -29,15 +29,6 @@ public class AcceptApplyServiceImpl implements AcceptApplySerivce {
         } else {
             newpage = (page - 1) * total;
         }
-//        //通过承担单位名，获取承担单位的id
-//        int cid = 0;
-//        Integer newcid = null;
-//        newcid = acceptApplyMapper.queryCidByCompanyName(subjectUndertakingUnit);
-//        if (newcid == null) {
-//            cid = 0;
-//        }else {
-//            cid = newcid.intValue();
-//        }
 
         //获取验收申请表的总数
         int alltotal = 0;

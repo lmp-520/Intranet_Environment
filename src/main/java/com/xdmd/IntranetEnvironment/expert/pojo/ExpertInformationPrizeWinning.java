@@ -28,4 +28,15 @@ public class ExpertInformationPrizeWinning {
 
     //获奖时间
     private  String prizeWinningTime;
+
+    public ExpertInformationPrizeWinning(Integer expertId, String prizeWinningName, String prizeWinningOrder, String prizeWinningDepartment, String prizeWinningTime) {
+        this.expertId = expertId;
+        this.prizeWinningName = prizeWinningName;
+        this.prizeWinningOrder = prizeWinningOrder;
+        this.prizeWinningDepartment = prizeWinningDepartment;
+        this.prizeWinningTime = prizeWinningTime;
+    }
+
+    public ExpertInformationPrizeWinning() {
+    }
 }
