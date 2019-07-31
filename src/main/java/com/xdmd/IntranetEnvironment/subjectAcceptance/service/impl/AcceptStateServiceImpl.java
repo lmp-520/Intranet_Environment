@@ -2,6 +2,7 @@ package com.xdmd.IntranetEnvironment.subjectAcceptance.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.xdmd.IntranetEnvironment.common.PageBean;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.exception.InsertSqlException;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.exception.UpdateAcceptancePhaseException;
@@ -34,6 +35,7 @@ public class AcceptStateServiceImpl implements AcceptStateService {
     @Autowired
     private AcceptApplyMapper acceptApplyMapper;
     ResultMap resultMap = new ResultMap();
+    PageBean pageBean = new PageBean();
     private static Logger log = LoggerFactory.getLogger(AcceptStateServiceImpl.class);
 
     //验收审核
@@ -191,7 +193,6 @@ public class AcceptStateServiceImpl implements AcceptStateService {
 
 
             JSONObject jsonObject = JSON.parseObject(checkApply.toString());
-            jsonObject.put("alltotal",alltotal);
             jsonObject.remove("achievementUrlId");
             jsonObject.remove("submitUrlId");
             jsonObject.remove("auditReportUrlId");
@@ -205,8 +206,10 @@ public class AcceptStateServiceImpl implements AcceptStateService {
 
             jsonObjectList.add(jsonObject);
         }
+        pageBean.setAlltotal(alltotal);
+        pageBean.setData(jsonObjectList);
 
-        return resultMap.success().message(jsonObjectList);
+        return resultMap.success().message(pageBean);
     }
 
 }

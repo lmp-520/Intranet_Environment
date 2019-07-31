@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -33,6 +34,7 @@ public class ExpertController {
         if (StringUtils.isEmpty(token)) {
             return resultMap.fail().message("请先登录");
         }
+
         try {
             resultMap = expertService.distributionAccount(token, response, expertInformation,ExpertFile);
         } catch (InsertSqlException e) {

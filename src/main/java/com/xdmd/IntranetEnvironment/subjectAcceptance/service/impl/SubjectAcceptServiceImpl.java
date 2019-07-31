@@ -43,6 +43,7 @@ public class SubjectAcceptServiceImpl implements SubjectAcceptSerivce {
     @Autowired
     private TokenService tokenService;
     ResultMap resultMap = new ResultMap();
+    PageBean pageBean = new PageBean();
     private static Logger log = LoggerFactory.getLogger(SubjectAcceptServiceImpl.class);
 
 
@@ -147,7 +148,6 @@ public class SubjectAcceptServiceImpl implements SubjectAcceptSerivce {
                 jsonObject.put("expertGroupComment",expertGroupComment);
             }
 
-            jsonObject.put("alltotal", alltotal);
             jsonObject.remove("achievementUrlId");
             jsonObject.remove("submitUrlId");
             jsonObject.remove("auditReportUrlId");
@@ -161,8 +161,10 @@ public class SubjectAcceptServiceImpl implements SubjectAcceptSerivce {
 
             jsonObjectList.add(jsonObject);
         }
+        pageBean.setAlltotal(alltotal);
+        pageBean.setData(jsonObjectList);
 
-        return resultMap.success().message(jsonObjectList);
+        return resultMap.success().message(pageBean);
     }
 
     //课题验收中的审核
@@ -200,6 +202,7 @@ public class SubjectAcceptServiceImpl implements SubjectAcceptSerivce {
             if (expertGroupCommentsId == null || expertAcceptanceFormId == null) {
                 int cid = subjectAcceptMapper.queryCompanyIdByid(id);//根据验收申请表id找到对应的公司id
                 String companyName = subjectAcceptMapper.queryCompanyNameByCid(cid);//根据公司的id，找到公司的名称
+                String subejctName = subjectAcceptMapper.querySubjectNameByCid(id);//根据验收申请表id，找到该课题名称
 
                 //判断这两个上传的文件后缀名是否正确
                 String expertGroupCommentsFilename = expertGroupCommentsFile.getOriginalFilename();      //获取专家意见表文件名
@@ -215,6 +218,7 @@ public class SubjectAcceptServiceImpl implements SubjectAcceptSerivce {
                     return resultMap.fail().message("请上传正确的文件格式");
                 }
                 try {
+
                     String expertGroupCommentsUrl = FileUploadUtil.fileUpload(expertGroupCommentsFile, companyName, "专家组意见", expertGroupCommentsSuffixList); //上传专家组意见表，并获取专家组意见表存放的url
                     UploadFile UploadExpertGroupComments = IntegrationFile.IntegrationFile(expertGroupCommentsFile, expertGroupCommentsUrl, "专家组意见", username);
                     subjectAcceptMapper.insertFile(UploadExpertGroupComments);//把专家组意见文件新增到文件表中

@@ -226,4 +226,10 @@
         #{uploadFileExpert.createAuthor},
         )
     </insert>
+
+    <!--<insert id="addExpertInformationArticle" useGeneratedKeys="true" keyProperty="id">-->
+        <!--insert into expert_information_article(-->
+          <!---->
+        <!--)-->
+    <!--</insert>-->
 </mapper>

@@ -100,4 +100,8 @@ public interface SubjectAcceptMapper {
     //通过专家组意见表的id，获取到专家的信息
     @Select("SELECT * FROM expert_group_comments_name  where egc_id = #{egcId}")
     List<ExpertGroupCommentsName> queryAllExpertNameByEgcId(@Param("egcId") int egcId);
+
+    //根据验收申请表id，找到该课题名称
+    @Select("select topic_name from check_apply where id = #{id}")
+    String querySubjectNameByCid(@Param("id") Integer id);
 }

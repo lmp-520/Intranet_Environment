@@ -2,6 +2,7 @@ package com.xdmd.IntranetEnvironment.subjectAcceptance.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.xdmd.IntranetEnvironment.common.PageBean;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.mapper.AcceptApplyMapper;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.pojo.CheckApply;
@@ -19,6 +20,7 @@ public class AcceptApplyServiceImpl implements AcceptApplySerivce {
     @Autowired
     private AcceptApplyMapper acceptApplyMapper;
     ResultMap resultMap = new ResultMap();
+    PageBean pageBean = new PageBean();
 
     //查询企业提交的验收申请
     @Override
@@ -84,7 +86,6 @@ public class AcceptApplyServiceImpl implements AcceptApplySerivce {
             checkApply.setAcceptancePhaseName(apName);
 
             JSONObject jsonObject = JSON.parseObject(checkApply.toString());
-            jsonObject.put("alltotal",alltotal);
             jsonObject.remove("achievementUrlId");
             jsonObject.remove("submitUrlId");
             jsonObject.remove("auditReportUrlId");
@@ -98,7 +99,9 @@ public class AcceptApplyServiceImpl implements AcceptApplySerivce {
 
             jsonObjectList.add(jsonObject);
         }
+        pageBean.setAlltotal(alltotal);
+        pageBean.setData(jsonObjectList);
 
-        return resultMap.success().message(jsonObjectList);
+        return resultMap.success().message(pageBean);
     }
 }
