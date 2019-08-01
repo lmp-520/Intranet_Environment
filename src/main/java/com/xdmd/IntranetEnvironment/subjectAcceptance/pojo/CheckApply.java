@@ -208,6 +208,9 @@ public class CheckApply implements Serializable {
     //最终验收结果id 在字典类中  (86：通过验收   87：结题   88：不通过验收)
     private Integer acceptanceFinalResultId;
 
+    //是否已经加入过成果库  0：还没有加入到成果库 （默认为 0）  1：已经加入到成果库
+    private String isOutcome;
+
     //每条数据的审核状态集合
     @Transient
     private List<CheckApplyState> checkApplyStateList;

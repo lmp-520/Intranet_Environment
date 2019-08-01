@@ -19,10 +19,10 @@ public class OutcomeInformationPaper {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     //主键id
-    private  long id;
+    private  Integer id;
 
     //成果信息id
-    private  long achievementsId;
+    private  Integer achievementsId;
 
     //论文序号
     @NotNull(message = "论文序号不能为空")
@@ -38,7 +38,7 @@ public class OutcomeInformationPaper {
 
     //发表时间
     @NotNull(message = "论文时间不能为空")
-    private  Date publicationTime;
+    private  String publicationTime;
 
     //作者
     @NotNull(message = "论文作者不能为空")
@@ -48,7 +48,7 @@ public class OutcomeInformationPaper {
     @NotNull(message = "论文级别不能为空")
     private  String paperLevel;
 
-    public OutcomeInformationPaper(long achievementsId, @NotNull(message = "论文序号不能为空") String serialNumber, @NotNull(message = "论文名称不能为空") String name, @NotNull(message = "论文刊物不能为空") String publication, @NotNull(message = "论文时间不能为空") Date publicationTime, @NotNull(message = "论文作者不能为空") String author, @NotNull(message = "论文级别不能为空") String paperLevel) {
+    public OutcomeInformationPaper(Integer achievementsId, @NotNull(message = "论文序号不能为空") String serialNumber, @NotNull(message = "论文名称不能为空") String name, @NotNull(message = "论文刊物不能为空") String publication, @NotNull(message = "论文时间不能为空") String publicationTime, @NotNull(message = "论文作者不能为空") String author, @NotNull(message = "论文级别不能为空") String paperLevel) {
         this.achievementsId = achievementsId;
         this.serialNumber = serialNumber;
         this.name = name;

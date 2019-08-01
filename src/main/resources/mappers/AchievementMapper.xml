@@ -27,17 +27,89 @@
         limit #{page},#{total}
     </select>
 
-    <select id="queryAlltotal" resultType="Integer">
+    <select id="queryAllAchievement" resultType="Integer">
         select count(*) from outcome_information
         <where>
             <if test="topicName != null">
                 topic_name like CONCAT('%',#{topicName},'%')
             </if>
 
-            <if test="applicationUnitName != null">
-                and application_unit_name like CONCAT('%',#{applicationUnitName},'%')
+            <if test="topicNumber != null">
+                and topic_number like CONCAT('%',#{topicNumber},'%')
             </if>
         </where>
     </select>
 
+    <select id="queryAchievementList" resultType="com.xdmd.IntranetEnvironment.achievementManagement.pojo.OutcomeInformationAll">
+        SELECT
+        id,
+        topic_number,
+        topic_name,
+        application_unit_name,
+        postal_address,
+        correspondence_code,
+        achievement_start_time,
+        economic_performance,
+        enclosure,
+        achievement_end_time
+        FROM
+        outcome_information
+        <where>
+            <if test="topicName != null">
+                topic_name like CONCAT('%',#{topicName},'%')
+            </if>
+
+            <if test="topicNumber != null">
+                and topic_number like CONCAT('%',#{topicNumber},'%')
+            </if>
+        </where>
+        limit #{page},#{total}
+    </select>
+
+    <select id="queryAchievementPatentByOid" resultType="com.xdmd.IntranetEnvironment.achievementManagement.pojo.OutcomeInformationPatent">
+        select
+          id,
+          serial_number,
+          outcome_name,
+          patent_application_time,
+          patent_application_number
+        from outcome_information_patent
+        where achievements_id = #{id}
+    </select>
+
+    <select id="queryAddAchievement" resultType="Integer">
+        select count(*) from check_apply
+        <where>
+            <if test="topicName != null">
+                topic_name like CONCAT('%',#{topicName},'%')
+            </if>
+            <if test="topicNumber != null">
+                and topic_number like CONCAT('%',#{topicNumber},'%')
+            </if>
+            <if test="0==0">
+                and acceptance_phase_id in (77,88) and is_outcome = 0
+            </if>
+        </where>
+    </select>
+
+    <select id="queryAddChievement" resultType="com.xdmd.IntranetEnvironment.achievementManagement.pojo.TopicNumberName">
+        select
+            id,
+            topic_name,
+            topic_number,
+            agreement_start_time,
+            agreement_end_time
+        from check_apply
+        <where>
+            <if test="topicName != null">
+                topic_name like CONCAT('%',#{topicName},'%')
+            </if>
+            <if test="topicNumber != null">
+                and topic_number like CONCAT('%',#{topicNumber},'%')
+            </if>
+            <if test="0==0">
+                and acceptance_phase_id in (77,88) and is_outcome = 0
+            </if>
+        </where>
+    </select>
 </mapper>

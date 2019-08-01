@@ -17,6 +17,10 @@ public interface AchievementService {
 
     ResultMap addAchievement(OutcomeInformationAll outcomeInformation);
 
+    ResultMap queryAchivement(String topicName, String topicNumber, Integer page, Integer total);
+
+    ResultMap queryAddAchivement(String topicName, String topicNumber, Integer page, Integer total);
+
     //新增成果
     //ResultMap addAchievement(OutcomeInformation outcomeInformation);
 }

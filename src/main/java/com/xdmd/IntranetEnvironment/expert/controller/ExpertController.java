@@ -37,6 +37,7 @@ public class ExpertController {
 
         try {
             resultMap = expertService.distributionAccount(token, response, expertInformation,ExpertFile);
+          //  resultMap = expertService.distributionAccount(expertInformation);
         } catch (InsertSqlException e) {
             e.printStackTrace();
             log.error(e.getMessage());
@@ -91,6 +92,14 @@ public class ExpertController {
             log.error("ExpertController 中 expertState方法 出错 -- " + e.getMessage());
             return resultMap.fail().message("系统异常");
         }
+        return resultMap;
+
+    }
+
+    @ResponseBody
+    @PostMapping("11111")
+    public ResultMap test(@RequestParam("ExpertFile") MultipartFile ExpertFile){
+        System.out.println("aaa");
         return resultMap;
 
     }

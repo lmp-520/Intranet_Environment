@@ -29,13 +29,13 @@ public class OutcomeInformationPatent {
 
     //专利申请时间
     @NotNull(message = "专利申请时间不能为空")
-    private Date patentApplicationTime;
+    private String patentApplicationTime;
 
     //专利申请号/专利号
     @NotNull(message = "专利号不能为空")
     private  String patentApplicationNumber;
 
-    public OutcomeInformationPatent(Integer achievementsId, @NotNull(message = "专利需要不能为空") String serialNumber, @NotNull(message = "专利名称不能为空") String outcomeName, @NotNull(message = "专利申请时间不能为空") Date patentApplicationTime, @NotNull(message = "专利号不能为空") String patentApplicationNumber) {
+    public OutcomeInformationPatent(Integer achievementsId, @NotNull(message = "专利序号不能为空") String serialNumber, @NotNull(message = "专利名称不能为空") String outcomeName, @NotNull(message = "专利申请时间不能为空") String patentApplicationTime, @NotNull(message = "专利号不能为空") String patentApplicationNumber) {
         this.achievementsId = achievementsId;
         this.serialNumber = serialNumber;
         this.outcomeName = outcomeName;

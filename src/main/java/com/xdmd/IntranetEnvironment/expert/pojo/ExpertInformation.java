@@ -2,6 +2,7 @@ package com.xdmd.IntranetEnvironment.expert.pojo;
 
 import com.alibaba.fastjson.JSON;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,6 +17,9 @@ public class ExpertInformation implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  Integer id;
+
+    //文件
+    private MultipartFile multipartFile;
 
     //姓名
     private  String name;

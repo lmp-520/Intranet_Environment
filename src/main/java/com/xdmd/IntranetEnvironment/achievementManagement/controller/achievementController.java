@@ -1,9 +1,6 @@
 package com.xdmd.IntranetEnvironment.achievementManagement.controller;
 
-import com.xdmd.IntranetEnvironment.achievementManagement.pojo.OutcomeInformation;
 import com.xdmd.IntranetEnvironment.achievementManagement.pojo.OutcomeInformationAll;
-import com.xdmd.IntranetEnvironment.achievementManagement.pojo.OutcomeInformationPaper;
-import com.xdmd.IntranetEnvironment.achievementManagement.pojo.OutcomeInformationPatent;
 import com.xdmd.IntranetEnvironment.achievementManagement.service.AchievementService;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
 import org.slf4j.Logger;
@@ -25,33 +22,48 @@ public class achievementController {
     AchievementService achievementService;
     private static Logger log = LoggerFactory.getLogger(achievementController.class);
 
-    //成果查询
+    //成果库 的 成果查询
     @PostMapping("queryAchievement")
     @ResponseBody
     public ResultMap QueryAchievement(@RequestParam(value = "topicName", required = false) String topicName,
-                                      @RequestParam(value = "applicationUnitName", required = false) String applicationUnitName,
+                                      @RequestParam(value = "topicNumber", required = false) String topicNumber,
                                       @RequestParam("Page") Integer page,
                                       @RequestParam("total") Integer total) {
         //对接收到的页数 与 每页显示的条数进行 判断
         if (page <= 0 || total <= 0) {
             return resultMap.fail().message("请返回正确的页数或每页显示条数");
         }
-        resultMap = achievementService.QueryAchievement(topicName, applicationUnitName, page, total);
+        resultMap = achievementService.queryAchivement(topicName,topicNumber,page,total);   //成果的查询，可以查询所有已经加入成果库的信息
         return resultMap;
     }
 
-    //当环保厅进行成果新增时，出现课题名称，课题编号，验收时间
+    //当环保厅进行成果新增时. 进行的查询
     @ResponseBody
-    @PostMapping("queryTopicNumberName")
-    public ResultMap queryTopicNumberName() {
+    @PostMapping("addAchievementQuery")
+    public ResultMap queryAddAchievement(@RequestParam(value = "topicName", required = false) String topicName,
+                                         @RequestParam(value = "topicNumber", required = false) String topicNumber,
+                                         @RequestParam("Page") Integer page,
+                                         @RequestParam("total") Integer total) {
+
         try {
-            resultMap = achievementService.queryTopicNumberName();
+            resultMap = achievementService.queryAddAchivement(topicName,topicNumber,page,total);    //此时查询的是，通过验收与结题的 待加入成果库的内容信息
         } catch (Exception e) {
             e.printStackTrace();
-            log.error("achievementController中 -- queryTopicNumberName方法出错");
-            resultMap.fail().message("系统异常");
+            log.error("achievementController 中 addAchievementQuery 方法出错 -- "+e.getMessage());
+            return resultMap.fail().message("系统异常");
         }
         return resultMap;
+    }
+
+
+    //成果库查询时，把enclosure 字段改为 成果附件的id
+    //成果新增的保存
+    @RequestMapping("addAchievementSave")
+    @ResponseBody
+    public ResultMap AddAchievementSave(@RequestParam("cid") String cid, //验收申请表的id
+                                        @RequestParam("")
+                                        ){
+
     }
 
     //新增成果

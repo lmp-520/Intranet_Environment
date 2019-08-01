@@ -218,14 +218,15 @@ public class SubjectAcceptServiceImpl implements SubjectAcceptSerivce {
                     return resultMap.fail().message("请上传正确的文件格式");
                 }
                 try {
+                    String expertGroupCommentsUrl = FileUploadUtil.UploadSubejctAcceptExpertFile(expertGroupCommentsFile, "专家组意见", companyName, subejctName);
+                    UploadFile UploadExpertGroupComments = IntegrationFile.IntegrationFile(expertGroupCommentsFile,expertGroupCommentsUrl,"专家组意见",username);
 
-                    String expertGroupCommentsUrl = FileUploadUtil.fileUpload(expertGroupCommentsFile, companyName, "专家组意见", expertGroupCommentsSuffixList); //上传专家组意见表，并获取专家组意见表存放的url
-                    UploadFile UploadExpertGroupComments = IntegrationFile.IntegrationFile(expertGroupCommentsFile, expertGroupCommentsUrl, "专家组意见", username);
                     subjectAcceptMapper.insertFile(UploadExpertGroupComments);//把专家组意见文件新增到文件表中
                     subjectAcceptMapper.updateExpertGroupCommentsUrlById(id, UploadExpertGroupComments.getId());    //根据验收申请表的id，把专家组意见文件id更新上去
 
-                    String expertAcceptanceFormUrl = FileUploadUtil.fileUpload(expertAcceptanceFormFile, companyName, "专家组评议", expertAcceptanceFormSuffixList); //上传专家评议压缩包，并获取专家组意见表存放的url
-                    UploadFile UploadExpertAcceptanceForm = IntegrationFile.IntegrationFile(expertAcceptanceFormFile, expertAcceptanceFormUrl, "专家组评议", username);
+                    String expertAcceptanceFormUrl = FileUploadUtil.UploadSubejctAcceptExpertFile(expertAcceptanceFormFile, "专家组评议", companyName, subejctName);
+                    UploadFile UploadExpertAcceptanceForm = IntegrationFile.IntegrationFile(expertAcceptanceFormFile,expertAcceptanceFormUrl,"专家组评议",username);
+
                     subjectAcceptMapper.insertFile(UploadExpertAcceptanceForm);        //把专家评议压缩包文件新增到文件表中
                     subjectAcceptMapper.updateExpertAcceptanceFormUrlById(id, UploadExpertAcceptanceForm.getId());    //根据验收申请表的id，把专家评议文件id更新上去
                 } catch (Exception e) {
