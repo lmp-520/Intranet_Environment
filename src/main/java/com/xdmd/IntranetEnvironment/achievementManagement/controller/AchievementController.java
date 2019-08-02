@@ -3,24 +3,24 @@ package com.xdmd.IntranetEnvironment.achievementManagement.controller;
 import com.xdmd.IntranetEnvironment.achievementManagement.pojo.OutcomeInformationAll;
 import com.xdmd.IntranetEnvironment.achievementManagement.service.AchievementService;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
-import java.util.List;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 
 @Controller
 @RequestMapping("achievement")
-public class achievementController {
+public class AchievementController {
     ResultMap resultMap = new ResultMap();
     @Autowired
     AchievementService achievementService;
-    private static Logger log = LoggerFactory.getLogger(achievementController.class);
+    private static Logger log = LoggerFactory.getLogger(AchievementController.class);
 
     //成果库 的 成果查询
     @PostMapping("queryAchievement")
@@ -56,56 +56,48 @@ public class achievementController {
     }
 
 
-    //成果库查询时，把enclosure 字段改为 成果附件的id
     //成果新增的保存
-    @RequestMapping("addAchievementSave")
+    @PostMapping("addAchievementSave")
     @ResponseBody
-    public ResultMap AddAchievementSave(@RequestParam("cid") String cid, //验收申请表的id
-                                        @RequestParam("")
+    public ResultMap AddAchievementSave(@CookieValue(value = "IntranecToken") String token, HttpServletResponse response,
+                                        @RequestParam("cid") String cid, //验收申请表的id
+                                        @RequestPart("achievementFileUrl")MultipartFile achievementFileUrl, //成果附件地址
+                                        @RequestPart OutcomeInformationAll outcomeInformationAll    //成果信息
                                         ){
-
-    }
-
-    //新增成果
-    @ResponseBody
-    @PostMapping("addAchievement")
-    public ResultMap addAchievement(@Valid OutcomeInformationAll outcomeInformation,BindingResult result){
-//        @Valid  OutcomeInformation outcomeInformation, BindingResult result,
-//                @Valid @RequestParam("outcomeInformationPatentList") List<OutcomeInformationPatent> outcomeInformationPatentList, BindingResult result2,
-//                @Valid @RequestParam("outcomeInformationPaperList") List<OutcomeInformationPaper> outcomeInformationPaperList,BindingResult result3
-
-        //用于判断用户传输的参数是否有误
-//        if (result.hasErrors()) {
-//            List<ObjectError> ls = result.getAllErrors();
-//            String errorMessage = ls.get(0).getDefaultMessage();
-//            return resultMap.fail().message(errorMessage);
-//        }
-//        if(result2.hasErrors()){
-//            List<ObjectError> ls2 = result2.getAllErrors();
-//            String errorMessage2 = ls2.get(0).getDefaultMessage();
-//            return resultMap.fail().message(errorMessage2);
-//        }
-//        if(result3.hasErrors()){
-//            List<ObjectError> ls3 = result3.getAllErrors();
-//            String errorMessage3 = ls3.get(0).getDefaultMessage();
-//            return resultMap.fail().message(errorMessage3);
-//        }
-
-        if (result.hasErrors()) {
-            List<ObjectError> ls = result.getAllErrors();
-            String errorMessage = ls.get(0).getDefaultMessage();
-            return resultMap.fail().message(errorMessage);
+        if(StringUtils.isEmpty(token)){
+            return resultMap.fail().message("请先登录");
         }
-        System.out.println("1111");
+
+        //成果新增的保存
         try {
-            resultMap = achievementService.addAchievement(outcomeInformation);
+            resultMap = achievementService.AddAchievementSave(token,response,cid,achievementFileUrl,outcomeInformationAll);
         } catch (Exception e) {
             e.printStackTrace();
-            log.error("achievementController中  --  addAchievement方法错误");
-            resultMap = resultMap.fail().message("系统异常");
+            log.error("AchievementController 中 AddAchievementSave 方法错误 -- "+e.getMessage());
+            return resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
+
+    //成果新增的提交
+    @PostMapping("AddAchievement")
+    @ResponseBody
+    public ResultMap AddAchievement(@CookieValue(value = "IntranecToken") String token, HttpServletResponse response,
+                                    @RequestParam("cid") String cid, //验收申请表的id
+                                    @RequestPart("achievementFileUrl")MultipartFile achievementFileUrl, //成果附件地址
+                                    @RequestPart OutcomeInformationAll outcomeInformationAll   ){ //成果信息
+        if(StringUtils.isEmpty(token)){
+            return resultMap.fail().message("请先登录");
         }
 
+        try {
+            resultMap = achievementService.AddAchievement(token,response,cid,achievementFileUrl,outcomeInformationAll);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("AchievementController 中 AddAchievement 方法错误 -- "+e.getMessage());
+            return resultMap.fail().message("系统异常");
+        }
         return resultMap;
-
     }
 }
+

@@ -11,7 +11,7 @@
  Target Server Version : 80016
  File Encoding         : 65001
 
- Date: 01/08/2019 18:01:21
+ Date: 02/08/2019 18:03:47
 */
 
 SET NAMES utf8mb4;
@@ -25,7 +25,7 @@ CREATE TABLE `acceptance_phase`  (
   `ap_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `ap_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '审核状态名称',
   PRIMARY KEY (`ap_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 100 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 99 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of acceptance_phase
@@ -83,9 +83,9 @@ CREATE TABLE `check_apply`  (
   `acceptance_conclusion_id` int(11) NULL DEFAULT NULL COMMENT '验收结论的id (在字典表中)',
   `acceptance_certificate_id` int(11) NULL DEFAULT NULL COMMENT '最终验收证书文件的id',
   `acceptance_final_result_id` int(11) NULL DEFAULT NULL COMMENT '最终验收结果id',
-  `is_outcome` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '是否已经加入过成果库\r\n0：还没有加入到成果库 （默认为 0）\r\n1：已经加入到成果库 ',
+  `is_outcome` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '是否已经加入过成果库\r\n0：还没有加入到成果库 （默认为 0）\r\n1:  已经加入到成果库',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 57 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of check_apply
@@ -96,7 +96,7 @@ INSERT INTO `check_apply` VALUES (52, '课题名称3', '1234', 2, '公司名称3
 INSERT INTO `check_apply` VALUES (53, '课题名称5', '12345', 2, '公司名称4', 2, '项目负责人名5', '15588865741', '158965512@wixing.com', '公司地址5', '2019-07-01', '2019-07-03', '2019-07-04', 4, '申请验收地点5', '验收联系人5', '13566678485', '主要研究内容完成情况5', '提交成果情况5', '课题承担单位意见5', '所在环保部门意见5', '省生态环境评估中心初审意见5', '省环保厅主管部门意见5', '提交资料清单5', 4, '2019-07-18 10:15:20', '创建人1', 77, 78, NULL, NULL, 4, NULL, 76, NULL, NULL, NULL, '0');
 INSERT INTO `check_apply` VALUES (54, '课题名称7', '12345', 2, '公司名称2', 2, '项目负责人名7', '15588865741', '158965512@wixing.com', '公司地址5', '2019-07-01', '2019-07-03', '2019-07-04', 3, '申请验收地点7', '验收联系人7', '13566678485', '主要研究内容完成情况7', '提交成果情况7', '课题承担单位意见7', '所在环保部门意见7', '省生态环境评估中心初审意见7', '省环保厅主管部门意见7', '提交资料清单7', 4, '2019-07-18 10:15:20', '创建人1', 77, 78, NULL, NULL, 4, NULL, 76, NULL, NULL, NULL, '0');
 INSERT INTO `check_apply` VALUES (55, '课题名称666', '12345', 2, '公司名称1', 2, '项目负责人名666', '15588865741', '158965512@wixing.com', '公司地址5', '2019-07-01', '2019-07-03', '2019-07-04', 3, '申请验收地点666', '验收联系人666', '13566678485', '主要研究内容完成情况666', '提交成果情况666', '课题承担单位意见6667', '所在环保部门意见6667', '省生态环境评估中心初审意见6667', '省环保厅主管部门意见7', '提交资料清单7', 77, '2019-07-18 10:15:20', '创建人1', 77, 78, NULL, NULL, 77, 78, 76, NULL, 77, NULL, '0');
-INSERT INTO `check_apply` VALUES (56, '课题名称9999', '123453', 14, 'xdmd', 2, 'null', '9999999999', '9999999@qq.com', '公司地址999', '2019-07-01', '2019-07-11', '2019-07-15', 2, '申请验收地点9999', '验收联系人99999', '9999999999', '主要研究内容完成情况9999', '提交成果情况9999', '课题承担单位意见999999', '所在环保部门意见9999', '省生态环境评估中心初审意见99999', '省环保厅主管部门意见999999', '提交资料清单9999', 88, '2019-07-23 14:12:12', '创建人999', 77, 78, NULL, NULL, 85, 86, NULL, NULL, NULL, NULL, '0');
+INSERT INTO `check_apply` VALUES (56, '课题名称9999', '123453', 14, 'xdmd', 2, 'null', '9999999999', '9999999@qq.com', '公司地址999', '2019-07-01', '2019-07-11', '2019-07-15', 2, '申请验收地点9999', '验收联系人99999', '9999999999', '主要研究内容完成情况9999', '提交成果情况9999', '课题承担单位意见999999', '所在环保部门意见9999', '省生态环境评估中心初审意见99999', '省环保厅主管部门意见999999', '提交资料清单9999', 88, '2019-07-23 14:12:12', '创建人999', 77, 78, NULL, NULL, 85, 86, NULL, NULL, NULL, NULL, '1');
 
 -- ----------------------------
 -- Table structure for check_apply_state
@@ -113,7 +113,7 @@ CREATE TABLE `check_apply_state`  (
   `handle_content` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '处理内容',
   `second_handle_time` datetime(0) NULL DEFAULT NULL COMMENT '处理时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 43 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 48 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of check_apply_state
@@ -178,7 +178,7 @@ CREATE TABLE `dictionary`  (
   `content_id` int(11) NOT NULL COMMENT '内容id',
   `state` int(5) NOT NULL COMMENT '启用（0:逻辑删除  1：启用）',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 95 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 94 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of dictionary
@@ -304,7 +304,7 @@ CREATE TABLE `expert_acceptance_review`  (
   `create_author` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建人',
   `create_time` datetime(6) NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`ar_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of expert_acceptance_review
@@ -358,7 +358,7 @@ CREATE TABLE `expert_group_comments_name`  (
   `major` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '专业',
   `job` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '职务',
   PRIMARY KEY (`egc_nid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of expert_group_comments_name
@@ -425,7 +425,7 @@ CREATE TABLE `expert_information_article`  (
   `title_articles_periodicals` varchar(40) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '文章期刊名',
   `articles_publication_time` date NOT NULL COMMENT '文章发布时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 19 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of expert_information_article
@@ -455,7 +455,7 @@ CREATE TABLE `expert_information_book`  (
   `book_publishing_house` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '著作出版社',
   `writing_time` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '著作时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of expert_information_book
@@ -482,7 +482,7 @@ CREATE TABLE `expert_information_patent`  (
   `patent_no` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '专利号',
   `patent_time` date NOT NULL COMMENT '专利时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of expert_information_patent
@@ -506,7 +506,7 @@ CREATE TABLE `expert_information_prize_winning`  (
   `prize_winning_department` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '获奖部门',
   `prize_winning_time` date NOT NULL COMMENT '获奖时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of expert_information_prize_winning
@@ -552,7 +552,7 @@ CREATE TABLE `menu`  (
   `is_father` int(10) NULL DEFAULT NULL COMMENT '是否是一级菜单 0：一级 1：二级菜单',
   `father_id` int(11) NULL DEFAULT NULL COMMENT '父id',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 40 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 39 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of menu
@@ -610,21 +610,32 @@ CREATE TABLE `outcome_information`  (
   `correspondence_code` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '通讯邮编',
   `achievement_start_time` date NOT NULL COMMENT '成果开始时间',
   `economic_performance` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '应用情况、社会经济效益（含计算过程）',
-  `enclosure` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '成果信息附件url',
+  `achievement_url_id` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '成果信息附件url的id',
   `achievement_end_time` date NOT NULL COMMENT '成果结束时间',
+  `create_author` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建者',
+  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `is_submit` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '是否提交 0：保存 1：提交',
+  `uid` int(11) NULL DEFAULT NULL COMMENT '保存情况下，保存人的id',
+  `check_apply_id` int(11) NULL DEFAULT NULL COMMENT '对应验收申请表id',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of outcome_information
 -- ----------------------------
-INSERT INTO `outcome_information` VALUES (4, '12121', '课题名称1', '应用单位1', '通讯地址1', '通讯邮编1', '2019-07-03', '应用情况1', '成果附件1', '2019-07-18');
-INSERT INTO `outcome_information` VALUES (5, '5445', '课题名称2', '应用单位2', '通讯地址2', '通讯邮编2', '2019-07-03', '应用情况2', '成果附件2', '2019-07-18');
-INSERT INTO `outcome_information` VALUES (6, '5445', '课题名称1', '应用单位2', '通讯地址2', '通讯邮编2', '2019-07-03', '应用情况2', '成果附件2', '2019-07-18');
-INSERT INTO `outcome_information` VALUES (7, '5445', '课题名称1', '应用单位1', '通讯地址2', '通讯邮编2', '2019-07-03', '应用情况2', '成果附件2', '2019-07-18');
-INSERT INTO `outcome_information` VALUES (8, '5445', '课题名称2', '应用单位2', '通讯地址2', '通讯邮编2', '2019-07-03', '应用情况2', '成果附件2', '2019-07-18');
-INSERT INTO `outcome_information` VALUES (9, '5445', '课题名称2', '应用单位1', '通讯地址2', '通讯邮编2', '2019-07-03', '应用情况2', '成果附件2', '2019-07-18');
-INSERT INTO `outcome_information` VALUES (10, '5445', '课题名称2', '应用单位1', '通讯地址2', '通讯邮编2', '2019-07-03', '应用情况2', '成果附件2', '2019-07-18');
+INSERT INTO `outcome_information` VALUES (4, '12121', '课题名称1', '应用单位1', '通讯地址1', '通讯邮编1', '2019-07-03', '应用情况1', '83', '2019-07-18', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `outcome_information` VALUES (5, '5445', '课题名称2', '应用单位2', '通讯地址2', '通讯邮编2', '2019-07-03', '应用情况2', '84', '2019-07-18', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `outcome_information` VALUES (6, '5445', '课题名称1', '应用单位2', '通讯地址2', '通讯邮编2', '2019-07-03', '应用情况2', '85', '2019-07-18', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `outcome_information` VALUES (7, '5445', '课题名称1', '应用单位1', '通讯地址2', '通讯邮编2', '2019-07-03', '应用情况2', '86', '2019-07-18', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `outcome_information` VALUES (8, '5445', '课题名称2', '应用单位2', '通讯地址2', '通讯邮编2', '2019-07-03', '应用情况2', '83', '2019-07-18', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `outcome_information` VALUES (9, '5445', '课题名称2', '应用单位1', '通讯地址2', '通讯邮编2', '2019-07-03', '应用情况2', '84', '2019-07-18', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `outcome_information` VALUES (10, '5445', '课题名称2', '应用单位1', '通讯地址2', '通讯邮编2', '2019-07-03', '应用情况2', '85', '2019-07-18', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `outcome_information` VALUES (11, '课题编号1', '课题名称1', '应用单位名称2', '通讯地址2', '233000', '2000-01-02', '应用情况', '成果附件id', '2222-05-04', '张三', '2019-08-02 11:02:43', '0', 4, 55);
+INSERT INTO `outcome_information` VALUES (12, '课题编号0000', '课题名称1', '应用单位名称2', '通讯地址2', '233000', '2000-01-02', '应用情况', '77', '2222-05-04', '张三', '2019-08-02 15:47:11', '0', 4, 56);
+INSERT INTO `outcome_information` VALUES (13, '课题编号0000', '课题名称1', '应用单位名称2', '通讯地址2', '233000', '2000-01-02', '应用情况', '成果附件id', '2222-05-04', '张三', '2019-08-02 15:48:08', '0', 4, NULL);
+INSERT INTO `outcome_information` VALUES (16, '课题编号0000', '课题名称1', '应用单位名称2', '通讯地址2', '233000', '2000-01-02', '应用情况', '成果附件id', '2222-05-04', '李四', '2019-08-02 16:13:07', '0', 6, 53);
+INSERT INTO `outcome_information` VALUES (23, '课题编号0454540', '课题名称1', '应用单位名称2', '通讯地址2', '233000', '2000-01-02', '应用情况', '成果附件id', '2222-05-04', '李四', '2019-08-02 16:39:04', '0', 6, 55);
+INSERT INTO `outcome_information` VALUES (24, '课题编号22222222', '课题名称1', '应用单位名称2', '通讯地址2', '233000', '2000-01-02', '应用情况', '成果附件id', '2222-05-04', '王五', '2019-08-02 18:01:04', '1', 888, 56);
 
 -- ----------------------------
 -- Table structure for outcome_information_paper
@@ -640,7 +651,7 @@ CREATE TABLE `outcome_information_paper`  (
   `author` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '作者',
   `paper_level` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '论文级别（SCI/EI/核心等）',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of outcome_information_paper
@@ -648,6 +659,12 @@ CREATE TABLE `outcome_information_paper`  (
 INSERT INTO `outcome_information_paper` VALUES (1, 4, '213544', '第一名称', '第一刊物', '1785-04-24', '第一作者', '第一论文级别');
 INSERT INTO `outcome_information_paper` VALUES (2, 4, '4456512', '第二名称', '第二刊物', '1785-04-24', '第二作者', '第二论文级别');
 INSERT INTO `outcome_information_paper` VALUES (3, 4, '213544', '第三名称', '第三刊物', '1785-04-24', '第三作者', '第三论文级别');
+INSERT INTO `outcome_information_paper` VALUES (4, 12, '论文序号666', '论文名称1', '论文刊物1', '2011-02-03', '论文作者1', '论文级别1');
+INSERT INTO `outcome_information_paper` VALUES (5, 12, '论文序号777', '论文名称2', '论文刊物2', '2011-02-03', '论文作者2', '论文级别2');
+INSERT INTO `outcome_information_paper` VALUES (6, 23, '论文序号55555', '论文名称5555', '论文刊物1', '2011-02-03', '论文作者1', '论文级别1');
+INSERT INTO `outcome_information_paper` VALUES (7, 23, '论文序号4545', '论文名称2', '论文刊物2', '2011-02-03', '论文作者2', '论文级别2');
+INSERT INTO `outcome_information_paper` VALUES (8, 24, '论文序号233333', '论文名称5555', '论文刊物1', '2011-02-03', '论文作者1', '论文级别1');
+INSERT INTO `outcome_information_paper` VALUES (9, 24, '论文序号33222', '论文名称2', '论文刊物2', '2011-02-03', '论文作者2', '论文级别2');
 
 -- ----------------------------
 -- Table structure for outcome_information_patent
@@ -661,7 +678,7 @@ CREATE TABLE `outcome_information_patent`  (
   `patent_application_time` date NOT NULL COMMENT '专利申请时间',
   `patent_application_number` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '专利申请号/专利号',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of outcome_information_patent
@@ -669,6 +686,12 @@ CREATE TABLE `outcome_information_patent`  (
 INSERT INTO `outcome_information_patent` VALUES (1, 4, '115623', '第一成果名称', '1745-12-24', '第一专利号');
 INSERT INTO `outcome_information_patent` VALUES (2, 4, '1156156', '第二成果名称', '1745-12-24', '第二专利号');
 INSERT INTO `outcome_information_patent` VALUES (3, 4, '11516', '第三成果名称', '1745-12-24', '第三专利号');
+INSERT INTO `outcome_information_patent` VALUES (4, 12, '专利序号6666', '专利名称1', '2000-03-05', '专利号');
+INSERT INTO `outcome_information_patent` VALUES (5, 12, '专利序号7777', '专利名称2', '2000-03-05', '专利号2');
+INSERT INTO `outcome_information_patent` VALUES (6, 23, '专利序号65464', '专利名称1', '2000-03-05', '专利号');
+INSERT INTO `outcome_information_patent` VALUES (7, 23, '专利序号345435', '专利名称2', '2000-03-05', '专利号2');
+INSERT INTO `outcome_information_patent` VALUES (8, 24, '专利序号23333', '专利名称1', '2000-03-05', '专利号');
+INSERT INTO `outcome_information_patent` VALUES (9, 24, '专利序号32222', '专利名称2', '2000-03-05', '专利号2');
 
 -- ----------------------------
 -- Table structure for shiro_company_name
@@ -678,7 +701,7 @@ CREATE TABLE `shiro_company_name`  (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '公司id',
   `company_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '公司名称',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of shiro_company_name
@@ -714,7 +737,7 @@ CREATE TABLE `shiro_role`  (
   `id` int(1) NOT NULL AUTO_INCREMENT COMMENT '主键Id',
   `role_name` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '角色名称',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of shiro_role
@@ -770,7 +793,7 @@ CREATE TABLE `shiro_user`  (
   `status` int(5) NULL DEFAULT NULL COMMENT '身份判断 0：管理员 1：部长 2：员工',
   `modify` int(5) NULL DEFAULT NULL COMMENT '员工修改登陆名次数 默认是1',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of shiro_user

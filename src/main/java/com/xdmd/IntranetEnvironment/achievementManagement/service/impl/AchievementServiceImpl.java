@@ -1,18 +1,23 @@
 package com.xdmd.IntranetEnvironment.achievementManagement.service.impl;
 
-import com.xdmd.IntranetEnvironment.achievementManagement.controller.achievementController;
+import com.xdmd.IntranetEnvironment.achievementManagement.controller.AchievementController;
 import com.xdmd.IntranetEnvironment.achievementManagement.mapper.AchievementMapper;
 import com.xdmd.IntranetEnvironment.achievementManagement.pojo.*;
 import com.xdmd.IntranetEnvironment.achievementManagement.service.AchievementService;
 import com.xdmd.IntranetEnvironment.common.PageBean;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
-import com.xdmd.IntranetEnvironment.subjectAcceptance.pojo.CheckApply;
-import io.swagger.models.auth.In;
+import com.xdmd.IntranetEnvironment.user.exception.ClaimsNullException;
+import com.xdmd.IntranetEnvironment.user.exception.UserNameNotExistentException;
+import com.xdmd.IntranetEnvironment.user.pojo.User;
+import com.xdmd.IntranetEnvironment.user.service.impl.TokenService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -21,57 +26,13 @@ public class AchievementServiceImpl implements AchievementService {
 
     @Autowired
     private AchievementMapper achievementMapper;
+    @Autowired
+    private TokenService tokenService;
     ResultMap resultMap = new ResultMap();
     PageBean pageBean = new PageBean();
-    private static Logger log = LoggerFactory.getLogger(achievementController.class);
+    private static Logger log = LoggerFactory.getLogger(AchievementController.class);
 
-
-    //成果查询
-    public ResultMap QueryAchievement(String topicName, String applicationUnitName, Integer page, Integer total) {
-        //对页数进行修改
-        if (page == 1) {
-            page = page - 1;
-        } else {
-            page = (page - 1) * total;
-        }
-        //根据
-        List<OutcomeInformation> outcomeInformationList = achievementMapper.QueryAchievement(topicName, applicationUnitName, page, total);
-
-        //查询总条数
-        Integer alltotal = achievementMapper.queryAlltotal(topicName,applicationUnitName);
-
-        return resultMap.success().message(outcomeInformationList);
-    }
-
-    //当环保厅进行成果新增时，出现课题名称，课题编号，验收时间
-    public ResultMap queryTopicNumberName() throws Exception {
-        List<TopicNumberName> topicNumberNameList = null;
-        try {
-            topicNumberNameList = achievementMapper.queryTopicNumberName();
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.error("AchievementServiceImpl中  --  queryTopicNumberName 查询语句出错");
-            throw new Exception();
-        }
-        return resultMap.success().message(topicNumberNameList);
-    }
-
-    //成果新增
-    public ResultMap addAchievement(OutcomeInformationAll outcomeInformation) {
-
- //       public ResultMap addAchievement(OutcomeInformation outcomeInformation, List<OutcomeInformationPatent> outcomeInformationPatentList, List<OutcomeInformationPaper> outcomeInformationPaperList) {
-        //首先先新增成果主表
-        int number = 0;
-       // number = achievementMapper.addAchievement(outcomeInformation);
-        if(number == 0){
-            return resultMap.fail().message("新增失败");
-        }
-        return resultMap;
-    }
-
-
-
-    //成果的查询，可以查询所有已经加入成果库与还没加入成果库，但是已经验收通过的信息
+    //成果的查询，可以查询所有已经加入成果库的信息
     @Override
     public ResultMap queryAchivement(String topicName, String topicNumber, Integer page, Integer total) {
         int newpage = 0;
@@ -83,7 +44,7 @@ public class AchievementServiceImpl implements AchievementService {
 
         //查询成果的总数
         int alltotal = 0;
-        alltotal = achievementMapper.queryAllAchievement(topicName,topicNumber);
+        alltotal = achievementMapper.queryAllAchievement(topicName, topicNumber);
         if (alltotal == 0) {
             return resultMap.fail().message();
         }
@@ -100,12 +61,14 @@ public class AchievementServiceImpl implements AchievementService {
         }
 
         //获取成果主表的集合
-        List<OutcomeInformationAll> outcomeInformationAllList = achievementMapper.queryAchievementList(topicName,topicNumber,newpage,total);
+        List<OutcomeInformationAll> outcomeInformationAllList = achievementMapper.queryAchievementList(topicName, topicNumber, newpage, total);
 
         //遍历成果主表的集合
         for (OutcomeInformationAll outcomeInformationAll : outcomeInformationAllList) {
             //获取成果的id
             Integer id = outcomeInformationAll.getId();
+            String achievementUrl = achievementMapper.queryAchievementFileNameByAchievementId(id);//获取成果表中 成果附件的id， 通过成果附件的id，查询到成果附件的地址
+            outcomeInformationAll.setAchievementUrl(achievementUrl);
             List<OutcomeInformationPatent> outcomeInformationPatentList = achievementMapper.queryAchievementPatentByOid(id);//根据成果主表的id，获取对应的专利表
             outcomeInformationAll.setOutcomeInformationPatentList(outcomeInformationPatentList);
 
@@ -122,6 +85,10 @@ public class AchievementServiceImpl implements AchievementService {
     //此时查询的是，通过验收与结题的 待加入成果库的内容信息
     @Override
     public ResultMap queryAddAchivement(String topicName, String topicNumber, Integer page, Integer total) {
+
+        String username = "张三";
+        Integer uid = 4;
+
         int newpage = 0;
         if (page == 1) {
             newpage = page - 1;
@@ -131,7 +98,7 @@ public class AchievementServiceImpl implements AchievementService {
 
         //查询待加入成果的信息总数 通过验收与结题的
         int alltotal = 0;
-        alltotal = achievementMapper.queryAddAchievement(topicName,topicNumber);
+        alltotal = achievementMapper.queryAddAchievement(topicName, topicNumber);
         if (alltotal == 0) {
             return resultMap.fail().message();
         }
@@ -148,16 +115,186 @@ public class AchievementServiceImpl implements AchievementService {
         }
 
         //获取已经通过验收或结题的  等待加入成果库的内容
-        List<TopicNumberName> topicNumberNameList = achievementMapper.queryAddChievement(topicName,topicNumber,newpage,total);
+        List<TopicNumberName> topicNumberNameList = achievementMapper.queryAddChievement(topicName, topicNumber, newpage, total);
         for (TopicNumberName topicNumberName : topicNumberNameList) {
             //遍历待加入成果库的信息
             String achievementFileUrl = achievementMapper.queryAchievementFileUrlById(topicNumberName.getId());//根据验收表的id，查询改验收表对应的成果附件地址
             topicNumberName.setAchievementFileUrl(achievementFileUrl);
-            String achievementFileName  = achievementMapper.queryAchievementFileNameById(topicNumberName.getId());//根据验收表的id，查询改验收表对应的成果附件真实名字
+            String achievementFileName = achievementMapper.queryAchievementFileNameById(topicNumberName.getId());//根据验收表的id，查询改验收表对应的成果附件真实名字
             topicNumberName.setFileName(achievementFileName);
+            //根据登陆人的uid，与 验收申请表的id，去查询这个人对应的验收表的信息，有没有保存过内容，如果有，则给提取出来
+            OutcomeInformationAll outcomeInformationAll = achievementMapper.querySaveAchievementByCheckApplyId(topicNumberName.getId(), uid);
+            if (outcomeInformationAll != null) {
+                //此时意味着，这个人的该条数据保存过内容
+                List<OutcomeInformationPaper> outcomeInformationPaperList = achievementMapper.queryAchievementPaperByOid(outcomeInformationAll.getId());//查询成果表对应的成果论文表
+                outcomeInformationAll.setOutcomeInformationPaperList(outcomeInformationPaperList);
+                List<OutcomeInformationPatent> outcomeInformationPatentList = achievementMapper.queryAchievementPatentByOid(outcomeInformationAll.getId());//查询成果表对应的成果专利
+                outcomeInformationAll.setOutcomeInformationPatentList(outcomeInformationPatentList);
+            }
+            topicNumberName.setOutcomeInformationAllList(outcomeInformationAll);
         }
         pageBean.setAlltotal(alltotal);
         pageBean.setData(topicNumberNameList);
         return resultMap.success().message(pageBean);
+    }
+
+    //成果新增的保存
+    @Override
+    public ResultMap AddAchievementSave(String token, HttpServletResponse response, String cid, MultipartFile achievementFileUrl, OutcomeInformationAll outcomeInformationAll) {
+        User user = new User();
+        try {
+            user = tokenService.compare(response, token);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (UserNameNotExistentException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (ClaimsNullException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("MenuServiceImpl 中 TokenService 出现问题");
+            return resultMap.message("系统异常");
+        }
+
+        Integer uid = user.getId();
+        String username = user.getUsername();
+
+
+        //判断保存，是第一次保存还是第多次保存   第一次保存的话，是新增操作，  多次保存的话，是更新操作
+        Integer saveStateId = null;
+        //通过uid cid找到对应的新增成果时，保存的数据，如果能找到，意味着这条数据被这个人保存过了，这次第多次操作，是更新操作，
+        //如果找不到，则意味着这条操作是第一次操作是新增操作
+        saveStateId = achievementMapper.querySaveState(uid, cid);
+
+        if (saveStateId != null) {
+            //此时可以找到，意味着，这条数据被这个用户已经保存过的，接下来是进行更新操作
+            //把创建时间保存到字段中
+            Date date = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String nowDate = sdf.format(date);
+            outcomeInformationAll.setCreateTime(nowDate);
+            outcomeInformationAll.setIsSubmit("0");
+
+            //更新成果主表
+            achievementMapper.UpdateAchievementInformation(outcomeInformationAll,cid,uid);
+
+            //更新成果表中的论文表
+            List<OutcomeInformationPaper> outcomeInformationPaperList = outcomeInformationAll.getOutcomeInformationPaperList();
+            for (OutcomeInformationPaper outcomeInformationPaper : outcomeInformationPaperList) {
+                outcomeInformationPaper.setAchievementsId(outcomeInformationAll.getId());
+                achievementMapper.UpdateAchievementInformationPaper(outcomeInformationPaper);
+            }
+
+            //更新成果表中的专利表
+            List<OutcomeInformationPatent> outcomeInformationPatentList = outcomeInformationAll.getOutcomeInformationPatentList();
+            for (OutcomeInformationPatent outcomeInformationPatent : outcomeInformationPatentList) {
+                outcomeInformationPatent.setAchievementsId(outcomeInformationAll.getId());
+                achievementMapper.UpdateAchievementInformationPatent(outcomeInformationPatent);
+            }
+            return resultMap.success().message("保存成功");
+        }
+
+
+        //把保存的成果信息保存到数据库中
+        outcomeInformationAll.setCreateAuthor(username);    //把创建人保存到字段中
+
+        //把创建时间保存到字段中
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String nowDate = sdf.format(date);
+        outcomeInformationAll.setCreateTime(nowDate);
+        outcomeInformationAll.setIsSubmit("0");
+
+        //把保存人的id，存入字段
+        outcomeInformationAll.setUid(uid);
+
+        outcomeInformationAll.setCheckApplyId(cid);
+
+        achievementMapper.addAchievementInformation(outcomeInformationAll);     //新增成果主表
+
+        //新增成果表中的论文表
+        List<OutcomeInformationPaper> outcomeInformationPaperList = outcomeInformationAll.getOutcomeInformationPaperList();
+        for (OutcomeInformationPaper outcomeInformationPaper : outcomeInformationPaperList) {
+            outcomeInformationPaper.setAchievementsId(outcomeInformationAll.getId());
+            achievementMapper.addAchievementInformationPaper(outcomeInformationPaper);
+        }
+
+        //新增成果表中的专利表
+        List<OutcomeInformationPatent> outcomeInformationPatentList = outcomeInformationAll.getOutcomeInformationPatentList();
+        for (OutcomeInformationPatent outcomeInformationPatent : outcomeInformationPatentList) {
+            outcomeInformationPatent.setAchievementsId(outcomeInformationAll.getId());
+            achievementMapper.addAchievementInformationPatent(outcomeInformationPatent);
+        }
+
+        return resultMap.success().message("保存成功");
+    }
+
+    //成果新增的提交
+    @Override
+    public ResultMap AddAchievement(String token, HttpServletResponse response, String cid, MultipartFile achievementFileUrl, OutcomeInformationAll outcomeInformationAll) {
+        User user = new User();
+        try {
+            user = tokenService.compare(response, token);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (UserNameNotExistentException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (ClaimsNullException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("MenuServiceImpl 中 TokenService 出现问题");
+            return resultMap.message("系统异常");
+        }
+
+        Integer uid = user.getId();
+        String username = user.getUsername();
+
+//        String username = "王五";
+//        Integer uid = 888;
+
+        //把保存的成果信息保存到数据库中
+        outcomeInformationAll.setCreateAuthor(username);    //把创建人保存到字段中
+
+        //把创建时间保存到字段中
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String nowDate = sdf.format(date);
+        outcomeInformationAll.setCreateTime(nowDate);
+        outcomeInformationAll.setIsSubmit("1");
+
+        //把保存人的id，存入字段
+        outcomeInformationAll.setUid(uid);
+
+        outcomeInformationAll.setCheckApplyId(cid);
+
+        //把验收申请表中的is_outcome 字段设置为1
+        achievementMapper.setCheckApplyIsOutomt(cid);
+
+        achievementMapper.addAchievementInformation(outcomeInformationAll);     //新增成果主表
+
+        //新增成果表中的论文表
+        List<OutcomeInformationPaper> outcomeInformationPaperList = outcomeInformationAll.getOutcomeInformationPaperList();
+        for (OutcomeInformationPaper outcomeInformationPaper : outcomeInformationPaperList) {
+            outcomeInformationPaper.setAchievementsId(outcomeInformationAll.getId());
+            achievementMapper.addAchievementInformationPaper(outcomeInformationPaper);
+        }
+
+        //新增成果表中的专利表
+        List<OutcomeInformationPatent> outcomeInformationPatentList = outcomeInformationAll.getOutcomeInformationPatentList();
+        for (OutcomeInformationPatent outcomeInformationPatent : outcomeInformationPatentList) {
+            outcomeInformationPatent.setAchievementsId(outcomeInformationAll.getId());
+            achievementMapper.addAchievementInformationPatent(outcomeInformationPatent);
+        }
+
+        return resultMap.success().message("保存成功");
+
+
     }
 }

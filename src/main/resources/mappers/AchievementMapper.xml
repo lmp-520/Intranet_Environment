@@ -1,32 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xdmd.IntranetEnvironment.achievementManagement.mapper.AchievementMapper">
-    <select id="QueryAchievement" resultType="com.xdmd.IntranetEnvironment.achievementManagement.pojo.OutcomeInformation">
-        SELECT
-        id,
-        topic_number,
-        topic_name,
-        application_unit_name,
-        postal_address,
-        correspondence_code,
-        achievement_start_time,
-        economic_performance,
-        enclosure,
-        achievement_end_time
-        FROM
-        outcome_information
-        <where>
-            <if test="topicName != null">
-                topic_name like CONCAT('%',#{topicName},'%')
-            </if>
-
-            <if test="applicationUnitName != null">
-                and application_unit_name like CONCAT('%',#{applicationUnitName},'%')
-            </if>
-        </where>
-        limit #{page},#{total}
-    </select>
-
     <select id="queryAllAchievement" resultType="Integer">
         select count(*) from outcome_information
         <where>
@@ -50,7 +24,7 @@
         correspondence_code,
         achievement_start_time,
         economic_performance,
-        enclosure,
+        achievement_url_id,
         achievement_end_time
         FROM
         outcome_information
@@ -69,6 +43,7 @@
     <select id="queryAchievementPatentByOid" resultType="com.xdmd.IntranetEnvironment.achievementManagement.pojo.OutcomeInformationPatent">
         select
           id,
+          achievements_id,
           serial_number,
           outcome_name,
           patent_application_time,
@@ -98,7 +73,8 @@
             topic_name,
             topic_number,
             agreement_start_time,
-            agreement_end_time
+            agreement_end_time,
+            achievement_url_id
         from check_apply
         <where>
             <if test="topicName != null">
@@ -112,4 +88,132 @@
             </if>
         </where>
     </select>
+
+    <insert id="addAchievementInformation" useGeneratedKeys="true" keyProperty="id">
+        insert into outcome_information(
+            id,
+            topic_number,
+            topic_name,
+            application_unit_name,
+            postal_address,
+            correspondence_code,
+            achievement_start_time,
+            economic_performance,
+            achievement_url_id,
+            achievement_end_time,
+            create_author,
+            create_time,
+            is_submit,
+            uid,
+            check_apply_id)
+        values (
+            #{outcomeInformationAll.id},
+            #{outcomeInformationAll.topicNumber},
+            #{outcomeInformationAll.topicName},
+            #{outcomeInformationAll.applicationUnitName},
+            #{outcomeInformationAll.postalAddress},
+            #{outcomeInformationAll.correspondenceCode},
+            #{outcomeInformationAll.achievementStartTime},
+            #{outcomeInformationAll.economicPerformance},
+            #{outcomeInformationAll.achievementUrlId},
+            #{outcomeInformationAll.achievementEndTime},
+            #{outcomeInformationAll.createAuthor},
+            #{outcomeInformationAll.createTime},
+            #{outcomeInformationAll.isSubmit},
+            #{outcomeInformationAll.uid},
+            #{outcomeInformationAll.checkApplyId}
+        )
+    </insert>
+
+    <insert id="addAchievementInformationPaper" useGeneratedKeys="true" keyProperty="id">
+        insert into outcome_information_paper(
+        id,
+        achievements_id,
+        serial_number,
+        name,
+        publication,
+        publication_time,
+        author,
+        paper_level)
+        values (
+        #{outcomeInformationPaper.id},
+        #{outcomeInformationPaper.achievementsId},
+        #{outcomeInformationPaper.serialNumber},
+        #{outcomeInformationPaper.name},
+        #{outcomeInformationPaper.publication},
+        #{outcomeInformationPaper.publicationTime},
+        #{outcomeInformationPaper.author},
+        #{outcomeInformationPaper.paperLevel}
+        )
+    </insert>
+
+    <insert id="addAchievementInformationPatent" useGeneratedKeys="true" keyProperty="id">
+        insert into outcome_information_patent(
+        id,
+        achievements_id,
+        serial_number,
+        outcome_name,
+        patent_application_time,
+        patent_application_number)
+        values (
+        #{outcomeInformationPatent.id},
+        #{outcomeInformationPatent.achievementsId},
+        #{outcomeInformationPatent.serialNumber},
+        #{outcomeInformationPatent.outcomeName},
+        #{outcomeInformationPatent.patentApplicationTime},
+        #{outcomeInformationPatent.patentApplicationNumber}
+        )
+    </insert>
+
+    <select id="querySaveAchievementByCheckApplyId" resultType="com.xdmd.IntranetEnvironment.achievementManagement.pojo.OutcomeInformationAll">
+        SELECT
+        id,
+        topic_number,
+        topic_name,
+        application_unit_name,
+        postal_address,
+        correspondence_code,
+        achievement_start_time,
+        economic_performance,
+        achievement_url_id,
+        achievement_end_time
+        FROM
+        outcome_information
+        where
+        check_apply_id = #{id} and uid = #{uid} and is_submit = 0
+    </select>
+
+    <update id="UpdateAchievementInformation">
+        update outcome_information
+        set topic_number = #{outcomeInformationAll.topicNumber},
+             topic_name = #{outcomeInformationAll.topicName},
+             application_unit_name = #{outcomeInformationAll.applicationUnitName},
+             postal_address = #{outcomeInformationAll.postalAddress},
+             correspondence_code = #{outcomeInformationAll.correspondenceCode},
+             achievement_start_time = #{outcomeInformationAll.achievementStartTime},
+             economic_performance = #{outcomeInformationAll.economicPerformance},
+             achievement_end_time = #{outcomeInformationAll.achievementEndTime},
+             create_time = #{outcomeInformationAll.createTime}
+        where check_apply_id = #{cid} and uid = #{uid}
+    </update>
+
+    <update id="UpdateAchievementInformationPaper">
+        update outcome_information_paper
+        set serial_number = #{outcomeInformationPaper.serialNumber},
+             name = #{outcomeInformationPaper.name},
+             publication = #{outcomeInformationPaper.publication},
+             publication_time = #{outcomeInformationPaper.publicationTime},
+             author = #{outcomeInformationPaper.author},
+             paper_level = #{outcomeInformationPaper.paperLevel}
+        where id = #{outcomeInformationPaper.id}
+    </update>
+
+    <update id="UpdateAchievementInformationPatent">
+        update outcome_information_patent
+        set serial_number = #{outcomeInformationPatent.serialNumber},
+         outcome_name = #{outcomeInformationPatent.outcomeName},
+         patent_application_time = #{outcomeInformationPatent.patentApplicationTime},
+         patent_application_number = #{outcomeInformationPatent.patentApplicationNumber}
+         where id = #{outcomeInformationPatent.id}
+    </update>
 </mapper>

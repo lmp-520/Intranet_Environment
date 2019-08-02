@@ -5,22 +5,18 @@ import com.xdmd.IntranetEnvironment.achievementManagement.pojo.OutcomeInformatio
 import com.xdmd.IntranetEnvironment.achievementManagement.pojo.OutcomeInformationPaper;
 import com.xdmd.IntranetEnvironment.achievementManagement.pojo.OutcomeInformationPatent;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 public interface AchievementService {
-    //成果查询
-    ResultMap QueryAchievement(String topicName, String applicationUnitName, Integer page, Integer total);
-
-    //当环保厅进行成果新增时，出现课题名称，课题编号，验收时间
-    ResultMap queryTopicNumberName() throws Exception;
-
-    ResultMap addAchievement(OutcomeInformationAll outcomeInformation);
-
     ResultMap queryAchivement(String topicName, String topicNumber, Integer page, Integer total);
 
     ResultMap queryAddAchivement(String topicName, String topicNumber, Integer page, Integer total);
 
-    //新增成果
-    //ResultMap addAchievement(OutcomeInformation outcomeInformation);
+    ResultMap AddAchievementSave(String token, HttpServletResponse response, String cid, MultipartFile achievementFileUrl, OutcomeInformationAll outcomeInformationAll);
+
+    ResultMap AddAchievement(String token, HttpServletResponse response, String cid, MultipartFile achievementFileUrl, OutcomeInformationAll outcomeInformationAll);
+
 }

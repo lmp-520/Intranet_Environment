@@ -3,6 +3,7 @@ package com.xdmd.IntranetEnvironment.achievementManagement.pojo;
 import lombok.Data;
 
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -13,7 +14,7 @@ public class OutcomeInformationPatent {
 
     //主键id
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  Integer id;
 
     //成果信息id
