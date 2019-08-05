@@ -137,15 +137,15 @@ public class SubjectAcceptServiceImpl implements SubjectAcceptSerivce {
 
             //查询专家组意见表，返回给前端
             ExpertGroupComment expertGroupComment = subjectAcceptMapper.queryExpertGroupCommentById(id);//根据验收申请表的id，获取对应专家组意见表
-            if(StringUtils.isEmpty(expertGroupComment)){
+            if (StringUtils.isEmpty(expertGroupComment)) {
                 //如果没有查询出结果，意味着公司还没有上传专家组意见表
-                jsonObject.put("expertGroupComment",null);
-            }else {
+                jsonObject.put("expertGroupComment", null);
+            } else {
                 //此时可以查询出数据
                 int egcId = expertGroupComment.getEgcId();//获取出专家组意见表中的id
                 List<ExpertGroupCommentsName> expertGroupCommentsNameList = subjectAcceptMapper.queryAllExpertNameByEgcId(egcId);//通过专家组意见表的id，获取到专家的信息
                 expertGroupComment.setExpertGroupCommentsNameList(expertGroupCommentsNameList);
-                jsonObject.put("expertGroupComment",expertGroupComment);
+                jsonObject.put("expertGroupComment", expertGroupComment);
             }
 
             jsonObject.remove("achievementUrlId");
@@ -219,13 +219,13 @@ public class SubjectAcceptServiceImpl implements SubjectAcceptSerivce {
                 }
                 try {
                     String expertGroupCommentsUrl = FileUploadUtil.UploadSubejctAcceptExpertFile(expertGroupCommentsFile, "专家组意见", companyName, subejctName);
-                    UploadFile UploadExpertGroupComments = IntegrationFile.IntegrationFile(expertGroupCommentsFile,expertGroupCommentsUrl,"专家组意见",username);
+                    UploadFile UploadExpertGroupComments = IntegrationFile.IntegrationFile(expertGroupCommentsFile, expertGroupCommentsUrl, "专家组意见", username);
 
                     subjectAcceptMapper.insertFile(UploadExpertGroupComments);//把专家组意见文件新增到文件表中
                     subjectAcceptMapper.updateExpertGroupCommentsUrlById(id, UploadExpertGroupComments.getId());    //根据验收申请表的id，把专家组意见文件id更新上去
 
                     String expertAcceptanceFormUrl = FileUploadUtil.UploadSubejctAcceptExpertFile(expertAcceptanceFormFile, "专家组评议", companyName, subejctName);
-                    UploadFile UploadExpertAcceptanceForm = IntegrationFile.IntegrationFile(expertAcceptanceFormFile,expertAcceptanceFormUrl,"专家组评议",username);
+                    UploadFile UploadExpertAcceptanceForm = IntegrationFile.IntegrationFile(expertAcceptanceFormFile, expertAcceptanceFormUrl, "专家组评议", username);
 
                     subjectAcceptMapper.insertFile(UploadExpertAcceptanceForm);        //把专家评议压缩包文件新增到文件表中
                     subjectAcceptMapper.updateExpertAcceptanceFormUrlById(id, UploadExpertAcceptanceForm.getId());    //根据验收申请表的id，把专家评议文件id更新上去
@@ -501,5 +501,32 @@ public class SubjectAcceptServiceImpl implements SubjectAcceptSerivce {
         }
 
         return resultMap.success().message();
+    }
+
+    //验收申请中的保存  需要保存专家组意见表
+    @Override
+    public ResultMap SubjectAcceptSave(String token, HttpServletResponse response, Boolean type, String reason, Integer id, Integer acceptanceFinalResultId, ExpertGroupComment expertGroupComment, MultipartFile expertGroupCommentsFile, MultipartFile expertAcceptanceFormFile) {
+        User user = new User();
+        try {
+            user = tokenService.compare(response, token);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (UserNameNotExistentException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (ClaimsNullException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("MenuServiceImpl 中 TokenService 出现问题");
+            return resultMap.message("系统异常");
+        }
+        Integer uid = user.getId();
+        String username = user.getUsername();
+
+        ResultMap resultMap = new ResultMap();
+        return resultMap;
     }
 }

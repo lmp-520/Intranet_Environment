@@ -83,7 +83,13 @@ public class ExpertGroupComment {
     //创建人
     private  String createAuthor;
 
-    public ExpertGroupComment(Integer caId, String topicName, String topicNumber, String projectLeader, String subjectUndertakingUnit, Integer acceptanceExpertNumber, BigDecimal expertOneGrade, BigDecimal expertTwoGrade, BigDecimal expertThreeGrade, BigDecimal expertFourGrade, BigDecimal expertFiveGrade, BigDecimal expertSixGrade, BigDecimal expertSevenGrade, BigDecimal synthesizeGrade, String topicOverallEvaluation, String suggest, Integer acceptanceConclusionId, List<ExpertGroupCommentsName> expertGroupCommentsNameList, String expertLeader, String writeDate, String createTime, String createAuthor) {
+    //是否提交  0：保存 1：提交
+    private String  isSubmit;
+
+    //保存该表人的id
+    private Integer uid;
+
+    public ExpertGroupComment(Integer caId, String topicName, String topicNumber, String projectLeader, String subjectUndertakingUnit, Integer acceptanceExpertNumber, BigDecimal expertOneGrade, BigDecimal expertTwoGrade, BigDecimal expertThreeGrade, BigDecimal expertFourGrade, BigDecimal expertFiveGrade, BigDecimal expertSixGrade, BigDecimal expertSevenGrade, BigDecimal synthesizeGrade, String topicOverallEvaluation, String suggest, Integer acceptanceConclusionId, List<ExpertGroupCommentsName> expertGroupCommentsNameList, String expertLeader, String writeDate, String createTime, String createAuthor, String isSubmit, Integer uid) {
         this.caId = caId;
         this.topicName = topicName;
         this.topicNumber = topicNumber;
@@ -106,6 +112,8 @@ public class ExpertGroupComment {
         this.writeDate = writeDate;
         this.createTime = createTime;
         this.createAuthor = createAuthor;
+        this.isSubmit = isSubmit;
+        this.uid = uid;
     }
 
     public ExpertGroupComment() {

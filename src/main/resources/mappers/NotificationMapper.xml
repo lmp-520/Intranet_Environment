@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xdmd.IntranetEnvironment.notification.mapper.NotificationMapper">
+    <insert id="addNotification" useGeneratedKeys="true" keyProperty="notification.id">
+        insert into notification(
+        id,
+        title,
+        content,
+        create_time,
+        create_author,
+        start_time,
+        end_time,
+        is_delete)
+        values (
+        #{notification.id},
+        #{notification.title},
+        #{notification.content},
+        #{notification.createTime},
+        #{username},
+        #{notification.startTime},
+        #{notification.endTime},
+        #{notification.isDelete}
+        )
+    </insert>
+
+    <update id="deleteNotificationService" parameterType="com.xdmd.IntranetEnvironment.notification.pojo.Notification">
+        update  notification
+        set is_delete = 1
+        where id = #{nid}
+    </update>
+
+    <update id="updateNotificationService" parameterType="com.xdmd.IntranetEnvironment.notification.pojo.Notification">
+        update  notification set
+        title = #{notification.title},
+        content = #{notification.content},
+        start_time = #{notification.startTime},
+        end_time = #{notification.endTime}
+        where id = #{nid}
+    </update>
+</mapper>

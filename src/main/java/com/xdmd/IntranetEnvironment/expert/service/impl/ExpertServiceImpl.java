@@ -69,11 +69,34 @@ public class ExpertServiceImpl implements ExpertService {
             return resultMap.fail().message("登陆名已存在");
         }
 
+        //对文件的后缀名进行判断
+        List<String> suffixList = new ArrayList<>(Arrays.asList(".doc",".docx",".pdf"));
+        //获取文件名
+        String filename = expertFile.getOriginalFilename();
+        Boolean aBoolean = FileSuffixJudgeUtil.SuffixJudge(filename, suffixList);
+        if(aBoolean == false){
+            return resultMap.fail().message("请上传正确的文件格式");
+        }
+
+        //对文件进行上传
+        String expertInformationFileUrl = null;
+        try {
+            expertInformationFileUrl = FileUploadUtil.UploadExpertInformationFile(expertFile, "专家信息库");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        //把上传文件的信息存储到upload_file
+        UploadFile uploadFileExpert = IntegrationFile.IntegrationFile(expertFile, expertInformationFileUrl, "专家信息库", username);
+        expertMapper.uploadExpertFile(uploadFileExpert);    //把文件上传的信息存储到upload_file表中
+
         //把专家信息表的内容存入数据库
         String newPassword = MD5Utils.md5(expertInformation.getPassword());//对获取的密码进行加密
         expertInformation.setPassword(newPassword);     //把新的密码存入到对象中
         expertInformation.setIsFirst("true");//设置isFirst  是否第一次登陆，默认true
         expertInformation.setCreateAuthor(username);    //存入创建此条信息的人
+        expertInformation.setExpertInformationUrlId(uploadFileExpert.getId());  //把保存的的专家信息文件的id，存储起来
+        expertInformation.setIsSubmit("1"); //设置已提交状态
 
         //获取当前时间，存入创建时间字段
         Date date = new Date();
@@ -153,6 +176,33 @@ public class ExpertServiceImpl implements ExpertService {
             }
         }
 
+        return resultMap.success().message("新增成功");
+    }
+
+    //专家信息的保存
+    @Override
+    public ResultMap expertSave(String token, HttpServletResponse response, ExpertInformation expertInformation, MultipartFile expertFile) throws Exception{
+        User user = new User();
+        try {
+            user = tokenService.compare(response, token);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (UserNameNotExistentException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (ClaimsNullException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("MenuServiceImpl 中 TokenService 出现问题");
+            return resultMap.message("系统异常");
+        }
+        Integer uid = user.getId();
+        String username = user.getUsername();
+
+
         //对文件的后缀名进行判断
         List<String> suffixList = new ArrayList<>(Arrays.asList(".doc",".docx",".pdf"));
         //获取文件名
@@ -174,7 +224,93 @@ public class ExpertServiceImpl implements ExpertService {
         UploadFile uploadFileExpert = IntegrationFile.IntegrationFile(expertFile, expertInformationFileUrl, "专家信息库", username);
         expertMapper.uploadExpertFile(uploadFileExpert);    //把文件上传的信息存储到upload_file表中
 
-        return resultMap.success().message("新增成功");
+
+        //把专家信息表的内容存入数据库
+        String newPassword = MD5Utils.md5(expertInformation.getPassword());//对获取的密码进行加密
+        expertInformation.setPassword(newPassword);     //把新的密码存入到对象中
+      //  expertInformation.setIsFirst("true");//设置isFirst  是否第一次登陆，默认true
+        expertInformation.setCreateAuthor(username);    //存入创建此条信息的人
+        expertInformation.setExpertInformationUrlId(uploadFileExpert.getId());  //把上传专家信息的id存储起来
+
+        //获取当前时间，存入创建时间字段
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String nowTime = sdf.format(date);
+        expertInformation.setCreateTime(nowTime);
+
+        expertInformation.setIsSubmit("0"); //设置提交信息是保存
+        expertInformation.setUid(uid);  //保存此条信息的提交人
+
+        try {
+            expertMapper.addExpertInformation(expertInformation);    //新增专家信息表主表
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new InsertSqlException("ExpertServiceImpl 中 distributionAccount 方法  新增专家信息表主表sql出错 -- " + e.getMessage());
+        }
+
+        //获取专家信息表的id
+
+        //新增专家信息表中的文章表
+        List<ExpertInformationArticle> expertInformationArticleList = expertInformation.getExpertInformationArticleList();  //获取专家信息表中文章列表集合
+        for (ExpertInformationArticle expertInformationArticle : expertInformationArticleList) {
+            expertInformationArticle.setExpertId(expertInformation.getId());    //把文章列表中对应的专家信息表的id存入
+            try {
+                expertMapper.addExpertInformationArticle(expertInformationArticle); //新增专家信息表对应的文章列表
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new InsertSqlException("ExpertServiceImpl 中 distributionAccount 方法 新增文章表sql出错 -- " + e.getMessage());
+            }
+        }
+
+        //新增专家信息表中著作表
+        List<ExpertInformationBook> expertInformationBookList = expertInformation.getExpertInformationBookList();   //获取专家信息表中的著作列表集合
+        for (ExpertInformationBook expertInformationBook : expertInformationBookList) {
+            expertInformationBook.setExpertId(expertInformation.getId());   //把文章列表中的对应的专家信息表的id存入
+            try {
+                expertMapper.addExpertInformationBook(expertInformationBook);   //新增专家信息表对应的著作列表
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new InsertSqlException("ExpertServiceImpl 中 distributionAccount 方法 新增著作表sql出错 -- " + e.getMessage());
+            }
+        }
+
+        //新增专家信息表中的专利表
+        List<ExpertInformationPatent> expertInformationPatentList = expertInformation.getExpertInformationPatentList(); //获取专家信息表中的专利表集合
+        for (ExpertInformationPatent expertInformationPatent : expertInformationPatentList) {
+            expertInformationPatent.setExpertId(expertInformation.getId()); //把专利表中的对应的专家信息表的id存入
+            try {
+                expertMapper.addExpertInformationPatent(expertInformationPatent);   //新增专家信息表对应的专利列表
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new InsertSqlException("ExpertServiceImpl 中 distributionAccount 方法 新增专利表sql出错 -- " + e.getMessage());
+            }
+        }
+
+        //新增专家信息表中的获奖表
+        List<ExpertInformationPrizeWinning> expertInformationPrizeWinningList = expertInformation.getExpertInformationPrizeWinningList();   //获取专家信息表中的获奖表集合
+        for (ExpertInformationPrizeWinning expertInformationPrizeWinning : expertInformationPrizeWinningList) {
+            expertInformationPrizeWinning.setExpertId(expertInformation.getId());   //把获奖表中的对应的专家信息表的id存入
+            try {
+                expertMapper.addExpertInformationPrizeWinning(expertInformationPrizeWinning);   //新增专家信息表对应的获奖列表
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new InsertSqlException("ExpertServiceImpl 中 distributionAccount 方法 新增获奖表sql出错 -- " + e.getMessage());
+            }
+        }
+
+        //新增专家信息表中的研究方向
+        List<ExpertInformationResearchDirection> expertInformationResearchDirectionList = expertInformation.getExpertInformationResearchDirectionList();     //获取专家信息表中的研究方向表集合
+        for (ExpertInformationResearchDirection expertInformationResearchDirection : expertInformationResearchDirectionList) {
+            expertInformationResearchDirection.setExpertId(expertInformation.getId());  //把研究方向中的对应的专家信息表的id存入
+            try {
+                expertMapper.addExpertInformationResearchDirection(expertInformationResearchDirection); //新增专家信息表对应的研究方向列表
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new InsertSqlException("ExpertServiceImpl 中 distributionAccount 方法 新增研究方向表sql出错 -- " + e.getMessage());
+            }
+        }
+
+        return resultMap.success().message("保存成功");
     }
 
     //专家的查询

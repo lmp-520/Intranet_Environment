@@ -157,7 +157,7 @@
                 and is_province = #{isProvince}
             </if>
             <if test="0 == 0">
-                and is_state in(1,2) and is_delete = 1
+                and is_state in(1,2) and is_delete = 1 and is_submit = 1
             </if>
         </where>
     </select>
@@ -201,7 +201,7 @@
                 and is_province = #{isProvince}
             </if>
             <if test="0 == 0">
-                and is_state in(1,2) and is_delete = 1
+                and is_state in(1,2) and is_delete = 1 and is_submit = 1
             </if>
         </where>
     </select>

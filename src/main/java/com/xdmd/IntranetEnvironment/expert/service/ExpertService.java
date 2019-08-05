@@ -14,4 +14,6 @@ public interface ExpertService {
     ResultMap expertState(String token, HttpServletResponse response, Boolean type, String reason, Integer id) throws updateSqlException;
 
     ResultMap distributionAccount(String token, HttpServletResponse response, ExpertInformation expertInformation, MultipartFile expertFile) throws Exception;
+
+    ResultMap expertSave(String token, HttpServletResponse response, ExpertInformation expertInformation, MultipartFile expertFile) throws Exception;
 }

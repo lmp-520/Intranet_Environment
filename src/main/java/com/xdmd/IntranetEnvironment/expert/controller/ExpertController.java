@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -84,7 +83,6 @@ public class ExpertController {
         if (StringUtils.isEmpty(token)) {
             return resultMap.fail().message("请先登录");
         }
-
         try {
             resultMap = expertService.expertState(token, response, type, reason, id);
         } catch (Exception e) {
@@ -93,7 +91,25 @@ public class ExpertController {
             return resultMap.fail().message("系统异常");
         }
         return resultMap;
+    }
 
+    //专家信息的保存
+    public ResultMap expertSave(@CookieValue(value = "IntranecToken") String token, HttpServletResponse response,
+                                @RequestPart ExpertInformation expertInformation,
+                                @RequestPart("ExpertFile") MultipartFile ExpertFile){
+
+        if(StringUtils.isEmpty(token)){
+            return resultMap.fail().message("请先登录");
+        }
+
+        try {
+            resultMap = expertService.expertSave(token,response,expertInformation,ExpertFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("ExpertController 中 expertSave方法出错 -- "+e.getMessage());
+            return resultMap.fail().message("系统异常");
+        }
+        return resultMap;
     }
 
     @ResponseBody
@@ -101,6 +117,5 @@ public class ExpertController {
     public ResultMap test(@RequestParam("ExpertFile") MultipartFile ExpertFile){
         System.out.println("aaa");
         return resultMap;
-
     }
 }

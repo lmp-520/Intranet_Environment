@@ -59,24 +59,24 @@ public class SubjectAcceptController {
                                         @RequestParam(value = "reason", required = false) String reason,//审核未通过原因
                                         @RequestParam("id") Integer id,//验收申请数据的id
                                         @RequestParam("acceptanceFinalResultId") Integer acceptanceFinalResultId,//最终验收结果id
-                                    //    @RequestBody ExpertGroupComment expertGroupComment, //专家组意见表
-                                        @RequestParam(value = "expertGroupCommentsFile",required = false)MultipartFile expertGroupCommentsFile,  //专家意见表文件
-                                        @RequestParam(value = "expertAcceptanceFormFile",required = false)MultipartFile expertAcceptanceFormFile){ //专家评议表文件
+                                        //    @RequestBody ExpertGroupComment expertGroupComment, //专家组意见表
+                                        @RequestParam(value = "expertGroupCommentsFile", required = false) MultipartFile expertGroupCommentsFile,  //专家意见表文件
+                                        @RequestParam(value = "expertAcceptanceFormFile", required = false) MultipartFile expertAcceptanceFormFile) { //专家评议表文件
         //首先判断token是否存在
-        if(StringUtils.isEmpty(token)){
+        if (StringUtils.isEmpty(token)) {
             return resultMap.fail().message("请先登录");
         }
         try {
-            resultMap = subjectAcceptSerivce.SubjectAcceptState(token,response,type,reason,id,expertGroupCommentsFile,expertAcceptanceFormFile,acceptanceFinalResultId);
-        } catch (UpdateSqlException e){
+            resultMap = subjectAcceptSerivce.SubjectAcceptState(token, response, type, reason, id, expertGroupCommentsFile, expertAcceptanceFormFile, acceptanceFinalResultId);
+        } catch (UpdateSqlException e) {
             e.printStackTrace();
-            log.error("SubjectAcceptServiceImpl 中出错：----"+e.getMessage());
+            log.error("SubjectAcceptServiceImpl 中出错：----" + e.getMessage());
             return resultMap.fail().message("系统异常");
-        }catch (InsertSqlException e){
+        } catch (InsertSqlException e) {
             e.printStackTrace();
-            log.error("SubjectAcceptServiceImpl中 出错： ----"+e.getMessage());
+            log.error("SubjectAcceptServiceImpl中 出错： ----" + e.getMessage());
             return resultMap.fail().message("系统异常");
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             log.error("SubjectAcceptController 中 SubjectAcceptState方法错误");
             return resultMap.fail().message("系统异常");
@@ -91,23 +91,45 @@ public class SubjectAcceptController {
     public ResultMap SubjectAcceptStateExpertGroup(@CookieValue(value = "IntranecToken") String token, HttpServletResponse response,
                                                    @RequestParam("type") Boolean type,//审核的状态.   true为审核通过  false为审核未通过
                                                    @RequestParam("id") Integer id,//验收申请数据的id
-                                                   @RequestBody ExpertGroupComment expertGroupComment){ //专家组意见表
+                                                   @RequestBody ExpertGroupComment expertGroupComment) { //专家组意见表
         //首先判断token是否存在
-        if(StringUtils.isEmpty(token)){
+        if (StringUtils.isEmpty(token)) {
             return resultMap.fail().message("请先登录");
         }
 
         try {
-            resultMap = subjectAcceptSerivce.SubjectAcceptStateExpertGroup(token,response,type,id,expertGroupComment);
-        } catch (InsertSqlException e){
+            resultMap = subjectAcceptSerivce.SubjectAcceptStateExpertGroup(token, response, type, id, expertGroupComment);
+        } catch (InsertSqlException e) {
             e.printStackTrace();
-            log.error("SubjectAcceptController 中 SubjectAcceptStateExpertGroup方法--- "+e.getMessage());
+            log.error("SubjectAcceptController 中 SubjectAcceptStateExpertGroup方法--- " + e.getMessage());
             return resultMap.fail().message("系统异常");
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return resultMap.fail().message("系统异常");
         }
         return resultMap;
+    }
 
+    //课题验收中的保存
+    public ResultMap SubjectAcceptSave(@CookieValue(value = "IntranecToken") String token, HttpServletResponse response,
+                                       @RequestParam("type") Boolean type,//审核的状态.   true为审核通过  false为审核未通过
+                                       @RequestParam(value = "reason", required = false) String reason,//审核未通过原因
+                                       @RequestParam("id") Integer id,//验收申请数据的id
+                                       @RequestParam("acceptanceFinalResultId") Integer acceptanceFinalResultId,//最终验收结果id
+                                       @RequestPart ExpertGroupComment expertGroupComment, //专家组意见表
+                                       @RequestPart(value = "expertGroupCommentsFile", required = false) MultipartFile expertGroupCommentsFile,  //专家意见表文件
+                                       @RequestPart(value = "expertAcceptanceFormFile", required = false) MultipartFile expertAcceptanceFormFile) { //专家组评议表文件
+
+        if (StringUtils.isEmpty(token)) {
+            return resultMap.fail().message("请先登陆");
+        }
+        try {
+            resultMap = subjectAcceptSerivce.SubjectAcceptSave(token, response, type, reason, id, acceptanceFinalResultId, expertGroupComment, expertGroupCommentsFile, expertAcceptanceFormFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("SubjectAcceptController 中 SubjectAcceptSave方法出错 ---" + e.getMessage());
+            return resultMap.fail().message("系统异常");
+        }
+        return resultMap;
     }
 }

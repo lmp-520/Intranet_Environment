@@ -15,4 +15,6 @@ public interface SubjectAcceptSerivce {
     ResultMap SubjectAcceptState(String token, HttpServletResponse response, Boolean type, String reason, Integer id, MultipartFile expertGroupCommentsFile, MultipartFile expertAcceptanceFormFile, Integer acceptanceFinalResultId) throws Exception;
 
     ResultMap SubjectAcceptStateExpertGroup(String token, HttpServletResponse response, Boolean type, Integer id, ExpertGroupComment expertGroupComment) throws Exception;
+
+    ResultMap SubjectAcceptSave(String token, HttpServletResponse response, Boolean type, String reason, Integer id, Integer acceptanceFinalResultId, ExpertGroupComment expertGroupComment, MultipartFile expertGroupCommentsFile, MultipartFile expertAcceptanceFormFile);
 }
