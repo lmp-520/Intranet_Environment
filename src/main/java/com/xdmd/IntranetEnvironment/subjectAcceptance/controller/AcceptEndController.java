@@ -2,6 +2,10 @@ package com.xdmd.IntranetEnvironment.subjectAcceptance.controller;
 
 import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.service.AcceptEndService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 
+@Api(tags = "验收结束")
 @Controller
 @RequestMapping("AcceptEnd")
 public class AcceptEndController {
@@ -20,6 +25,17 @@ public class AcceptEndController {
     private static Logger log = LoggerFactory.getLogger(AcceptEndController.class);
 
     //验收结束的查询
+    @ApiOperation(value = "验收结束的查询")
+    @ApiImplicitParams(
+            {
+                    @ApiImplicitParam(name = "topicName",value = "课题名称"),
+                    @ApiImplicitParam(name = "subjectUndertakingUnit",value = "承担单位"),
+                    @ApiImplicitParam(name = "unitNature",value = "单位性质"),
+                    @ApiImplicitParam(name = "projectLeader",value = "课题负责人"),
+                    @ApiImplicitParam(name = "Page",value = "页数"),
+                    @ApiImplicitParam(name = "total",value = "每页显示条数"),
+            }
+    )
     @ResponseBody
     @PostMapping("query")
     public ResultMap AcceptEndQuery(@RequestParam(value = "topicName", required = false) String topicName, //课题名称
@@ -43,6 +59,14 @@ public class AcceptEndController {
 
 
     //验收结束的审核
+    @ApiOperation(value = "验收结束的审核")
+    @ApiImplicitParams(
+            {
+                    @ApiImplicitParam(name = "type",value = "true为审核通过  false为审核未通过"),
+                    @ApiImplicitParam(name = "reason",value = "审核未通过原因"),
+                    @ApiImplicitParam(name = "id",value = "验收申请表id")
+            }
+    )
     @ResponseBody
     @PostMapping("examine")
     public ResultMap AcceptEndState(@CookieValue(value = "IntranecToken") String token, HttpServletResponse response,

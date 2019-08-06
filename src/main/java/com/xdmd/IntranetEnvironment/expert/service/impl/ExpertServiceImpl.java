@@ -40,7 +40,7 @@ public class ExpertServiceImpl implements ExpertService {
     //给专家分配账号
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResultMap distributionAccount(String token, HttpServletResponse response, ExpertInformation expertInformation, MultipartFile expertFile) throws InsertSqlException {
+    public ResultMap distributionAccount(String token, HttpServletResponse response, ExpertInformation expertInformation, MultipartFile expertFile) throws Exception {
         User user = new User();
         try {
             user = tokenService.compare(response, token);
@@ -80,11 +80,12 @@ public class ExpertServiceImpl implements ExpertService {
 
         //对文件进行上传
         String expertInformationFileUrl = null;
-        try {
+//       try {
             expertInformationFileUrl = FileUploadUtil.UploadExpertInformationFile(expertFile, "专家信息库");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            throw Exception;
+//        }
 
         //把上传文件的信息存储到upload_file
         UploadFile uploadFileExpert = IntegrationFile.IntegrationFile(expertFile, expertInformationFileUrl, "专家信息库", username);

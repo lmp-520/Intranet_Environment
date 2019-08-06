@@ -5,6 +5,10 @@ import com.xdmd.IntranetEnvironment.expert.pojo.ExpertInformation;
 import com.xdmd.IntranetEnvironment.expert.service.ExpertService;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.controller.AcceptStateController;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.exception.InsertSqlException;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 
+@Api(tags = "专家库")
 @Controller
 @RequestMapping("expert")
 public class ExpertController {
@@ -25,6 +30,13 @@ public class ExpertController {
     private ExpertService expertService;
 
     //给专家分配账号
+    @ApiOperation(value = "专家的创建")
+    @ApiImplicitParams(
+            {
+                    @ApiImplicitParam(name = "expertInformation",value = "专家表信息"),
+                    @ApiImplicitParam(name = "ExpertFile",value = "专家信息文件")
+            }
+    )
     @PostMapping("distributionAccount")
     @ResponseBody
     public ResultMap distributionAccount(@CookieValue(value = "IntranecToken") String token, HttpServletResponse response,
@@ -51,6 +63,17 @@ public class ExpertController {
 
 
     //专家的查询
+    @ApiOperation(value = "专家的查询")
+    @ApiImplicitParams(
+            {
+                    @ApiImplicitParam(name = "name",value = "真实姓名"),
+                    @ApiImplicitParam(name = "natureWork",value = "工作性质"),
+                    @ApiImplicitParam(name = "professionalField",value = "专业领域"),
+                    @ApiImplicitParam(name = "isProvince",value = "省内省外"),
+                    @ApiImplicitParam(name = "Page",value = "页数"),
+                    @ApiImplicitParam(name = "total",value = "条数")
+            }
+    )
     @ResponseBody
     @PostMapping("query")
     public ResultMap query(@RequestParam(value = "name", required = false) String name,    //真实姓名
@@ -74,6 +97,14 @@ public class ExpertController {
 
 
     //专家账号的审核
+    @ApiOperation(value = "专家的审核")
+    @ApiImplicitParams(
+            {
+                    @ApiImplicitParam(name = "type",value = "审核的状态.   true为审核通过  false为审核未通过"),
+                    @ApiImplicitParam(name = "reason",value = "审核未通过的原因"),
+                    @ApiImplicitParam(name = "id",value = "专家账号的id")
+            }
+    )
     @ResponseBody
     @PostMapping("examine")
     public ResultMap expertState(@CookieValue(value = "IntranecToken") String token, HttpServletResponse response,

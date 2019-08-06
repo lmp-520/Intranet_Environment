@@ -3,6 +3,10 @@ package com.xdmd.IntranetEnvironment.subjectAcceptance.controller;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.service.AcceptApplySerivce;
 import com.xdmd.IntranetEnvironment.user.service.impl.MenuServiceImpl;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+@Api(tags="验收申请查询")
 @Controller
 @RequestMapping("checkApply")
 public class AcceptApplyController {
@@ -32,6 +37,17 @@ public class AcceptApplyController {
      * @param total
      * @return
      */
+    @ApiOperation(value = "查询企业提交的验收申请")
+    @ApiImplicitParams(
+            {
+                    @ApiImplicitParam(name = "topicName",value ="课题名称", required = false),
+                    @ApiImplicitParam(name = "subjectUndertakingUnit",value ="承担单位", required = false),
+                    @ApiImplicitParam(name = "unitNature",value ="单位性质", required = false),
+                    @ApiImplicitParam(name = "projectLeader",value ="课题负责人", required = false),
+                    @ApiImplicitParam(name = "Page",value ="页数", required = true),
+                    @ApiImplicitParam(name = "total",value ="每页显示条数", required = true)
+            }
+    )
     @ResponseBody
     @PostMapping("query")
     public ResultMap acceptApplyQuery(@RequestParam(value = "topicName",required = false) String topicName, //课题名称

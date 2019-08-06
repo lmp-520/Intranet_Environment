@@ -4,8 +4,11 @@ import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.exception.InsertSqlException;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.exception.UpdateSqlException;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.pojo.ExpertGroupComment;
-import com.xdmd.IntranetEnvironment.subjectAcceptance.pojo.ExpertGroupCommentsName;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.service.SubjectAcceptSerivce;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,12 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.http.HttpServletResponse;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
 
+@Api(tags = "课题验收")
 @Controller
 @RequestMapping("subjectAccept")
 public class SubjectAcceptController {
@@ -30,6 +30,17 @@ public class SubjectAcceptController {
 
 
     //课题验收的查询
+    @ApiOperation(value = "课题验收的查询")
+    @ApiImplicitParams(
+            {
+                    @ApiImplicitParam(name = "topicName",value = "课题名称"),
+                    @ApiImplicitParam(name = "subjectUndertakingUnit",value = "承担单位"),
+                    @ApiImplicitParam(name = "unitNature",value = "单位性质"),
+                    @ApiImplicitParam(name = "projectLeader",value = "课题负责人"),
+                    @ApiImplicitParam(name = "Page",value = "页数"),
+                    @ApiImplicitParam(name = "total",value = "每页显示条数")
+            }
+    )
     @ResponseBody
     @PostMapping("query")
     public ResultMap SubjectAcceptQuery(@RequestParam(value = "topicName", required = false) String topicName, //课题名称
@@ -52,6 +63,17 @@ public class SubjectAcceptController {
     }
 
     //课题验收中的审核
+    @ApiOperation(value = "课题验收中的审核")
+    @ApiImplicitParams(
+            {
+                    @ApiImplicitParam(name = "type",value = "审核的状态，true为审核通过，false未审核未通过"),
+                    @ApiImplicitParam(name = "reason",value = "审核未通过的原因"),
+                    @ApiImplicitParam(name = "id",value = "验收申请数据的id"),
+                    @ApiImplicitParam(name = "acceptanceFinalResultId",value = "最终验收结果的id"),
+                    @ApiImplicitParam(name = "expertGroupCommentsFile",value = "专家意见表文件"),
+                    @ApiImplicitParam(name = "expertAcceptanceFormFile",value = "专家评议表文件")
+            }
+    )
     @ResponseBody
     @PostMapping("examine")
     public ResultMap SubjectAcceptState(@CookieValue(value = "IntranecToken") String token, HttpServletResponse response,
@@ -111,6 +133,18 @@ public class SubjectAcceptController {
     }
 
     //课题验收中的保存
+    @ApiOperation(value = "课题验收中的保存")
+    @ApiImplicitParams(
+            {
+                    @ApiImplicitParam(name = "type",value = "审核的状态，true为审核通过，false未审核未通过"),
+                    @ApiImplicitParam(name = "reason",value = "审核未通过的原因"),
+                    @ApiImplicitParam(name = "id",value = "验收申请数据的id"),
+                    @ApiImplicitParam(name = "acceptanceFinalResultId",value = "最终验收结果的id"),
+                    @ApiImplicitParam(name = "expertGroupComment",value = "专家组意见表"),
+                    @ApiImplicitParam(name = "expertGroupCommentsFile",value = "专家意见表文件"),
+                    @ApiImplicitParam(name = "expertAcceptanceFormFile",value = "专家评议表文件")
+            }
+    )
     public ResultMap SubjectAcceptSave(@CookieValue(value = "IntranecToken") String token, HttpServletResponse response,
                                        @RequestParam("type") Boolean type,//审核的状态.   true为审核通过  false为审核未通过
                                        @RequestParam(value = "reason", required = false) String reason,//审核未通过原因

@@ -3,6 +3,10 @@ package com.xdmd.IntranetEnvironment.achievementManagement.controller;
 import com.xdmd.IntranetEnvironment.achievementManagement.pojo.OutcomeInformationAll;
 import com.xdmd.IntranetEnvironment.achievementManagement.service.AchievementService;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 
+@Api(tags = "成果管理")
 @Controller
 @RequestMapping("achievement")
 public class AchievementController {
@@ -22,7 +27,17 @@ public class AchievementController {
     AchievementService achievementService;
     private static Logger log = LoggerFactory.getLogger(AchievementController.class);
 
+
     //成果库 的 成果查询
+    @ApiOperation(value = "成果库的成果查询")
+    @ApiImplicitParams(
+            {
+                    @ApiImplicitParam(name = "topicName",value = "课题名称"),
+                    @ApiImplicitParam(name = "topicNumber",value = "课题编号"),
+                    @ApiImplicitParam(name = "Page",value = "页数"),
+                    @ApiImplicitParam(name = "total",value = "每页显示条数")
+            }
+    )
     @PostMapping("queryAchievement")
     @ResponseBody
     public ResultMap QueryAchievement(@RequestParam(value = "topicName", required = false) String topicName,
@@ -38,6 +53,15 @@ public class AchievementController {
     }
 
     //当环保厅进行成果新增时. 进行的查询
+    @ApiOperation(value = "成果新增时的查询")
+    @ApiImplicitParams(
+            {
+                    @ApiImplicitParam(name = "topicName",value = "课题名称"),
+                    @ApiImplicitParam(name = "topicNumber",value = "课题编号"),
+                    @ApiImplicitParam(name = "Page",value = "页数"),
+                    @ApiImplicitParam(name = "total",value = "每页显示条数")
+            }
+    )
     @ResponseBody
     @PostMapping("addAchievementQuery")
     public ResultMap queryAddAchievement(@RequestParam(value = "topicName", required = false) String topicName,
@@ -80,6 +104,14 @@ public class AchievementController {
     }
 
     //成果新增的提交
+    @ApiOperation(value = "成果新增的提交")
+    @ApiImplicitParams(
+            {
+                    @ApiImplicitParam(name = "cid",value = "验收申请表的id"),
+                    @ApiImplicitParam(name = "achievementFileUrl",value = "成果附件文件"),
+                    @ApiImplicitParam(name = "outcomeInformationAll",value = "成果信息")
+            }
+    )
     @PostMapping("AddAchievement")
     @ResponseBody
     public ResultMap AddAchievement(@CookieValue(value = "IntranecToken") String token, HttpServletResponse response,
