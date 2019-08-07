@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -77,12 +78,14 @@ public class AcceptStateController {
     public ResultMap acceptState(@CookieValue(value = "IntranecToken") String token, HttpServletResponse response,
                                  @RequestParam("type") Boolean type,//审核的状态.   true为审核通过  false为审核未通过
                                  @RequestParam(value = "reason", required = false) String reason,//审核未通过原因
-                                 @RequestParam("id") Integer id) { //最终验收结果id
+                                 @RequestParam("id") Integer id,//验收申请表id
+                                 @RequestParam("specialAuditFile")MultipartFile specialAuditFile,//专项审计报告文件
+                                 @RequestParam("firstInspectionFile") MultipartFile firstInspectionFile) {  //初审报告文件
         if (StringUtils.isEmpty(token)) {
             return resultMap.fail().message("请先登录");
         }
         try {
-            resultMap = acceptStateService.acceptState(token, response, type, reason, id);
+            resultMap = acceptStateService.acceptState(token, response, type, reason, id,specialAuditFile,firstInspectionFile);
         } catch (UpdateSqlException e) {
             e.printStackTrace();
             log.error("AcceptStateController 中 acceptState 方法 -- " + e.getMessage());

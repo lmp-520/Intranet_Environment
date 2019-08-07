@@ -81,15 +81,16 @@ public class SubjectAcceptController {
                                         @RequestParam(value = "reason", required = false) String reason,//审核未通过原因
                                         @RequestParam("id") Integer id,//验收申请数据的id
                                         @RequestParam("acceptanceFinalResultId") Integer acceptanceFinalResultId,//最终验收结果id
-                                        //    @RequestBody ExpertGroupComment expertGroupComment, //专家组意见表
-                                        @RequestParam(value = "expertGroupCommentsFile", required = false) MultipartFile expertGroupCommentsFile,  //专家意见表文件
+                                        @RequestPart ExpertGroupComment expertGroupComment, //专家组意见表
+                                        @RequestPart(value = "expertGroupCommentsFile", required = false) MultipartFile expertGroupCommentsFile,  //专家意见表文件
                                         @RequestParam(value = "expertAcceptanceFormFile", required = false) MultipartFile expertAcceptanceFormFile) { //专家评议表文件
         //首先判断token是否存在
         if (StringUtils.isEmpty(token)) {
             return resultMap.fail().message("请先登录");
         }
+
         try {
-            resultMap = subjectAcceptSerivce.SubjectAcceptState(token, response, type, reason, id, expertGroupCommentsFile, expertAcceptanceFormFile, acceptanceFinalResultId);
+            resultMap = subjectAcceptSerivce.SubjectAcceptState(token, response, type, reason, id, expertGroupCommentsFile, expertAcceptanceFormFile, acceptanceFinalResultId,expertGroupComment);
         } catch (UpdateSqlException e) {
             e.printStackTrace();
             log.error("SubjectAcceptServiceImpl 中出错：----" + e.getMessage());

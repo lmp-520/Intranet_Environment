@@ -2,8 +2,7 @@ package com.xdmd.IntranetEnvironment.subjectAcceptance.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.xdmd.IntranetEnvironment.common.PageBean;
-import com.xdmd.IntranetEnvironment.common.ResultMap;
+import com.xdmd.IntranetEnvironment.common.*;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.exception.InsertSqlException;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.exception.UpdateAcceptancePhaseException;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.exception.UpdateSqlException;
@@ -20,9 +19,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class AcceptStateServiceImpl implements AcceptStateService {
 
     //验收审核
     @Override
-    public ResultMap acceptState(String token, HttpServletResponse response, Boolean type, String reason, Integer id) throws Exception {
+    public ResultMap acceptState(String token, HttpServletResponse response, Boolean type, String reason, Integer id, MultipartFile specialAuditFile, MultipartFile firstInspectionFile) throws Exception {
         User user = new User();
         try {
             user = tokenService.compare(response, token);
@@ -63,6 +64,36 @@ public class AcceptStateServiceImpl implements AcceptStateService {
 
         //判断是审核通过还是审核未通过
         if (type) {
+            //此时为审核通过时
+            //判断上传文件的后缀名是否正确
+            String specialAuditFileName = specialAuditFile.getOriginalFilename();
+            List<String> specialAuditSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".xlsx", ".zip", ".7z", ".rar"));
+            Boolean aBoolean = FileSuffixJudgeUtil.SuffixJudge(specialAuditFileName, specialAuditSuffixList);
+
+            String firstInspectionFileName = firstInspectionFile.getOriginalFilename();
+            List<String> firstInspectionSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".xlsx", ".zip", ".7z", ".rar"));
+            Boolean bBoolean = FileSuffixJudgeUtil.SuffixJudge(firstInspectionFileName, firstInspectionSuffixList);
+
+            if(aBoolean == false || bBoolean == false){
+                //两个文件中存在有一个错误，意味着有文件上传的格式不正确
+                return resultMap.fail().message("请上传正确的文件格式");
+            }
+
+            //根据验收申请表的id 获取该公司的名字
+            String cname = acceptStateMapper.queryCompanyNameByCid(id);
+
+            //获取专项审计报告文件的地址
+            String specialAuditFileUrl = FileUploadUtil.fileUpload(specialAuditFile, cname, "专项审计报告");
+            UploadFile uploadSpecialAudit = IntegrationFile.IntegrationFile(specialAuditFile,specialAuditFileUrl,"专项审计报告",username);
+            acceptStateMapper.insertFile(uploadSpecialAudit);   //把该文件上传到文件表中
+            acceptStateMapper.updateCheckApplyFileId(id,uploadSpecialAudit.getId());//把新增该专项审计报告文件的id取出，存到check_apply中
+
+            //初审报告文件
+            String firstInspectionFIleUrl = FileUploadUtil.fileUpload(firstInspectionFile, cname, "初审报告");
+            UploadFile uploadFirstInspection = IntegrationFile.IntegrationFile(firstInspectionFile,firstInspectionFIleUrl,"初审报告",username);
+            acceptStateMapper.insertFile(uploadFirstInspection);    //上传此文件到文件表中
+            acceptStateMapper.updateCheckApplyFirstInspectionFileId(id,uploadFirstInspection.getId());//把新增初审报告文件的id取出，存在check_apply中
+
 
             //审核通过时,先把上一条数据进行更新，再新增下一条数据
             String state = "已处理";

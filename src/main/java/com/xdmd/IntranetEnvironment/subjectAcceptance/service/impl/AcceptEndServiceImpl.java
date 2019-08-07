@@ -92,6 +92,27 @@ public class AcceptEndServiceImpl implements AcceptEndService {
             String acceptanceCertificateFileUrl = acceptEndMapper.queryFileUrlByFileId(acceptanceCertificateId);
             checkApply.setAcceptanceCertificateUrl(acceptanceCertificateFileUrl);
 
+            //获取专家组文件的id
+            Integer expertGroupCommentsUrlId = checkApply.getExpertGroupCommentsUrlId();
+            String expertGroupFileUrl = acceptEndMapper.queryFileUrlByFileId(expertGroupCommentsUrlId);
+            checkApply.setExpertGroupCommentsUrl(expertGroupFileUrl);
+
+            //获取专家评议表文件的id
+            Integer expertAcceptanceFormId = checkApply.getExpertAcceptanceFormId();
+            String expertAcceptanceFormUrl = acceptEndMapper.queryFileUrlByFileId(expertAcceptanceFormId);
+            checkApply.setExpertAcceptanceFormUrl(expertAcceptanceFormUrl);
+
+            //获取审计报告文件的id
+            Integer auditReportUrlId = checkApply.getAuditReportUrlId();
+            String auditReportUrl = acceptEndMapper.queryFileUrlByFileId(auditReportUrlId);
+            checkApply.setSpecialAuditUrl(auditReportUrl);
+
+            //获取初审报告文件
+            Integer firstInspectionReportUrlId = checkApply.getFirstInspectionReportUrlId();
+            String firstInspectionReportUrl = acceptEndMapper.queryFileUrlByFileId(firstInspectionReportUrlId);
+            checkApply.setFirstInspectionUrl(firstInspectionReportUrl);
+
+
             //取出验收申请表中数据对应的id
             Integer id = checkApply.getId();
             //根据id到验收审核状态表中查询审核状态

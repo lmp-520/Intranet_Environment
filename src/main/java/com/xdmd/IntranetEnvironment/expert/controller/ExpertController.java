@@ -40,8 +40,8 @@ public class ExpertController {
     @PostMapping("distributionAccount")
     @ResponseBody
     public ResultMap distributionAccount(@CookieValue(value = "IntranecToken") String token, HttpServletResponse response,
-                                         @RequestBody ExpertInformation expertInformation,
-                                         @RequestParam("ExpertFile") MultipartFile ExpertFile) {
+                                         @RequestPart ExpertInformation expertInformation,
+                                         @RequestPart("ExpertFile") MultipartFile ExpertFile) {
         if (StringUtils.isEmpty(token)) {
             return resultMap.fail().message("请先登录");
         }

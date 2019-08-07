@@ -21,11 +21,7 @@ public class ExpertStyleServiceImpl implements ExpertStyleService {
     public ResultMap queryProvince() {
         HashMap<String, Object> result = new HashMap<>();
         List<Dictionary> dictionaryList = expertStyleMapper.queryProvince();
-        for (Dictionary dictionary : dictionaryList) {
-            result.put("id",dictionary.getId());
-            result.put("name",dictionary.getContent());
-        }
-        return resultMap.success().message(result);
+        return resultMap.success().message(dictionaryList);
     }
 
     //显示工作性质
@@ -33,11 +29,7 @@ public class ExpertStyleServiceImpl implements ExpertStyleService {
     public ResultMap queryNatureWork() {
         HashMap<String, Object> result = new HashMap<>();
         List<Dictionary> dictionaryList = expertStyleMapper.queryNatureWork();
-        for (Dictionary dictionary : dictionaryList) {
-            result.put("id",dictionary.getId());
-            result.put("name",dictionary.getContent());
-        }
-        return resultMap.success().message(result);
+        return resultMap.success().message(dictionaryList);
     }
 
     //显示专业领域
@@ -45,10 +37,6 @@ public class ExpertStyleServiceImpl implements ExpertStyleService {
     public ResultMap professionalField() {
         HashMap<String, Object> result = new HashMap<>();
         List<Dictionary> dictionaryList = expertStyleMapper.professionalField();
-        for (Dictionary dictionary : dictionaryList) {
-            result.put("id",dictionary.getId());
-            result.put("name",dictionary.getContent());
-        }
-        return resultMap.success().message(result);
+        return resultMap.success().message(dictionaryList);
     }
 }

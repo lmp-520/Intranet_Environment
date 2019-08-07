@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 //显示专家中，字典表中内容
 @Controller
-@RequestMapping("style")
+@RequestMapping("expertStyle")
 public class ExpertStyleController {
     @Autowired
     private ExpertStyleService expertStyleService;

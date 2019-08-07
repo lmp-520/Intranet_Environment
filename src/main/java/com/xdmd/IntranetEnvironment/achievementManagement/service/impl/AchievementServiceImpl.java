@@ -122,16 +122,16 @@ public class AchievementServiceImpl implements AchievementService {
             topicNumberName.setAchievementFileUrl(achievementFileUrl);
             String achievementFileName = achievementMapper.queryAchievementFileNameById(topicNumberName.getId());//根据验收表的id，查询改验收表对应的成果附件真实名字
             topicNumberName.setFileName(achievementFileName);
-            //根据登陆人的uid，与 验收申请表的id，去查询这个人对应的验收表的信息，有没有保存过内容，如果有，则给提取出来
-            OutcomeInformationAll outcomeInformationAll = achievementMapper.querySaveAchievementByCheckApplyId(topicNumberName.getId(), uid);
-            if (outcomeInformationAll != null) {
-                //此时意味着，这个人的该条数据保存过内容
-                List<OutcomeInformationPaper> outcomeInformationPaperList = achievementMapper.queryAchievementPaperByOid(outcomeInformationAll.getId());//查询成果表对应的成果论文表
-                outcomeInformationAll.setOutcomeInformationPaperList(outcomeInformationPaperList);
-                List<OutcomeInformationPatent> outcomeInformationPatentList = achievementMapper.queryAchievementPatentByOid(outcomeInformationAll.getId());//查询成果表对应的成果专利
-                outcomeInformationAll.setOutcomeInformationPatentList(outcomeInformationPatentList);
-            }
-            topicNumberName.setOutcomeInformationAllList(outcomeInformationAll);
+//            //根据登陆人的uid，与 验收申请表的id，去查询这个人对应的验收表的信息，有没有保存过内容，如果有，则给提取出来
+//            OutcomeInformationAll outcomeInformationAll = achievementMapper.querySaveAchievementByCheckApplyId(topicNumberName.getId(), uid);
+//            if (outcomeInformationAll != null) {
+//                //此时意味着，这个人的该条数据保存过内容
+//                List<OutcomeInformationPaper> outcomeInformationPaperList = achievementMapper.queryAchievementPaperByOid(outcomeInformationAll.getId());//查询成果表对应的成果论文表
+//                outcomeInformationAll.setOutcomeInformationPaperList(outcomeInformationPaperList);
+//                List<OutcomeInformationPatent> outcomeInformationPatentList = achievementMapper.queryAchievementPatentByOid(outcomeInformationAll.getId());//查询成果表对应的成果专利
+//                outcomeInformationAll.setOutcomeInformationPatentList(outcomeInformationPatentList);
+//            }
+//            topicNumberName.setOutcomeInformationAllList(outcomeInformationAll);
         }
         pageBean.setAlltotal(alltotal);
         pageBean.setData(topicNumberNameList);

@@ -1,5 +1,6 @@
 package com.xdmd.IntranetEnvironment.subjectAcceptance.mapper;
 
+import com.xdmd.IntranetEnvironment.common.UploadFile;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.pojo.CheckApply;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.pojo.CheckApplyState;
 import org.apache.ibatis.annotations.Insert;
@@ -46,4 +47,20 @@ public interface AcceptStateMapper {
     List<CheckApply> acceptApplyQuery(@Param("newpage") int newpage, @Param("total") Integer total, @Param("topicName") String topicName, @Param("subjectUndertakingUnit") String subjectUndertakingUnit, @Param("unitNature") Integer unitNature, @Param("projectLeader") String projectLeader);
 
     String queryAcceptanceFinalResultByAfrId(String acceptanceFinalResultId);
+
+    //根据验收申请表的id 获取该公司的名字
+    @Select("select subject_undertaking_unit from check_apply where id = #{id}")
+    String queryCompanyNameByCid(@Param("id") Integer id);
+
+    void insertFile(@Param("uploadSpecialAudit") UploadFile uploadSpecialAudit);
+
+    //把新增该专项审计报告文件的id取出，存到check_apply中
+    @Update("update check_apply set audit_report_url_id = #{fid} where id = #{cid}")
+    void updateCheckApplyFileId(@Param("cid") Integer cid, @Param("fid") Integer fid);
+
+
+    //把新增初审报告文件的id取出，存在check_apply中
+    @Update("update check_apply set first_inspection_report_url_id = #{fid} where id = #{cid}")
+    void updateCheckApplyFirstInspectionFileId(@Param("cid") Integer cid, @Param("fid") Integer fid);
+
 }

@@ -157,7 +157,7 @@
                 and is_province = #{isProvince}
             </if>
             <if test="0 == 0">
-                and is_state in(1,2) and is_delete = 1 and is_submit = 1
+                and is_state in(1,2) and is_delete = 1
             </if>
         </where>
     </select>
@@ -184,7 +184,8 @@
           curriculum_vitae,
           recommendation_unit_opinion,
           is_state,
-          is_province
+          is_province,
+          expert_information_url_id
       from
           expert_information
         <where>
@@ -201,7 +202,7 @@
                 and is_province = #{isProvince}
             </if>
             <if test="0 == 0">
-                and is_state in(1,2) and is_delete = 1 and is_submit = 1
+                and is_state in(1,2) and is_delete = 1
             </if>
         </where>
     </select>

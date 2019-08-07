@@ -67,4 +67,12 @@ public interface ExpertMapper {
 
     //把文件上传的信息存储到upload_file表中
     void uploadExpertFile(@Param("uploadFileExpert") UploadFile uploadFileExpert);
+
+    //通过专家信息文件的id找到专家信息文件
+    @Select("select upload_file_address from upload_file where id = #{expertInformationUrlId}")
+    String queryExpertInformationFileByFileId(@Param("expertInformationUrlId") Integer expertInformationUrlId);
+
+    //通过专家信息文件的id找到专家信息文件的名称
+    @Select("select upload_file_name from upload_file where id = #{expertInformationUrlId}")
+    String queryExpertInformationFileNameByFileId(@Param("expertInformationUrlId") Integer expertInformationUrlId);
 }

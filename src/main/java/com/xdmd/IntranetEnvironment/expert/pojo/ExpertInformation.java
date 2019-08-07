@@ -27,7 +27,7 @@ public class ExpertInformation implements Serializable {
     private  String name;
 
     //登陆名
-    @ApiModelProperty("真实姓名")
+    @ApiModelProperty("登陆名")
     private String username;
 
     //密码
@@ -147,7 +147,13 @@ public class ExpertInformation implements Serializable {
     //专家信息文件对应的id
     private Integer expertInformationUrlId;
 
-    public ExpertInformation(String name, String username, String password, String sex, String birthDate, String education, String presentPost, String technicalTitle, String studyMajor, String professionalism, String workUnit, String postalAddress, String postalCode, String workTelephone, String phone, String mail, String natureWork, String professionalField, String curriculumVitae, String recommendationUnitOpinion, String isFirst, String createAuthor, String createTime, String isState, String isDelete, String isProvince, String reason, List<ExpertInformationArticle> expertInformationArticleList, List<ExpertInformationBook> expertInformationBookList, List<ExpertInformationPatent> expertInformationPatentList, List<ExpertInformationPrizeWinning> expertInformationPrizeWinningList, List<ExpertInformationResearchDirection> expertInformationResearchDirectionList, String isSubmit, Integer uid, Integer expertInformationUrlId) {
+    //专家信息表文件的地址
+    private String expertInformationUrl;
+
+    //专家信息表文件的名称
+    private String expertInformationFileName;
+
+    public ExpertInformation(String name, String username, String password, String sex, String birthDate, String education, String presentPost, String technicalTitle, String studyMajor, String professionalism, String workUnit, String postalAddress, String postalCode, String workTelephone, String phone, String mail, String natureWork, String professionalField, String curriculumVitae, String recommendationUnitOpinion, String isFirst, String createAuthor, String createTime, String isState, String isDelete, String isProvince, String reason, List<ExpertInformationArticle> expertInformationArticleList, List<ExpertInformationBook> expertInformationBookList, List<ExpertInformationPatent> expertInformationPatentList, List<ExpertInformationPrizeWinning> expertInformationPrizeWinningList, List<ExpertInformationResearchDirection> expertInformationResearchDirectionList, String isSubmit, Integer uid, Integer expertInformationUrlId, String expertInformationUrl) {
         this.name = name;
         this.username = username;
         this.password = password;
@@ -183,6 +189,7 @@ public class ExpertInformation implements Serializable {
         this.isSubmit = isSubmit;
         this.uid = uid;
         this.expertInformationUrlId = expertInformationUrlId;
+        this.expertInformationUrl = expertInformationUrl;
     }
 
     public ExpertInformation() {

@@ -22,22 +22,15 @@ public class FileUploadUtil {
      * @param file        上传的文件
      * @param companyName 公司名
      * @param type        类别
-     * @param suffixList  后缀名集合
      * @return
      */
-    public static String fileUpload(MultipartFile file, String companyName, String type, List<String> suffixList) throws Exception {
+    public static String fileUpload(MultipartFile file, String companyName, String type) throws Exception {
         Logger log = LoggerFactory.getLogger(FileUploadUtil.class);
 
         HashMap<String, String> result = new HashMap<>();
 
         //获取文件名
         String originalFilename = file.getOriginalFilename();
-        //判断文件的后缀名是否有误
-        Boolean Flag = FileSuffixJudgeUtil.SuffixJudge(originalFilename, suffixList);
-
-        if (Flag == false) {
-            throw new FileSuffixJudgeException("请上传正确的文件格式");
-        }
 
         Date date = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -46,7 +39,7 @@ public class FileUploadUtil {
         String newOriginalFilename = nowTime + originalFilename;
 
         //文件保存的路径
-        String FilePath = "D://xdmd_environment//Intranet//" + companyName + "//" + type + "//";
+        String FilePath = "D:/xdmd_environment/" + companyName + "/" + type + "/";
 
         File dest = new File(FilePath + newOriginalFilename);
 
@@ -64,7 +57,7 @@ public class FileUploadUtil {
             throw new FileUploadException("文件上传失败");
         }
 
-        return FilePath + originalFilename;
+        return FilePath + newOriginalFilename;
     }
 
     //上传专家信息表
@@ -121,7 +114,7 @@ public class FileUploadUtil {
         String newOriginalFilename = nowTime + originalFilename;
 
         //文件保存的路径
-        String FilePath = "D:/xdmd_environment/" + companyName + "/" + subjectName + "/" + type + "/";
+        String FilePath = "D:/xdmd_environment/" + companyName  + "/" + type + "/";
 
         File dest = new File(FilePath + newOriginalFilename);
 

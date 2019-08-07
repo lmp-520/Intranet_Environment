@@ -347,6 +347,13 @@ public class ExpertServiceImpl implements ExpertService {
 
         for (ExpertInformation expertInformation : expertInformationList) {
             JSONObject jsonObject = JSON.parseObject(expertInformation.toString());
+            //通过专家信息文件的id找到专家信息文件
+            String expertInformationFileUrl = expertMapper.queryExpertInformationFileByFileId(expertInformation.getExpertInformationUrlId());
+            expertInformation.setExpertInformationUrl(expertInformationFileUrl);
+
+            //通过专家信息文件的id找到专家信息文件的名称
+            String fileName = expertMapper.queryExpertInformationFileNameByFileId(expertInformation.getExpertInformationUrlId());
+            expertInformation.setExpertInformationFileName(fileName);
 
             //获取专家信息表中文章
             List<ExpertInformationArticle> expertInformationArticleList = expertMapper.queryExpertInformationArticleByExpertId(expertInformation.getId());

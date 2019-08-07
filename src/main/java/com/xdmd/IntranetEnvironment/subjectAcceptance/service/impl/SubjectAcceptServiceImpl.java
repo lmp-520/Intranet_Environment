@@ -169,7 +169,7 @@ public class SubjectAcceptServiceImpl implements SubjectAcceptSerivce {
 
     //课题验收中的审核
     @Override
-    public ResultMap SubjectAcceptState(String token, HttpServletResponse response, Boolean type, String reason, Integer id, MultipartFile expertGroupCommentsFile, MultipartFile expertAcceptanceFormFile, Integer acceptanceFinalResultId) throws Exception {
+    public ResultMap SubjectAcceptState(String token, HttpServletResponse response, Boolean type, String reason, Integer id, MultipartFile expertGroupCommentsFile, MultipartFile expertAcceptanceFormFile, Integer acceptanceFinalResultId, ExpertGroupComment expertGroupComment) throws Exception {
         User user = new User();
         try {
             user = tokenService.compare(response, token);
@@ -189,6 +189,9 @@ public class SubjectAcceptServiceImpl implements SubjectAcceptSerivce {
         }
         Integer uid = user.getId();
         String username = user.getUsername();
+
+//        String username = "王二麻子";
+//        Integer uid = 5;
 
         //判断是审核通过还是审核未通过
         if (type) {
@@ -229,6 +232,42 @@ public class SubjectAcceptServiceImpl implements SubjectAcceptSerivce {
 
                     subjectAcceptMapper.insertFile(UploadExpertAcceptanceForm);        //把专家评议压缩包文件新增到文件表中
                     subjectAcceptMapper.updateExpertAcceptanceFormUrlById(id, UploadExpertAcceptanceForm.getId());    //根据验收申请表的id，把专家评议文件id更新上去
+
+
+                    /**
+                     * 这里做一个专家组意见表的内容传输到数据库中
+                     */
+                    //此时因为文件是由内网上传的，所以专家组意见表，也肯定是由内网填写的
+                    Date nowTime = new Date();  //获取此条数据的创建时间
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    expertGroupComment.setCreateTime(sdf.format(nowTime));
+
+                    expertGroupComment.setCreateAuthor(username);//获取创建此条信息的人
+                    expertGroupComment.setCaId(id);//获取此条验收申请的数据id
+                    expertGroupComment.setUid(uid);
+                    expertGroupComment.setIsSubmit("1");    //把此条数据设置为提交
+
+                    try {
+                        subjectAcceptMapper.addExpertGroupComment(expertGroupComment);  //对专家组意见主表进行新增
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        throw new InsertSqlException("专家组意见主表进行新增时出错-- " + e.getMessage());
+                    }
+
+                    //遍历专家组意见表的专家姓名
+                    List<ExpertGroupCommentsName> expertGroupCommentsNameList = expertGroupComment.getExpertGroupCommentsNameList();
+
+                    for (ExpertGroupCommentsName egcn : expertGroupCommentsNameList) {
+                        egcn.setEgcId(expertGroupComment.getEgcId());   //把专家意见表id，插入进去
+                        //对专家组意见表中的专家信息进行新增
+                        try {
+                            subjectAcceptMapper.addExpertGroupCommentName(egcn);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            throw new InsertSqlException("专家组意见表中的专家信息进行新增时 出现错误" + e.getMessage());
+                        }
+                    }
+
                 } catch (Exception e) {
                     log.error("SubjectAcceptServiceImpl 中 SubjectAcceptState方法中 文件上传出现异常: -------" + e.getMessage());
                     e.printStackTrace();

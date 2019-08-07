@@ -80,4 +80,25 @@
         </where>
         limit #{newpage},#{total}
     </select>
+
+    <insert id="insertFile"  useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO upload_file(
+        id,
+        upload_file_address,
+        upload_file_name,
+        upload_file_type,
+        upload_suffix_name,
+        file_size,
+        create_time,
+        create_author)
+        VALUES(
+        #{uploadSpecialAudit.id},
+        #{uploadSpecialAudit.uploadFileAddress},
+        #{uploadSpecialAudit.uploadFileName},
+        #{uploadSpecialAudit.uploadFileType},
+        #{uploadSpecialAudit.uploadSuffixName},
+        #{uploadSpecialAudit.fileSize},
+        #{uploadSpecialAudit.createTime},
+        #{uploadSpecialAudit.createAuthor});
+    </insert>
 </mapper>
