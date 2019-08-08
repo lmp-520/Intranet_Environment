@@ -61,6 +61,6 @@ public class UserServiceImpl implements UserService {
         cookie.setPath("/");
         response.addCookie(cookie);
 
-        return resultMap.success().message("登陆成功");
+        return resultMap.success().message(user.getUsername());
     }
 }

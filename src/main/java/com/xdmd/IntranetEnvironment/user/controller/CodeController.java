@@ -18,7 +18,7 @@ import java.util.Random;
 @RequestMapping("code")
 public class CodeController {
 
-    @PostMapping("checkCode")
+    @GetMapping("checkCode")
     public void Code(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // 服务器通知浏览器不要缓存
         response.setHeader("pragma", "no-cache");
