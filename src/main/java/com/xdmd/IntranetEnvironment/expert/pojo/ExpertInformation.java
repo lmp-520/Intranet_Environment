@@ -22,6 +22,9 @@ public class ExpertInformation implements Serializable {
     @ApiModelProperty("主键id")
     private  Integer id;
 
+    //用户信息id
+    private Integer aid;
+
     //姓名
     @ApiModelProperty("姓名")
     private  String name;

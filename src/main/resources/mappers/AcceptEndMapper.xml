@@ -79,4 +79,22 @@
         </where>
         limit #{newpage},#{total}
     </select>
+
+    <select id="queryTopicNameAndCompanyName" resultType="Integer">
+        SELECT
+            id
+        FROM
+            check_apply
+        <where>
+            <if test="topicName != null">
+                topic_name like CONCAT('%',#{topicName},'%')
+            </if>
+            <if test="companyName != null">
+                AND subject_undertaking_unit LIKE CONCAT('%',#{companyName},'%')
+            </if>
+            <if test="0==0">
+                and is_outcome = 0
+            </if>
+        </where>
+    </select>
 </mapper>

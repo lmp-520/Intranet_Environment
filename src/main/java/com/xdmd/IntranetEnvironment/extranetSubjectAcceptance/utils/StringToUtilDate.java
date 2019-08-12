@@ -1,6 +1,6 @@
 package com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.utils;
 
-import com.xdmd.environment.subjectAcceptance.exception.StringToDateException;
+import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.exception.StringToDateException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

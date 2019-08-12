@@ -13,7 +13,7 @@ import java.util.List;
 //专家组意见表
 @ApiModel("专家组意见")
 @Data
-public class ExpertGroupComment {
+public class ExtranetExpertGroupComment {
     //主键id  (专家组意见表)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -89,7 +89,7 @@ public class ExpertGroupComment {
 
     //专家组意见表中的专家信息
     @ApiModelProperty("专家组意见表中的专家信息")
-    private List<ExpertGroupCommentsName> expertGroupCommentsNameList;
+    private List<ExtranetExpertGroupCommentsName> extranetExpertGroupCommentsNameList;
 
     //专家组组长姓名
     @ApiModelProperty("专家组组长姓名")
@@ -111,7 +111,7 @@ public class ExpertGroupComment {
     //保存该表人的id
     private Integer uid;
 
-    public ExpertGroupComment(Integer caId, String topicName, String topicNumber, String projectLeader, String subjectUndertakingUnit, Integer acceptanceExpertNumber, BigDecimal expertOneGrade, BigDecimal expertTwoGrade, BigDecimal expertThreeGrade, BigDecimal expertFourGrade, BigDecimal expertFiveGrade, BigDecimal expertSixGrade, BigDecimal expertSevenGrade, BigDecimal synthesizeGrade, String topicOverallEvaluation, String suggest, Integer acceptanceConclusionId, List<ExpertGroupCommentsName> expertGroupCommentsNameList, String expertLeader, String writeDate, String createTime, String createAuthor, String isSubmit, Integer uid) {
+    public ExtranetExpertGroupComment(Integer caId, String topicName, String topicNumber, String projectLeader, String subjectUndertakingUnit, Integer acceptanceExpertNumber, BigDecimal expertOneGrade, BigDecimal expertTwoGrade, BigDecimal expertThreeGrade, BigDecimal expertFourGrade, BigDecimal expertFiveGrade, BigDecimal expertSixGrade, BigDecimal expertSevenGrade, BigDecimal synthesizeGrade, String topicOverallEvaluation, String suggest, Integer acceptanceConclusionId, List<ExtranetExpertGroupCommentsName> extranetExpertGroupCommentsNameList, String expertLeader, String writeDate, String createTime, String createAuthor, String isSubmit, Integer uid) {
         this.caId = caId;
         this.topicName = topicName;
         this.topicNumber = topicNumber;
@@ -129,7 +129,7 @@ public class ExpertGroupComment {
         this.topicOverallEvaluation = topicOverallEvaluation;
         this.suggest = suggest;
         this.acceptanceConclusionId = acceptanceConclusionId;
-        this.expertGroupCommentsNameList = expertGroupCommentsNameList;
+        this.extranetExpertGroupCommentsNameList = extranetExpertGroupCommentsNameList;
         this.expertLeader = expertLeader;
         this.writeDate = writeDate;
         this.createTime = createTime;
@@ -138,6 +138,6 @@ public class ExpertGroupComment {
         this.uid = uid;
     }
 
-    public ExpertGroupComment() {
+    public ExtranetExpertGroupComment() {
     }
 }

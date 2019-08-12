@@ -1,23 +1,15 @@
 package com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.service.impl;
 
-import com.xdmd.IntranetEnvironment.common.PageBean;
+import com.xdmd.IntranetEnvironment.common.FileSuffixJudgeUtil;
+import com.xdmd.IntranetEnvironment.common.FileUploadUtil;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.exception.MysqlErrorException;
 import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.mapper.ExtranetAcceptApplyMapper;
-import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.CheckApplyState;
-import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.ExtranetCheckApply;
-import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.UploadFile;
+import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.*;
 import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.service.ExtranetAcceptApplyService;
-import com.xdmd.IntranetEnvironment.user.service.impl.TokenService;
-import com.xdmd.environment.common.*;
-import com.xdmd.environment.company.Pojo.JwtInformation;
-import com.xdmd.environment.company.exception.ClaimsNullException;
-import com.xdmd.environment.company.exception.UserNameNotExistentException;
-import com.xdmd.environment.subjectAcceptance.exception.MysqlErrorException;
-import com.xdmd.environment.subjectAcceptance.mapper.AcceptApplyMapper;
-import com.xdmd.environment.subjectAcceptance.pojo.*;
-import com.xdmd.environment.subjectAcceptance.service.ExtranetAcceptApplyService;
-import com.xdmd.environment.subjectAcceptance.utils.IntegrationFile;
+import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.utils.IntegrationFile;
+import com.xdmd.IntranetEnvironment.user.exception.ClaimsNullException;
+import com.xdmd.IntranetEnvironment.user.exception.UserNameNotExistentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,12 +29,12 @@ import java.util.List;
 @Service
 public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyService {
     @Autowired
-    private TokenService tokenService;
+    private ExtranetTokenService extranetTokenService;
     @Autowired
     private ExtranetAcceptApplyMapper acceptApplyMapper;
     ResultMap resultMap = new ResultMap();
     PageBean pageBean = new PageBean();
-    CheckApplyState checkApplyState = new CheckApplyState();
+    ExtranetCheckApplyState extranetCheckApplyState = new ExtranetCheckApplyState();
     //打印日志
     private static Logger log = LoggerFactory.getLogger(ExtranetAcceptApplyServiceImpl.class);
 
@@ -61,15 +53,15 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
         String nowTime = sdf.format(date);
         String state = "待处理";
 
-        checkApplyState.setCheckApplyId(cid);
-        checkApplyState.setFistHandler(firstHandler);
-        checkApplyState.setAuditStep("公司审批");
-        checkApplyState.setFirstHandleTime(nowTime);
-        checkApplyState.setState("待处理");
+        extranetCheckApplyState.setCheckApplyId(cid);
+        extranetCheckApplyState.setFistHandler(firstHandler);
+        extranetCheckApplyState.setAuditStep("公司审批");
+        extranetCheckApplyState.setFirstHandleTime(nowTime);
+        extranetCheckApplyState.setState("待处理");
 
 
         //新增验收审核状态
-        acceptApplyMapper.insertCheckApplyState(checkApplyState);
+        acceptApplyMapper.insertCheckApplyState(extranetCheckApplyState);
 
         return resultMap.success().message("新增成功");
 
@@ -253,7 +245,7 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
     public ResultMap query(String token, HttpServletResponse response, String topicName, String topicNumber, Integer page, Integer total) {
         JwtInformation jwtInformation = new JwtInformation();
         try {
-            jwtInformation = tokenService.compare(response, token);
+            jwtInformation = extranetTokenService.compare(response, token);
         } catch (NullPointerException e) {
             e.printStackTrace();
             return resultMap.fail().message("请先登录");
@@ -295,9 +287,9 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
         for (ExtranetCheckApply extranetCheckApply : extranetCheckApplyList) {
             Integer id = extranetCheckApply.getId();   //获取验收申请表的id
             //通过验收申请表的id，获取到对应的审核状态
-            List<CheckApplyState> checkApplyStateList = acceptApplyMapper.queryCheckApplyState(id);
+            List<ExtranetCheckApplyState> extranetCheckApplyStateList = acceptApplyMapper.queryCheckApplyState(id);
             //把验收申请表的内容存放到checkApply中
-            extranetCheckApply.setCheckApplyStateList(checkApplyStateList);
+            extranetCheckApply.setExtranetCheckApplyStateList(extranetCheckApplyStateList);
 
             //通过验收状态的id，查询出验收审核的状态
             String acceotancePhaseName = acceptApplyMapper.queryAcceptancePhaseName(extranetCheckApply.getAcceptancePhaseId());
@@ -371,7 +363,7 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
     public ResultMap examine(String token, HttpServletResponse response, Boolean type, String reason, Integer id) {
         JwtInformation jwtInformation = new JwtInformation();
         try {
-            jwtInformation = tokenService.compare(response, token);
+            jwtInformation = extranetTokenService.compare(response, token);
         } catch (NullPointerException e) {
             e.printStackTrace();
             return resultMap.fail().message("请先登录");
@@ -442,7 +434,7 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
     public ResultMap queryResult(String token, HttpServletResponse response, String topicName, String topicNumber, Integer page, Integer total) {
         JwtInformation jwtInformation = new JwtInformation();
         try {
-            jwtInformation = tokenService.compare(response, token);
+            jwtInformation = extranetTokenService.compare(response, token);
         } catch (NullPointerException e) {
             e.printStackTrace();
             return resultMap.fail().message("请先登录");
@@ -483,9 +475,9 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
         for (ExtranetCheckApply extranetCheckApply : extranetCheckApplyList) {
             Integer id = extranetCheckApply.getId();   //获取验收申请表的id
             //通过验收申请表的id，获取到对应的审核状态
-            List<CheckApplyState> checkApplyStateList = acceptApplyMapper.queryCheckApplyState(id);
+            List<ExtranetCheckApplyState> extranetCheckApplyStateList = acceptApplyMapper.queryCheckApplyState(id);
             //把验收申请表的内容存放到checkApply中
-            extranetCheckApply.setCheckApplyStateList(checkApplyStateList);
+            extranetCheckApply.setExtranetCheckApplyStateList(extranetCheckApplyStateList);
 
             //通过验收状态的id，查询出验收审核的状态
             String acceotancePhaseName = acceptApplyMapper.queryAcceptancePhaseName(extranetCheckApply.getAcceptancePhaseId());
@@ -557,32 +549,32 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
     //提交最终验收报告
     @Override
     public ResultMap submitLastReport(String token, HttpServletResponse response, Integer caId, MultipartFile lastReport, AcceptanceCertificate acceptanceCertificate) throws Exception {
-        JwtInformation jwtInformation = new JwtInformation();
-        try {
-            jwtInformation = tokenService.compare(response, token);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            return resultMap.fail().message("请先登录");
-        } catch (UserNameNotExistentException e) {
-            e.printStackTrace();
-            return resultMap.fail().message("请先登录");
-        } catch (ClaimsNullException e) {
-            e.printStackTrace();
-            return resultMap.fail().message("请先登录");
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.error("MenuServiceImpl 中 TokenService 出现问题");
-            return resultMap.message("系统异常");
-        }
+//        JwtInformation jwtInformation = new JwtInformation();
+//        try {
+//            jwtInformation = extranetTokenService.compare(response, token);
+//        } catch (NullPointerException e) {
+//            e.printStackTrace();
+//            return resultMap.fail().message("请先登录");
+//        } catch (UserNameNotExistentException e) {
+//            e.printStackTrace();
+//            return resultMap.fail().message("请先登录");
+//        } catch (ClaimsNullException e) {
+//            e.printStackTrace();
+//            return resultMap.fail().message("请先登录");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            log.error("MenuServiceImpl 中 TokenService 出现问题");
+//            return resultMap.message("系统异常");
+//        }
+//
+//        Integer uid = jwtInformation.getUid();
+//        String uname = jwtInformation.getUsername();
+//        Integer cid = jwtInformation.getCid();
+//        String cname = jwtInformation.getCompanyName();
 
-        Integer uid = jwtInformation.getUid();
-        String uname = jwtInformation.getUsername();
-        Integer cid = jwtInformation.getCid();
-        String cname = jwtInformation.getCompanyName();
-
-//        String cname = "王六公司";
-//        String uname = "王六";
-//        Integer cid =20;
+        String cname = "王六公司";
+        String uname = "王六";
+        Integer cid =20;
 
         //判断验收证书后缀名是否正确
         List<String> acceptanceCertificateSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".rar", ".zip", ".7z"));
@@ -601,6 +593,32 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
         acceptApplyMapper.updateAcceptanceFinalResultIdById(caId, uploadLastReportFile.getId());
         //修改验收证书的状态
         acceptApplyMapper.updateAcceptancePhaseById(cid, 7);
+
+        //新增最终验收报告表单
+        acceptanceCertificate.setCid(caId);
+        //新增最终验收报告的主表
+        acceptApplyMapper.addAcceptanceCertificate(acceptanceCertificate);
+        //新增最终验收报告的专利表
+        List<AcceptanceCertificatePatent> acceptanceCertificatePatentList = acceptanceCertificate.getAcceptanceCertificatePatentList();
+        for (AcceptanceCertificatePatent acceptanceCertificatePatent : acceptanceCertificatePatentList) {
+            acceptanceCertificatePatent.setAcceptanceCertificateId(acceptanceCertificate.getId());
+            acceptApplyMapper.addAcceptanceCertificatePatent(acceptanceCertificatePatent);
+        }
+
+        //新增最终验收报告的主要参加人员
+        List<AcceptanceCertificatePrincipalPersonnel> acceptanceCertificatePrincipalPersonnelList = acceptanceCertificate.getAcceptanceCertificatePrincipalPersonnelList();
+        for (AcceptanceCertificatePrincipalPersonnel acceptanceCertificatePrincipalPersonnel : acceptanceCertificatePrincipalPersonnelList) {
+            acceptanceCertificatePrincipalPersonnel.setAcceptanceCertificateId(acceptanceCertificate.getId());
+            acceptApplyMapper.addAcceptanceCertificatePrincipalPersonnel(acceptanceCertificatePrincipalPersonnel);
+        }
+
+        //新增验收证书的课题负责人
+        List<AcceptanceCertificateSubjectPeople> acceptanceCertificateSubjectPeopleList = acceptanceCertificate.getAcceptanceCertificateSubjectPeopleList();
+        for (AcceptanceCertificateSubjectPeople acceptanceCertificateSubjectPeople : acceptanceCertificateSubjectPeopleList) {
+            acceptanceCertificateSubjectPeople.setAcceptanceCertificateId(acceptanceCertificate.getId());
+            acceptApplyMapper.addAcceptanceCertificateSubjectPeople(acceptanceCertificateSubjectPeople);
+        }
+
 
         //把验收申请的状态表进行修改
         //首先更新上一条表的状态
@@ -622,10 +640,10 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
 
     //上传专家组意见信息 与专家组意见文件与专家组评议表文件
     @Override
-    public ResultMap submitExpertGroup(String token, HttpServletResponse response, Integer caId, ExpertGroupComment expertGroupComment, MultipartFile expertGroupCommentsFile, MultipartFile expertAcceptanceFormFile) throws Exception {
+    public ResultMap submitExpertGroup(String token, HttpServletResponse response, Integer caId, ExtranetExpertGroupComment extranetExpertGroupComment, MultipartFile expertGroupCommentsFile, MultipartFile expertAcceptanceFormFile) throws Exception {
         JwtInformation jwtInformation = new JwtInformation();
         try {
-            jwtInformation = tokenService.compare(response, token);
+            jwtInformation = extranetTokenService.compare(response, token);
         } catch (NullPointerException e) {
             e.printStackTrace();
             return resultMap.fail().message("请先登录");
@@ -679,19 +697,19 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
         //根据专家组评议文件的id，新增最终验收报告中专家组评议的id
         acceptApplyMapper.updateExpertAcceptanceFormFileId(caId, uploadExpertAcceptanceFormFileUrl.getId());
 
-        expertGroupComment.setCreateAuthor(uname);  //存入创建人名
+        extranetExpertGroupComment.setCreateAuthor(uname);  //存入创建人名
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String nowTime = sdf.format(date);
-        expertGroupComment.setCreateTime(nowTime);//存入创建时间
+        extranetExpertGroupComment.setCreateTime(nowTime);//存入创建时间
 
         //把专家组主表信息存储到数据库中
-        acceptApplyMapper.addExpertGroupComment(expertGroupComment);
+        acceptApplyMapper.addExpertGroupComment(extranetExpertGroupComment);
 
         //把专家组从表存储到数据库中
-        List<ExpertGroupCommentsName> expertGroupCommentsNameList = expertGroupComment.getExpertGroupCommentsNameList();
-        for (ExpertGroupCommentsName expertGroupCommentsName : expertGroupCommentsNameList) {
-            acceptApplyMapper.addExpertGroupCommentName(expertGroupComment.getEgcId(),expertGroupCommentsName);
+        List<ExtranetExpertGroupCommentsName> extranetExpertGroupCommentsNameList = extranetExpertGroupComment.getExtranetExpertGroupCommentsNameList();
+        for (ExtranetExpertGroupCommentsName extranetExpertGroupCommentsName : extranetExpertGroupCommentsNameList) {
+            acceptApplyMapper.addExpertGroupCommentName(extranetExpertGroupComment.getEgcId(), extranetExpertGroupCommentsName);
         }
 
         //更新验收申请的状态表

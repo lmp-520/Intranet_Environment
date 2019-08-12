@@ -3,7 +3,7 @@ package com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.service;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.exception.MysqlErrorException;
 import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.AcceptanceCertificate;
-import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.ExpertGroupComment;
+import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.ExtranetExpertGroupComment;
 import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.ExtranetCheckApply;
 import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.UploadFile;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,7 +34,7 @@ public interface ExtranetAcceptApplyService {
 
     ResultMap submitLastReport(String token, HttpServletResponse response, Integer caId, MultipartFile lastReport, AcceptanceCertificate acceptanceCertificate) throws Exception;
 
-    ResultMap submitExpertGroup(String token, HttpServletResponse response, Integer caId, ExpertGroupComment expertGroupComment, MultipartFile expertGroupCommentsFile, MultipartFile expertAcceptanceFormFile) throws Exception;
+    ResultMap submitExpertGroup(String token, HttpServletResponse response, Integer caId, ExtranetExpertGroupComment extranetExpertGroupComment, MultipartFile expertGroupCommentsFile, MultipartFile expertAcceptanceFormFile) throws Exception;
 
     ResultMap modifyApply(String token, HttpServletResponse response, String oldSubmitInventoryFileUrl, String oldAchievementsFileUrl, String oldApplicationAcceptanceFileUrl, MultipartFile submitInventoryFile, MultipartFile applicationAcceptanceFile, MultipartFile achievementsFile, ExtranetCheckApply extranetCheckApply) throws Exception;
 

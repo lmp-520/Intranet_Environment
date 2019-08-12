@@ -1,12 +1,15 @@
 package com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.controller;
 
-import com.xdmd.environment.common.*;
-import com.xdmd.environment.company.Pojo.JwtInformation;
-import com.xdmd.environment.company.exception.ClaimsNullException;
-import com.xdmd.environment.company.exception.UserNameNotExistentException;
-import com.xdmd.environment.subjectAcceptance.pojo.*;
-import com.xdmd.environment.subjectAcceptance.service.ExtranetAcceptApplyService;
-import com.xdmd.environment.subjectAcceptance.utils.*;
+import com.xdmd.IntranetEnvironment.common.FileSuffixJudgeUtil;
+import com.xdmd.IntranetEnvironment.common.FileUploadUtil;
+import com.xdmd.IntranetEnvironment.common.ResultMap;
+import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.*;
+import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.service.ExtranetAcceptApplyService;
+import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.service.impl.ExtranetTokenService;
+import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.utils.IntegrationFile;
+import com.xdmd.IntranetEnvironment.user.exception.ClaimsNullException;
+import com.xdmd.IntranetEnvironment.user.exception.UserNameNotExistentException;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,24 +36,24 @@ public class ExtranetAcceptApplyController {
     ResultMap resultMap = new ResultMap();
     private static Logger log = LoggerFactory.getLogger(ExtranetAcceptApplyController.class);
     @Autowired
-    private TokenService tokenService;
+    private ExtranetTokenService extranetTokenService;
 
 
     //员工填写验收申请表
     @ResponseBody
     @PostMapping("addAcceptApply")
     public ResultMap AddAcceptApply(@CookieValue(value = "token") String token, HttpServletResponse response,
-                                    @RequestParam("submitInventoryFile") MultipartFile submitInventoryFile,     //提交清单文件
-                                    @RequestParam("applicationAcceptanceFile") MultipartFile applicationAcceptanceFile,     //验收申请表文件
-                                    @RequestParam("achievementsFile") MultipartFile achievementsFile,   //成果附件文件
-                                    @Valid ExtranetCheckApply extranetCheckApply, BindingResult result) {
+                                    @RequestPart("submitInventoryFile") MultipartFile submitInventoryFile,     //提交清单文件
+                                    @RequestPart("applicationAcceptanceFile") MultipartFile applicationAcceptanceFile,     //验收申请表文件
+                                    @RequestPart("achievementsFile") MultipartFile achievementsFile,   //成果附件文件
+                                    @Valid @RequestPart ExtranetCheckApply extranetCheckApply, BindingResult result) {
         if (StringUtils.isEmpty(token)) {
             return resultMap.fail().message("请先登陆");
         }
 
         JwtInformation jwtInformation = new JwtInformation();
         try {
-            jwtInformation = tokenService.compare(response, token);
+            jwtInformation = extranetTokenService.compare(response, token);
         } catch (NullPointerException e) {
             e.printStackTrace();
             return resultMap.fail().message("请先登录");
@@ -69,6 +72,9 @@ public class ExtranetAcceptApplyController {
         String uname = jwtInformation.getUsername();
         Integer cid = jwtInformation.getCid();
         String cname = jwtInformation.getCompanyName();
+
+//        String uname = "测试的人名";
+//        Integer cid = 555;
 
         if (!submitInventoryFile.getOriginalFilename().contains(".") || !applicationAcceptanceFile.getOriginalFilename().contains(".") || !achievementsFile.getOriginalFilename().contains(".")) {
             return resultMap.fail().message("上传的文件不可以为空");
@@ -374,15 +380,18 @@ public class ExtranetAcceptApplyController {
     //提交最终验收报告
     @PostMapping("submitLastReport")
     @ResponseBody
-    public ResultMap submitLastReport(@CookieValue(value = "token")String token,HttpServletResponse response,
+    public ResultMap submitLastReport(//@CookieValue(value = "token")String token,HttpServletResponse response,
                                       @RequestParam("caId") Integer caId, //验收申请表的id
                                       @RequestPart(value = "lastReport",required = true) MultipartFile lastReport,
                                       @RequestPart AcceptanceCertificate acceptanceCertificate
                                       ){
 
-        if(StringUtils.isEmpty(token)){
-            return resultMap.fail().message("请先登录");
-        }
+        String token = "aaa";
+        HttpServletResponse response = null;
+
+//        if(StringUtils.isEmpty(token)){
+//            return resultMap.fail().message("请先登录");
+//        }
 
         try {
             resultMap = extranetAcceptApplyService.submitLastReport(token,response,caId,lastReport,acceptanceCertificate);
@@ -399,7 +408,7 @@ public class ExtranetAcceptApplyController {
     //上传专家组意见信息 与专家组意见文件与专家组评议表文件
     public ResultMap submitExpertGroup(@CookieValue(value = "token")String token, HttpServletResponse response,
                                        @RequestParam("caId") Integer caId, //验收申请表的id
-                                       @RequestPart ExpertGroupComment expertGroupComment, //专家组意见表
+                                       @RequestPart ExtranetExpertGroupComment extranetExpertGroupComment, //专家组意见表
                                        @RequestPart(value = "expertGroupCommentsFile", required = false) MultipartFile expertGroupCommentsFile,  //专家意见表文件
                                        @RequestPart(value = "expertAcceptanceFormFile", required = false) MultipartFile expertAcceptanceFormFile) { //专家评议表文件
 
@@ -408,7 +417,7 @@ public class ExtranetAcceptApplyController {
         }
 
         try {
-            resultMap = extranetAcceptApplyService.submitExpertGroup(token,response,caId,expertGroupComment,expertGroupCommentsFile,expertAcceptanceFormFile);
+            resultMap = extranetAcceptApplyService.submitExpertGroup(token,response,caId, extranetExpertGroupComment,expertGroupCommentsFile,expertAcceptanceFormFile);
         } catch (Exception e) {
             e.printStackTrace();
             log.error("AcceptApplyController 中 submitExpertGroup 方法 -- "+e.getMessage());

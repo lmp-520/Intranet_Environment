@@ -1,6 +1,6 @@
 package com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.utils;
 
-import com.xdmd.environment.subjectAcceptance.pojo.UploadFile;
+import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.UploadFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;

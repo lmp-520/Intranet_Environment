@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.xdmd.environment.subjectAcceptance.mapper.AcceptApplyMapper">
+<mapper namespace="com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.mapper.ExtranetAcceptApplyMapper">
 
     <!--<select id="queryAcceptApply" resultType="com.xdmd.environment.subjectAcceptance.pojo.CheckApply">-->
         <!--SELECT-->
@@ -110,36 +110,36 @@
             application_url_id
         )VALUES
         (
-          #{checkApply.id},
-          #{checkApply.topicName},
-          #{checkApply.topicNumber},
-          #{checkApply.subjectUndertakingUnitId},
-          #{checkApply.subjectUndertakingUnit},
-          #{checkApply.unitNature},
-          #{checkApply.projectLeader},
-          #{checkApply.projectLeaderPhone},
-          #{checkApply.projectLeaderMail},
-          #{checkApply.postalAddress},
-          #{checkApply.agreementStartTime},
-          #{checkApply.agreementEndTime},
-          #{checkApply.applicationAcceptanceTime},
-          #{checkApply.applicationAcceptanceMode},
-          #{checkApply.applicationAcceptancePlace},
-          #{checkApply.acceptanceContact},
-          #{checkApply.acceptanceContactPhone},
-          #{checkApply.mainContentSituation},
-          #{checkApply.submissionAchievementsSituation},
-          #{checkApply.subjectUndertakingUnitOpinion},
-          #{checkApply.environmentalDepartmentsOpinion},
-          #{checkApply.provinceAssessmentCenterOpinion},
-          #{checkApply.competentDepartmentOinion},
-          #{checkApply.submitInventory},
-          #{checkApply.acceptancePhaseId},
-          #{checkApply.createTime},
-          #{checkApply.createAuthor},
-          #{checkApply.achievementUrlId},
-          #{checkApply.submitUrlId},
-          #{checkApply.applicationUrlId}
+          #{extranetCheckApply.id},
+          #{extranetCheckApply.topicName},
+          #{extranetCheckApply.topicNumber},
+          #{extranetCheckApply.subjectUndertakingUnitId},
+          #{extranetCheckApply.subjectUndertakingUnit},
+          #{extranetCheckApply.unitNature},
+          #{extranetCheckApply.projectLeader},
+          #{extranetCheckApply.projectLeaderPhone},
+          #{extranetCheckApply.projectLeaderMail},
+          #{extranetCheckApply.postalAddress},
+          #{extranetCheckApply.agreementStartTime},
+          #{extranetCheckApply.agreementEndTime},
+          #{extranetCheckApply.applicationAcceptanceTime},
+          #{extranetCheckApply.applicationAcceptanceMode},
+          #{extranetCheckApply.applicationAcceptancePlace},
+          #{extranetCheckApply.acceptanceContact},
+          #{extranetCheckApply.acceptanceContactPhone},
+          #{extranetCheckApply.mainContentSituation},
+          #{extranetCheckApply.submissionAchievementsSituation},
+          #{extranetCheckApply.subjectUndertakingUnitOpinion},
+          #{extranetCheckApply.environmentalDepartmentsOpinion},
+          #{extranetCheckApply.provinceAssessmentCenterOpinion},
+          #{extranetCheckApply.competentDepartmentOinion},
+          #{extranetCheckApply.submitInventory},
+          #{extranetCheckApply.acceptancePhaseId},
+          #{extranetCheckApply.createTime},
+          #{extranetCheckApply.createAuthor},
+          #{extranetCheckApply.achievementUrlId},
+          #{extranetCheckApply.submitUrlId},
+          #{extranetCheckApply.applicationUrlId}
         );
     </insert>
 
@@ -151,15 +151,15 @@
       first_handle_time,
       state)
       values (
-      #{checkApplyState.checkApplyId},
-      #{checkApplyState.fistHandler},
-      #{checkApplyState.auditStep},
-      #{checkApplyState.firstHandleTime},
-      #{checkApplyState.state}
+      #{extranetCheckApplyState.checkApplyId},
+      #{extranetCheckApplyState.fistHandler},
+      #{extranetCheckApplyState.auditStep},
+      #{extranetCheckApplyState.firstHandleTime},
+      #{extranetCheckApplyState.state}
       )
     </insert>
 
-    <select id="queryAcceptApply" resultType="com.xdmd.environment.subjectAcceptance.pojo.CheckApply">
+    <select id="queryAcceptApply" resultType="com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.ExtranetCheckApply">
         select * from check_apply
         <where>
             <if test="topicName != null">
@@ -190,7 +190,7 @@
         </where>
     </select>
 
-    <select id="queryCheckApplyState" resultType="com.xdmd.environment.subjectAcceptance.pojo.CheckApplyState">
+    <select id="queryCheckApplyState" resultType="com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.ExtranetCheckApplyState">
         select * from check_apply_state
         where check_apply_id = #{id}
     </select>
@@ -211,7 +211,7 @@
         </where>
     </select>
 
-    <select id="queryResultCheckApply" resultType="com.xdmd.environment.subjectAcceptance.pojo.CheckApply">
+    <select id="queryResultCheckApply" resultType="com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.ExtranetCheckApply">
         select * from check_apply
         <where>
             <if test="topicName != null ">
@@ -251,28 +251,28 @@
             create_time,
             create_author)
         VALUES(
-            #{expertGroupComment.egcId},
-            #{expertGroupComment.caId},
-            #{expertGroupComment.topicName},
-            #{expertGroupComment.topicNumber},
-            #{expertGroupComment.projectLeader},
-            #{expertGroupComment.subjectUndertakingUnit},
-            #{expertGroupComment.acceptanceExpertNumber},
-            #{expertGroupComment.expertOneGrade},
-            #{expertGroupComment.expertTwoGrade},
-            #{expertGroupComment.expertThreeGrade},
-            #{expertGroupComment.expertFourGrade},
-            #{expertGroupComment.expertFiveGrade},
-            #{expertGroupComment.expertSixGrade},
-            #{expertGroupComment.expertSevenGrade},
-            #{expertGroupComment.synthesizeGrade},
-            #{expertGroupComment.topicOverallEvaluation},
-            #{expertGroupComment.suggest},
-            #{expertGroupComment.acceptanceConclusionId},
-            #{expertGroupComment.expertLeader},
-            #{expertGroupComment.writeDate},
-            #{expertGroupComment.createTime},
-            #{expertGroupComment.createAuthor}
+            #{extranetExpertGroupComment.egcId},
+            #{extranetExpertGroupComment.caId},
+            #{extranetExpertGroupComment.topicName},
+            #{extranetExpertGroupComment.topicNumber},
+            #{extranetExpertGroupComment.projectLeader},
+            #{extranetExpertGroupComment.subjectUndertakingUnit},
+            #{extranetExpertGroupComment.acceptanceExpertNumber},
+            #{extranetExpertGroupComment.expertOneGrade},
+            #{extranetExpertGroupComment.expertTwoGrade},
+            #{extranetExpertGroupComment.expertThreeGrade},
+            #{extranetExpertGroupComment.expertFourGrade},
+            #{extranetExpertGroupComment.expertFiveGrade},
+            #{extranetExpertGroupComment.expertSixGrade},
+            #{extranetExpertGroupComment.expertSevenGrade},
+            #{extranetExpertGroupComment.synthesizeGrade},
+            #{extranetExpertGroupComment.topicOverallEvaluation},
+            #{extranetExpertGroupComment.suggest},
+            #{extranetExpertGroupComment.acceptanceConclusionId},
+            #{extranetExpertGroupComment.expertLeader},
+            #{extranetExpertGroupComment.writeDate},
+            #{extranetExpertGroupComment.createTime},
+            #{extranetExpertGroupComment.createAuthor}
             );
     </insert>
 
@@ -285,12 +285,12 @@
             major,
             job)
         values(
-            #{expertGroupCommentsName.egcNid},
+            #{extranetExpertGroupCommentsName.egcNid},
             #{egcId},
-            #{expertGroupCommentsName.expertName},
-            #{expertGroupCommentsName.companyName},
-            #{expertGroupCommentsName.major},
-            #{expertGroupCommentsName.job}
+            #{extranetExpertGroupCommentsName.expertName},
+            #{extranetExpertGroupCommentsName.companyName},
+            #{extranetExpertGroupCommentsName.major},
+            #{extranetExpertGroupCommentsName.job}
         )
     </insert>
 
@@ -321,4 +321,211 @@
             submit_inventory  = #{checkApply.submitInventory}
         where id = #{checkApply.id}
     </update>
+
+    <insert id="addAcceptanceCertificate" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO acceptance_certificate (
+            id,
+            cid,
+            translate,
+            topic_number,
+            topic_name,
+            completion_unit,
+            acceptance_department,
+            acceptance_time,
+            unit_name,
+            unit_nature,
+            location,
+            legal_representative,
+            legal_representative_phone,
+            contacts,
+            contacts_phone,
+            postal_code,
+            mail,
+            mailing_address,
+            competent_department,
+            project_start_time,
+            project_completion_time,
+            achievement_form,
+            achievement_level,
+            development_total_number,
+            doctor_total_number,
+            master_total_number,
+            senior_total_number,
+            intermediate_total_number,
+            school_master_number,
+            total_project_funds,
+            environment_topic_funds,
+            competent_department_match,
+            bank_loans,
+            unit_raise_money,
+            other_actual_money,
+            equipment_cost,
+            material_fee,
+            laboratory_fees,
+            fuel_costs,
+            travel_expenses,
+            conference_fee,
+            international_communication,
+            expert_consult,
+            management_expense,
+            other_expenditure_money,
+            new_output,
+            new_sales_volume,
+            new_profit_tax,
+            exit_earn,
+            main_solve_technology,
+            main_completion,
+            implementation_achievement,
+            science_department_opinion,
+            check_department_opinion,
+            environment_office_opinion
+        )
+        VALUES(
+            #{acceptanceCertificate.id},
+            #{acceptanceCertificate.cid},
+            #{acceptanceCertificate.translate},
+            #{acceptanceCertificate.topicNumber},
+            #{acceptanceCertificate.topicName},
+            #{acceptanceCertificate.completionUnit},
+            #{acceptanceCertificate.acceptanceDepartment},
+            #{acceptanceCertificate.acceptanceTime},
+            #{acceptanceCertificate.unitName},
+            #{acceptanceCertificate.unitNature},
+            #{acceptanceCertificate.location},
+            #{acceptanceCertificate.legalRepresentative},
+            #{acceptanceCertificate.legalRepresentativePhone},
+            #{acceptanceCertificate.contacts},
+            #{acceptanceCertificate.contactsPhone},
+            #{acceptanceCertificate.postalCode},
+            #{acceptanceCertificate.mail},
+            #{acceptanceCertificate.mailingAddress},
+            #{acceptanceCertificate.competentDepartment},
+            #{acceptanceCertificate.projectStartTime},
+            #{acceptanceCertificate.projectCompletionTime},
+            #{acceptanceCertificate.achievementForm},
+            #{acceptanceCertificate.achievementLevel},
+            #{acceptanceCertificate.developmentTotalNumber},
+            #{acceptanceCertificate.doctorTotalNumber},
+            #{acceptanceCertificate.masterTotalNumber},
+            #{acceptanceCertificate.seniorTotalNumber},
+            #{acceptanceCertificate.intermediateTotalNumber},
+            #{acceptanceCertificate.schoolMasterNumber},
+            #{acceptanceCertificate.totalProjectFunds},
+            #{acceptanceCertificate.environmentTopicFunds},
+            #{acceptanceCertificate.competentDepartmentMatch},
+            #{acceptanceCertificate.bankLoans},
+            #{acceptanceCertificate.unitRaiseMoney},
+            #{acceptanceCertificate.otherActualMoney},
+            #{acceptanceCertificate.equipmentCost},
+            #{acceptanceCertificate.materialFee},
+            #{acceptanceCertificate.laboratoryFees},
+            #{acceptanceCertificate.fuelCosts},
+            #{acceptanceCertificate.travelExpenses},
+            #{acceptanceCertificate.conferenceFee},
+            #{acceptanceCertificate.internationalCommunication},
+            #{acceptanceCertificate.expertConsult},
+            #{acceptanceCertificate.managementExpense},
+            #{acceptanceCertificate.otherExpenditureMoney},
+            #{acceptanceCertificate.newOutput},
+            #{acceptanceCertificate.newSalesVolume},
+            #{acceptanceCertificate.newProfitTax},
+            #{acceptanceCertificate.exitEarn},
+            #{acceptanceCertificate.mainSolveTechnology},
+            #{acceptanceCertificate.mainCompletion},
+            #{acceptanceCertificate.implementationAchievement},
+            #{acceptanceCertificate.scienceDepartmentOpinion},
+            #{acceptanceCertificate.checkDepartmentOpinion},
+            #{acceptanceCertificate.environmentOfficeOpinion}
+        );
+    </insert>
+
+    <insert id="addAcceptanceCertificatePatent">
+        INSERT INTO acceptance_certificate_patent (
+            id,
+            acceptance_certificate_id,
+            application_invention,
+            use_new_type,
+            patent_appearance,
+            patent_invention,
+            empower_new_type,
+            empower_appearance_design,
+            paper_number,
+            science_indexe,
+            engineer_index,
+            publish_work,
+            technical_standard,
+            new_product,
+            policy_system,
+            new_device,
+            new_technology
+        )
+        VALUES(
+            #{acceptanceCertificatePatent.id},
+            #{acceptanceCertificatePatent.acceptanceCertificateId},
+            #{acceptanceCertificatePatent.applicationInvention},
+            #{acceptanceCertificatePatent.useNewType},
+            #{acceptanceCertificatePatent.patentAppearance},
+            #{acceptanceCertificatePatent.patentInvention},
+            #{acceptanceCertificatePatent.empowerNewType},
+            #{acceptanceCertificatePatent.empowerAppearanceDesign},
+            #{acceptanceCertificatePatent.paperNumber},
+            #{acceptanceCertificatePatent.scienceIndexe},
+            #{acceptanceCertificatePatent.engineerIndex},
+            #{acceptanceCertificatePatent.publishWork},
+            #{acceptanceCertificatePatent.technicalStandard},
+            #{acceptanceCertificatePatent.newProduct},
+            #{acceptanceCertificatePatent.policySystem},
+            #{acceptanceCertificatePatent.newDevice},
+            #{acceptanceCertificatePatent.newTechnology}
+        );
+    </insert>
+
+    <insert id="addAcceptanceCertificatePrincipalPersonnel">
+        INSERT INTO acceptance_certificate_principal_personnel (
+            id,
+            acceptance_certificate_id,
+            participant_name,
+            participant_sex,
+            participant_birth_date,
+            participant_technical_title,
+            participant_education,
+            participant_work_unit,
+            task_taking)
+        VALUES(
+            #{acceptanceCertificatePrincipalPersonnel.id},
+            #{acceptanceCertificatePrincipalPersonnel.acceptanceCertificateId},
+            #{acceptanceCertificatePrincipalPersonnel.participantName},
+            #{acceptanceCertificatePrincipalPersonnel.participantSex},
+            #{acceptanceCertificatePrincipalPersonnel.participantBirthDate},
+            #{acceptanceCertificatePrincipalPersonnel.participantTechnicalTitle},
+            #{acceptanceCertificatePrincipalPersonnel.participantEducation},
+            #{acceptanceCertificatePrincipalPersonnel.participantWorkUnit},
+            #{acceptanceCertificatePrincipalPersonnel.taskTaking}
+        );
+    </insert>
+
+    <insert id="addAcceptanceCertificateSubjectPeople">
+        INSERT INTO acceptance_certificate_subject_people(
+            id,
+            acceptance_certificate_id,
+            name,
+            sex,
+            birth_date,
+            major,
+            education,
+            title,
+            phone )
+        VALUES(
+            #{acceptanceCertificateSubjectPeople.id},
+            #{acceptanceCertificateSubjectPeople.acceptanceCertificateId},
+            #{acceptanceCertificateSubjectPeople.name},
+            #{acceptanceCertificateSubjectPeople.sex},
+            #{acceptanceCertificateSubjectPeople.birthDate},
+            #{acceptanceCertificateSubjectPeople.major},
+            #{acceptanceCertificateSubjectPeople.education},
+            #{acceptanceCertificateSubjectPeople.title},
+            #{acceptanceCertificateSubjectPeople.phone}
+        );
+
+    </insert>
 </mapper>

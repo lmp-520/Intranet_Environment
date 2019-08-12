@@ -20,12 +20,12 @@ public interface ExtranetAcceptApplyMapper<T> extends MyBaseMapper<ExtranetCheck
     void addAcceptApply(@Param("extranetCheckApply") ExtranetCheckApply extranetCheckApply);
 
     //新增验收审核状态
-    void insertCheckApplyState(@Param("checkApplyState") CheckApplyState checkApplyState);
+    void insertCheckApplyState(@Param("extranetCheckApplyState") ExtranetCheckApplyState extranetCheckApplyState);
 
     int queryAllExpert(@Param("cid") Integer cid, @Param("topicName") String topicName, @Param("topicNumber") String topicNumber);
 
     //通过验收申请表的id，获取到对应的审核状态
-    List<CheckApplyState> queryCheckApplyState(@Param("id") Integer id);
+    List<ExtranetCheckApplyState> queryCheckApplyState(@Param("id") Integer id);
 
     List<ExtranetCheckApply> queryAcceptApply(@Param("cid") Integer cid, @Param("topicName") String topicName, @Param("topicNumber") String topicNumber, @Param("page") int newpage, @Param("total") Integer total);
 
@@ -60,7 +60,7 @@ public interface ExtranetAcceptApplyMapper<T> extends MyBaseMapper<ExtranetCheck
     List<ExtranetCheckApply> queryResultCheckApply(@Param("cid") Integer cid, @Param("topicName") String topicName, @Param("topicNumber") String topicNumber, @Param("page") Integer page, @Param("total") Integer total);
 
     //根据验收申请表的id，新增最终验收报告的id
-    @Update("update check_apply set acceptance_final_result_id = #{id} where id = #{cid}")
+    @Update("update check_apply set acceptance_certificate_id = #{id} where id = #{cid}")
     void updateAcceptanceFinalResultIdById(@Param("cid") Integer cid, @Param("id") Integer id);
 
     //根据专家组意见文件的id，新增最终验收报告中专家组意见的id
@@ -72,11 +72,23 @@ public interface ExtranetAcceptApplyMapper<T> extends MyBaseMapper<ExtranetCheck
     void updateExpertAcceptanceFormFileId(@Param("caId") Integer caId, @Param("id") Integer id);
 
     //把专家组主表信息存储到数据库中
-    void addExpertGroupComment(@Param("expertGroupComment") ExpertGroupComment expertGroupComment);
+    void addExpertGroupComment(@Param("extranetExpertGroupComment") ExtranetExpertGroupComment extranetExpertGroupComment);
 
     //把专家组从表存储到数据库中
-    void addExpertGroupCommentName(@Param("egcId") Integer egcId, @Param("expertGroupCommentsName") ExpertGroupCommentsName expertGroupCommentsName);
+    void addExpertGroupCommentName(@Param("egcId") Integer egcId, @Param("extranetExpertGroupCommentsName") ExtranetExpertGroupCommentsName extranetExpertGroupCommentsName);
 
     //更新验收申请表
     void updateCheckApply(@Param("extranetCheckApply") ExtranetCheckApply extranetCheckApply);
+
+    //新增最终验收报告主表
+    void addAcceptanceCertificate(@Param("acceptanceCertificate") AcceptanceCertificate acceptanceCertificate);
+
+    //新增最终验收报告的专利表
+    void addAcceptanceCertificatePatent(@Param("acceptanceCertificatePatent") AcceptanceCertificatePatent acceptanceCertificatePatent);
+
+    //新增最终验收报告里的主要参加人员
+    void addAcceptanceCertificatePrincipalPersonnel(@Param("acceptanceCertificatePrincipalPersonnel") AcceptanceCertificatePrincipalPersonnel acceptanceCertificatePrincipalPersonnel);
+
+    //新增课题验收中的课题负责人
+    void addAcceptanceCertificateSubjectPeople(@Param("acceptanceCertificateSubjectPeople") AcceptanceCertificateSubjectPeople acceptanceCertificateSubjectPeople);
 }

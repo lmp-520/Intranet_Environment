@@ -11,7 +11,7 @@ import javax.persistence.Id;
 //专家组意见从表
 @ApiModel("专家组意见从表")
 @Data
-public class ExpertGroupCommentsName {
+public class ExtranetExpertGroupCommentsName {
     //主键id (专家组意见从表)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,7 +38,7 @@ public class ExpertGroupCommentsName {
     @ApiModelProperty("职务")
     private  String job;
 
-    public ExpertGroupCommentsName(Integer egcNid, Integer egcId, String expertName, String companyName, String major, String job) {
+    public ExtranetExpertGroupCommentsName(Integer egcNid, Integer egcId, String expertName, String companyName, String major, String job) {
         this.egcNid = egcNid;
         this.egcId = egcId;
         this.expertName = expertName;
@@ -47,6 +47,6 @@ public class ExpertGroupCommentsName {
         this.job = job;
     }
 
-    public ExpertGroupCommentsName() {
+    public ExtranetExpertGroupCommentsName() {
     }
 }

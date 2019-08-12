@@ -34,10 +34,10 @@ public interface AcceptEndMapper {
     String queryAcceptancePhaseNameByApId(@Param("acceptancePhaseId") Integer acceptancePhaseId);
 
     //获取验收申请表的总数
-    int queryAllAccpetApply(@Param("topicName") String topicName, @Param("subjectUndertakingUnit") String subjectUndertakingUnit, @Param("unitNature") Integer unitNature, @Param("projectLeader") String projectLeader);
+//    int queryAllAccpetApply(@Param("topicName") String topicName, @Param("subjectUndertakingUnit") String subjectUndertakingUnit, @Param("unitNature") Integer unitNature, @Param("projectLeader") String projectLeader);
 
     //获取验收申请表的集合
-    List<CheckApply> acceptApplyQuery(@Param("newpage") int newpage, @Param("total") Integer total, @Param("topicName") String topicName, @Param("subjectUndertakingUnit") String subjectUndertakingUnit, @Param("unitNature") Integer unitNature, @Param("projectLeader") String projectLeader);
+//    List<CheckApply> acceptApplyQuery(@Param("newpage") int newpage, @Param("total") Integer total, @Param("topicName") String topicName, @Param("subjectUndertakingUnit") String subjectUndertakingUnit, @Param("unitNature") Integer unitNature, @Param("projectLeader") String projectLeader);
 
     //根据数据的id 把处理人，审核状态，审核内容，处理时间更新
     @Update("update check_apply_state set state =#{state},second_handler =#{username} ,handle_content = #{handleContent} ,second_handle_time = #{date} where check_apply_id =  #{id} order by first_handle_time desc limit 1")
@@ -53,4 +53,11 @@ public interface AcceptEndMapper {
 
     @Insert("INSERT INTO check_apply_state(check_apply_id, fist_handler, audit_step, first_handle_time, state) VALUES (#{id},#{username},#{auditStep},#{firstHandleTime},#{newState})")
     int addNewCheckApplyState(@Param("id") Integer id, @Param("auditStep") String auditStep, @Param("newState") String newState, @Param("username") String username, @Param("firstHandleTime") String firstHandleTime);
+
+    int queryAllAccpetApply(@Param("topicName") String topicName, @Param("companyName") String companyName, @Param("startTime") String startTime, @Param("endTime") String endTime, @Param("achievementLevel") String achievementLevel);
+
+    List<CheckApply> acceptApplyQuery(int newpage, Integer total, String topicName, String companyName, String startTime, String endTime, String achievementLevel);
+
+    //满足课题名称，承担单位的申请表
+    List<Integer> queryTopicNameAndCompanyName(@Param("topicName") String topicName, @Param("companyName") String companyName);
 }

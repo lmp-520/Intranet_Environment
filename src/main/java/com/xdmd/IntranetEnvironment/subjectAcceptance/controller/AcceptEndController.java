@@ -36,22 +36,46 @@ public class AcceptEndController {
                     @ApiImplicitParam(name = "total",value = "每页显示条数"),
             }
     )
+//    @ResponseBody
+//    @PostMapping("query")
+//    public ResultMap AcceptEndQuery(@RequestParam(value = "topicName", required = false) String topicName, //课题名称
+//                                    @RequestParam(value = "subjectUndertakingUnit", required = false) String subjectUndertakingUnit,//承担单位
+//                                    @RequestParam(value = "unitNature", required = false) Integer unitNature,//单位性质
+//                                    @RequestParam(value = "projectLeader", required = false) String projectLeader,//课题负责人
+//                                    @RequestParam("Page") Integer page,
+//                                    @RequestParam("total") Integer total) {
+//        if (page <= 0 || total <= 0) {
+//            return resultMap.fail().message("请返回正确的页数或每页显示条数");
+//        }
+//        try {
+//            resultMap = acceptEndService.AcceptEndQuery(topicName, subjectUndertakingUnit, unitNature, projectLeader,page,total);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            log.error("AcceptEndController中AcceptEndQuery方法有误: ----" + e.getMessage());
+//            return resultMap.fail().message("系统异常");
+//        }
+//        return resultMap;
+//    }
+
     @ResponseBody
     @PostMapping("query")
-    public ResultMap AcceptEndQuery(@RequestParam(value = "topicName", required = false) String topicName, //课题名称
-                                    @RequestParam(value = "subjectUndertakingUnit", required = false) String subjectUndertakingUnit,//承担单位
-                                    @RequestParam(value = "unitNature", required = false) Integer unitNature,//单位性质
-                                    @RequestParam(value = "projectLeader", required = false) String projectLeader,//课题负责人
-                                    @RequestParam("Page") Integer page,
-                                    @RequestParam("total") Integer total) {
+    public ResultMap query(@RequestParam(value = "topicName", required = false) String topicName,   //课题名称
+                           @RequestParam(value = "companyName",required = false)String companyName, //完成单位
+                           @RequestParam(value = "startTime",required = false)String startTime, //课题开始时间
+                           @RequestParam(value = "endTime",required = false)String endTime,//课题结束时间
+                           @RequestParam(value = "achievementLevel",required = false)String achievementLevel,//成果水平
+                           @RequestParam("Page") Integer page,  //页数
+                           @RequestParam("total") Integer total //每页显示条数
+                           ){
         if (page <= 0 || total <= 0) {
             return resultMap.fail().message("请返回正确的页数或每页显示条数");
         }
+
         try {
-            resultMap = acceptEndService.AcceptEndQuery(topicName, subjectUndertakingUnit, unitNature, projectLeader,page,total);
+            resultMap = acceptEndService.queryResult(topicName,companyName,startTime,endTime,achievementLevel,page,total);
         } catch (Exception e) {
             e.printStackTrace();
-            log.error("AcceptEndController中AcceptEndQuery方法有误: ----" + e.getMessage());
+            log.error("AcceptEndController 中 query 方法错误 -- "+e.getMessage());
             return resultMap.fail().message("系统异常");
         }
         return resultMap;

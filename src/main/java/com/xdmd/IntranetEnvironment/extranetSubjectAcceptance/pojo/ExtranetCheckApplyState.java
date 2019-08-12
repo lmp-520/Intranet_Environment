@@ -11,7 +11,7 @@ import javax.persistence.Id;
  * 验收申请审核状态表
  */
 @Data
-public class CheckApplyState {
+public class ExtranetCheckApplyState {
     //主键id
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,7 +41,7 @@ public class CheckApplyState {
     //处理时间
     private  String secondHandleTime;
 
-    public CheckApplyState(Integer checkApplyId, String fistHandler, String secondHandler, String auditStep, String firstHandleTime, String state, String handleContent, String secondHandleTime) {
+    public ExtranetCheckApplyState(Integer checkApplyId, String fistHandler, String secondHandler, String auditStep, String firstHandleTime, String state, String handleContent, String secondHandleTime) {
         this.checkApplyId = checkApplyId;
         this.fistHandler = fistHandler;
         this.secondHandler = secondHandler;
@@ -52,6 +52,6 @@ public class CheckApplyState {
         this.secondHandleTime = secondHandleTime;
     }
 
-    public CheckApplyState() {
+    public ExtranetCheckApplyState() {
     }
 }

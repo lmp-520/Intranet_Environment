@@ -17,6 +17,8 @@ public class AcceptanceCertificate {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    private Integer cid;
+
     //文号
     private String translate;
 
