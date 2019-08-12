@@ -2,7 +2,6 @@ package com.xdmd.IntranetEnvironment.expert.mapper;
 
 import com.xdmd.IntranetEnvironment.common.UploadFile;
 import com.xdmd.IntranetEnvironment.expert.pojo.*;
-import com.xdmd.IntranetEnvironment.subjectAcceptance.pojo.CheckApply;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;

@@ -1,4 +1,4 @@
-package com.xdmd.IntranetEnvironment.subjectAcceptance.pojo;
+package com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo;
 
 import com.alibaba.fastjson.JSON;
 import lombok.Data;
@@ -20,7 +20,7 @@ import java.util.List;
  * @Date: 2019.7.15
  */
 @Data
-public class CheckApply implements Serializable {
+public class ExtranetCheckApply implements Serializable {
     //主键Id
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -218,7 +218,7 @@ public class CheckApply implements Serializable {
     @Transient
     private List<CheckApplyState> checkApplyStateList;
 
-    public CheckApply(@NotNull(message = "课题名称不能为空") String topicName, @NotNull(message = "课题编号不能为空") String topicNumber, @NotNull(message = "课题承担单位不能为空") String subjectUndertakingUnit, Integer subjectUndertakingUnitId, @NotNull(message = "单位性质不能为空") Integer unitNature, @NotNull(message = "单位负责人不能为空") String projectLeader, @NotNull(message = "课题负责人联系电话不能为空") String projectLeaderPhone, @NotNull(message = "课题负责人联系邮箱") String projectLeaderMail, @NotNull(message = "通讯地址不能为空") String postalAddress, String agreementStartTime, String agreementEndTime, String applicationAcceptanceTime, @NotNull(message = "申请验收方式不能为空") Integer applicationAcceptanceMode, @NotNull(message = "申请验收地点不能为空") String applicationAcceptancePlace, @NotNull(message = "验收联系人不能为空") String acceptanceContact, @NotNull(message = "验收联系人联系电话不能为空") String acceptanceContactPhone, @Size(min = 1, max = 500, message = "请输入范围内字数") @NotNull(message = "主要研究内容完成情况不能为空") String mainContentSituation, @NotNull(message = "提交成果情况不能为空") @Size(min = 1, max = 500, message = "请输入范围内字数") String submissionAchievementsSituation, @NotNull(message = "课题承担单位意见不能为空") @Size(min = 1, max = 500, message = "请输入范围内字数") String subjectUndertakingUnitOpinion, @NotNull(message = "所在环保部门意见不能为空") @Size(min = 1, max = 500, message = "请输入范围内字数") String environmentalDepartmentsOpinion, @NotNull(message = "省生态环境评估中心初审意见不能为空") @Size(min = 1, max = 500, message = "请输入范围内字数") String provinceAssessmentCenterOpinion, @NotNull(message = "省环保厅主管部门意见不能为空") @Size(min = 1, max = 500, message = "请输入范围内字数") String competentDepartmentOinion, @NotNull(message = "提交资料清单不能为空") String submitInventory, String submitInventoryUrl, String submitInventoryUrlName, String applicationAcceptanceUrl, String applicationAcceptanceUrlName, String achievementsUrl, String achievementsName, String auditReportUrl, String auditReportUrlName, String firstInspectionReportUrl, String firstInspectionReportUrlName, String expertGroupCommentsUrl, String expertGroupCommentsUrlName, String expertAcceptanceFormUrl, String expertAcceptanceFormUrlName, String acceptanceCertificateUrl, String acceptanceCertificateUrlName, Integer acceptancePhaseId, String acceptancePhaseName, Date createTime, String createAuthor, Integer achievementUrlId, Integer submitUrlId, Integer auditReportUrlId, Integer firstInspectionReportUrlId, Integer expertGroupCommentsUrlId, Integer expertAcceptanceFormId, Integer applicationUrlId, Integer acceptanceConclusionId, Integer acceptanceCertificateId, Integer acceptanceFinalResultId, String isOutcome, List<CheckApplyState> checkApplyStateList) {
+    public ExtranetCheckApply(@NotNull(message = "课题名称不能为空") String topicName, @NotNull(message = "课题编号不能为空") String topicNumber, @NotNull(message = "课题承担单位不能为空") String subjectUndertakingUnit, Integer subjectUndertakingUnitId, @NotNull(message = "单位性质不能为空") Integer unitNature, @NotNull(message = "单位负责人不能为空") String projectLeader, @NotNull(message = "课题负责人联系电话不能为空") String projectLeaderPhone, @NotNull(message = "课题负责人联系邮箱") String projectLeaderMail, @NotNull(message = "通讯地址不能为空") String postalAddress, String agreementStartTime, String agreementEndTime, String applicationAcceptanceTime, @NotNull(message = "申请验收方式不能为空") Integer applicationAcceptanceMode, @NotNull(message = "申请验收地点不能为空") String applicationAcceptancePlace, @NotNull(message = "验收联系人不能为空") String acceptanceContact, @NotNull(message = "验收联系人联系电话不能为空") String acceptanceContactPhone, @Size(min = 1, max = 500, message = "请输入范围内字数") @NotNull(message = "主要研究内容完成情况不能为空") String mainContentSituation, @NotNull(message = "提交成果情况不能为空") @Size(min = 1, max = 500, message = "请输入范围内字数") String submissionAchievementsSituation, @NotNull(message = "课题承担单位意见不能为空") @Size(min = 1, max = 500, message = "请输入范围内字数") String subjectUndertakingUnitOpinion, @NotNull(message = "所在环保部门意见不能为空") @Size(min = 1, max = 500, message = "请输入范围内字数") String environmentalDepartmentsOpinion, @NotNull(message = "省生态环境评估中心初审意见不能为空") @Size(min = 1, max = 500, message = "请输入范围内字数") String provinceAssessmentCenterOpinion, @NotNull(message = "省环保厅主管部门意见不能为空") @Size(min = 1, max = 500, message = "请输入范围内字数") String competentDepartmentOinion, @NotNull(message = "提交资料清单不能为空") String submitInventory, String submitInventoryUrl, String submitInventoryUrlName, String applicationAcceptanceUrl, String applicationAcceptanceUrlName, String achievementsUrl, String achievementsName, String auditReportUrl, String auditReportUrlName, String firstInspectionReportUrl, String firstInspectionReportUrlName, String expertGroupCommentsUrl, String expertGroupCommentsUrlName, String expertAcceptanceFormUrl, String expertAcceptanceFormUrlName, String acceptanceCertificateUrl, String acceptanceCertificateUrlName, Integer acceptancePhaseId, String acceptancePhaseName, Date createTime, String createAuthor, Integer achievementUrlId, Integer submitUrlId, Integer auditReportUrlId, Integer firstInspectionReportUrlId, Integer expertGroupCommentsUrlId, Integer expertAcceptanceFormId, Integer applicationUrlId, Integer acceptanceConclusionId, Integer acceptanceCertificateId, Integer acceptanceFinalResultId, String isOutcome, List<CheckApplyState> checkApplyStateList) {
         this.topicName = topicName;
         this.topicNumber = topicNumber;
         this.subjectUndertakingUnit = subjectUndertakingUnit;
@@ -276,7 +276,7 @@ public class CheckApply implements Serializable {
         this.checkApplyStateList = checkApplyStateList;
     }
 
-    public CheckApply() {
+    public ExtranetCheckApply() {
     }
 
     @Override

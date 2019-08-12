@@ -8,7 +8,6 @@ import com.xdmd.IntranetEnvironment.subjectAcceptance.mapper.AcceptApplyMapper;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.pojo.CheckApply;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.pojo.CheckApplyState;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.service.AcceptApplySerivce;
-import org.hibernate.annotations.Check;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

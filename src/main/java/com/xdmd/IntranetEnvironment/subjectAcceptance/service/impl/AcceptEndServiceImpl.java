@@ -105,12 +105,12 @@ public class AcceptEndServiceImpl implements AcceptEndService {
             //获取审计报告文件的id
             Integer auditReportUrlId = checkApply.getAuditReportUrlId();
             String auditReportUrl = acceptEndMapper.queryFileUrlByFileId(auditReportUrlId);
-            checkApply.setSpecialAuditUrl(auditReportUrl);
+            checkApply.setAuditReportUrl(auditReportUrl);
 
             //获取初审报告文件
             Integer firstInspectionReportUrlId = checkApply.getFirstInspectionReportUrlId();
             String firstInspectionReportUrl = acceptEndMapper.queryFileUrlByFileId(firstInspectionReportUrlId);
-            checkApply.setFirstInspectionUrl(firstInspectionReportUrl);
+            checkApply.setFirstInspectionReportUrl(firstInspectionReportUrl);
 
 
             //取出验收申请表中数据对应的id

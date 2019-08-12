@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xdmd.environment.subjectAcceptance.mapper.AcceptApplyMapper">
+
+    <!--<select id="queryAcceptApply" resultType="com.xdmd.environment.subjectAcceptance.pojo.CheckApply">-->
+        <!--SELECT-->
+        <!--id,-->
+        <!--topic_name,-->
+        <!--topic_number,-->
+        <!--subject_undertaking_unit,-->
+        <!--unit_nature,-->
+        <!--project_leader,-->
+        <!--project_leader_phone,-->
+        <!--project_leader_mail,-->
+        <!--postal_address,-->
+        <!--agreement_start_time,-->
+        <!--agreement_end_time,-->
+        <!--application_acceptance_time,-->
+        <!--application_acceptance_mode,-->
+        <!--application_acceptance_place,-->
+        <!--acceptance_contact,-->
+        <!--acceptance_contact_phone,-->
+        <!--main_content_situation,-->
+        <!--submission_achievements_situation,-->
+        <!--subject_undertaking_unit_opinion,-->
+        <!--environmental_departments_opinion,-->
+        <!--province_assessment_center_opinion,-->
+        <!--competent_department_oinion,-->
+        <!--submit_inventory-->
+        <!--FROM-->
+        <!--check_apply-->
+        <!--<where>-->
+            <!--<if test="topicName != null">-->
+                <!--topic_name like CONCAT('%',#{topicName},'%')-->
+            <!--</if>-->
+
+            <!--<if test="projectLeader != null">-->
+                <!--and project_leader like CONCAT('%',#{projectLeader},'%')-->
+            <!--</if>-->
+        <!--</where>-->
+        <!--limit #{page},#{total}-->
+    <!--</select>-->
+
+    <select id="queryAllTotal" resultType="Integer">
+        select count(*) from check_apply
+        <where>
+            <if test="topicName != null">
+                topic_name like CONCAT('%',#{topicName},'%')
+            </if>
+
+            <if test="projectLeader != null">
+                and project_leader like CONCAT('%',#{projectLeader},'%')
+            </if>
+        </where>
+    </select>
+
+    <insert id="uploadFile" useGeneratedKeys="true" keyProperty="id">
+         insert into upload_file(
+            id,
+            upload_file_address,
+            upload_file_name,
+            upload_file_type,
+            upload_suffix_name,
+            file_size,
+            create_time,
+            create_author)
+            values(
+            #{uploadFile.id},
+            #{uploadFile.uploadFileAddress},
+            #{uploadFile.uploadFileName},
+            #{uploadFile.uploadFileType},
+            #{uploadFile.uploadSuffixName},
+            #{uploadFile.fileSize},
+            #{uploadFile.createTime},
+            #{uploadFile.createAuthor}
+            )
+    </insert>
+
+    <insert id="addAcceptApply" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO check_apply (
+            id,
+            topic_name,
+            topic_number,
+            subject_undertaking_unit_id,
+            subject_undertaking_unit,
+            unit_nature,
+            project_leader,
+            project_leader_phone,
+            project_leader_mail,
+            postal_address,
+            agreement_start_time,
+            agreement_end_time,
+            application_acceptance_time,
+            application_acceptance_mode,
+            application_acceptance_place,
+            acceptance_contact,
+            acceptance_contact_phone,
+            main_content_situation,
+            submission_achievements_situation,
+            subject_undertaking_unit_opinion,
+            environmental_departments_opinion,
+            province_assessment_center_opinion,
+            competent_department_oinion,
+            submit_inventory,
+            acceptance_phase_id,
+            create_time,
+            create_author,
+            achievement_url_id,
+            submit_url_id,
+            application_url_id
+        )VALUES
+        (
+          #{checkApply.id},
+          #{checkApply.topicName},
+          #{checkApply.topicNumber},
+          #{checkApply.subjectUndertakingUnitId},
+          #{checkApply.subjectUndertakingUnit},
+          #{checkApply.unitNature},
+          #{checkApply.projectLeader},
+          #{checkApply.projectLeaderPhone},
+          #{checkApply.projectLeaderMail},
+          #{checkApply.postalAddress},
+          #{checkApply.agreementStartTime},
+          #{checkApply.agreementEndTime},
+          #{checkApply.applicationAcceptanceTime},
+          #{checkApply.applicationAcceptanceMode},
+          #{checkApply.applicationAcceptancePlace},
+          #{checkApply.acceptanceContact},
+          #{checkApply.acceptanceContactPhone},
+          #{checkApply.mainContentSituation},
+          #{checkApply.submissionAchievementsSituation},
+          #{checkApply.subjectUndertakingUnitOpinion},
+          #{checkApply.environmentalDepartmentsOpinion},
+          #{checkApply.provinceAssessmentCenterOpinion},
+          #{checkApply.competentDepartmentOinion},
+          #{checkApply.submitInventory},
+          #{checkApply.acceptancePhaseId},
+          #{checkApply.createTime},
+          #{checkApply.createAuthor},
+          #{checkApply.achievementUrlId},
+          #{checkApply.submitUrlId},
+          #{checkApply.applicationUrlId}
+        );
+    </insert>
+
+    <insert id="insertCheckApplyState" useGeneratedKeys="true" keyProperty="id">
+      insert into check_apply_state(
+      check_apply_id,
+      fist_handler,
+      audit_step,
+      first_handle_time,
+      state)
+      values (
+      #{checkApplyState.checkApplyId},
+      #{checkApplyState.fistHandler},
+      #{checkApplyState.auditStep},
+      #{checkApplyState.firstHandleTime},
+      #{checkApplyState.state}
+      )
+    </insert>
+
+    <select id="queryAcceptApply" resultType="com.xdmd.environment.subjectAcceptance.pojo.CheckApply">
+        select * from check_apply
+        <where>
+            <if test="topicName != null">
+                topic_name like CONCAT('%',#{topicName},'%')
+            </if>
+            <if test="topicNumber != null">
+                and topic_number like CONCAT ('%',#{topicNumber},'%')
+            </if>
+            <if test="0 == 0">
+                and subject_undertaking_unit_id = #{cid} and acceptance_phase_id in(1,2,3,4,5,6,7)
+            </if>
+        </where>
+        limit #{page},#{total};
+    </select>
+
+    <select id="queryAllExpert" resultType="Integer">
+        select count(*) from check_apply
+        <where>
+            <if test="topicName != null ">
+                topic_name like CONCAT ('%',#{topicName},'%')
+            </if>
+            <if test="topicNumber != null">
+                and topic_number like CONCAT ('%',#{topicNumber},'%')
+            </if>
+            <if test="0 == 0">
+                and subject_undertaking_unit_id = #{cid} and acceptance_phase_id in(1,2,3,4,5,6,7)
+            </if>
+        </where>
+    </select>
+
+    <select id="queryCheckApplyState" resultType="com.xdmd.environment.subjectAcceptance.pojo.CheckApplyState">
+        select * from check_apply_state
+        where check_apply_id = #{id}
+    </select>
+
+
+    <select id="queryAllResultCheckApply" resultType="Integer">
+        select count(*) from check_apply
+        <where>
+            <if test="topicName != null ">
+                topic_name like CONCAT ('%',#{topicName},'%')
+            </if>
+            <if test="topicNumber != null">
+                and topic_number like CONCAT ('%',#{topicNumber},'%')
+            </if>
+            <if test="0 == 0">
+                and subject_undertaking_unit_id = #{cid} and acceptance_phase_id in(77,88,99)
+            </if>
+        </where>
+    </select>
+
+    <select id="queryResultCheckApply" resultType="com.xdmd.environment.subjectAcceptance.pojo.CheckApply">
+        select * from check_apply
+        <where>
+            <if test="topicName != null ">
+                topic_name like CONCAT ('%',#{topicName},'%')
+            </if>
+            <if test="topicNumber != null">
+                and topic_number like CONCAT ('%',#{topicNumber},'%')
+            </if>
+            <if test="0 == 0">
+                and subject_undertaking_unit_id = #{cid} and acceptance_phase_id in(77,88,99)
+            </if>
+        </where>
+    </select>
+
+    <insert id="addExpertGroupComment" useGeneratedKeys="true" keyProperty="egcId">
+        INSERT INTO expert_group_comments (
+            egc_id,
+            ca_id,
+            topic_name,
+            topic_number,
+            project_leader,
+            subject_undertaking_unit,
+            acceptance_expert_number,
+            expert_one_grade,
+            expert_two_grade,
+            expert_three_grade,
+            expert_four_grade,
+            expert_five_grade,
+            expert_six_grade,
+            expert_seven_grade,
+            synthesize_grade,
+            topic_overall_evaluation,
+            suggest,
+            acceptance_conclusion_id,
+            expert_leader,
+            write_date,
+            create_time,
+            create_author)
+        VALUES(
+            #{expertGroupComment.egcId},
+            #{expertGroupComment.caId},
+            #{expertGroupComment.topicName},
+            #{expertGroupComment.topicNumber},
+            #{expertGroupComment.projectLeader},
+            #{expertGroupComment.subjectUndertakingUnit},
+            #{expertGroupComment.acceptanceExpertNumber},
+            #{expertGroupComment.expertOneGrade},
+            #{expertGroupComment.expertTwoGrade},
+            #{expertGroupComment.expertThreeGrade},
+            #{expertGroupComment.expertFourGrade},
+            #{expertGroupComment.expertFiveGrade},
+            #{expertGroupComment.expertSixGrade},
+            #{expertGroupComment.expertSevenGrade},
+            #{expertGroupComment.synthesizeGrade},
+            #{expertGroupComment.topicOverallEvaluation},
+            #{expertGroupComment.suggest},
+            #{expertGroupComment.acceptanceConclusionId},
+            #{expertGroupComment.expertLeader},
+            #{expertGroupComment.writeDate},
+            #{expertGroupComment.createTime},
+            #{expertGroupComment.createAuthor}
+            );
+    </insert>
+
+    <insert id="addExpertGroupCommentName">
+        insert into expert_group_comments_name(
+            egc_nid,
+            egc_id,
+            expert_name,
+            company_name,
+            major,
+            job)
+        values(
+            #{expertGroupCommentsName.egcNid},
+            #{egcId},
+            #{expertGroupCommentsName.expertName},
+            #{expertGroupCommentsName.companyName},
+            #{expertGroupCommentsName.major},
+            #{expertGroupCommentsName.job}
+        )
+    </insert>
+
+    <update id="updateCheckApply">
+        update check_apply set
+            id = #{checkApply.id},
+            topic_name = #{checkApply.topicName},
+            topic_number = #{checkApply.topicNumber},
+            subject_undertaking_unit = #{checkApply.subjectUndertakingUnit},
+            unit_nature = #{checkApply.unitNature},
+            project_leader = #{checkApply.projectLeader},
+            project_leader_phone = #{checkApply.projectLeaderPhone},
+            project_leader_mail = #{checkApply.projectLeaderMail},
+            postal_address = #{checkApply.postalAddress},
+            agreement_start_time = #{checkApply.agreementStartTime},
+            agreement_end_time = #{checkApply.agreementEndTime},
+            application_acceptance_time = #{checkApply.applicationAcceptanceTime},
+            application_acceptance_mode = #{checkApply.applicationAcceptanceMode},
+            application_acceptance_place = #{checkApply.applicationAcceptancePlace},
+            acceptance_contact = #{checkApply.acceptanceContact},
+            acceptance_contact_phone = #{checkApply.acceptanceContactPhone},
+            main_content_situation = #{checkApply.mainContentSituation},
+            submission_achievements_situation = #{checkApply.submissionAchievementsSituation},
+            subject_undertaking_unit_opinion = #{checkApply.subjectUndertakingUnitOpinion},
+            environmental_departments_opinion = #{checkApply.environmentalDepartmentsOpinion},
+            province_assessment_center_opinion = #{checkApply.provinceAssessmentCenterOpinion},
+            competent_department_oinion = #{checkApply.competentDepartmentOinion},
+            submit_inventory  = #{checkApply.submitInventory}
+        where id = #{checkApply.id}
+    </update>
+</mapper>
