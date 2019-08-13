@@ -182,7 +182,7 @@ public class AcceptanceCertificate {
     //验收证书url
     private String acceptanceCertificateUrl;
 
-    //验收证书集合
+    //验收证书专利集合
     private List<AcceptanceCertificatePatent> acceptanceCertificatePatentList;
 
     //主要参加人员集合

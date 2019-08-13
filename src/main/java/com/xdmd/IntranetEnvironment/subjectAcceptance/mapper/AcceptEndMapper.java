@@ -1,5 +1,9 @@
 package com.xdmd.IntranetEnvironment.subjectAcceptance.mapper;
 
+import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.AcceptanceCertificate;
+import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.AcceptanceCertificatePatent;
+import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.AcceptanceCertificatePrincipalPersonnel;
+import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.AcceptanceCertificateSubjectPeople;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.pojo.CheckApply;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.pojo.CheckApplyState;
 import org.apache.ibatis.annotations.Insert;
@@ -60,4 +64,34 @@ public interface AcceptEndMapper {
 
     //满足课题名称，承担单位的申请表
     List<Integer> queryTopicNameAndCompanyName(@Param("topicName") String topicName, @Param("companyName") String companyName);
+
+    //获取符合条件的验收申请表id
+    List<Integer> queryAcceptApplyId(@Param("newpage") int newpage, @Param("total") Integer total, @Param("topicName") String topicName, @Param("companyName") String companyName, @Param("startTime") String startTime, @Param("endTime") String endTime, @Param("achievementLevel") String achievementLevel);
+
+    //根据cid，获取验收申请表总表信息
+    CheckApply queryCheckApply(@Param("cid") Integer cid);
+
+    //获取验收证书主表
+    @Select("SELECT * FROM  acceptance_certificate where cid = #{id}")
+    AcceptanceCertificate queryAcceptanceCertificate(@Param("id") Integer id);
+
+    //获取验收证书的专利表
+    @Select("SELECT * FROM acceptance_certificate_patent where acceptance_certificate_id = #{id}")
+    List<AcceptanceCertificatePatent> queryAcceptanceCertificatePatent(@Param("id") Integer id);
+
+    //获取验收证书主要成员
+    @Select("SELECT * FROM acceptance_certificate_principal_personnel where acceptance_certificate_id =#{id}")
+    List<AcceptanceCertificatePrincipalPersonnel> queryAcceptanceCertificatePrincipalPersonnel(@Param("id") Integer id);
+
+    //获取验收证书课题负责人
+    @Select("SELECT * FROM  acceptance_certificate_subject_people where acceptance_certificate_id = #{id}")
+    List<AcceptanceCertificateSubjectPeople> queryAcceptanceCertificateSubjectPeople(@Param("id") Integer id);
+
+    //根据验收状态id，获取验收状态
+    @Select("select ap_name from acceptance_phase where ap_id = #{acceptancePhaseId} ")
+    String queryCheckPhaseById(@Param("acceptancePhaseId") Integer acceptancePhaseId);
+
+    //根据验收申请表的id，获取该申请表的审核状态
+    @Select("SELECT * FROM check_apply_state where check_apply_id = #{id} ORDER BY first_handle_time")
+    List<CheckApplyState> queryCheckApplyStateByCid(@Param("id") Integer id);
 }

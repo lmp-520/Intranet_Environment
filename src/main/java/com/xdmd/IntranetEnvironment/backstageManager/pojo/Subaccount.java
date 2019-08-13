@@ -40,6 +40,9 @@ public class Subaccount {
     //身份证扫描件地址
     private String idCardUrl;
 
+    //文件的真实名称
+    private String FileName;
+
     //创建时间
     private String createTime;
 

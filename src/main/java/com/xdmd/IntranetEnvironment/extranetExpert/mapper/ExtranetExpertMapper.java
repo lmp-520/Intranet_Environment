@@ -67,4 +67,8 @@ public interface ExtranetExpertMapper {
     //新增该账号与角色之间的关系
     @Insert("insert into shiro_user_role (uid,rid) values(#{uid},3)")
     void addUserRole(@Param("uid") Integer uid);
+
+    //判断该员工是不是第一次登陆
+    @Select("SELECT is_first FROM  shiro_user_information where uid = #{uid} ")
+    String queryIsFirst(@Param("uid") Integer uid);
 }

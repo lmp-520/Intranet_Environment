@@ -1,8 +1,9 @@
 package com.xdmd.IntranetEnvironment.subjectAcceptance.service.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+
+import com.xdmd.IntranetEnvironment.common.PageBean;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
+import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.*;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.controller.AcceptEndController;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.exception.InsertSqlException;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.exception.UpdateAcceptancePhaseException;
@@ -32,6 +33,7 @@ public class AcceptEndServiceImpl implements AcceptEndService {
     @Autowired
     private TokenService tokenService;
     ResultMap resultMap = new ResultMap();
+    PageBean pageBean = new PageBean();
     private static Logger log = LoggerFactory.getLogger(AcceptEndController.class);
 
 
@@ -231,32 +233,85 @@ public class AcceptEndServiceImpl implements AcceptEndService {
 
         //获取验收申请表的总数
         int alltotal = 0;
-        //获取满足课题名称，承担单位的申请表id
-        List<Integer> idList = acceptEndMapper.queryTopicNameAndCompanyName(topicName,companyName);
-        acceptEndMapper.
-
-
         alltotal = acceptEndMapper.queryAllAccpetApply(topicName, companyName, startTime, endTime,achievementLevel);
         if (alltotal == 0) {
             return resultMap.fail().message();
         }
 
         //获取验收申请表的集合
-        List<CheckApply> checkApplyList = acceptEndMapper.acceptApplyQuery(newpage, total, topicName, companyName, startTime, endTime,achievementLevel);
+//        List<CheckApply> checkApplyList = acceptEndMapper.acceptApplyQuery(newpage, total, topicName, companyName, startTime, endTime,achievementLevel);
 
-        //判断用户输入的页数是否超过总页数
-        int allPage = 0;
-        if (alltotal % page == 0) {
-            allPage = alltotal / page;
-        } else {
-            allPage = (alltotal / page) + 1;
+        //获取符合条件的验收申请表id
+        List<Integer> checkApplyIdList = acceptEndMapper.queryAcceptApplyId(newpage,total,topicName,companyName,startTime,endTime,achievementLevel);
+
+        List<CheckApply> checkApplyList = new ArrayList<>();
+        //遍历验收申请表id集合
+        for (Integer cid : checkApplyIdList) {
+            CheckApply checkApply = new CheckApply();
+            //根据cid，获取验收申请表总表信息
+            checkApply = acceptEndMapper.queryCheckApply(cid);
+
+            //根据验收状态id，获取验收状态
+            String phaseName = acceptEndMapper.queryCheckPhaseById(checkApply.getAcceptancePhaseId());
+            checkApply.setAcceptancePhaseName(phaseName);
+
+            //根据验收申请表的id，获取该申请表的审核状态
+            List<CheckApplyState> checkApplyStateList = acceptEndMapper.queryCheckApplyStateByCid(checkApply.getId());
+            checkApply.setCheckApplyStateList(checkApplyStateList);
+
+
+            //根据各个文件的id，获取各个文件的地址
+            String achievementUrl = acceptEndMapper.queryFileUrlByFileId(checkApply.getAchievementUrlId());            //获取成果附件地址
+            checkApply.setAchievementsUrl(achievementUrl);
+
+            String submitUrl = acceptEndMapper.queryFileUrlByFileId(checkApply.getSubmitUrlId());                      //获取提交清单文件
+            checkApply.setSubmitInventoryUrl(submitUrl);
+
+            String auditReportUrl = acceptEndMapper.queryFileUrlByFileId(checkApply.getAuditReportUrlId());            //获取审计报告文件
+            checkApply.setAuditReportUrl(auditReportUrl);
+
+            String firstInspectionReportUrl = acceptEndMapper.queryFileUrlByFileId(checkApply.getFirstInspectionReportUrlId());     //获取初审报告文件
+            checkApply.setFirstInspectionReportUrl(firstInspectionReportUrl);
+
+            String expertGroupCommentsUrl = acceptEndMapper.queryFileUrlByFileId(checkApply.getExpertGroupCommentsUrlId());         //获取专家组意见文件
+            checkApply.setExpertGroupCommentsUrl(expertGroupCommentsUrl);
+
+            String expertAcceptanceFormUrl = acceptEndMapper.queryFileUrlByFileId(checkApply.getExpertAcceptanceFormId());  //获取专家组评议表文件
+            checkApply.setExpertAcceptanceFormUrl(expertAcceptanceFormUrl);
+
+            String applicationUrl = acceptEndMapper.queryFileUrlByFileId(checkApply.getApplicationUrlId());         //验收申请表文件
+            checkApply.setApplicationAcceptanceUrl(applicationUrl);
+
+            String acceptanceCertificateUrl = acceptEndMapper.queryFileUrlByFileId(checkApply.getAcceptanceCertificateId());    //最终证书文件
+            checkApply.setAcceptanceCertificateUrl(acceptanceCertificateUrl);
+
+            AcceptanceCertificate acceptanceCertificate  = new AcceptanceCertificate();
+            //获取验收证书主表
+            acceptanceCertificate = acceptEndMapper.queryAcceptanceCertificate(checkApply.getId());
+
+            List<AcceptanceCertificatePatent> acceptanceCertificatePatentList = new ArrayList<AcceptanceCertificatePatent>();
+            //获取验收证书专利表
+            acceptanceCertificatePatentList = acceptEndMapper.queryAcceptanceCertificatePatent(checkApply.getId());
+
+            List<AcceptanceCertificatePrincipalPersonnel> acceptanceCertificatePrincipalPersonnelList = new ArrayList<AcceptanceCertificatePrincipalPersonnel>();
+            //获取验收证书主要成员
+            acceptanceCertificatePrincipalPersonnelList = acceptEndMapper.queryAcceptanceCertificatePrincipalPersonnel(checkApply.getId());
+
+            List<AcceptanceCertificateSubjectPeople> acceptanceCertificateSubjectPeopleList = new ArrayList<AcceptanceCertificateSubjectPeople>();
+            //获取验收证书课题负责人
+            acceptanceCertificateSubjectPeopleList = acceptEndMapper.queryAcceptanceCertificateSubjectPeople(checkApply.getId());
+
+            acceptanceCertificate.setAcceptanceCertificatePatentList(acceptanceCertificatePatentList);
+            acceptanceCertificate.setAcceptanceCertificatePrincipalPersonnelList(acceptanceCertificatePrincipalPersonnelList);
+            acceptanceCertificate.setAcceptanceCertificateSubjectPeopleList(acceptanceCertificateSubjectPeopleList);
+
+            checkApply.setAcceptanceCertificate(acceptanceCertificate);
+
+            checkApplyList.add(checkApply);
         }
-        if (page > allPage) {
-            return resultMap.fail().message("页数超过总页数");
-        }
 
-        return resultMap;
-
-
+        pageBean.setAlltotal(alltotal);
+        pageBean.setData(checkApplyList);
+        return resultMap.success().message(pageBean);
     }
 }

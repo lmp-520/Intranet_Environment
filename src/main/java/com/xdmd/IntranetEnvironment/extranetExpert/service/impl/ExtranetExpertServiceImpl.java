@@ -1,5 +1,7 @@
 package com.xdmd.IntranetEnvironment.extranetExpert.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.xdmd.IntranetEnvironment.common.FileSuffixJudgeUtil;
 import com.xdmd.IntranetEnvironment.common.FileUploadUtil;
 import com.xdmd.IntranetEnvironment.common.MD5Utils;
@@ -29,6 +31,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class ExtranetExpertServiceImpl implements ExtranetExpertService {
     @Autowired
     private ExtranetExpertMapper extranetExpertMapper;
@@ -59,12 +62,11 @@ public class ExtranetExpertServiceImpl implements ExtranetExpertService {
         }
 
         //对专家信息表进行上传
-        //对营业执照文件进行上传
         try {
             String businessFileUrl = FileUploadUtil.UploadExpertInformationFile(expertFile, "专家信息库");
-            //把营业执照文件上传到upload_file中
+            //把专家信息文件上传到upload_file中
             UploadFile uploadBusinessFile = IntegrationFile.IntegrationFile(expertFile, businessFileUrl, "专家信息库", userInformation.getRealName());
-            extranetExpertMapper.uploadFile(uploadBusinessFile);   //对文件进行上传
+            extranetExpertMapper.uploadFile(uploadBusinessFile);   //对专家信息进行上传
             ExpertInformation expertInformation = userInformation.getExpertInformation();
             expertInformation.setExpertInformationUrlId(uploadBusinessFile.getId());//把上传后的文件id，插入到专家信息表中
         } catch (Exception e) {
@@ -79,21 +81,23 @@ public class ExtranetExpertServiceImpl implements ExtranetExpertService {
         String newPassword  = MD5Utils.md5(password);
         userInformation.setPassword(newPassword);
 
-        //设置管理员身份
+        ExpertInformation expertInformation = userInformation.getExpertInformation();
+
+        //设置管专家身份
         userInformation.setIdentity("2");
         //设置为多次登陆
         userInformation.setIsFirst("1");
-        //设置审核通过
-        userInformation.setIsState("2");
+        //设置等待审核
+        userInformation.setIsState("2");    //1：审核通过 2：等待审核  3：审核未通过
         //设置该账号启用
-        userInformation.setIsDelete("1");
+        userInformation.setIsDelete("0");
 
         //把专家的基本信息存入到基本信息表中，具体信息存入专家表中
         extranetExpertMapper.addUserInformation(userInformation);
 
         //根据登陆名查询刚刚插入数据的id
         Integer id = extranetExpertMapper.addIdByLoginName(userInformation.getLoginName());
-        ExpertInformation expertInformation = userInformation.getExpertInformation();
+//        ExpertInformation expertInformation1 = userInformation.getExpertInformation();
         expertInformation.setAid(id);
 
         Date date = new Date();
@@ -173,9 +177,11 @@ public class ExtranetExpertServiceImpl implements ExtranetExpertService {
             //此时审核未通过
             //根据uid在专家信息表中获取未通过的原因
             String reason = extranetExpertMapper.queryReasonByUid(uid);
-            return resultMap.fail().message(reason);
+            LoginReturnContent loginReturnContent = new LoginReturnContent();
+            JSONObject jsonObject = JSON.parseObject(loginReturnContent.toString());
+            jsonObject.put("errorReason",reason);
+            return resultMap.fail().message(jsonObject);
         }
-
 
         //根据登录名获取数据库中的密码
         String sqlPassword = extranetExpertMapper.queryPasswordByLoginName(loginName);
@@ -185,7 +191,6 @@ public class ExtranetExpertServiceImpl implements ExtranetExpertService {
             //此时密码不相同，则返回
             return resultMap.success().message("密码错误");
         }
-
 
         //根据uid获取登陆人的真实姓名
         String realName = extranetExpertMapper.queryRealNameByUid(uid);
@@ -207,6 +212,18 @@ public class ExtranetExpertServiceImpl implements ExtranetExpertService {
         loginReturnContent.setIdentity(2);
         loginReturnContent.setRealName(realName);
 
-        return resultMap.success().message(loginReturnContent);
+        JSONObject jsonObject = JSON.parseObject(loginReturnContent.toString());
+
+        //判断该员工是不是第一次登陆
+        String isFirst = extranetExpertMapper.queryIsFirst(uid);
+        if(isFirst.equals("0")){
+            //第一次登陆
+            jsonObject.put("isFirst",0);
+        }else {
+            //多次登陆
+            jsonObject.put("isFirst",1);
+        }
+
+        return resultMap.success().message(jsonObject);
     }
 }

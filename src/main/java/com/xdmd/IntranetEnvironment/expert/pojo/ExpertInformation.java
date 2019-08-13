@@ -156,10 +156,8 @@ public class ExpertInformation implements Serializable {
     //专家信息表文件的名称
     private String expertInformationFileName;
 
-    public ExpertInformation(String name, String username, String password, String sex, String birthDate, String education, String presentPost, String technicalTitle, String studyMajor, String professionalism, String workUnit, String postalAddress, String postalCode, String workTelephone, String phone, String mail, String natureWork, String professionalField, String curriculumVitae, String recommendationUnitOpinion, String isFirst, String createAuthor, String createTime, String isState, String isDelete, String isProvince, String reason, List<ExpertInformationArticle> expertInformationArticleList, List<ExpertInformationBook> expertInformationBookList, List<ExpertInformationPatent> expertInformationPatentList, List<ExpertInformationPrizeWinning> expertInformationPrizeWinningList, List<ExpertInformationResearchDirection> expertInformationResearchDirectionList, String isSubmit, Integer uid, Integer expertInformationUrlId, String expertInformationUrl) {
-        this.name = name;
-        this.username = username;
-        this.password = password;
+    public ExpertInformation(Integer aid, String sex, String birthDate, String education, String presentPost, String technicalTitle, String studyMajor, String professionalism, String workUnit, String postalAddress, String postalCode, String workTelephone, String phone, String mail, String natureWork, String professionalField, String curriculumVitae, String recommendationUnitOpinion, String isFirst, String createAuthor, String createTime, String isState, String isDelete, String isProvince, String reason, List<ExpertInformationArticle> expertInformationArticleList, List<ExpertInformationBook> expertInformationBookList, List<ExpertInformationPatent> expertInformationPatentList, List<ExpertInformationPrizeWinning> expertInformationPrizeWinningList, List<ExpertInformationResearchDirection> expertInformationResearchDirectionList, String isSubmit, Integer uid, Integer expertInformationUrlId, String expertInformationUrl, String expertInformationFileName) {
+        this.aid = aid;
         this.sex = sex;
         this.birthDate = birthDate;
         this.education = education;
@@ -193,6 +191,7 @@ public class ExpertInformation implements Serializable {
         this.uid = uid;
         this.expertInformationUrlId = expertInformationUrlId;
         this.expertInformationUrl = expertInformationUrl;
+        this.expertInformationFileName = expertInformationFileName;
     }
 
     public ExpertInformation() {

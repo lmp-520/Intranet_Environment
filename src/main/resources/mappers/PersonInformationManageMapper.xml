@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xdmd.IntranetEnvironment.backstageManager.mapper.PersonInformationManageMapper">
+    <insert id="uploadFile" useGeneratedKeys="true" keyProperty="id">
+         insert into upload_file(
+            id,
+            upload_file_address,
+            upload_file_name,
+            upload_file_type,
+            upload_suffix_name,
+            file_size,
+            create_time,
+            create_author)
+            values(
+            #{uploadFile.id},
+            #{uploadFile.uploadFileAddress},
+            #{uploadFile.uploadFileName},
+            #{uploadFile.uploadFileType},
+            #{uploadFile.uploadSuffixName},
+            #{uploadFile.fileSize},
+            #{uploadFile.createTime},
+            #{uploadFile.createAuthor}
+            )
+    </insert>
+
+   <insert id="addNewUserInformation" useGeneratedKeys="true" keyProperty="uid">
+       insert into shiro_user_information(
+           uid,
+           real_name,
+           login_name,
+           password,
+           identity,
+           is_delete,
+           is_first,
+           is_state
+       )values (
+           #{userInformation.uid},
+           #{userInformation.realName},
+           #{userInformation.loginName},
+           #{userInformation.password},
+           #{userInformation.identity},
+           #{userInformation.isDelete},
+           #{userInformation.isFirst},
+           #{userInformation.isState}
+       )
+   </insert>
+
+    <insert id="addSubaccount">
+        insert into staff_information(
+              aid,
+              company_name,
+              company_id,
+              phone,
+              email,
+              id_card,
+              id_card_url_id,
+              create_time,
+              create_name)
+          values (
+              #{subaccount.aid},
+              #{subaccount.companyName},
+              #{subaccount.companyId},
+              #{subaccount.phone},
+              #{subaccount.email},
+              #{subaccount.idCard},
+              #{subaccount.idCardUrlId},
+              #{subaccount.createTime},
+              #{subaccount.createName})
+    </insert>
+</mapper>

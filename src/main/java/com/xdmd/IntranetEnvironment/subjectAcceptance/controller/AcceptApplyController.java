@@ -11,12 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-@Api(tags="验收申请查询")
 @Controller
 @RequestMapping("checkApply")
 public class AcceptApplyController {
@@ -37,17 +33,6 @@ public class AcceptApplyController {
      * @param total
      * @return
      */
-    @ApiOperation(value = "查询企业提交的验收申请")
-    @ApiImplicitParams(
-            {
-                    @ApiImplicitParam(name = "topicName",value ="课题名称", required = false),
-                    @ApiImplicitParam(name = "subjectUndertakingUnit",value ="承担单位", required = false),
-                    @ApiImplicitParam(name = "unitNature",value ="单位性质", required = false),
-                    @ApiImplicitParam(name = "projectLeader",value ="课题负责人", required = false),
-                    @ApiImplicitParam(name = "Page",value ="页数", required = true),
-                    @ApiImplicitParam(name = "total",value ="每页显示条数", required = true)
-            }
-    )
     @ResponseBody
     @PostMapping("query")
     public ResultMap acceptApplyQuery(@RequestParam(value = "topicName",required = false) String topicName, //课题名称

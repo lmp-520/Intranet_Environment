@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xdmd.IntranetEnvironment.company.mapper.CompanyMapper">
+    <insert id="uploadFile" useGeneratedKeys="true" keyProperty="id">
+         insert into upload_file(
+            id,
+            upload_file_address,
+            upload_file_name,
+            upload_file_type,
+            upload_suffix_name,
+            file_size,
+            create_time,
+            create_author)
+            values(
+            #{uploadFile.id},
+            #{uploadFile.uploadFileAddress},
+            #{uploadFile.uploadFileName},
+            #{uploadFile.uploadFileType},
+            #{uploadFile.uploadSuffixName},
+            #{uploadFile.fileSize},
+            #{uploadFile.createTime},
+            #{uploadFile.createAuthor}
+            )
+    </insert>
+
+   <insert id="addCompanyInformation" useGeneratedKeys="true" keyProperty="uid">
+      insert into shiro_user_information(
+        uid,
+        real_name,
+        login_name,
+        password,
+        identity,
+        is_delete,
+        is_first,
+        is_state
+      )values (
+        #{userInformation.uid},
+        #{userInformation.realName},
+        #{userInformation.loginName},
+        #{userInformation.password},
+        #{userInformation.identity},
+        #{userInformation.isDelete},
+        #{userInformation.isFirst},
+        #{userInformation.isState}
+      )
+   </insert>
+
+   <insert id="addAdministratorInformation">
+        INSERT INTO administrator_information (
+          id,
+          aid,
+          company_name,
+          company_id,
+          company_address,
+          unit_nature,
+          social_credit_code,
+          legal_person,
+          contact_id_card,
+          contact_phone,
+          email,
+          business_url_id,
+          legal_card_id_url_id,
+          contact_card_url_id,
+          create_time
+      )
+      VALUES(
+          #{administratorInformation.id},
+          #{administratorInformation.aid},
+          #{administratorInformation.companyName},
+          #{administratorInformation.companyId},
+          #{administratorInformation.companyAddress},
+          #{administratorInformation.unitNature},
+          #{administratorInformation.socialCreditCode},
+          #{administratorInformation.legalPerson},
+          #{administratorInformation.contactIdCard},
+          #{administratorInformation.contactPhone},
+          #{administratorInformation.email},
+          #{administratorInformation.businessUrlId},
+          #{administratorInformation.legalCardIdUrlId},
+          #{administratorInformation.contactCardUrlId},
+          #{administratorInformation.createTime}
+          );
+   </insert>
+</mapper>

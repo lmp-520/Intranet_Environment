@@ -31,6 +31,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class CompanyControllerTwoImpl implements CompanyServiceTwo {
 
     @Autowired

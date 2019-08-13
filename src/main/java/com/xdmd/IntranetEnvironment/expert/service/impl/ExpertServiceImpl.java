@@ -41,25 +41,27 @@ public class ExpertServiceImpl implements ExpertService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ResultMap distributionAccount(String token, HttpServletResponse response, ExpertInformation expertInformation, MultipartFile expertFile) throws Exception {
-        User user = new User();
-        try {
-            user = tokenService.compare(response, token);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            return resultMap.fail().message("请先登录");
-        } catch (UserNameNotExistentException e) {
-            e.printStackTrace();
-            return resultMap.fail().message("请先登录");
-        } catch (ClaimsNullException e) {
-            e.printStackTrace();
-            return resultMap.fail().message("请先登录");
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.error("MenuServiceImpl 中 TokenService 出现问题");
-            return resultMap.message("系统异常");
-        }
-        Integer uid = user.getId();
-        String username = user.getUsername();
+//        User user = new User();
+//        try {
+//            user = tokenService.compare(response, token);
+//        } catch (NullPointerException e) {
+//            e.printStackTrace();
+//            return resultMap.fail().message("请先登录");
+//        } catch (UserNameNotExistentException e) {
+//            e.printStackTrace();
+//            return resultMap.fail().message("请先登录");
+//        } catch (ClaimsNullException e) {
+//            e.printStackTrace();
+//            return resultMap.fail().message("请先登录");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            log.error("MenuServiceImpl 中 TokenService 出现问题");
+//            return resultMap.message("系统异常");
+//        }
+//        Integer uid = user.getId();
+//        String username = user.getUsername();
+
+        String username = "测试人名";
 
         //判断输入的登陆名是否存在
         Integer eid = null;

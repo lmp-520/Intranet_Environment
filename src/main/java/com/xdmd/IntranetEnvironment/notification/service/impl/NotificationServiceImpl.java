@@ -2,7 +2,6 @@ package com.xdmd.IntranetEnvironment.notification.service.impl;
 
 import com.xdmd.IntranetEnvironment.common.PageBean;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
-import com.xdmd.IntranetEnvironment.notification.controller.NotificationController;
 import com.xdmd.IntranetEnvironment.notification.mapper.NotificationMapper;
 import com.xdmd.IntranetEnvironment.notification.pojo.Notification;
 import com.xdmd.IntranetEnvironment.notification.service.NotificationService;

@@ -97,7 +97,7 @@ public class PersonInformationManageController {
     @PostMapping("changeState")
     public ResultMap changeState(@CookieValue("token") String token, HttpServletResponse response,
                                  @RequestParam("uid") Integer uid,      //员工的id
-                                 @RequestPart("type") Boolean type){    //类型  true 启用  false 停用
+                                 @RequestParam("type") Boolean type){    //类型  true 启用  false 停用
         if (StringUtils.isEmpty(token)){
             return resultMap.fail().message("请先登录");
         }
@@ -115,10 +115,13 @@ public class PersonInformationManageController {
     //对员工进行修改
     @ResponseBody
     @PostMapping("modifyStaff")
-    public ResultMap modify(@CookieValue("token") String token, HttpServletResponse response,
+    public ResultMap modify(//@CookieValue("token") String token, HttpServletResponse response,
                             @RequestPart(value = "oldFileUrl",required = false) String oldFileUrl,     //旧的身份证文件地址
                             @Valid @RequestPart Subaccount subaccount, BindingResult result,
                             @RequestPart(value = "idCardFile",required = false) MultipartFile idCardFile){   //新的身份证文件
+        String token = "aaa";
+        HttpServletResponse response = null;
+
         if(StringUtils.isEmpty(token)){
             return resultMap.fail().message("请先登录");
         }

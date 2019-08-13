@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xdmd.IntranetEnvironment.extranetExpert.mapper.ExtranetExpertMapper">
+    <insert id="uploadFile" useGeneratedKeys="true" keyProperty="id">
+        insert into upload_file(
+        id,
+        upload_file_address,
+        upload_file_name,
+        upload_file_type,
+        upload_suffix_name,
+        file_size,
+        create_time,
+        create_author)
+        values(
+        #{uploadFile.id},
+        #{uploadFile.uploadFileAddress},
+        #{uploadFile.uploadFileName},
+        #{uploadFile.uploadFileType},
+        #{uploadFile.uploadSuffixName},
+        #{uploadFile.fileSize},
+        #{uploadFile.createTime},
+        #{uploadFile.createAuthor}
+        )
+    </insert>
+
+    <insert id="addUserInformation" useGeneratedKeys="true" keyProperty="uid">
+      insert into shiro_user_information(
+        uid,
+        real_name,
+        login_name,
+        password,
+        identity,
+        is_delete,
+        is_first,
+        is_state
+      )values (
+        #{userInformation.uid},
+        #{userInformation.realName},
+        #{userInformation.loginName},
+        #{userInformation.password},
+        #{userInformation.identity},
+        #{userInformation.isDelete},
+        #{userInformation.isFirst},
+        #{userInformation.isState}
+      )
+    </insert>
+
+    <insert id="addExpertInformation" useGeneratedKeys="true" keyProperty="id">
+      INSERT INTO expert_information(
+            id,
+            aid,
+            name,
+            username,
+            password,
+            sex,
+            birth_date,
+            education,
+            present_post,
+            technical_title,
+            study_major,
+            professionalism,
+            work_unit,
+            postal_address,
+            postal_code,
+            work_telephone,
+            phone,
+            mail,
+            nature_work,
+            professional_field,
+            curriculum_vitae,
+            recommendation_unit_opinion,
+            create_author,
+            create_time,
+            is_province,
+            expert_information_url_id)
+        VALUES(
+        #{expertInformation.id},
+        #{expertInformation.aid,},
+        #{expertInformation.name},
+        #{expertInformation.username},
+        #{expertInformation.password},
+        #{expertInformation.sex},
+        #{expertInformation.birthDate},
+        #{expertInformation.education},
+        #{expertInformation.presentPost},
+        #{expertInformation.technicalTitle},
+        #{expertInformation.studyMajor},
+        #{expertInformation.professionalism},
+        #{expertInformation.workUnit},
+        #{expertInformation.postalAddress},
+        #{expertInformation.postalCode},
+        #{expertInformation.workTelephone},
+        #{expertInformation.phone},
+        #{expertInformation.mail},
+        #{expertInformation.natureWork},
+        #{expertInformation.professionalField},
+        #{expertInformation.curriculumVitae},
+        #{expertInformation.recommendationUnitOpinion},
+        #{expertInformation.createAuthor},
+        #{expertInformation.createTime},
+        #{expertInformation.isProvince},
+        #{expertInformation.expertInformationUrlId}
+        )
+    </insert>
+
+    <insert id="addExpertInformationArticle" useGeneratedKeys="true" keyProperty="id">
+        insert into expert_information_article(
+          id,
+          expert_id,
+          article_title,
+          authorr_ranking,
+          title_articles_periodicals,
+          articles_publication_time)
+          values (
+          #{expertInformationArticle.id},
+          #{expertInformationArticle.expertId},
+          #{expertInformationArticle.articleTitle},
+          #{expertInformationArticle.authorrRanking},
+          #{expertInformationArticle.titleArticlesPeriodicals},
+          #{expertInformationArticle.articlesPublicationTime})
+    </insert>
+
+    <insert id="addExpertInformationBook" useGeneratedKeys="true" keyProperty="id">
+        insert into expert_information_book(
+        id,
+        expert_id,
+        work_name,
+        sort,
+        book_publishing_house,
+        writing_time)
+        values (
+        #{expertInformationBook.id},
+        #{expertInformationBook.expertId},
+        #{expertInformationBook.workName},
+        #{expertInformationBook.sort},
+        #{expertInformationBook.bookPublishingHouse},
+        #{expertInformationBook.writingTime})
+    </insert>
+
+    <insert id="addExpertInformationPatent" useGeneratedKeys="true" keyProperty="id">
+        insert into expert_information_patent(
+        id,
+        expert_id,
+        patent_name,
+        patent_types,
+        patent_no,
+        patent_time)
+        values(
+        #{expertInformationPatent.id},
+        #{expertInformationPatent.expertId},
+        #{expertInformationPatent.patentName},
+        #{expertInformationPatent.patentTypes},
+        #{expertInformationPatent.patentNo},
+        #{expertInformationPatent.patentTime})
+    </insert>
+
+    <insert id="addExpertInformationPrizeWinning" useGeneratedKeys="true" keyProperty="id">
+        insert into expert_information_prize_winning(
+        id,
+        expert_id,
+        prize_winning_name,
+        prize_winning_order,
+        prize_winning_department,
+        prize_winning_time)
+        values (
+        #{expertInformationPrizeWinning.id},
+        #{expertInformationPrizeWinning.expertId},
+        #{expertInformationPrizeWinning.prizeWinningName},
+        #{expertInformationPrizeWinning.prizeWinningOrder},
+        #{expertInformationPrizeWinning.prizeWinningDepartment},
+        #{expertInformationPrizeWinning.prizeWinningTime})
+    </insert>
+
+    <insert id="addExpertInformationResearchDirection" useGeneratedKeys="true" keyProperty="id">
+          insert into expert_information_research_direction(
+          id,
+          expert_id,
+          main_research_directions)
+          values (
+          #{expertInformationResearchDirection.id},
+          #{expertInformationResearchDirection.expertId},
+          #{expertInformationResearchDirection.mainResearchDirections}
+          )
+    </insert>
+</mapper>

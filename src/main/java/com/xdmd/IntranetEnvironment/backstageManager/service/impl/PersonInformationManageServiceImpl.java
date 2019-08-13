@@ -20,7 +20,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import sun.security.provider.MD5;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -31,6 +33,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class PersonInformationManageServiceImpl implements PersonInformationManageService {
     @Autowired
     private PersonInformationManageMapper personInformationManageMapper;
@@ -125,7 +128,9 @@ public class PersonInformationManageServiceImpl implements PersonInformationMana
         //把员工的基本信息储存到数据库中
         String loginName = userInformation.getLoginName();
         String passWord = loginName + "@123";
-        userInformation.setPassword(passWord);
+        String newPassword = MD5Utils.md5(passWord);
+
+        userInformation.setPassword(newPassword);
         userInformation.setIdentity("1");   //设置身份
         userInformation.setIsDelete("0");   //设置启用
         userInformation.setIsFirst("0"); //设置为第一次登陆
@@ -189,6 +194,10 @@ public class PersonInformationManageServiceImpl implements PersonInformationMana
             UserInformation userInformation = personInformationManageMapper.queryStaffInformation(subaccount.getAid());
             //根据idCard的id，获取文件的地址
             String idCardUrl = personInformationManageMapper.queryIdCardUrl(subaccount.getIdCardUrlId());
+
+            //根据idCard的id，获取文件的真实名称
+            String fileRealName = personInformationManageMapper.querFileRealNameByFileId(subaccount.getIdCardUrlId());
+            subaccount.setFileName(fileRealName);   //把文件的真实名称赋值过去
             subaccount.setIdCardUrl(idCardUrl);
             userInformation.setUid(subaccount.getAid());
             userInformation.setSubaccount(subaccount);
@@ -237,28 +246,31 @@ public class PersonInformationManageServiceImpl implements PersonInformationMana
     //对员工信息进行修改
     @Override
     public ResultMap modify(String token, HttpServletResponse response, String oldFileUrl, Subaccount subaccount, MultipartFile idCardFile) throws Exception {
-        JwtInformation jwtInformation = new JwtInformation();
-        try {
-            jwtInformation = tokenService.compare(response, token);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            return resultMap.fail().message("请先登录");
-        } catch (UserNameNotExistentException e) {
-            e.printStackTrace();
-            return resultMap.fail().message("请先登录");
-        } catch (ClaimsNullException e) {
-            e.printStackTrace();
-            return resultMap.fail().message("请先登录");
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.error("MenuServiceImpl 中 TokenService 出现问题");
-            return resultMap.message("系统异常");
-        }
+//        JwtInformation jwtInformation = new JwtInformation();
+//        try {
+//            jwtInformation = tokenService.compare(response, token);
+//        } catch (NullPointerException e) {
+//            e.printStackTrace();
+//            return resultMap.fail().message("请先登录");
+//        } catch (UserNameNotExistentException e) {
+//            e.printStackTrace();
+//            return resultMap.fail().message("请先登录");
+//        } catch (ClaimsNullException e) {
+//            e.printStackTrace();
+//            return resultMap.fail().message("请先登录");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            log.error("MenuServiceImpl 中 TokenService 出现问题");
+//            return resultMap.message("系统异常");
+//        }
+//
+//        Integer uid = jwtInformation.getUid();
+//        String uname = jwtInformation.getUsername();
+//        Integer cid = jwtInformation.getCid();
+//        String cname = jwtInformation.getCompanyName();
 
-        Integer uid = jwtInformation.getUid();
-        String uname = jwtInformation.getUsername();
-        Integer cid = jwtInformation.getCid();
-        String cname = jwtInformation.getCompanyName();
+        String uname = "修改人名";
+        String cname = "修改公司名";
 
 
         //判断用户是否上传新的文件

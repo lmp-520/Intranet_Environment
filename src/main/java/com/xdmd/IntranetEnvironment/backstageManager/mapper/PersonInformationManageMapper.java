@@ -45,7 +45,7 @@ public interface PersonInformationManageMapper {
     void addUserRole(@Param("uid") Integer uid);
 
     //查询该公司下的员工信息
-    @Select("SELECT id,aid,phone,email,id_card,id_card_url_id FROM `staff_information` where company_id = #{cid}")
+    @Select("SELECT id,aid,phone,email,id_card,id_card_url_id FROM staff_information where company_id = #{cid}")
     List<Subaccount> queryStaffByCid(@Param("cid") Integer cid);
 
     @Select("SELECT real_name,login_name,is_delete FROM  shiro_user_information  where uid = #{aid}")
@@ -70,4 +70,8 @@ public interface PersonInformationManageMapper {
     //更新员工数据中的信息与文件id
     @Update("update staff_information set phone = #{subaccount.phone},email = #{subaccount.email}, id_card = #{subaccount.idCard},id_card_url_id = #{subaccount.idCardUrlId} where aid = #{aid}")
     void updateStaffInformationAndIdCardFile(@Param("aid") Integer aid, @Param("subaccount") Subaccount subaccount);
+
+    //根据idCard的id，获取文件的真实名称
+    @Select("SELECT upload_file_name FROM  upload_file  where id = #{idCardUrlId}")
+    String querFileRealNameByFileId(@Param("idCardUrlId") Integer idCardUrlId);
 }
