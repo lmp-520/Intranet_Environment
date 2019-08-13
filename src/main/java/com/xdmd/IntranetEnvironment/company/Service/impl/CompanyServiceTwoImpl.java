@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.jws.WebService;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
@@ -32,12 +33,12 @@ import java.util.List;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class CompanyControllerTwoImpl implements CompanyServiceTwo {
+public class CompanyServiceTwoImpl implements CompanyServiceTwo {
 
     @Autowired
     private CompanyMapper companyMapper;
     ResultMap resultMap = new ResultMap();
-    private static Logger log = LoggerFactory.getLogger(CompanyControllerTwoImpl.class);
+    private static Logger log = LoggerFactory.getLogger(CompanyServiceTwoImpl.class);
 
     //公司的注册
     @Override

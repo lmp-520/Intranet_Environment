@@ -4,6 +4,7 @@ import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.company.Pojo.UserInformation;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.jws.WebService;
 import javax.servlet.http.HttpServletResponse;
 
 public interface CompanyServiceTwo {
