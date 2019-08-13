@@ -1,6 +1,7 @@
 package com.xdmd.IntranetEnvironment.expert.controller;
 
 import com.xdmd.IntranetEnvironment.common.ResultMap;
+import com.xdmd.IntranetEnvironment.company.Pojo.UserInformation;
 import com.xdmd.IntranetEnvironment.expert.pojo.ExpertInformation;
 import com.xdmd.IntranetEnvironment.expert.service.ExpertService;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.controller.AcceptStateController;
@@ -28,28 +29,23 @@ public class ExpertController {
     @Autowired
     private ExpertService expertService;
 
-    //给专家分配账号
-    @PostMapping("distributionAccount")
-    @ResponseBody
-    public ResultMap distributionAccount(//@CookieValue(value = "IntranecToken") String token, HttpServletResponse response,
-                                         @RequestPart ExpertInformation expertInformation,
-                                         @RequestPart("ExpertFile") MultipartFile ExpertFile) {
-        String token = "aaa";
-        HttpServletResponse response = null;
 
-        if (StringUtils.isEmpty(token)) {
+    //分配账号
+    @PostMapping("distributionExpertAccount")
+    @ResponseBody
+    public ResultMap distributionExpertAccount(@CookieValue(value = "IntranecToken") String token, HttpServletResponse response,
+                                               @RequestPart UserInformation userInformation,
+                                               @RequestPart ("expertFile") MultipartFile expertFile){
+
+        if(StringUtils.isEmpty(token)){
             return resultMap.fail().message("请先登录");
         }
 
         try {
-            resultMap = expertService.distributionAccount(token, response, expertInformation,ExpertFile);
-        } catch (InsertSqlException e) {
-            e.printStackTrace();
-            log.error(e.getMessage());
-            return resultMap.fail().message("系统异常");
+            resultMap = expertService.distributionExpertAccount(token,response,userInformation,expertFile);
         } catch (Exception e) {
             e.printStackTrace();
-            log.error("ExpertController 中 distributionAccount 方法 -- " + e.getMessage());
+            log.error("ExpertController 中 distributionExpertAccount错误 -- "+e.getMessage());
             return resultMap.fail().message("系统异常");
         }
         return resultMap;
@@ -94,25 +90,6 @@ public class ExpertController {
         } catch (Exception e) {
             e.printStackTrace();
             log.error("ExpertController 中 expertState方法 出错 -- " + e.getMessage());
-            return resultMap.fail().message("系统异常");
-        }
-        return resultMap;
-    }
-
-    //专家信息的保存
-    public ResultMap expertSave(@CookieValue(value = "IntranecToken") String token, HttpServletResponse response,
-                                @RequestPart ExpertInformation expertInformation,
-                                @RequestPart("ExpertFile") MultipartFile ExpertFile){
-
-        if(StringUtils.isEmpty(token)){
-            return resultMap.fail().message("请先登录");
-        }
-
-        try {
-            resultMap = expertService.expertSave(token,response,expertInformation,ExpertFile);
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.error("ExpertController 中 expertSave方法出错 -- "+e.getMessage());
             return resultMap.fail().message("系统异常");
         }
         return resultMap;

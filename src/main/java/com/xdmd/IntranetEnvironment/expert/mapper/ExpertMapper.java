@@ -1,7 +1,9 @@
 package com.xdmd.IntranetEnvironment.expert.mapper;
 
 import com.xdmd.IntranetEnvironment.common.UploadFile;
+import com.xdmd.IntranetEnvironment.company.Pojo.UserInformation;
 import com.xdmd.IntranetEnvironment.expert.pojo.*;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -74,4 +76,18 @@ public interface ExpertMapper {
     //通过专家信息文件的id找到专家信息文件的名称
     @Select("select upload_file_name from upload_file where id = #{expertInformationUrlId}")
     String queryExpertInformationFileNameByFileId(@Param("expertInformationUrlId") Integer expertInformationUrlId);
+
+    //判断登陆名是否存在
+    @Select("select uid from shiro_user_information where login_name = #{loginName}")
+    Integer queryUidByLoginNameExist(@Param("loginName") String loginName);
+
+    //文件上传
+    void uploadFile(@Param("uploadFile")UploadFile uploadFile);
+
+    //上传专家的基本信息
+    void addUserInformation(@Param("userInformation") UserInformation userInformation);
+
+    //新增该账号与角色之间的关系
+    @Insert("insert into shiro_user_role (uid,rid) values(#{uid},3)")
+    void addUserRole(@Param("uid") Integer uid);
 }

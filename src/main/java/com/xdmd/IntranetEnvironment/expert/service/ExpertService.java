@@ -1,6 +1,7 @@
 package com.xdmd.IntranetEnvironment.expert.service;
 
 import com.xdmd.IntranetEnvironment.common.ResultMap;
+import com.xdmd.IntranetEnvironment.company.Pojo.UserInformation;
 import com.xdmd.IntranetEnvironment.expert.pojo.ExpertInformation;
 import com.xdmd.IntranetEnvironment.expert.updateSqlException;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.exception.InsertSqlException;
@@ -13,7 +14,5 @@ public interface ExpertService {
 
     ResultMap expertState(String token, HttpServletResponse response, Boolean type, String reason, Integer id) throws updateSqlException;
 
-    ResultMap distributionAccount(String token, HttpServletResponse response, ExpertInformation expertInformation, MultipartFile expertFile) throws Exception;
-
-    ResultMap expertSave(String token, HttpServletResponse response, ExpertInformation expertInformation, MultipartFile expertFile) throws Exception;
+    ResultMap distributionExpertAccount(String token, HttpServletResponse response, UserInformation userInformation, MultipartFile expertFile);
 }

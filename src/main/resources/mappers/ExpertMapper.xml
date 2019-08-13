@@ -4,6 +4,7 @@
     <insert id="addExpertInformation" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO expert_information(
             id,
+            aid,
             name,
             username,
             password,
@@ -24,41 +25,38 @@
             professional_field,
             curriculum_vitae,
             recommendation_unit_opinion,
-            is_first,
             create_author,
             create_time,
-            is_state,
-            is_delete,
-            is_province)
+            is_province,
+            expert_information_url_id)
         VALUES(
-        #{expertInformation.id},
-        #{expertInformation.name},
-        #{expertInformation.username},
-        #{expertInformation.password},
-        #{expertInformation.sex},
-        #{expertInformation.birthDate},
-        #{expertInformation.education},
-        #{expertInformation.presentPost},
-        #{expertInformation.technicalTitle},
-        #{expertInformation.studyMajor},
-        #{expertInformation.professionalism},
-        #{expertInformation.workUnit},
-        #{expertInformation.postalAddress},
-        #{expertInformation.postalCode},
-        #{expertInformation.workTelephone},
-        #{expertInformation.phone},
-        #{expertInformation.mail},
-        #{expertInformation.natureWork},
-        #{expertInformation.professionalField},
-        #{expertInformation.curriculumVitae},
-        #{expertInformation.recommendationUnitOpinion},
-        #{expertInformation.isFirst},
-        #{expertInformation.createAuthor},
-        #{expertInformation.createTime},
-        #{expertInformation.isState},
-        #{expertInformation.isDelete},
-        #{expertInformation.isProvince}
-        )
+          #{expertInformation.id},
+          #{expertInformation.aid,},
+          #{expertInformation.name},
+          #{expertInformation.username},
+          #{expertInformation.password},
+          #{expertInformation.sex},
+          #{expertInformation.birthDate},
+          #{expertInformation.education},
+          #{expertInformation.presentPost},
+          #{expertInformation.technicalTitle},
+          #{expertInformation.studyMajor},
+          #{expertInformation.professionalism},
+          #{expertInformation.workUnit},
+          #{expertInformation.postalAddress},
+          #{expertInformation.postalCode},
+          #{expertInformation.workTelephone},
+          #{expertInformation.phone},
+          #{expertInformation.mail},
+          #{expertInformation.natureWork},
+          #{expertInformation.professionalField},
+          #{expertInformation.curriculumVitae},
+          #{expertInformation.recommendationUnitOpinion},
+          #{expertInformation.createAuthor},
+          #{expertInformation.createTime},
+          #{expertInformation.isProvince},
+          #{expertInformation.expertInformationUrlId}
+      )
     </insert>
 
     <insert id="addExpertInformationArticle" useGeneratedKeys="true" keyProperty="id">
@@ -228,9 +226,47 @@
         )
     </insert>
 
-    <!--<insert id="addExpertInformationArticle" useGeneratedKeys="true" keyProperty="id">-->
-        <!--insert into expert_information_article(-->
-          <!---->
-        <!--)-->
-    <!--</insert>-->
+    <insert id="uploadFile" useGeneratedKeys="true" keyProperty="id">
+        insert into upload_file(
+            id,
+            upload_file_address,
+            upload_file_name,
+            upload_file_type,
+            upload_suffix_name,
+            file_size,
+            create_time,
+            create_author)
+        values(
+              #{uploadFile.id},
+              #{uploadFile.uploadFileAddress},
+              #{uploadFile.uploadFileName},
+              #{uploadFile.uploadFileType},
+              #{uploadFile.uploadSuffixName},
+              #{uploadFile.fileSize},
+              #{uploadFile.createTime},
+              #{uploadFile.createAuthor}
+        )
+    </insert>
+
+    <insert id="addUserInformation" useGeneratedKeys="true" keyProperty="uid">
+        insert into shiro_user_information(
+            uid,
+            real_name,
+            login_name,
+            password,
+            identity,
+            is_delete,
+            is_first,
+            is_state
+        )values (
+            #{userInformation.uid},
+            #{userInformation.realName},
+            #{userInformation.loginName},
+            #{userInformation.password},
+            #{userInformation.identity},
+            #{userInformation.isDelete},
+            #{userInformation.isFirst},
+            #{userInformation.isState}
+        )
+    </insert>
 </mapper>
