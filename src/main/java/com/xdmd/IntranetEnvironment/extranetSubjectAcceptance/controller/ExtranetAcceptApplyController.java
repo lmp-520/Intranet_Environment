@@ -429,7 +429,7 @@ public class ExtranetAcceptApplyController {
     //在提交验收申请后，在被审核之前，进行的修改
     @ResponseBody
     @PostMapping("modify")
-    public ResultMap modifyApply(//@CookieValue(value = "token") String token, HttpServletResponse response,
+    public ResultMap modifyApply(@CookieValue(value = "token") String token, HttpServletResponse response,
                                  @RequestPart(value = "oldSubmitInventoryFileUrl",required = false) String oldSubmitInventoryFileUrl,//旧的提交清单文件
                                  @RequestPart(value = "oldApplicationAcceptanceFileUrl",required = false) String oldApplicationAcceptanceFileUrl,//旧的验收申请文件
                                  @RequestPart(value = "oldAchievementsFileUrl",required = false)String oldAchievementsFileUrl,//旧的成果附件文件
@@ -437,11 +437,9 @@ public class ExtranetAcceptApplyController {
                                  @RequestPart(value = "applicationAcceptanceFile",required = false) MultipartFile applicationAcceptanceFile,     //验收申请表文件
                                  @RequestPart(value = "achievementsFile",required = false) MultipartFile achievementsFile,   //成果附件文件
                                  @Valid @RequestPart ExtranetCheckApply extranetCheckApply, BindingResult result){
-//        if(StringUtils.isEmpty(token)){
-//            return resultMap.fail().message("请先登录");
-//        }
-        String token = "aaa";
-        HttpServletResponse response = null;
+        if(StringUtils.isEmpty(token)){
+            return resultMap.fail().message("请先登录");
+        }
 
         //用于判断用户传输的参数是否有误
         if (result.hasErrors()) {

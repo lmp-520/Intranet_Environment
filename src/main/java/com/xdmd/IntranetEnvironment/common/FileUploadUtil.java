@@ -94,7 +94,7 @@ public class FileUploadUtil {
             throw new FileUploadException("文件上传失败");
         }
 
-        return FilePath + originalFilename;
+        return FilePath + newOriginalFilename;
     }
 
 

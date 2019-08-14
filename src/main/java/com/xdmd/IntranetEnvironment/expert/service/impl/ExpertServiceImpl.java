@@ -13,6 +13,7 @@ import com.xdmd.IntranetEnvironment.user.exception.ClaimsNullException;
 import com.xdmd.IntranetEnvironment.user.exception.UserNameNotExistentException;
 import com.xdmd.IntranetEnvironment.user.pojo.User;
 import com.xdmd.IntranetEnvironment.user.service.impl.TokenService;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -60,7 +62,6 @@ public class ExpertServiceImpl implements ExpertService {
         }
         Integer uid = user.getId();
         String username = user.getUsername();
-
 
 
         //判断上传的文件后缀名是否正确
@@ -167,6 +168,102 @@ public class ExpertServiceImpl implements ExpertService {
         return resultMap.success().message("账号分配成功");
     }
 
+    //专家表的修改
+    @Override
+    public ResultMap expertModify(String token, HttpServletResponse response, String oldExpertFile, ExpertInformation expertInformation, MultipartFile expertFile) throws Exception {
+        User user = new User();
+        try {
+            user = tokenService.compare(response, token);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (UserNameNotExistentException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (ClaimsNullException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("MenuServiceImpl 中 TokenService 出现问题");
+            return resultMap.message("系统异常");
+        }
+        Integer uid = user.getId();
+        String username = user.getUsername();
+
+        //判断旧文件是否存在
+        if(oldExpertFile!=null){
+            //旧文件存在，意味着，上传了新的文件
+            //首先对旧文件进行删除
+            //判断文件输入的格式是否正确
+            ArrayList<String> idCardFileSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".rar", ".zip", ".7z", ".pdf"));
+            String expertFileName = expertFile.getOriginalFilename();
+            Boolean aBoolean = FileSuffixJudgeUtil.SuffixJudge(expertFileName, idCardFileSuffixList);
+            if (aBoolean == false) {
+                return resultMap.fail().message("请上传正确的专家信息文件格式");
+            }
+            //再根据旧的文件地址，先把文件给删除掉
+            File file = new File(oldExpertFile);
+            file.delete();
+
+            //对新的专家信息文件进行上传
+            String expertFileUrl = FileUploadUtil.UploadExpertInformationFile(expertFile, "专家信息库");
+            //把专家信息文件上传到upload_file中
+            UploadFile uploadExpertFile = IntegrationFile.IntegrationFile(expertFile, expertFileUrl, "专家信息库", username);
+            expertMapper.uploadFile(uploadExpertFile);   //对专家信息进行上传
+            expertInformation.setExpertInformationUrlId(uploadExpertFile.getId());//把上传后的文件id，插入到专家信息表中
+
+            Date date = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String nowTime = sdf.format(date);
+            expertInformation.setCreateTime(nowTime);
+
+            //把专家具体信息更新到数据库中
+            expertMapper.updateExpertInformation(expertInformation);
+
+            //新增专家信息表中的文章表
+            List<ExpertInformationArticle> expertInformationArticleList = expertInformation.getExpertInformationArticleList();  //获取专家信息表中文章列表集合
+            for (ExpertInformationArticle expertInformationArticle : expertInformationArticleList) {
+                expertInformationArticle.setExpertId(expertInformation.getId());    //把文章列表中对应的专家信息表的id存入
+                //更新专家信息对应的文章列表
+                expertMapper.updateExpertInformationArticle(expertInformationArticle);
+
+                expertMapper.addExpertInformationArticle(expertInformationArticle); //新增专家信息表对应的文章列表
+
+            }
+
+            //新增专家信息表中著作表
+            List<ExpertInformationBook> expertInformationBookList = expertInformation.getExpertInformationBookList();   //获取专家信息表中的著作列表集合
+            for (ExpertInformationBook expertInformationBook : expertInformationBookList) {
+                expertInformationBook.setExpertId(expertInformation.getId());   //把文章列表中的对应的专家信息表的id存入
+                expertMapper.addExpertInformationBook(expertInformationBook);   //新增专家信息表对应的著作列表
+            }
+
+            //新增专家信息表中的专利表
+            List<ExpertInformationPatent> expertInformationPatentList = expertInformation.getExpertInformationPatentList(); //获取专家信息表中的专利表集合
+            for (ExpertInformationPatent expertInformationPatent : expertInformationPatentList) {
+                expertInformationPatent.setExpertId(expertInformation.getId());   //把文章列表中的对应的专家信息表的id存入
+                expertMapper.addExpertInformationPatent(expertInformationPatent);   //新增专家信息表对应的专利列表
+            }
+
+            //新增专家信息表中的获奖表
+            List<ExpertInformationPrizeWinning> expertInformationPrizeWinningList = expertInformation.getExpertInformationPrizeWinningList();   //获取专家信息表中的获奖表集合
+            for (ExpertInformationPrizeWinning expertInformationPrizeWinning : expertInformationPrizeWinningList) {
+                expertInformationPrizeWinning.setExpertId(expertInformation.getId());   //把获奖表中的对应的专家信息表的id存入
+                expertMapper.addExpertInformationPrizeWinning(expertInformationPrizeWinning);   //新增专家信息表对应的获奖列表
+            }
+
+            //新增专家信息表中的研究方向
+            List<ExpertInformationResearchDirection> expertInformationResearchDirectionList = expertInformation.getExpertInformationResearchDirectionList();     //获取专家信息表中的研究方向表集合
+            for (ExpertInformationResearchDirection expertInformationResearchDirection : expertInformationResearchDirectionList) {
+                expertInformationResearchDirection.setExpertId(expertInformation.getId());  //把研究方向中的对应的专家信息表的id存入
+                expertMapper.addExpertInformationResearchDirection(expertInformationResearchDirection); //新增专家信息表对应的研究方向列表
+            }
+
+        }
+
+    }
+
     //专家的查询
     @Override
     public ResultMap query(String name, String natureWork, String professionalField, String isProvince, Integer page, Integer total) {
@@ -195,17 +292,18 @@ public class ExpertServiceImpl implements ExpertService {
             return resultMap.fail().message("页数超过总页数");
         }
 
-        //获取专家信息的集合
-        List<ExpertInformation> expertInformationList = expertMapper.queryExpertInformation(newpage, total, name, natureWork, professionalField, isProvince);
 
-        for (ExpertInformation expertInformation : expertInformationList) {
-            JSONObject jsonObject = JSON.parseObject(expertInformation.toString());
-            //通过专家信息文件的id找到专家信息文件
-            String expertInformationFileUrl = expertMapper.queryExpertInformationFileByFileId(expertInformation.getExpertInformationUrlId());
-            expertInformation.setExpertInformationUrl(expertInformationFileUrl);
+        //获取符合条件的专家id集合
+        List<Integer> allExpertIdList = expertMapper.queryAllExpertIdList(newpage,total,name,natureWork,professionalField,isProvince);
 
-            //通过专家信息文件的id找到专家信息文件的名称
-            String fileName = expertMapper.queryExpertInformationFileNameByFileId(expertInformation.getExpertInformationUrlId());
+        List<UserInformation> userInformationList = new ArrayList<>();
+        for (Integer expertId : allExpertIdList) {
+            UserInformation userInformation = expertMapper.queryExpertUserInformation(expertId);    //查询专家的基本信息
+            ExpertInformation expertInformation = userInformation.getExpertInformation();
+            expertInformation = expertMapper.queryExpertInformationByExpertId(expertId);  //查询专家的全部信息
+            String expertFileUrl = expertMapper.queryExpertFileUrlById(expertInformation.getExpertInformationUrlId());  //根据文件的id，获取文件地址
+            String fileName = expertMapper.queryExpertFileNameById(expertInformation.getExpertInformationUrlId());      //根据文件的id，获取文件的真实名称
+            expertInformation.setExpertInformationUrl(expertFileUrl);
             expertInformation.setExpertInformationFileName(fileName);
 
             //获取专家信息表中文章
@@ -227,11 +325,15 @@ public class ExpertServiceImpl implements ExpertService {
             //获取专家表中研究方向
             List<ExpertInformationResearchDirection> expertInformationResearchDirectionList = expertMapper.queryExpertInformationResearchDirectionByExpertId(expertInformation.getId());
             expertInformation.setExpertInformationResearchDirectionList(expertInformationResearchDirectionList);
-        }
 
+            userInformation.setExpertInformation(expertInformation);
+            userInformationList.add(userInformation);
+
+        }
         pageBean.setAlltotal(alltotal);
-        pageBean.setData(expertInformationList);
+        pageBean.setData(userInformationList);
         return resultMap.success().message(pageBean);
+
     }
 
 

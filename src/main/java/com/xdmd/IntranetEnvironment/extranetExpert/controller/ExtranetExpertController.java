@@ -76,12 +76,12 @@ public class ExtranetExpertController {
 
         try {
             resultMap = extranetExpertService.login(loginName,password,response);
-//            //创建shiro的令牌
-//            Subject subject = SecurityUtils.getSubject();
-//            //  在认证提交前准备token（令牌）
-//            UsernamePasswordToken token = new UsernamePasswordToken(loginName, password);
-//            //执行认证登陆
-//            subject.login(token);
+            //创建shiro的令牌
+            Subject subject = SecurityUtils.getSubject();
+            //  在认证提交前准备token（令牌）
+            UsernamePasswordToken token = new UsernamePasswordToken(loginName, password);
+            //执行认证登陆
+            subject.login(token);
 
         } catch (Exception e) {
             e.printStackTrace();

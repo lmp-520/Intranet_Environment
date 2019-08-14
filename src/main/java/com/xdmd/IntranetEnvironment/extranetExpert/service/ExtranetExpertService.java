@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 
 public interface ExtranetExpertService {
+
     ResultMap register(UserInformation userInformation, MultipartFile expertFile);
 
     ResultMap login(String loginName, String password, HttpServletResponse response);

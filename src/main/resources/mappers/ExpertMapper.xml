@@ -140,22 +140,26 @@
     </insert>
 
     <select id="queryAllExpert" resultType="Integer">
-        select count(*) from expert_information
+        SELECT DISTINCT
+        count(s.uid)
+        FROM
+        expert_information e,
+        shiro_user_information s
         <where>
-            <if test="name != null and name!='' ">
-                name like CONCAT('%',#{name},'%')
+            <if test="name!=null">
+                s.real_name like CONCAT('%',#{name},'%')
             </if>
-            <if test="natureWork != null and natureWork!='' ">
-                and nature_work = #{natureWork}
+            <if test="natureWork != null">
+                and e.nature_work like CONCAT('%',#{natureWork},'%')
             </if>
-            <if test="professionalField != null and professionalField!='' ">
-                and professional_field = #{professionalField}
+            <if test="professionalField != null">
+                and e.professional_field like CONCAT('%',#{professionalField},'%')
             </if>
-            <if test="isProvince != null and isProvince!='' ">
-                and is_province = #{isProvince}
+            <if test="isProvince != null">
+                and e.is_province like CONCAT('%',#{isProvince},'%')
             </if>
             <if test="0 == 0">
-                and is_state in(1,2) and is_delete = 1
+                AND e.aid = s.uid and is_state in(1,2) and identity = 2
             </if>
         </where>
     </select>
@@ -269,4 +273,106 @@
             #{userInformation.isState}
         )
     </insert>
+
+    <select id="queryAllExpertIdList" resultType="Integer">
+        SELECT DISTINCT
+        s.uid
+        FROM
+        expert_information e,
+        shiro_user_information s
+        <where>
+            <if test="name!=null">
+                s.real_name like CONCAT('%',#{name},'%')
+            </if>
+            <if test="natureWork != null">
+                and e.nature_work like CONCAT('%',#{natureWork},'%')
+            </if>
+            <if test="professionalField != null">
+                and e.professional_field like CONCAT('%',#{professionalField},'%')
+            </if>
+            <if test="isProvince != null">
+                and e.is_province like CONCAT('%',#{isProvince},'%')
+            </if>
+            <if test="0 == 0">
+                AND e.aid = s.uid and is_state in(1,2) and identity = 2
+            </if>
+        </where>
+        limit #{newpage},#{total}
+    </select>
+
+    <select id="queryExpertUserInformation" resultType="com.xdmd.IntranetEnvironment.company.Pojo.UserInformation">
+        select
+             uid,
+             real_name,
+             login_name,
+             identity,
+             is_delete,
+             is_first,
+             is_state
+        from
+             shiro_user_information
+        where uid = #{expertId}
+    </select>
+
+    <select id="queryExpertInformationByExpertId" resultType="com.xdmd.IntranetEnvironment.expert.pojo.ExpertInformation">
+        SELECT
+            id,
+            aid,
+            sex,
+            birth_date,
+            education,
+            present_post,
+            technical_title,
+            study_major,
+            professionalism,
+            work_unit,
+            postal_address,
+            postal_code,
+            work_telephone,
+            phone,
+            mail,
+            nature_work,
+            professional_field,
+            curriculum_vitae,
+            recommendation_unit_opinion,
+            create_author,
+            create_time,
+            is_province,
+            reason,
+            expert_information_url_id
+        FROM
+            expert_information
+        WHERE
+            aid = #{expertId}
+    </select>
+
+    <update id="updateExpertInformation">
+        update expert_information set
+        sex = #{expertInformation.sex},
+        birth_date = #{expertInformation.birthDate},
+        education = #{expertInformation.education},
+        present_post = #{expertInformation.presentPost},
+        technical_title = #{expertInformation.technicalTitle},
+        study_major = #{expertInformation.studyMajor},
+        professionalism = #{expertInformation.professionalism},
+        work_unit = #{expertInformation.workUnit},
+        postal_address = #{expertInformation.postalAddress},
+        postal_code = #{expertInformation.postalCode},
+        work_telephone = #{expertInformation.workTelephone},
+        phone = #{expertInformation.phone},
+        mail = #{expertInformation.mail},
+        nature_work = #{expertInformation.natureWork},
+        professional_field = #{expertInformation.professionalField},
+        curriculum_vitae = #{expertInformation.curriculumVitae},
+        recommendation_unit_opinion = #{expertInformation.recommendationUnitOpinion},
+        is_province = #{expertInformation.isProvince}
+        <if test="expertInformation.expertInformationUrlId != null">
+            , expert_information_url_id = #{expertInformation.expertInformationUrlId}
+        </if>
+        where aid = #{expertInformation.aid}
+    </update>
+
+    <!--<update id="updateExpertInformationArticle">-->
+        <!--update -->
+    <!--</update>-->
 </mapper>

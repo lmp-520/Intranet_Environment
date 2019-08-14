@@ -33,7 +33,7 @@ public interface ExpertMapper {
     @Select("select id from expert_information where username = #{username}")
     Integer queryEidByUsername(@Param("username") String username);
 
-    //获取验收申请表的总数
+    //获取专家的总数
     int queryAllExpert(@Param("name") String name, @Param("natureWork") String natureWork, @Param("professionalField") String professionalField, @Param("isProvince") String isProvince);
 
     //获取专家信息的集合
@@ -59,11 +59,11 @@ public interface ExpertMapper {
     @Select("select * from expert_information_research_direction where expert_id = #{id}")
     List<ExpertInformationResearchDirection> queryExpertInformationResearchDirectionByExpertId(@Param("id") Integer id);
 
-    @Update("update expert_information set is_state = 1 where id = #{id}")
+    @Update("update shiro_user_information set is_state = 1 where uid = #{id}")
     void ExpertStateSuccess(@Param("id") Integer id);
 
     //此时审核未通过，修改账号的状态与未通过的原因
-    @Update("update expert_information set is_state = 3,reason = #{reason} where id = #{id}")
+    @Update("update shiro_user_information set is_state = 0 where uid = #{id}")
     void ExpertStateFail(@Param("id") Integer id, @Param("reason") String reason);
 
     //把文件上传的信息存储到upload_file表中
@@ -90,4 +90,27 @@ public interface ExpertMapper {
     //新增该账号与角色之间的关系
     @Insert("insert into shiro_user_role (uid,rid) values(#{uid},3)")
     void addUserRole(@Param("uid") Integer uid);
+
+    //获取符合条件的专家id集合
+    List<Integer> queryAllExpertIdList(@Param("newpage") int newpage, @Param("total") Integer total,@Param("name")String name, @Param("natureWork") String natureWork, @Param("professionalField") String professionalField, @Param("isProvince") String isProvince);
+
+    //查询专家的基本信息
+    UserInformation queryExpertUserInformation(@Param("expertId") Integer expertId);
+
+    //查询专家的全部信息
+    ExpertInformation queryExpertInformationByExpertId(@Param("expertId") Integer expertId);
+
+    //根据文件的id，获取文件地址
+    @Select("SELECT upload_file_address FROM upload_file where id = #{fileId}")
+    String queryExpertFileUrlById(@Param("fileId") Integer expertInformationUrlId);
+
+    //根据文件的id，获取文件的名称
+    @Select("SELECT upload_file_name FROM upload_file where id = #{fileId}")
+    String queryExpertFileNameById(@Param("fileId")Integer expertInformationUrlId);
+
+    //把专家具体信息更新到数据库中
+    void updateExpertInformation(@Param("expertInformation") ExpertInformation expertInformation);
+
+    //更新专家信息对应的文章列表
+    void updateExpertInformationArticle(@Param("expertInformationArticle") ExpertInformationArticle expertInformationArticle);
 }

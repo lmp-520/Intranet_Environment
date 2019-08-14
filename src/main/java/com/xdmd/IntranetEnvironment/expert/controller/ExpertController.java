@@ -95,4 +95,25 @@ public class ExpertController {
         return resultMap;
     }
 
+    //专家表的修改
+    @PostMapping("modify")
+    public ResultMap expertModify(@RequestParam(value = "oldExpertFile",required = false) String oldExpertFile,  //旧的专家信息文件
+                                  @CookieValue(value = "IntranecToken") String token, HttpServletResponse response,
+                                  @RequestPart ExpertInformation expertInformation, //专家信息表
+                                  @RequestPart (value = "expertFile",required = false) MultipartFile expertFile){    //新的专家信息文件
+        if(StringUtils.isEmpty(token)){
+            return resultMap.fail().message("请先登录");
+        }
+
+        try {
+            resultMap = expertService.expertModify(token,response,oldExpertFile,expertInformation,expertFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("ExpertController 中 expertModify 方法  -- "+e.getMessage());
+            return resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+
+    }
+
 }

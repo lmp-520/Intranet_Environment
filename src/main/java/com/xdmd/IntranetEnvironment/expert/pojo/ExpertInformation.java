@@ -25,18 +25,6 @@ public class ExpertInformation implements Serializable {
     //用户信息id
     private Integer aid;
 
-    //姓名
-    @ApiModelProperty("姓名")
-    private  String name;
-
-    //登陆名
-    @ApiModelProperty("登陆名")
-    private String username;
-
-    //密码
-    @ApiModelProperty("密码")
-    private String password;
-
     //性别
     @ApiModelProperty("性别")
     private  String sex;
@@ -105,20 +93,11 @@ public class ExpertInformation implements Serializable {
     @ApiModelProperty("推荐单位意见")
     private String recommendationUnitOpinion;
 
-    //是否是第一次登陆，默认true
-    private String isFirst;
-
     //创建此条信息的人
     private String createAuthor;
 
     //创建此条消息的时间
     private String createTime;
-
-    //是否审核通过  （1：审核通过 2：等待审核  3：审核未通过） 内网分配账号时，默认为审核通过
-    private String isState;
-
-    //是否启用  （1：启用  0 :逻辑删除）默认为 1
-    private String isDelete;
 
     //是否省内  存放字典表中的id
     private String isProvince;
@@ -141,12 +120,6 @@ public class ExpertInformation implements Serializable {
     //主要研究方向
     private List<ExpertInformationResearchDirection> expertInformationResearchDirectionList;
 
-    //是否提交 0：保存  1：提交
-    private String isSubmit;
-
-    //保存人的id
-    private Integer uid;
-
     //专家信息文件对应的id
     private Integer expertInformationUrlId;
 
@@ -156,7 +129,7 @@ public class ExpertInformation implements Serializable {
     //专家信息表文件的名称
     private String expertInformationFileName;
 
-    public ExpertInformation(Integer aid, String sex, String birthDate, String education, String presentPost, String technicalTitle, String studyMajor, String professionalism, String workUnit, String postalAddress, String postalCode, String workTelephone, String phone, String mail, String natureWork, String professionalField, String curriculumVitae, String recommendationUnitOpinion, String isFirst, String createAuthor, String createTime, String isState, String isDelete, String isProvince, String reason, List<ExpertInformationArticle> expertInformationArticleList, List<ExpertInformationBook> expertInformationBookList, List<ExpertInformationPatent> expertInformationPatentList, List<ExpertInformationPrizeWinning> expertInformationPrizeWinningList, List<ExpertInformationResearchDirection> expertInformationResearchDirectionList, String isSubmit, Integer uid, Integer expertInformationUrlId, String expertInformationUrl, String expertInformationFileName) {
+    public ExpertInformation(Integer aid, String sex, String birthDate, String education, String presentPost, String technicalTitle, String studyMajor, String professionalism, String workUnit, String postalAddress, String postalCode, String workTelephone, String phone, String mail, String natureWork, String professionalField, String curriculumVitae, String recommendationUnitOpinion, String createAuthor, String createTime, String isProvince, String reason, List<ExpertInformationArticle> expertInformationArticleList, List<ExpertInformationBook> expertInformationBookList, List<ExpertInformationPatent> expertInformationPatentList, List<ExpertInformationPrizeWinning> expertInformationPrizeWinningList, List<ExpertInformationResearchDirection> expertInformationResearchDirectionList, Integer expertInformationUrlId, String expertInformationUrl, String expertInformationFileName) {
         this.aid = aid;
         this.sex = sex;
         this.birthDate = birthDate;
@@ -175,11 +148,8 @@ public class ExpertInformation implements Serializable {
         this.professionalField = professionalField;
         this.curriculumVitae = curriculumVitae;
         this.recommendationUnitOpinion = recommendationUnitOpinion;
-        this.isFirst = isFirst;
         this.createAuthor = createAuthor;
         this.createTime = createTime;
-        this.isState = isState;
-        this.isDelete = isDelete;
         this.isProvince = isProvince;
         this.reason = reason;
         this.expertInformationArticleList = expertInformationArticleList;
@@ -187,8 +157,6 @@ public class ExpertInformation implements Serializable {
         this.expertInformationPatentList = expertInformationPatentList;
         this.expertInformationPrizeWinningList = expertInformationPrizeWinningList;
         this.expertInformationResearchDirectionList = expertInformationResearchDirectionList;
-        this.isSubmit = isSubmit;
-        this.uid = uid;
         this.expertInformationUrlId = expertInformationUrlId;
         this.expertInformationUrl = expertInformationUrl;
         this.expertInformationFileName = expertInformationFileName;
