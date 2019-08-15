@@ -26,6 +26,13 @@ public class TopicNumberName {
     private String achievementUrlId;   //成果附件对应的id
     @ApiModelProperty("文件名字")
     private String fileName;
+
+    //应用单位地址
+    private String postalAddress;
+
+    //应用单位名称
+    private String subjectUndertakingUnit;
+
     private OutcomeInformationAll outcomeInformationAllList;
 
     public TopicNumberName(Integer id, String topicName, String topicNumber, String agreementStartTime, String agreementEndTime, String achievementFileUrl, String achievementUrlId, String fileName, OutcomeInformationAll outcomeInformationAllList) {

@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -72,9 +73,6 @@ public class ExtranetAcceptApplyController {
         String uname = jwtInformation.getUsername();
         Integer cid = jwtInformation.getCid();
         String cname = jwtInformation.getCompanyName();
-
-//        String uname = "测试的人名";
-//        Integer cid = 555;
 
         if (!submitInventoryFile.getOriginalFilename().contains(".") || !applicationAcceptanceFile.getOriginalFilename().contains(".") || !achievementsFile.getOriginalFilename().contains(".")) {
             return resultMap.fail().message("上传的文件不可以为空");
@@ -157,7 +155,10 @@ public class ExtranetAcceptApplyController {
 
         //获取创建新增该表时间
         Date date = new Date();
-        extranetCheckApply.setCreateTime(date);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String nowTime = sdf.format(date);
+
+        extranetCheckApply.setCreateTime(nowTime);
         //获取创建人
         extranetCheckApply.setCreateAuthor(uname);
 
@@ -166,6 +167,9 @@ public class ExtranetAcceptApplyController {
 
         //把公司的id存在checkApply
         extranetCheckApply.setSubjectUndertakingUnitId(cid);
+
+        extranetCheckApply.setIsOutcome("0");   //设置该验收申请还未加入成果库
+
 
         try {
             resultMap = extranetAcceptApplyService.AddAcceptApply(extranetCheckApply, submitInventoryFile, applicationAcceptanceFile, achievementsFile, uname);
@@ -317,7 +321,7 @@ public class ExtranetAcceptApplyController {
     public ResultMap query(@CookieValue(value = "token")String token, HttpServletResponse response,
                              @RequestParam(value = "topicName",required = false)String topicName,//课题名称
                              @RequestParam(value = "topicNumber",required = false) String topicNumber,   //课题编号
-                             @RequestParam("page")Integer page,     //页数
+                             @RequestParam("Page")Integer page,     //页数
                              @RequestParam("total")Integer total){  //每页显示的条数
         if(StringUtils.isEmpty(token)){
             return resultMap.fail().message("请先登录");
@@ -361,11 +365,12 @@ public class ExtranetAcceptApplyController {
     public ResultMap queryResult(@CookieValue(value = "token")String token, HttpServletResponse response,
                                  @RequestParam(value = "topicName",required = false)String topicName,//课题名称
                                  @RequestParam(value = "topicNumber",required = false) String topicNumber,   //课题编号
-                                 @RequestParam("page")Integer page,     //页数
+                                 @RequestParam("Page")Integer page,     //页数
                                  @RequestParam("total")Integer total){
         if(StringUtils.isEmpty(token)){
             return resultMap.fail().message("请先登录");
         }
+
         try {
             resultMap = extranetAcceptApplyService.queryResult(token,response,topicName,topicNumber,page,total);
         } catch (Exception e) {
@@ -380,18 +385,14 @@ public class ExtranetAcceptApplyController {
     //提交最终验收报告
     @PostMapping("submitLastReport")
     @ResponseBody
-    public ResultMap submitLastReport(//@CookieValue(value = "token")String token,HttpServletResponse response,
+    public ResultMap submitLastReport(@CookieValue(value = "token")String token,HttpServletResponse response,
                                       @RequestParam("caId") Integer caId, //验收申请表的id
                                       @RequestPart(value = "lastReport",required = true) MultipartFile lastReport,
                                       @RequestPart AcceptanceCertificate acceptanceCertificate
                                       ){
-
-        String token = "aaa";
-        HttpServletResponse response = null;
-
-//        if(StringUtils.isEmpty(token)){
-//            return resultMap.fail().message("请先登录");
-//        }
+        if(StringUtils.isEmpty(token)){
+            return resultMap.fail().message("请先登录");
+        }
 
         try {
             resultMap = extranetAcceptApplyService.submitLastReport(token,response,caId,lastReport,acceptanceCertificate);
@@ -457,4 +458,17 @@ public class ExtranetAcceptApplyController {
         }
         return resultMap;
     }
+
+
+//    //对专家组信息，专家组文件，专家组评议表文件进行上传
+//    @ResponseBody
+//    @PostMapping("ExpertGroupModify")
+//    public ResultMap expertGroupModify(@CookieValue(value = "token") String token, HttpServletResponse response,
+//                                       @RequestPart(value = "oldExpertGroupFileUrl",required = false)String oldExpertGroupFileUrl,//旧的专家组文件
+//                                       @RequestPart(value = "oldExpertAcceptanceFormFile",required = false)String oldExpertAcceptanceFormFile,  //旧的专家组评议文件
+//
+//                                       ){
+//
+//    }
+
 }

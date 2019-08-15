@@ -65,6 +65,9 @@ public class OutcomeInformationAll {
     //成果信息附件url
     private  String achievementUrl;
 
+    //成果信息文件的名字
+    private String achievementName;
+
     //成果附件的id
     private String achievementUrlId;
 
@@ -74,19 +77,13 @@ public class OutcomeInformationAll {
     //创建时间
     private String createTime;
 
-    //是否提交 0：保存  1:提交
-    private String isSubmit;
-
-    //如果保存的话，保存人的id
-    private Integer uid;
-
     //对应验收申请表的id
     private String checkApplyId;
 
     private List<OutcomeInformationPaper> outcomeInformationPaperList;
     private List<OutcomeInformationPatent> outcomeInformationPatentList;
 
-    public OutcomeInformationAll(@NotNull(message = "课题编号不能为空") String topicNumber, @NotNull(message = "课题名称不能为空") String topicName, @NotNull(message = "应用单位名称不能为空") String applicationUnitName, @NotNull(message = "通讯地址不能为空") String postalAddress, @NotNull(message = "通讯邮编不能为空") @Pattern(regexp = "^[1-9]\\\\d{5}$", message = "通讯邮编格式不正确") String correspondenceCode, @NotNull(message = "成果开始时间不能为空") String achievementStartTime, @NotNull(message = "成果结束时间不能为空") String achievementEndTime, @NotNull(message = "应用情况、社会经济效益不能为空") String economicPerformance, String achievementUrl, String achievementUrlId, String createAuthor, String createTime, String isSubmit, Integer uid, String checkApplyId, List<OutcomeInformationPaper> outcomeInformationPaperList, List<OutcomeInformationPatent> outcomeInformationPatentList) {
+    public OutcomeInformationAll(@NotNull(message = "课题编号不能为空") String topicNumber, @NotNull(message = "课题名称不能为空") String topicName, @NotNull(message = "应用单位名称不能为空") String applicationUnitName, @NotNull(message = "通讯地址不能为空") String postalAddress, @NotNull(message = "通讯邮编不能为空") @Pattern(regexp = "^[1-9]\\\\d{5}$", message = "通讯邮编格式不正确") String correspondenceCode, @NotNull(message = "成果开始时间不能为空") String achievementStartTime, @NotNull(message = "成果结束时间不能为空") String achievementEndTime, @NotNull(message = "应用情况、社会经济效益不能为空") String economicPerformance, String achievementUrl, String achievementUrlId, String createAuthor, String createTime, String checkApplyId, List<OutcomeInformationPaper> outcomeInformationPaperList, List<OutcomeInformationPatent> outcomeInformationPatentList) {
         this.topicNumber = topicNumber;
         this.topicName = topicName;
         this.applicationUnitName = applicationUnitName;
@@ -99,8 +96,6 @@ public class OutcomeInformationAll {
         this.achievementUrlId = achievementUrlId;
         this.createAuthor = createAuthor;
         this.createTime = createTime;
-        this.isSubmit = isSubmit;
-        this.uid = uid;
         this.checkApplyId = checkApplyId;
         this.outcomeInformationPaperList = outcomeInformationPaperList;
         this.outcomeInformationPatentList = outcomeInformationPatentList;

@@ -19,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 
-@Api(tags = "验收审核")
 @Controller
 @RequestMapping("acceptState")
 public class AcceptStateController {
@@ -30,17 +29,6 @@ public class AcceptStateController {
     private static Logger log = LoggerFactory.getLogger(AcceptStateController.class);
 
 
-    @ApiOperation(value = "验收审核查询")
-    @ApiImplicitParams(
-            {
-                    @ApiImplicitParam(name = "topicName",value = "课题名称"),
-                    @ApiImplicitParam(name = "subjectUndertakingUnit",value = "承担单位"),
-                    @ApiImplicitParam(name = "unitNature",value = "单位性质"),
-                    @ApiImplicitParam(name = "projectLeader",value = "课题负责人"),
-                    @ApiImplicitParam(name = "Page",value = "页数"),
-                    @ApiImplicitParam(name = "total",value = "每页显示的条数"),
-            }
-    )
     //验收审核的查询
     @PostMapping("query")
     @ResponseBody
@@ -64,14 +52,6 @@ public class AcceptStateController {
     }
 
 
-    @ApiOperation(value = "验收申请的审核")
-    @ApiImplicitParams(
-            {
-                    @ApiImplicitParam(name = "type",value = "审核的状态 true为审核通过  false为审核未通过"),
-                    @ApiImplicitParam(name = "reason",value = "审核未通过的原因"),
-                    @ApiImplicitParam(name = "id",value = "验收表的id"),
-            }
-    )
     //验收申请的审核
     @PostMapping("examine")
     @ResponseBody

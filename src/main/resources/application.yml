@@ -10,6 +10,12 @@ spring:
   devtools:
     restart:
       enabled: true  #开启热部署
+  # 解决post请求乱码
+  http:
+    encoding:
+      charset: utf-8
+      force: true
+      enabled: true
 #  jpa:
 #    hibernate:
 #      ddl-auto: validate

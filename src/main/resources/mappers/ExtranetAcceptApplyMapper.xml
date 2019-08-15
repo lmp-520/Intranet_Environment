@@ -107,7 +107,8 @@
             create_author,
             achievement_url_id,
             submit_url_id,
-            application_url_id
+            application_url_id,
+            is_outcome
         )VALUES
         (
           #{extranetCheckApply.id},
@@ -139,7 +140,8 @@
           #{extranetCheckApply.createAuthor},
           #{extranetCheckApply.achievementUrlId},
           #{extranetCheckApply.submitUrlId},
-          #{extranetCheckApply.applicationUrlId}
+          #{extranetCheckApply.applicationUrlId},
+          #{extranetCheckApply.isOutcome}
         );
     </insert>
 
@@ -296,30 +298,30 @@
 
     <update id="updateCheckApply">
         update check_apply set
-            id = #{checkApply.id},
-            topic_name = #{checkApply.topicName},
-            topic_number = #{checkApply.topicNumber},
-            subject_undertaking_unit = #{checkApply.subjectUndertakingUnit},
-            unit_nature = #{checkApply.unitNature},
-            project_leader = #{checkApply.projectLeader},
-            project_leader_phone = #{checkApply.projectLeaderPhone},
-            project_leader_mail = #{checkApply.projectLeaderMail},
-            postal_address = #{checkApply.postalAddress},
-            agreement_start_time = #{checkApply.agreementStartTime},
-            agreement_end_time = #{checkApply.agreementEndTime},
-            application_acceptance_time = #{checkApply.applicationAcceptanceTime},
-            application_acceptance_mode = #{checkApply.applicationAcceptanceMode},
-            application_acceptance_place = #{checkApply.applicationAcceptancePlace},
-            acceptance_contact = #{checkApply.acceptanceContact},
-            acceptance_contact_phone = #{checkApply.acceptanceContactPhone},
-            main_content_situation = #{checkApply.mainContentSituation},
-            submission_achievements_situation = #{checkApply.submissionAchievementsSituation},
-            subject_undertaking_unit_opinion = #{checkApply.subjectUndertakingUnitOpinion},
-            environmental_departments_opinion = #{checkApply.environmentalDepartmentsOpinion},
-            province_assessment_center_opinion = #{checkApply.provinceAssessmentCenterOpinion},
-            competent_department_oinion = #{checkApply.competentDepartmentOinion},
-            submit_inventory  = #{checkApply.submitInventory}
-        where id = #{checkApply.id}
+            id = #{extranetCheckApply.id},
+            topic_name = #{extranetCheckApply.topicName},
+            topic_number = #{extranetCheckApply.topicNumber},
+            subject_undertaking_unit = #{extranetCheckApply.subjectUndertakingUnit},
+            unit_nature = #{extranetCheckApply.unitNature},
+            project_leader = #{extranetCheckApply.projectLeader},
+            project_leader_phone = #{extranetCheckApply.projectLeaderPhone},
+            project_leader_mail = #{extranetCheckApply.projectLeaderMail},
+            postal_address = #{extranetCheckApply.postalAddress},
+            agreement_start_time = #{extranetCheckApply.agreementStartTime},
+            agreement_end_time = #{extranetCheckApply.agreementEndTime},
+            application_acceptance_time = #{extranetCheckApply.applicationAcceptanceTime},
+            application_acceptance_mode = #{extranetCheckApply.applicationAcceptanceMode},
+            application_acceptance_place = #{extranetCheckApply.applicationAcceptancePlace},
+            acceptance_contact = #{extranetCheckApply.acceptanceContact},
+            acceptance_contact_phone = #{extranetCheckApply.acceptanceContactPhone},
+            main_content_situation = #{extranetCheckApply.mainContentSituation},
+            submission_achievements_situation = #{extranetCheckApply.submissionAchievementsSituation},
+            subject_undertaking_unit_opinion = #{extranetCheckApply.subjectUndertakingUnitOpinion},
+            environmental_departments_opinion = #{extranetCheckApply.environmentalDepartmentsOpinion},
+            province_assessment_center_opinion = #{extranetCheckApply.provinceAssessmentCenterOpinion},
+            competent_department_oinion = #{extranetCheckApply.competentDepartmentOinion},
+            submit_inventory  = #{extranetCheckApply.submitInventory}
+        where id = #{extranetCheckApply.id}
     </update>
 
     <insert id="addAcceptanceCertificate" useGeneratedKeys="true" keyProperty="id">

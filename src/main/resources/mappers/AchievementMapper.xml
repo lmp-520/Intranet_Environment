@@ -8,8 +8,8 @@
                 topic_name like CONCAT('%',#{topicName},'%')
             </if>
 
-            <if test="topicNumber != null">
-                and topic_number like CONCAT('%',#{topicNumber},'%')
+            <if test="companyName != null">
+                and application_unit_name like CONCAT('%',#{companyName},'%')
             </if>
         </where>
     </select>
@@ -25,6 +25,7 @@
         achievement_start_time,
         economic_performance,
         achievement_url_id,
+        check_apply_id,
         achievement_end_time
         FROM
         outcome_information
@@ -33,8 +34,8 @@
                 topic_name like CONCAT('%',#{topicName},'%')
             </if>
 
-            <if test="topicNumber != null">
-                and topic_number like CONCAT('%',#{topicNumber},'%')
+            <if test="companyName != null">
+                and application_unit_name like CONCAT('%',#{companyName},'%')
             </if>
         </where>
         limit #{page},#{total}
@@ -58,8 +59,8 @@
             <if test="topicName != null">
                 topic_name like CONCAT('%',#{topicName},'%')
             </if>
-            <if test="topicNumber != null">
-                and topic_number like CONCAT('%',#{topicNumber},'%')
+            <if test="companyName != null">
+                and subject_undertaking_unit like CONCAT('%',#{companyName},'%')
             </if>
             <if test="0==0">
                 and acceptance_phase_id in (77,88) and is_outcome = 0
@@ -70,6 +71,8 @@
     <select id="queryAddChievement" resultType="com.xdmd.IntranetEnvironment.achievementManagement.pojo.TopicNumberName">
         select
             id,
+            subject_undertaking_unit,
+            postal_address,
             topic_name,
             topic_number,
             agreement_start_time,
@@ -80,8 +83,8 @@
             <if test="topicName != null">
                 topic_name like CONCAT('%',#{topicName},'%')
             </if>
-            <if test="topicNumber != null">
-                and topic_number like CONCAT('%',#{topicNumber},'%')
+            <if test="companyName != null">
+                and subject_undertaking_unit like CONCAT('%',#{companyName},'%')
             </if>
             <if test="0==0">
                 and acceptance_phase_id in (77,88) and is_outcome = 0
@@ -180,7 +183,7 @@
         FROM
         outcome_information
         where
-        check_apply_id = #{id} and uid = #{uid} and is_submit = 0
+        check_apply_id = #{id} and uid = #{uid}
     </select>
 
     <update id="UpdateAchievementInformation">

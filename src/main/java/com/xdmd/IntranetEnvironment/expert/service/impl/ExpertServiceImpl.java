@@ -213,55 +213,143 @@ public class ExpertServiceImpl implements ExpertService {
             expertMapper.uploadFile(uploadExpertFile);   //对专家信息进行上传
             expertInformation.setExpertInformationUrlId(uploadExpertFile.getId());//把上传后的文件id，插入到专家信息表中
 
-            Date date = new Date();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String nowTime = sdf.format(date);
-            expertInformation.setCreateTime(nowTime);
-
             //把专家具体信息更新到数据库中
             expertMapper.updateExpertInformation(expertInformation);
 
-            //新增专家信息表中的文章表
+            //更新专家信息表中的文章表
             List<ExpertInformationArticle> expertInformationArticleList = expertInformation.getExpertInformationArticleList();  //获取专家信息表中文章列表集合
+            //根据专家的id，把专家文章表对应的旧的信息删除
+            expertMapper.deleteExpertInformationArticleByExpertId(expertInformation.getId());
             for (ExpertInformationArticle expertInformationArticle : expertInformationArticleList) {
                 expertInformationArticle.setExpertId(expertInformation.getId());    //把文章列表中对应的专家信息表的id存入
-                //更新专家信息对应的文章列表
-                expertMapper.updateExpertInformationArticle(expertInformationArticle);
-
                 expertMapper.addExpertInformationArticle(expertInformationArticle); //新增专家信息表对应的文章列表
 
             }
 
-            //新增专家信息表中著作表
+            //更新专家信息表中著作表
             List<ExpertInformationBook> expertInformationBookList = expertInformation.getExpertInformationBookList();   //获取专家信息表中的著作列表集合
+            //根据专家的id，把专家著作表对应的旧的信息删除
+            expertMapper.deleteExpertInformationBookByExpertId(expertInformation.getId());
             for (ExpertInformationBook expertInformationBook : expertInformationBookList) {
                 expertInformationBook.setExpertId(expertInformation.getId());   //把文章列表中的对应的专家信息表的id存入
                 expertMapper.addExpertInformationBook(expertInformationBook);   //新增专家信息表对应的著作列表
             }
 
-            //新增专家信息表中的专利表
+            //更新专家信息表中的专利表
             List<ExpertInformationPatent> expertInformationPatentList = expertInformation.getExpertInformationPatentList(); //获取专家信息表中的专利表集合
+            //根据专家的id，把专家专利表对应的旧的信息删除
+            expertMapper.deleteExpertInformationPatentByExpertId(expertInformation.getId());
             for (ExpertInformationPatent expertInformationPatent : expertInformationPatentList) {
                 expertInformationPatent.setExpertId(expertInformation.getId());   //把文章列表中的对应的专家信息表的id存入
                 expertMapper.addExpertInformationPatent(expertInformationPatent);   //新增专家信息表对应的专利列表
             }
 
-            //新增专家信息表中的获奖表
+            //更新专家信息表中的获奖表
             List<ExpertInformationPrizeWinning> expertInformationPrizeWinningList = expertInformation.getExpertInformationPrizeWinningList();   //获取专家信息表中的获奖表集合
+            //根据专家的id，把专家获奖表对应的旧的信息删除
+            expertMapper.deleteExpertInformationPrizeWinningByExpertId(expertInformation.getId());
             for (ExpertInformationPrizeWinning expertInformationPrizeWinning : expertInformationPrizeWinningList) {
                 expertInformationPrizeWinning.setExpertId(expertInformation.getId());   //把获奖表中的对应的专家信息表的id存入
                 expertMapper.addExpertInformationPrizeWinning(expertInformationPrizeWinning);   //新增专家信息表对应的获奖列表
             }
 
-            //新增专家信息表中的研究方向
+            //更新专家信息表中的研究方向
             List<ExpertInformationResearchDirection> expertInformationResearchDirectionList = expertInformation.getExpertInformationResearchDirectionList();     //获取专家信息表中的研究方向表集合
+            //根据专家的id，把专家研究方向表对应的旧的信息删除
+            expertMapper.deleteExpertInformationResearchDirectionByExpertId(expertInformation.getId());
+            for (ExpertInformationResearchDirection expertInformationResearchDirection : expertInformationResearchDirectionList) {
+                expertInformationResearchDirection.setExpertId(expertInformation.getId());  //把研究方向中的对应的专家信息表的id存入
+                expertMapper.addExpertInformationResearchDirection(expertInformationResearchDirection); //新增专家信息表对应的研究方向列表
+            }
+
+        }else {
+            //没有上传新的文件，只改变了数据库中的信息
+            //把专家具体信息更新到数据库中,此时不需要更新文件id，因为文件还是原来的文件
+            expertMapper.updateExpertInformationNotFileId(expertInformation);
+
+            //更新专家信息表中的文章表
+            List<ExpertInformationArticle> expertInformationArticleList = expertInformation.getExpertInformationArticleList();  //获取专家信息表中文章列表集合
+            //根据专家的id，把专家文章表对应的旧的信息删除
+            expertMapper.deleteExpertInformationArticleByExpertId(expertInformation.getId());
+            for (ExpertInformationArticle expertInformationArticle : expertInformationArticleList) {
+                expertInformationArticle.setExpertId(expertInformation.getId());    //把文章列表中对应的专家信息表的id存入
+                expertMapper.addExpertInformationArticle(expertInformationArticle); //新增专家信息表对应的文章列表
+
+            }
+
+            //更新专家信息表中著作表
+            List<ExpertInformationBook> expertInformationBookList = expertInformation.getExpertInformationBookList();   //获取专家信息表中的著作列表集合
+            //根据专家的id，把专家著作表对应的旧的信息删除
+            expertMapper.deleteExpertInformationBookByExpertId(expertInformation.getId());
+            for (ExpertInformationBook expertInformationBook : expertInformationBookList) {
+                expertInformationBook.setExpertId(expertInformation.getId());   //把文章列表中的对应的专家信息表的id存入
+                expertMapper.addExpertInformationBook(expertInformationBook);   //新增专家信息表对应的著作列表
+            }
+
+            //更新专家信息表中的专利表
+            List<ExpertInformationPatent> expertInformationPatentList = expertInformation.getExpertInformationPatentList(); //获取专家信息表中的专利表集合
+            //根据专家的id，把专家专利表对应的旧的信息删除
+            expertMapper.deleteExpertInformationPatentByExpertId(expertInformation.getId());
+            for (ExpertInformationPatent expertInformationPatent : expertInformationPatentList) {
+                expertInformationPatent.setExpertId(expertInformation.getId());   //把文章列表中的对应的专家信息表的id存入
+                expertMapper.addExpertInformationPatent(expertInformationPatent);   //新增专家信息表对应的专利列表
+            }
+
+            //更新专家信息表中的获奖表
+            List<ExpertInformationPrizeWinning> expertInformationPrizeWinningList = expertInformation.getExpertInformationPrizeWinningList();   //获取专家信息表中的获奖表集合
+            //根据专家的id，把专家获奖表对应的旧的信息删除
+            expertMapper.deleteExpertInformationPrizeWinningByExpertId(expertInformation.getId());
+            for (ExpertInformationPrizeWinning expertInformationPrizeWinning : expertInformationPrizeWinningList) {
+                expertInformationPrizeWinning.setExpertId(expertInformation.getId());   //把获奖表中的对应的专家信息表的id存入
+                expertMapper.addExpertInformationPrizeWinning(expertInformationPrizeWinning);   //新增专家信息表对应的获奖列表
+            }
+
+            //更新专家信息表中的研究方向
+            List<ExpertInformationResearchDirection> expertInformationResearchDirectionList = expertInformation.getExpertInformationResearchDirectionList();     //获取专家信息表中的研究方向表集合
+            //根据专家的id，把专家研究方向表对应的旧的信息删除
+            expertMapper.deleteExpertInformationResearchDirectionByExpertId(expertInformation.getId());
             for (ExpertInformationResearchDirection expertInformationResearchDirection : expertInformationResearchDirectionList) {
                 expertInformationResearchDirection.setExpertId(expertInformation.getId());  //把研究方向中的对应的专家信息表的id存入
                 expertMapper.addExpertInformationResearchDirection(expertInformationResearchDirection); //新增专家信息表对应的研究方向列表
             }
 
         }
+        return resultMap.success().message("更新成功");
 
+    }
+
+    //修改专家的启用或者停用状态
+    @Override
+    public ResultMap changeState(String token, HttpServletResponse response, Integer id, Boolean type) {
+        User user = new User();
+        try {
+            user = tokenService.compare(response, token);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (UserNameNotExistentException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (ClaimsNullException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("MenuServiceImpl 中 TokenService 出现问题");
+            return resultMap.message("系统异常");
+        }
+        Integer uid = user.getId();
+        String username = user.getUsername();
+
+        //修改这个账号的启用状态
+        if (type) {
+            //当状态为true时, 则启用这个账号  0 启用 1停用
+            expertMapper.changeStateStart(id);
+        } else {
+            //此时状态为false，停用这个账号
+            expertMapper.changeStateEnd(id);
+        }
+        return resultMap.success().message("设置成功");
     }
 
     //专家的查询

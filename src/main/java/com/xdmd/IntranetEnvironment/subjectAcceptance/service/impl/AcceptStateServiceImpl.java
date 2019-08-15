@@ -180,16 +180,6 @@ public class AcceptStateServiceImpl implements AcceptStateService {
         //获取验收申请表的集合
         List<CheckApply> checkApplyList = acceptStateMapper.acceptApplyQuery(newpage, total, topicName, subjectUndertakingUnit, unitNature, projectLeader);
 
-        //判断用户输入的页数是否超过总页数
-        int allPage = 0;
-        if (alltotal % page == 0) {
-            allPage = alltotal / page;
-        } else {
-            allPage = (alltotal / page) + 1;
-        }
-        if (page > allPage) {
-            return resultMap.fail().message("页数超过总页数");
-        }
 
         List<JSONObject> jsonObjectList = new ArrayList<>();
         //通过查询出来的文件id 获取文件的地址

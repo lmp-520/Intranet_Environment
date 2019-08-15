@@ -96,8 +96,9 @@ public class ExpertController {
     }
 
     //专家表的修改
+    @ResponseBody
     @PostMapping("modify")
-    public ResultMap expertModify(@RequestParam(value = "oldExpertFile",required = false) String oldExpertFile,  //旧的专家信息文件
+    public ResultMap expertModify(@RequestPart(value = "oldExpertFile",required = false) String oldExpertFile,  //旧的专家信息文件
                                   @CookieValue(value = "IntranecToken") String token, HttpServletResponse response,
                                   @RequestPart ExpertInformation expertInformation, //专家信息表
                                   @RequestPart (value = "expertFile",required = false) MultipartFile expertFile){    //新的专家信息文件
@@ -113,7 +114,27 @@ public class ExpertController {
             return resultMap.fail().message("系统异常");
         }
         return resultMap;
+    }
 
+
+    //修改专家的启用或者停用状态
+    @PostMapping("changeState")
+    @ResponseBody
+    public ResultMap changeState(@CookieValue("token") String token, HttpServletResponse response,
+                                 @RequestParam("id") Integer id,         //专家的id
+                                 @RequestParam("type") Boolean type){    //类型  true 启用  false 停用
+        if(StringUtils.isEmpty(token)){
+            return resultMap.fail().message("请先登录");
+        }
+
+        try {
+            resultMap = expertService.changeState(token,response,id,type);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("ExpertController中 changeState方法错误 -- "+e.getMessage());
+            return resultMap.fail().message("系统异常");
+        }
+        return resultMap;
     }
 
 }

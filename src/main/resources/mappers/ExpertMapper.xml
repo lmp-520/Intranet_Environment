@@ -365,14 +365,37 @@
         professional_field = #{expertInformation.professionalField},
         curriculum_vitae = #{expertInformation.curriculumVitae},
         recommendation_unit_opinion = #{expertInformation.recommendationUnitOpinion},
-        is_province = #{expertInformation.isProvince}
-        <if test="expertInformation.expertInformationUrlId != null">
-            , expert_information_url_id = #{expertInformation.expertInformationUrlId}
-        </if>
+        is_province = #{expertInformation.isProvince},
+        expert_information_url_id = #{expertInformation.expertInformationUrlId}
         where aid = #{expertInformation.aid}
     </update>
 
-    <!--<update id="updateExpertInformationArticle">-->
-        <!--update -->
-    <!--</update>-->
+    <delete id="deleteExpertInformationArticleByExpertId">
+        delete from
+          expert_information_article
+        where expert_id = #{id}
+    </delete>
+
+    <update id="updateExpertInformationNotFileId">
+        update expert_information set
+            sex = #{expertInformation.sex},
+            birth_date = #{expertInformation.birthDate},
+            education = #{expertInformation.education},
+            present_post = #{expertInformation.presentPost},
+            technical_title = #{expertInformation.technicalTitle},
+            study_major = #{expertInformation.studyMajor},
+            professionalism = #{expertInformation.professionalism},
+            work_unit = #{expertInformation.workUnit},
+            postal_address = #{expertInformation.postalAddress},
+            postal_code = #{expertInformation.postalCode},
+            work_telephone = #{expertInformation.workTelephone},
+            phone = #{expertInformation.phone},
+            mail = #{expertInformation.mail},
+            nature_work = #{expertInformation.natureWork},
+            professional_field = #{expertInformation.professionalField},
+            curriculum_vitae = #{expertInformation.curriculumVitae},
+            recommendation_unit_opinion = #{expertInformation.recommendationUnitOpinion},
+            is_province = #{expertInformation.isProvince}
+        where aid = #{expertInformation.aid}
+    </update>
 </mapper>

@@ -34,7 +34,7 @@ public class AchievementServiceImpl implements AchievementService {
 
     //成果的查询，可以查询所有已经加入成果库的信息
     @Override
-    public ResultMap queryAchivement(String topicName, String topicNumber, Integer page, Integer total) {
+    public ResultMap queryAchivement(String topicName, String companyName, Integer page, Integer total) {
         int newpage = 0;
         if (page == 1) {
             newpage = page - 1;
@@ -44,7 +44,7 @@ public class AchievementServiceImpl implements AchievementService {
 
         //查询成果的总数
         int alltotal = 0;
-        alltotal = achievementMapper.queryAllAchievement(topicName, topicNumber);
+        alltotal = achievementMapper.queryAllAchievement(topicName, companyName);
         if (alltotal == 0) {
             return resultMap.fail().message();
         }
@@ -61,7 +61,7 @@ public class AchievementServiceImpl implements AchievementService {
         }
 
         //获取成果主表的集合
-        List<OutcomeInformationAll> outcomeInformationAllList = achievementMapper.queryAchievementList(topicName, topicNumber, newpage, total);
+        List<OutcomeInformationAll> outcomeInformationAllList = achievementMapper.queryAchievementList(topicName, companyName, newpage, total);
 
         //遍历成果主表的集合
         for (OutcomeInformationAll outcomeInformationAll : outcomeInformationAllList) {
@@ -69,6 +69,11 @@ public class AchievementServiceImpl implements AchievementService {
             Integer id = outcomeInformationAll.getId();
             String achievementUrl = achievementMapper.queryAchievementFileNameByAchievementId(id);//获取成果表中 成果附件的id， 通过成果附件的id，查询到成果附件的地址
             outcomeInformationAll.setAchievementUrl(achievementUrl);
+
+            //根据成果附件的id，获取成果附件的真实名字
+            String fileName = achievementMapper.queryOutcomeInformationById(id);
+            outcomeInformationAll.setAchievementName(fileName);
+
             List<OutcomeInformationPatent> outcomeInformationPatentList = achievementMapper.queryAchievementPatentByOid(id);//根据成果主表的id，获取对应的专利表
             outcomeInformationAll.setOutcomeInformationPatentList(outcomeInformationPatentList);
 
@@ -84,10 +89,7 @@ public class AchievementServiceImpl implements AchievementService {
 
     //此时查询的是，通过验收与结题的 待加入成果库的内容信息
     @Override
-    public ResultMap queryAddAchivement(String topicName, String topicNumber, Integer page, Integer total) {
-
-        String username = "张三";
-        Integer uid = 4;
+    public ResultMap queryAddAchivement(String topicName, String companyName, Integer page, Integer total) {
 
         int newpage = 0;
         if (page == 1) {
@@ -98,7 +100,7 @@ public class AchievementServiceImpl implements AchievementService {
 
         //查询待加入成果的信息总数 通过验收与结题的
         int alltotal = 0;
-        alltotal = achievementMapper.queryAddAchievement(topicName, topicNumber);
+        alltotal = achievementMapper.queryAddAchievement(topicName, companyName);
         if (alltotal == 0) {
             return resultMap.fail().message();
         }
@@ -115,23 +117,13 @@ public class AchievementServiceImpl implements AchievementService {
         }
 
         //获取已经通过验收或结题的  等待加入成果库的内容
-        List<TopicNumberName> topicNumberNameList = achievementMapper.queryAddChievement(topicName, topicNumber, newpage, total);
+        List<TopicNumberName> topicNumberNameList = achievementMapper.queryAddChievement(topicName, companyName, newpage, total);
         for (TopicNumberName topicNumberName : topicNumberNameList) {
             //遍历待加入成果库的信息
             String achievementFileUrl = achievementMapper.queryAchievementFileUrlById(topicNumberName.getId());//根据验收表的id，查询改验收表对应的成果附件地址
             topicNumberName.setAchievementFileUrl(achievementFileUrl);
             String achievementFileName = achievementMapper.queryAchievementFileNameById(topicNumberName.getId());//根据验收表的id，查询改验收表对应的成果附件真实名字
             topicNumberName.setFileName(achievementFileName);
-//            //根据登陆人的uid，与 验收申请表的id，去查询这个人对应的验收表的信息，有没有保存过内容，如果有，则给提取出来
-//            OutcomeInformationAll outcomeInformationAll = achievementMapper.querySaveAchievementByCheckApplyId(topicNumberName.getId(), uid);
-//            if (outcomeInformationAll != null) {
-//                //此时意味着，这个人的该条数据保存过内容
-//                List<OutcomeInformationPaper> outcomeInformationPaperList = achievementMapper.queryAchievementPaperByOid(outcomeInformationAll.getId());//查询成果表对应的成果论文表
-//                outcomeInformationAll.setOutcomeInformationPaperList(outcomeInformationPaperList);
-//                List<OutcomeInformationPatent> outcomeInformationPatentList = achievementMapper.queryAchievementPatentByOid(outcomeInformationAll.getId());//查询成果表对应的成果专利
-//                outcomeInformationAll.setOutcomeInformationPatentList(outcomeInformationPatentList);
-//            }
-//            topicNumberName.setOutcomeInformationAllList(outcomeInformationAll);
         }
         pageBean.setAlltotal(alltotal);
         pageBean.setData(topicNumberNameList);
@@ -175,8 +167,6 @@ public class AchievementServiceImpl implements AchievementService {
             Date date = new Date();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String nowDate = sdf.format(date);
-            outcomeInformationAll.setCreateTime(nowDate);
-            outcomeInformationAll.setIsSubmit("0");
 
             //更新成果主表
             achievementMapper.UpdateAchievementInformation(outcomeInformationAll,cid,uid);
@@ -206,10 +196,6 @@ public class AchievementServiceImpl implements AchievementService {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String nowDate = sdf.format(date);
         outcomeInformationAll.setCreateTime(nowDate);
-        outcomeInformationAll.setIsSubmit("0");
-
-        //把保存人的id，存入字段
-        outcomeInformationAll.setUid(uid);
 
         outcomeInformationAll.setCheckApplyId(cid);
 
@@ -267,10 +253,6 @@ public class AchievementServiceImpl implements AchievementService {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String nowDate = sdf.format(date);
         outcomeInformationAll.setCreateTime(nowDate);
-        outcomeInformationAll.setIsSubmit("1");
-
-        //把保存人的id，存入字段
-        outcomeInformationAll.setUid(uid);
 
         outcomeInformationAll.setCheckApplyId(cid);
 

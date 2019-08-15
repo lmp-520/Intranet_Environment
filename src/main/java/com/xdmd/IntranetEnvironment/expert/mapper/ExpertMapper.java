@@ -3,10 +3,7 @@ package com.xdmd.IntranetEnvironment.expert.mapper;
 import com.xdmd.IntranetEnvironment.common.UploadFile;
 import com.xdmd.IntranetEnvironment.company.Pojo.UserInformation;
 import com.xdmd.IntranetEnvironment.expert.pojo.*;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -111,6 +108,33 @@ public interface ExpertMapper {
     //把专家具体信息更新到数据库中
     void updateExpertInformation(@Param("expertInformation") ExpertInformation expertInformation);
 
-    //更新专家信息对应的文章列表
-    void updateExpertInformationArticle(@Param("expertInformationArticle") ExpertInformationArticle expertInformationArticle);
+    //根据专家的id，把专家文章表对应的信息删除
+    void deleteExpertInformationArticleByExpertId(@Param("id") Integer id);
+
+    //根据专家的id，把专家著作表对应的旧的信息删除
+    @Delete("delete from expert_information_book where expert_id = #{id}")
+    void deleteExpertInformationBookByExpertId(@Param("id") Integer id);
+
+    //根据专家的id，把专家专利表对应的旧的信息删除
+    @Delete("delete from expert_information_patent where expert_id = #{id}")
+    void deleteExpertInformationPatentByExpertId(@Param("id") Integer id);
+
+    //根据专家的id，把专家获奖表对应的旧的信息删除
+    @Delete("delete from expert_information_prize_winning where expert_id = #{id}")
+    void deleteExpertInformationPrizeWinningByExpertId(@Param("id") Integer id);
+
+    //根据专家的id，把专家研究方向表对应的旧的信息删除
+    @Delete("delete from expert_information_research_direction where expert_id = #{id}")
+    void deleteExpertInformationResearchDirectionByExpertId(@Param("id") Integer id);
+
+    //把专家具体信息更新到数据库中,此时不需要更新文件id，因为文件还是原来的文件
+    void updateExpertInformationNotFileId(@Param("expertInformation") ExpertInformation expertInformation);
+
+    //启用这个专家账号
+    @Update("update shiro_user_information set is_delete = 0 where uid = #{id}")
+    void changeStateStart(@Param("id") Integer id);
+
+    //停用这个专家账号
+    @Update("update shiro_user_information set is_delete = 1 where uid = #{id}")
+    void changeStateEnd(@Param("id") Integer id);
 }

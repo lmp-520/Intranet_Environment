@@ -17,4 +17,6 @@ public interface ExpertService {
     ResultMap distributionExpertAccount(String token, HttpServletResponse response, UserInformation userInformation, MultipartFile expertFile);
 
     ResultMap expertModify(String token, HttpServletResponse response, String oldExpertFile, ExpertInformation expertInformation, MultipartFile expertFile) throws Exception;
+
+    ResultMap changeState(String token, HttpServletResponse response, Integer id, Boolean type);
 }

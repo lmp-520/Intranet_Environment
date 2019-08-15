@@ -11,12 +11,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 public interface AchievementService {
-    ResultMap queryAchivement(String topicName, String topicNumber, Integer page, Integer total);
-
-    ResultMap queryAddAchivement(String topicName, String topicNumber, Integer page, Integer total);
-
     ResultMap AddAchievementSave(String token, HttpServletResponse response, String cid, MultipartFile achievementFileUrl, OutcomeInformationAll outcomeInformationAll);
 
     ResultMap AddAchievement(String token, HttpServletResponse response, String cid, MultipartFile achievementFileUrl, OutcomeInformationAll outcomeInformationAll);
 
+    ResultMap queryAddAchivement(String topicName, String companyName, Integer page, Integer total);
+
+    ResultMap queryAchivement(String topicName, String companyName, Integer page, Integer total);
 }

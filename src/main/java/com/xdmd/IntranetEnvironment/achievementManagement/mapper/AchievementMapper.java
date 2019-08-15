@@ -9,10 +9,10 @@ import java.util.List;
 
 public interface AchievementMapper {
     //查询成果的总数
-    int queryAllAchievement(@Param("topicName") String topicName, @Param("topicNumber") String topicNumber);
+    int queryAllAchievement(@Param("topicName") String topicName, @Param("companyName") String companyName);
 
     //获取成果主表的集合
-    List<OutcomeInformationAll> queryAchievementList(@Param("topicName") String topicName, @Param("topicNumber") String topicNumber, @Param("page") Integer page, @Param("total") Integer total);
+    List<OutcomeInformationAll> queryAchievementList(@Param("topicName") String topicName, @Param("companyName") String companyName, @Param("page") Integer page, @Param("total") Integer total);
 
     //根据成果主表的id，获取对应的专利表
     List<OutcomeInformationPatent> queryAchievementPatentByOid(@Param("id") Integer id);
@@ -22,10 +22,10 @@ public interface AchievementMapper {
     List<OutcomeInformationPaper> queryAchievementPaperByOid(@Param("id") Integer id);
 
     //查询待加入成果的信息总数 通过验收与结题的
-    int queryAddAchievement(@Param("topicName") String topicName, @Param("topicNumber") String topicNumber);
+    int queryAddAchievement(@Param("topicName") String topicName, @Param("companyName") String companyName);
 
     //获取已经通过验收或结题的  等待加入成果库的内容
-    List<TopicNumberName> queryAddChievement(@Param("topicName") String topicName, @Param("topicNumber") String topicNumber, @Param("newpage") int newpage, @Param("total") Integer total);
+    List<TopicNumberName> queryAddChievement(@Param("topicName") String topicName, @Param("companyName") String companyName, @Param("newpage") int newpage, @Param("total") Integer total);
 
     //根据验收表的id，查询改验收表对应的成果附件地址
     @Select("select upload_file_address from upload_file where id = (select achievement_url_id from check_apply where id = #{id})")
@@ -71,4 +71,8 @@ public interface AchievementMapper {
 
     @Update("update check_apply set is_outcome = 1 where id = #{cid}")
     void setCheckApplyIsOutomt(@Param("cid") String cid);
+
+    //根据成果附件的id，获取成果附件的真实名字
+    @Select("select upload_file_name from upload_file where id = (SELECT achievement_url_id FROM outcome_information where id = #{id})")
+    String queryOutcomeInformationById(@Param("id") Integer id);
 }

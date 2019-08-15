@@ -91,4 +91,16 @@ public interface ExtranetAcceptApplyMapper<T> extends MyBaseMapper<ExtranetCheck
 
     //新增课题验收中的课题负责人
     void addAcceptanceCertificateSubjectPeople(@Param("acceptanceCertificateSubjectPeople") AcceptanceCertificateSubjectPeople acceptanceCertificateSubjectPeople);
+
+    //对旧的提交清单文件id进行更新
+    @Update("update check_apply set submit_url_id = #{fileId} where id = #{cid}")
+    void updateSubmitInventoryIdById(@Param("cid") Integer id, @Param("fileId") Integer id1);
+
+    //对旧的成果附件文件文件id进行更新
+    @Update("update check_apply set achievement_url_id = #{fileId} where id = #{cid}")
+    void updateAchievementIdById(@Param("cid") Integer id, @Param("fileId") Integer id1);
+
+    //对旧的验收申请表文件文件id进行更新
+    @Update("update check_apply set application_url_id = #{fileId} where id = #{cid}")
+    void updateApplicationAcceptanceIdById(@Param("id") Integer id, @Param("fileId") Integer id1);
 }

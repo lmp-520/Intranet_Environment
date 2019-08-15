@@ -65,41 +65,6 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
 
         return resultMap.success().message("新增成功");
 
-
-//        int number = 0;
-//        int number2 = 0;
-//        int number3 = 0;
-//        int number4 = 0;
-//        try {
-//            number = acceptApplyMapper.insertSelective(extranetCheckApply);
-//
-//            //把上传的文件上传到文件表
-//            //验收申请表的上传
-//            IntegrationFile applicationAcceptanceIntegrationFile = new IntegrationFile();
-//            UploadFile applicationUploadFile = applicationAcceptanceIntegrationFile.IntegrationFile(applicationAcceptanceFile, extranetCheckApply.getId(), extranetCheckApply.getApplicationAcceptanceUrl(), "验收申请表", createname);
-//            number2 = acceptApplyFileUploadMapper.insertSelective(applicationUploadFile);
-//
-//            //成果附件的上传
-//            IntegrationFile achievementsUploadFile = new IntegrationFile();
-//            UploadFile achievementsUploadFile2 = achievementsUploadFile.IntegrationFile(achievementsFile, extranetCheckApply.getId(), extranetCheckApply.getAchievementsUrl(), "成果附件", createname);
-//            number3 = acceptApplyFileUploadMapper.insertSelective(achievementsUploadFile2);
-//
-//            //提交清单的上传
-//            IntegrationFile submitInventoryUploadFile = new IntegrationFile();
-//            UploadFile submitUploadFile = submitInventoryUploadFile.IntegrationFile(submitInventoryFile, extranetCheckApply.getId(), extranetCheckApply.getSubmitInventoryUrl(), "提交清单", createname);
-//            number4 = acceptApplyFileUploadMapper.insertSelective(submitUploadFile);
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            log.error("ExtranetAcceptApplyServiceImpl -- AddAcceptApply 中查询语句出错");
-//            throw new MysqlErrorException();
-//        }
-//        if (number == 0 || number2 == 0 || number3 == 0 || number4 == 0) {
-//            resultMap.fail().message("新增失败");
-//        } else {
-//            resultMap.success().message("新增成功");
-//        }
-//        return resultMap;
     }
 
     //企业修改验收申请表
@@ -265,6 +230,7 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
         String uname = jwtInformation.getUsername();
         Integer cid = jwtInformation.getCid();
         String cname = jwtInformation.getCompanyName();
+
 
         int newpage = 0;
         if (page == 1) {
@@ -549,32 +515,28 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
     //提交最终验收报告
     @Override
     public ResultMap submitLastReport(String token, HttpServletResponse response, Integer caId, MultipartFile lastReport, AcceptanceCertificate acceptanceCertificate) throws Exception {
-//        JwtInformation jwtInformation = new JwtInformation();
-//        try {
-//            jwtInformation = extranetTokenService.compare(response, token);
-//        } catch (NullPointerException e) {
-//            e.printStackTrace();
-//            return resultMap.fail().message("请先登录");
-//        } catch (UserNameNotExistentException e) {
-//            e.printStackTrace();
-//            return resultMap.fail().message("请先登录");
-//        } catch (ClaimsNullException e) {
-//            e.printStackTrace();
-//            return resultMap.fail().message("请先登录");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            log.error("MenuServiceImpl 中 TokenService 出现问题");
-//            return resultMap.message("系统异常");
-//        }
-//
-//        Integer uid = jwtInformation.getUid();
-//        String uname = jwtInformation.getUsername();
-//        Integer cid = jwtInformation.getCid();
-//        String cname = jwtInformation.getCompanyName();
+        JwtInformation jwtInformation = new JwtInformation();
+        try {
+            jwtInformation = extranetTokenService.compare(response, token);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (UserNameNotExistentException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (ClaimsNullException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("MenuServiceImpl 中 TokenService 出现问题");
+            return resultMap.message("系统异常");
+        }
 
-        String cname = "王六公司";
-        String uname = "王六";
-        Integer cid =20;
+        Integer uid = jwtInformation.getUid();
+        String uname = jwtInformation.getUsername();
+        Integer cid = jwtInformation.getCid();
+        String cname = jwtInformation.getCompanyName();
 
         //判断验收证书后缀名是否正确
         List<String> acceptanceCertificateSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".rar", ".zip", ".7z"));
@@ -774,6 +736,9 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
             //把提交清单文件上传到upload_file中
             UploadFile uploadSubmitInventoryFile = IntegrationFile.IntegrationFile(submitInventoryFile, submitInventoryFileUrl, "提交清单", uname);
             acceptApplyMapper.uploadFile(uploadSubmitInventoryFile);//对文件进行上传
+            //对旧的提交清单文件id进行更新
+            acceptApplyMapper.updateSubmitInventoryIdById(extranetCheckApply.getId(),uploadSubmitInventoryFile.getId());
+
             //把上传文件的id，存入checkApply中
             extranetCheckApply.setSubmitUrlId(uploadSubmitInventoryFile.getId());
         }
@@ -796,6 +761,9 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
             //把提交清单文件上传到upload_file中
             UploadFile uploadAchievementsFile = IntegrationFile.IntegrationFile(achievementsFile, achievementsFileUrl, "成果附件", uname);
             acceptApplyMapper.uploadFile(uploadAchievementsFile);//对文件进行上传
+            //对旧的成果附件文件文件id进行更新
+            acceptApplyMapper.updateAchievementIdById(extranetCheckApply.getId(),uploadAchievementsFile.getId());
+
             //把上传文件的id，存入checkApply中
             extranetCheckApply.setAchievementUrlId(uploadAchievementsFile.getId());
         }
@@ -806,17 +774,22 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
             String applicationAcceptanceFileName = applicationAcceptanceFile.getOriginalFilename();
             Boolean aBoolean = FileSuffixJudgeUtil.SuffixJudge(applicationAcceptanceFileName, idCardFileSuffixList);
             if (aBoolean == false) {
-                return resultMap.fail().message("请上传正确的成果附件格式");
+                return resultMap.fail().message("请上传正确的验收申请表格式");
             }
             //再根据旧的文件地址，先把文件给删除掉
             File file = new File(oldApplicationAcceptanceFileUrl);
             file.delete();
 
-            //对新的提交清单进行上传
+            //对新的验收申请表进行上传
             String applicationAcceptanceFileUrl = FileUploadUtil.fileUpload(applicationAcceptanceFile, cname, "验收申请表");
-            //把提交清单文件上传到upload_file中
+            //把验收申请表文件上传到upload_file中
             UploadFile uploadApplicationAcceptanceFile = IntegrationFile.IntegrationFile(applicationAcceptanceFile, applicationAcceptanceFileUrl, "验收申请表", uname);
             acceptApplyMapper.uploadFile(uploadApplicationAcceptanceFile);//对文件进行上传
+
+            //对旧的验收申请表文件文件id进行更新
+            acceptApplyMapper.updateApplicationAcceptanceIdById(extranetCheckApply.getId(),uploadApplicationAcceptanceFile.getId());
+
+
             //把上传文件的id，存入checkApply中
             extranetCheckApply.setAchievementUrlId(uploadApplicationAcceptanceFile.getId());
         }

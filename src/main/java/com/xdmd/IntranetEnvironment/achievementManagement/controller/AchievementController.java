@@ -18,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 
-@Api(tags = "成果管理")
 @Controller
 @RequestMapping("achievement")
 public class AchievementController {
@@ -29,48 +28,30 @@ public class AchievementController {
 
 
     //成果库 的 成果查询
-    @ApiOperation(value = "成果库的成果查询")
-    @ApiImplicitParams(
-            {
-                    @ApiImplicitParam(name = "topicName",value = "课题名称"),
-                    @ApiImplicitParam(name = "topicNumber",value = "课题编号"),
-                    @ApiImplicitParam(name = "Page",value = "页数"),
-                    @ApiImplicitParam(name = "total",value = "每页显示条数")
-            }
-    )
     @PostMapping("queryAchievement")
     @ResponseBody
-    public ResultMap QueryAchievement(@RequestParam(value = "topicName", required = false) String topicName,
-                                      @RequestParam(value = "topicNumber", required = false) String topicNumber,
+    public ResultMap QueryAchievement(@RequestParam(value = "topicName", required = false) String topicName,    //课题名称
+                                      @RequestParam(value = "companyName", required = false) String companyName,    //应用单位名称
                                       @RequestParam("Page") Integer page,
                                       @RequestParam("total") Integer total) {
         //对接收到的页数 与 每页显示的条数进行 判断
         if (page <= 0 || total <= 0) {
             return resultMap.fail().message("请返回正确的页数或每页显示条数");
         }
-        resultMap = achievementService.queryAchivement(topicName,topicNumber,page,total);   //成果的查询，可以查询所有已经加入成果库的信息
+        resultMap = achievementService.queryAchivement(topicName,companyName,page,total);   //成果的查询，可以查询所有已经加入成果库的信息
         return resultMap;
     }
 
     //当环保厅进行成果新增时. 进行的查询
-    @ApiOperation(value = "成果新增时的查询")
-    @ApiImplicitParams(
-            {
-                    @ApiImplicitParam(name = "topicName",value = "课题名称"),
-                    @ApiImplicitParam(name = "topicNumber",value = "课题编号"),
-                    @ApiImplicitParam(name = "Page",value = "页数"),
-                    @ApiImplicitParam(name = "total",value = "每页显示条数")
-            }
-    )
     @ResponseBody
     @PostMapping("addAchievementQuery")
     public ResultMap queryAddAchievement(@RequestParam(value = "topicName", required = false) String topicName,
-                                         @RequestParam(value = "topicNumber", required = false) String topicNumber,
+                                         @RequestParam(value = "companyName", required = false) String companyName,
                                          @RequestParam("Page") Integer page,
                                          @RequestParam("total") Integer total) {
 
         try {
-            resultMap = achievementService.queryAddAchivement(topicName,topicNumber,page,total);    //此时查询的是，通过验收与结题的 待加入成果库的内容信息
+            resultMap = achievementService.queryAddAchivement(topicName,companyName,page,total);    //此时查询的是，通过验收与结题的 待加入成果库的内容信息
         } catch (Exception e) {
             e.printStackTrace();
             log.error("achievementController 中 addAchievementQuery 方法出错 -- "+e.getMessage());
@@ -104,14 +85,6 @@ public class AchievementController {
     }
 
     //成果新增的提交
-    @ApiOperation(value = "成果新增的提交")
-    @ApiImplicitParams(
-            {
-                    @ApiImplicitParam(name = "cid",value = "验收申请表的id"),
-                    @ApiImplicitParam(name = "achievementFileUrl",value = "成果附件文件"),
-                    @ApiImplicitParam(name = "outcomeInformationAll",value = "成果信息")
-            }
-    )
     @PostMapping("AddAchievement")
     @ResponseBody
     public ResultMap AddAchievement(@CookieValue(value = "IntranecToken") String token, HttpServletResponse response,
@@ -131,5 +104,6 @@ public class AchievementController {
         }
         return resultMap;
     }
+
 }
 
