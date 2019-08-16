@@ -50,14 +50,6 @@ public class AcceptEndController {
 
 
     //验收结束的审核
-    @ApiOperation(value = "验收结束的审核")
-    @ApiImplicitParams(
-            {
-                    @ApiImplicitParam(name = "type",value = "true为审核通过  false为审核未通过"),
-                    @ApiImplicitParam(name = "reason",value = "审核未通过原因"),
-                    @ApiImplicitParam(name = "id",value = "验收申请表id")
-            }
-    )
     @ResponseBody
     @PostMapping("examine")
     public ResultMap AcceptEndState(@CookieValue(value = "IntranecToken") String token, HttpServletResponse response,

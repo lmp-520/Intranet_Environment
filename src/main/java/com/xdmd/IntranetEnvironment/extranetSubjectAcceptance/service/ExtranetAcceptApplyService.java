@@ -38,4 +38,7 @@ public interface ExtranetAcceptApplyService {
 
     ResultMap modifyApply(String token, HttpServletResponse response, String oldSubmitInventoryFileUrl, String oldAchievementsFileUrl, String oldApplicationAcceptanceFileUrl, MultipartFile submitInventoryFile, MultipartFile applicationAcceptanceFile, MultipartFile achievementsFile, ExtranetCheckApply extranetCheckApply) throws Exception;
 
+    ResultMap expertGroupModify(String token, HttpServletResponse response, ExtranetExpertGroupComment extranetExpertGroupComment, Integer caId, String oldExpertGroupFileUrl, String oldExpertAcceptanceFormFile, MultipartFile expertGroupFile, MultipartFile expertAcceptanceFormFile) throws Exception;
+
+    ResultMap lastReportModify(String token, HttpServletResponse response, Integer caId, MultipartFile lastReportFile, String oldLastReportFileUrl, AcceptanceCertificate acceptanceCertificate) throws Exception;
 }

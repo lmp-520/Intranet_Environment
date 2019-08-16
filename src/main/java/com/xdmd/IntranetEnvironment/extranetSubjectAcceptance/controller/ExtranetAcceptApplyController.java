@@ -460,15 +460,52 @@ public class ExtranetAcceptApplyController {
     }
 
 
-//    //对专家组信息，专家组文件，专家组评议表文件进行上传
-//    @ResponseBody
-//    @PostMapping("ExpertGroupModify")
-//    public ResultMap expertGroupModify(@CookieValue(value = "token") String token, HttpServletResponse response,
-//                                       @RequestPart(value = "oldExpertGroupFileUrl",required = false)String oldExpertGroupFileUrl,//旧的专家组文件
-//                                       @RequestPart(value = "oldExpertAcceptanceFormFile",required = false)String oldExpertAcceptanceFormFile,  //旧的专家组评议文件
-//
-//                                       ){
-//
-//    }
+    //对专家组信息，专家组文件，专家组评议表文件进行修改上传
+    @ResponseBody
+    @PostMapping("ExpertGroupModify")
+    public ResultMap expertGroupModify(@CookieValue(value = "token") String token, HttpServletResponse response,
+                                       @RequestParam("caId") Integer caId, //验收申请表的id
+                                       @RequestPart ExtranetExpertGroupComment extranetExpertGroupComment, //专家组意见表
+                                       @RequestPart(value = "oldExpertGroupFileUrl",required = false)String oldExpertGroupFileUrl,//旧的专家组文件
+                                       @RequestPart(value = "oldExpertAcceptanceFormFile",required = false)String oldExpertAcceptanceFormFile,  //旧的专家组评议文件
+                                       @RequestPart(value = "expertGroupFile",required = false) MultipartFile expertGroupFile,  //专家组文件
+                                       @RequestPart(value = "expertAcceptanceFormFile",required = false) MultipartFile expertAcceptanceFormFile ){//专家组评议表文件
+        if(StringUtils.isEmpty(token)){
+            return resultMap.fail().message("请先登录");
+        }
 
+        try {
+            resultMap = extranetAcceptApplyService.expertGroupModify(token,response,extranetExpertGroupComment,caId,oldExpertGroupFileUrl,oldExpertAcceptanceFormFile,expertGroupFile,expertAcceptanceFormFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("ExtranetAcceptApplyController 中 expertGroupModify 错误 -- "+e.getMessage());
+            return resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+
+    }
+
+    //对最终证书文件 与信息 修改
+    @ResponseBody
+    @PostMapping("lastReportModify")
+    public ResultMap lastReportModify(//@CookieValue(value = "token")String token,HttpServletResponse response,
+                                      @RequestParam("caId") Integer caId, //验收申请表的id
+                                      @RequestPart(value = "lastReportFile",required = false) MultipartFile lastReportFile,  //最终验收报告文件
+                                      @RequestPart(value = "oldLastReportFileUrl",required = false)String oldLastReportFileUrl,    //旧的最终验收报告文件
+                                      @RequestPart AcceptanceCertificate acceptanceCertificate){    //最终验收报告信息
+//        if(StringUtils.isEmpty(token)){
+//            return resultMap.fail().message("请先登录");
+//        }
+        String token = "aaa";
+        HttpServletResponse response = null;
+
+        try {
+            resultMap = extranetAcceptApplyService.lastReportModify(token,response,caId,lastReportFile,oldLastReportFileUrl,acceptanceCertificate);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("ExtranetAcceptApplyController 中 lastReportModify 方法出错 -- "+e.getMessage());
+            return resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
 }

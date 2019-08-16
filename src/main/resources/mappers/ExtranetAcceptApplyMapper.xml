@@ -528,6 +528,86 @@
             #{acceptanceCertificateSubjectPeople.title},
             #{acceptanceCertificateSubjectPeople.phone}
         );
-
     </insert>
+
+    <update id="updateExpertGroupByCaId">
+        update expert_group_comments set
+            topic_name = #{extranetExpertGroupComment.topicName},
+            topic_number = #{extranetExpertGroupComment.topicNumber},
+            project_leader = #{extranetExpertGroupComment.projectLeader},
+            subject_undertaking_unit = #{extranetExpertGroupComment.subjectUndertakingUnit},
+            acceptance_expert_number = #{extranetExpertGroupComment.acceptanceExpertNumber},
+            expert_one_grade = #{extranetExpertGroupComment.expertOneGrade},
+            expert_two_grade = #{extranetExpertGroupComment.expertTwoGrade},
+            expert_three_grade = #{extranetExpertGroupComment.expertThreeGrade},
+            expert_four_grade = #{extranetExpertGroupComment.expertFourGrade},
+            expert_five_grade = #{extranetExpertGroupComment.expertFiveGrade},
+            expert_six_grade = #{extranetExpertGroupComment.expertSixGrade},
+            expert_seven_grade = #{extranetExpertGroupComment.expertSevenGrade},
+            synthesize_grade = #{extranetExpertGroupComment.synthesizeGrade},
+            topic_overall_evaluation = #{extranetExpertGroupComment.topicOverallEvaluation},
+            suggest = #{extranetExpertGroupComment.suggest},
+            acceptance_conclusion_id = #{extranetExpertGroupComment.acceptanceConclusionId},
+            expert_leader = #{extranetExpertGroupComment.expertLeader},
+            write_date = #{extranetExpertGroupComment.writeDate}
+        where ca_id = #{caId}
+    </update>
+
+    <update id="UpdateLastReportFile">
+        update acceptance_certificate set
+            translate = #{acceptanceCertificate.translate},
+            topic_number = #{acceptanceCertificate.topicNumber},
+            topic_name = #{acceptanceCertificate.topicName},
+            completion_unit = #{acceptanceCertificate.completionUnit},
+            acceptance_department = #{acceptanceCertificate.acceptanceDepartment},
+            acceptance_time = #{acceptanceCertificate.acceptanceTime},
+            unit_name = #{acceptanceCertificate.unitName},
+            unit_nature = #{acceptanceCertificate.unitNature},
+            location = #{acceptanceCertificate.location},
+            legal_representative = #{acceptanceCertificate.legalRepresentative},
+            legal_representative_phone = #{acceptanceCertificate.legalRepresentativePhone},
+            contacts = #{acceptanceCertificate.contacts},
+            contacts_phone = #{acceptanceCertificate.contactsPhone},
+            postal_code = #{acceptanceCertificate.postalCode},
+            mail = #{acceptanceCertificate.mail},
+            mailing_address = #{acceptanceCertificate.mailingAddress},
+            competent_department = #{acceptanceCertificate.competentDepartment},
+            project_start_time = #{acceptanceCertificate.projectStartTime},
+            project_completion_time = #{acceptanceCertificate.projectCompletionTime},
+            achievement_form = #{acceptanceCertificate.achievementForm},
+            achievement_level = #{acceptanceCertificate.achievementLevel},
+            development_total_number = #{acceptanceCertificate.developmentTotalNumber},
+            doctor_total_number = #{acceptanceCertificate.doctorTotalNumber},
+            master_total_number = #{acceptanceCertificate.masterTotalNumber},
+            senior_total_number = #{acceptanceCertificate.seniorTotalNumber},
+            intermediate_total_number = #{acceptanceCertificate.intermediateTotalNumber},
+            school_master_number = #{acceptanceCertificate.schoolMasterNumber},
+            total_project_funds = #{acceptanceCertificate.totalProjectFunds},
+            environment_topic_funds = #{acceptanceCertificate.environmentTopicFunds},
+            competent_department_match = #{acceptanceCertificate.competentDepartmentMatch},
+            bank_loans = #{acceptanceCertificate.bankLoans},
+            unit_raise_money = #{acceptanceCertificate.unitRaiseMoney},
+            other_actual_money = #{acceptanceCertificate.otherActualMoney},
+            equipment_cost = #{acceptanceCertificate.equipmentCost},
+            material_fee = #{acceptanceCertificate.materialFee},
+            laboratory_fees = #{acceptanceCertificate.laboratoryFees},
+            fuel_costs = #{acceptanceCertificate.fuelCosts},
+            travel_expenses = #{acceptanceCertificate.travelExpenses},
+            conference_fee = #{acceptanceCertificate.conferenceFee},
+            international_communication = #{acceptanceCertificate.internationalCommunication},
+            expert_consult = #{acceptanceCertificate.expertConsult},
+            management_expense = #{acceptanceCertificate.managementExpense},
+            other_expenditure_money = #{acceptanceCertificate.otherExpenditureMoney},
+            new_output = #{acceptanceCertificate.newOutput},
+            new_sales_volume = #{acceptanceCertificate.newSalesVolume},
+            new_profit_tax = #{acceptanceCertificate.newProfitTax},
+            exit_earn = #{acceptanceCertificate.exitEarn},
+            main_solve_technology = #{acceptanceCertificate.mainSolveTechnology},
+            main_completion = #{acceptanceCertificate.mainCompletion},
+            implementation_achievement = #{acceptanceCertificate.implementationAchievement},
+            science_department_opinion = #{acceptanceCertificate.scienceDepartmentOpinion},
+            check_department_opinion = #{acceptanceCertificate.checkDepartmentOpinion},
+            environment_office_opinion = #{acceptanceCertificate.environmentOfficeOpinion}
+        where cid = #{caId}
+    </update>
 </mapper>

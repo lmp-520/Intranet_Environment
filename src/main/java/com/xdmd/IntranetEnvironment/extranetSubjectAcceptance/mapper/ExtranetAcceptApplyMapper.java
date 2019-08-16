@@ -2,10 +2,7 @@ package com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.mapper;
 
 import com.xdmd.IntranetEnvironment.common.MyBaseMapper;
 import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.*;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -103,4 +100,38 @@ public interface ExtranetAcceptApplyMapper<T> extends MyBaseMapper<ExtranetCheck
     //对旧的验收申请表文件文件id进行更新
     @Update("update check_apply set application_url_id = #{fileId} where id = #{cid}")
     void updateApplicationAcceptanceIdById(@Param("id") Integer id, @Param("fileId") Integer id1);
+
+    //对旧的专家组意见文件文件id进行更新
+    @Update("update check_apply set expert_group_comments_url_id = #{fileId} where id = #{caId}")
+    void updateExpertGroupFileIdById(@Param("caId") Integer caId, @Param("fileId") Integer id);
+
+    //对旧的专家组评议文件文件id进行更新
+    @Update("update check_apply set expert_acceptance_form_id = #{fileId} where id = #{caId}")
+    void updateExpertAcceptanceFormFileIdById(@Param("caId") Integer caId, @Param("fileId") Integer id);
+
+    //对专家组意见主表进行更新
+    void updateExpertGroupByCaId(@Param("caId") Integer caId, @Param("extranetExpertGroupComment") ExtranetExpertGroupComment extranetExpertGroupComment);
+
+    //对专家组意见从表旧的内容首先进行删除
+    @Delete("delete from expert_group_comments_name where egc_id = #{egcId}")
+    void deleteExpertGroupCommentsNameById(@Param("egcId") Integer egcId);
+
+    //对旧的最终验收证书文件id进行更新
+    @Update("update check_apply set acceptance_certificate_id = #{fileId} where id = #{caId}")
+    void uploadLastReportFileIdById(@Param("caId") Integer caId, @Param("fileId") Integer id);
+
+    //对验收证书报告信息的主表进行更新
+    void UpdateLastReportFile(@Param("caId") Integer caId, @Param("acceptanceCertificate") AcceptanceCertificate acceptanceCertificate);
+
+    //把验收证书中专利表对应的信息删除
+    @Delete("delete from acceptance_certificate_patent where acceptance_certificate_id = #{caId}")
+    void deleteAcceptanceCertificatePatent(@Param("caId") Integer caId);
+
+    //把验收证书中主要参与人员删除
+    @Delete("delete from acceptance_certificate_principal_personnel where acceptance_certificate_id = #{caId}")
+    void deleteAcceptanceCertificatePrincipalPersonnel(@Param("caId") Integer caId);
+
+    //把验收证书中的课题负责人删除
+    @Delete("delete from acceptance_certificate_subject_people where acceptance_certificate_id = #{caId}")
+    void deleteAcceptanceCertificateSubjectPeople(@Param("caId") Integer caId);
 }

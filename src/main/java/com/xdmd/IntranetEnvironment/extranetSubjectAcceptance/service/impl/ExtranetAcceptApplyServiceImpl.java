@@ -10,6 +10,7 @@ import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.service.ExtranetAc
 import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.utils.IntegrationFile;
 import com.xdmd.IntranetEnvironment.user.exception.ClaimsNullException;
 import com.xdmd.IntranetEnvironment.user.exception.UserNameNotExistentException;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -789,12 +790,198 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
             //对旧的验收申请表文件文件id进行更新
             acceptApplyMapper.updateApplicationAcceptanceIdById(extranetCheckApply.getId(),uploadApplicationAcceptanceFile.getId());
 
-
             //把上传文件的id，存入checkApply中
             extranetCheckApply.setAchievementUrlId(uploadApplicationAcceptanceFile.getId());
         }
 
         acceptApplyMapper.updateCheckApply(extranetCheckApply);
         return resultMap.fail().message("修改成功");
+    }
+
+    //对专家组信息，专家组文件，专家组评议表文件进行修改
+    @Override
+    public ResultMap expertGroupModify(String token, HttpServletResponse response, ExtranetExpertGroupComment extranetExpertGroupComment, Integer caId, String oldExpertGroupFileUrl, String oldExpertAcceptanceFormFile, MultipartFile expertGroupFile, MultipartFile expertAcceptanceFormFile) throws Exception {
+        JwtInformation jwtInformation = new JwtInformation();
+        try {
+            jwtInformation = extranetTokenService.compare(response, token);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (UserNameNotExistentException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (ClaimsNullException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("MenuServiceImpl 中 TokenService 出现问题");
+            return resultMap.message("系统异常");
+        }
+
+        Integer uid = jwtInformation.getUid();
+        String uname = jwtInformation.getUsername();
+        Integer cid = jwtInformation.getCid();
+        String cname = jwtInformation.getCompanyName();
+
+        if(expertGroupFile!=null){
+            //此时专家组意见文件不为空，则意味着上传了新的专家组意见
+            //判断上传的专家组意见文件是否后缀名正确
+
+            ArrayList<String> idCardFileSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".rar", ".zip", ".7z"));
+            String expertGroupFileName = expertGroupFile.getOriginalFilename();
+            Boolean aBoolean = FileSuffixJudgeUtil.SuffixJudge(expertGroupFileName, idCardFileSuffixList);
+            if (aBoolean == false) {
+                return resultMap.fail().message("请上传正确的专家组文件格式");
+            }
+            //再根据旧的文件地址，先把文件给删除掉
+            File file = new File(oldExpertGroupFileUrl);
+            file.delete();
+        }
+
+        if(expertAcceptanceFormFile!=null){
+            //此时专家组意见文件不为空，则意味着上传了新的专家组意见
+            //判断上传的专家组意见文件是否后缀名正确
+
+            ArrayList<String> idCardFileSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".rar", ".zip", ".7z"));
+            String expertAcceptanceFormFileName = expertAcceptanceFormFile.getOriginalFilename();
+            Boolean aBoolean = FileSuffixJudgeUtil.SuffixJudge(expertAcceptanceFormFileName, idCardFileSuffixList);
+            if (aBoolean == false) {
+                return resultMap.fail().message("请上传正确的专家组评议文件格式");
+            }
+            //再根据旧的文件地址，先把文件给删除掉
+            File file = new File(oldExpertAcceptanceFormFile);
+            file.delete();
+        }
+
+
+        if(oldExpertGroupFileUrl !=null){
+            //此时旧的专家组意见文件地址存在
+
+            //对新的专家组文件进行上传
+            String applicationAcceptanceFileUrl = FileUploadUtil.fileUpload(expertGroupFile, cname, "专家组文件");
+            //把专家组意见文件上传到upload_file中
+            UploadFile uploadExpertGroupFile = IntegrationFile.IntegrationFile(expertGroupFile, applicationAcceptanceFileUrl, "专家组文件", uname);
+            acceptApplyMapper.uploadFile(uploadExpertGroupFile);//对文件进行上传
+
+            //对旧的专家组意见文件文件id进行更新
+            acceptApplyMapper.updateExpertGroupFileIdById(caId,uploadExpertGroupFile.getId());
+        }
+
+        if(oldExpertAcceptanceFormFile !=null){
+            //此时旧的专家评议表文件地址存在
+
+            //对新的专家组文件进行上传
+            String expertAcceptanceFormFileUrl = FileUploadUtil.fileUpload(expertAcceptanceFormFile, cname, "专家组评议文件");
+            //把专家组意见文件上传到upload_file中
+            UploadFile uploadExpertAcceptanceFormFile = IntegrationFile.IntegrationFile(expertAcceptanceFormFile, expertAcceptanceFormFileUrl, "专家组评议文件", uname);
+            acceptApplyMapper.uploadFile(uploadExpertAcceptanceFormFile);//对文件进行上传
+
+            //对旧的专家组评议文件文件id进行更新
+            acceptApplyMapper.updateExpertAcceptanceFormFileIdById(caId,uploadExpertAcceptanceFormFile.getId());
+        }
+        //对专家组意见主表进行更新
+        acceptApplyMapper.updateExpertGroupByCaId(caId,extranetExpertGroupComment);
+
+        //对专家组从表进行更新
+        //对专家组意见从表旧的内容首先进行删除
+        acceptApplyMapper.deleteExpertGroupCommentsNameById(extranetExpertGroupComment.getEgcId());
+
+        List<ExtranetExpertGroupCommentsName> extranetExpertGroupCommentsNameList = extranetExpertGroupComment.getExtranetExpertGroupCommentsNameList();
+        for (ExtranetExpertGroupCommentsName extranetExpertGroupCommentsName : extranetExpertGroupCommentsNameList) {
+            acceptApplyMapper.addExpertGroupCommentName(extranetExpertGroupComment.getEgcId(), extranetExpertGroupCommentsName);
+        }
+        return resultMap.success().message("更新成功");
+    }
+
+    //对最终证书文件 与信息 修改
+    @Override
+    public ResultMap lastReportModify(String token, HttpServletResponse response, Integer caId, MultipartFile lastReportFile, String oldLastReportFileUrl, AcceptanceCertificate acceptanceCertificate) throws Exception {
+//        JwtInformation jwtInformation = new JwtInformation();
+//        try {
+//            jwtInformation = extranetTokenService.compare(response, token);
+//        } catch (NullPointerException e) {
+//            e.printStackTrace();
+//            return resultMap.fail().message("请先登录");
+//        } catch (UserNameNotExistentException e) {
+//            e.printStackTrace();
+//            return resultMap.fail().message("请先登录");
+//        } catch (ClaimsNullException e) {
+//            e.printStackTrace();
+//            return resultMap.fail().message("请先登录");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            log.error("MenuServiceImpl 中 TokenService 出现问题");
+//            return resultMap.message("系统异常");
+//        }
+//
+//        Integer uid = jwtInformation.getUid();
+//        String uname = jwtInformation.getUsername();
+//        Integer cid = jwtInformation.getCid();
+//        String cname = jwtInformation.getCompanyName();
+
+        String uname = "人名测试";
+        String cname = "公司测试";
+
+        if(lastReportFile!=null){
+            //此时专家组意见文件不为空，则意味着上传了新的专家组意见
+            //判断上传的专家组意见文件是否后缀名正确
+
+            ArrayList<String> idCardFileSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".rar", ".zip", ".7z"));
+            String lastReportFileName = lastReportFile.getOriginalFilename();
+            Boolean aBoolean = FileSuffixJudgeUtil.SuffixJudge(lastReportFileName, idCardFileSuffixList);
+            if (aBoolean == false) {
+                return resultMap.fail().message("请上传正确的最终验收证书文件格式");
+            }
+            //再根据旧的文件地址，先把文件给删除掉
+            File file = new File(oldLastReportFileUrl);
+            file.delete();
+        }
+
+        if(oldLastReportFileUrl !=null){
+            //此时旧的最终验收文件地址存在
+
+            //对新的最终验收文件进行上传
+            String lastReportFileUrl = FileUploadUtil.fileUpload(lastReportFile, cname, "最终验收证书文件");
+            //把最终验收文件上传到upload_file中
+            UploadFile uploadLastReportFile = IntegrationFile.IntegrationFile(lastReportFile, lastReportFileUrl, "最终验收证书文件", uname);
+            acceptApplyMapper.uploadFile(uploadLastReportFile);//对文件进行上传
+
+            //对旧的最终验收证书文件id进行更新
+            acceptApplyMapper.uploadLastReportFileIdById(caId,uploadLastReportFile.getId());
+        }
+
+        //对验收证书报告信息的主表进行更新
+        acceptApplyMapper.UpdateLastReportFile(caId,acceptanceCertificate);
+
+        //把验收证书中专利表对应的信息删除
+        acceptApplyMapper.deleteAcceptanceCertificatePatent(caId);
+        //把验证证书中专利表的信息新增进去
+        List<AcceptanceCertificatePatent> acceptanceCertificatePatentList = acceptanceCertificate.getAcceptanceCertificatePatentList();
+        for (AcceptanceCertificatePatent acceptanceCertificatePatent : acceptanceCertificatePatentList) {
+            acceptanceCertificatePatent.setAcceptanceCertificateId(acceptanceCertificate.getId());
+            acceptApplyMapper.addAcceptanceCertificatePatent(acceptanceCertificatePatent);
+        }
+
+        //把验收证书中主要参与人员删除
+        acceptApplyMapper.deleteAcceptanceCertificatePrincipalPersonnel(caId);
+        //新增最终验收报告的主要参加人员
+        List<AcceptanceCertificatePrincipalPersonnel> acceptanceCertificatePrincipalPersonnelList = acceptanceCertificate.getAcceptanceCertificatePrincipalPersonnelList();
+        for (AcceptanceCertificatePrincipalPersonnel acceptanceCertificatePrincipalPersonnel : acceptanceCertificatePrincipalPersonnelList) {
+            acceptanceCertificatePrincipalPersonnel.setAcceptanceCertificateId(acceptanceCertificate.getId());
+            acceptApplyMapper.addAcceptanceCertificatePrincipalPersonnel(acceptanceCertificatePrincipalPersonnel);
+        }
+
+        //把验收证书中的课题负责人删除
+        acceptApplyMapper.deleteAcceptanceCertificateSubjectPeople(caId);
+
+        //新增验收证书的课题负责人
+        List<AcceptanceCertificateSubjectPeople> acceptanceCertificateSubjectPeopleList = acceptanceCertificate.getAcceptanceCertificateSubjectPeopleList();
+        for (AcceptanceCertificateSubjectPeople acceptanceCertificateSubjectPeople : acceptanceCertificateSubjectPeopleList) {
+            acceptanceCertificateSubjectPeople.setAcceptanceCertificateId(acceptanceCertificate.getId());
+            acceptApplyMapper.addAcceptanceCertificateSubjectPeople(acceptanceCertificateSubjectPeople);
+        }
+
+        return resultMap.success().message("更新成功");
     }
 }
