@@ -10,7 +10,6 @@ import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.service.ExtranetAc
 import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.utils.IntegrationFile;
 import com.xdmd.IntranetEnvironment.user.exception.ClaimsNullException;
 import com.xdmd.IntranetEnvironment.user.exception.UserNameNotExistentException;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +27,7 @@ import java.util.List;
 
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyService {
     @Autowired
     private ExtranetTokenService extranetTokenService;
@@ -897,31 +897,28 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
     //对最终证书文件 与信息 修改
     @Override
     public ResultMap lastReportModify(String token, HttpServletResponse response, Integer caId, MultipartFile lastReportFile, String oldLastReportFileUrl, AcceptanceCertificate acceptanceCertificate) throws Exception {
-//        JwtInformation jwtInformation = new JwtInformation();
-//        try {
-//            jwtInformation = extranetTokenService.compare(response, token);
-//        } catch (NullPointerException e) {
-//            e.printStackTrace();
-//            return resultMap.fail().message("请先登录");
-//        } catch (UserNameNotExistentException e) {
-//            e.printStackTrace();
-//            return resultMap.fail().message("请先登录");
-//        } catch (ClaimsNullException e) {
-//            e.printStackTrace();
-//            return resultMap.fail().message("请先登录");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            log.error("MenuServiceImpl 中 TokenService 出现问题");
-//            return resultMap.message("系统异常");
-//        }
-//
-//        Integer uid = jwtInformation.getUid();
-//        String uname = jwtInformation.getUsername();
-//        Integer cid = jwtInformation.getCid();
-//        String cname = jwtInformation.getCompanyName();
+        JwtInformation jwtInformation = new JwtInformation();
+        try {
+            jwtInformation = extranetTokenService.compare(response, token);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (UserNameNotExistentException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (ClaimsNullException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("MenuServiceImpl 中 TokenService 出现问题");
+            return resultMap.message("系统异常");
+        }
 
-        String uname = "人名测试";
-        String cname = "公司测试";
+        Integer uid = jwtInformation.getUid();
+        String uname = jwtInformation.getUsername();
+        Integer cid = jwtInformation.getCid();
+        String cname = jwtInformation.getCompanyName();
 
         if(lastReportFile!=null){
             //此时专家组意见文件不为空，则意味着上传了新的专家组意见
@@ -959,7 +956,7 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
         //把验证证书中专利表的信息新增进去
         List<AcceptanceCertificatePatent> acceptanceCertificatePatentList = acceptanceCertificate.getAcceptanceCertificatePatentList();
         for (AcceptanceCertificatePatent acceptanceCertificatePatent : acceptanceCertificatePatentList) {
-            acceptanceCertificatePatent.setAcceptanceCertificateId(acceptanceCertificate.getId());
+            acceptanceCertificatePatent.setAcceptanceCertificateId(acceptanceCertificate.getCid());
             acceptApplyMapper.addAcceptanceCertificatePatent(acceptanceCertificatePatent);
         }
 
@@ -968,7 +965,7 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
         //新增最终验收报告的主要参加人员
         List<AcceptanceCertificatePrincipalPersonnel> acceptanceCertificatePrincipalPersonnelList = acceptanceCertificate.getAcceptanceCertificatePrincipalPersonnelList();
         for (AcceptanceCertificatePrincipalPersonnel acceptanceCertificatePrincipalPersonnel : acceptanceCertificatePrincipalPersonnelList) {
-            acceptanceCertificatePrincipalPersonnel.setAcceptanceCertificateId(acceptanceCertificate.getId());
+            acceptanceCertificatePrincipalPersonnel.setAcceptanceCertificateId(acceptanceCertificate.getCid());
             acceptApplyMapper.addAcceptanceCertificatePrincipalPersonnel(acceptanceCertificatePrincipalPersonnel);
         }
 
@@ -978,7 +975,7 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
         //新增验收证书的课题负责人
         List<AcceptanceCertificateSubjectPeople> acceptanceCertificateSubjectPeopleList = acceptanceCertificate.getAcceptanceCertificateSubjectPeopleList();
         for (AcceptanceCertificateSubjectPeople acceptanceCertificateSubjectPeople : acceptanceCertificateSubjectPeopleList) {
-            acceptanceCertificateSubjectPeople.setAcceptanceCertificateId(acceptanceCertificate.getId());
+            acceptanceCertificateSubjectPeople.setAcceptanceCertificateId(acceptanceCertificate.getCid());
             acceptApplyMapper.addAcceptanceCertificateSubjectPeople(acceptanceCertificateSubjectPeople);
         }
 

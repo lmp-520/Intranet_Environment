@@ -66,7 +66,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     //通知通告的删除
     @Override
-    public ResultMap deleteNotificationService(String token, HttpServletResponse response, Integer nid) {
+    public ResultMap deleteNotificationService(String token, HttpServletResponse response, Integer[] ids) {
         User user = new User();
         try {
             user = tokenService.compare(response, token);
@@ -87,7 +87,9 @@ public class NotificationServiceImpl implements NotificationService {
         Integer uid = user.getId();
         String username = user.getUsername();
 
-        notificationMapper.deleteNotificationService(nid);
+        for (Integer id : ids) {
+            notificationMapper.deleteNotificationService(id);
+        }
         return resultMap.success().message("删除成功");
     }
 
@@ -135,17 +137,6 @@ public class NotificationServiceImpl implements NotificationService {
         if (alltotal == 0) {
             return resultMap.fail().message();
         }
-
-        //判断用户输入的页数是否超过总页数
-//        int allPage = 0;
-//        if (alltotal % page == 0) {
-//            allPage = alltotal / page;
-//        } else {
-//            allPage = (alltotal / page) + 1;
-//        }
-//        if (page > allPage) {
-//            return resultMap.fail().message("页数超过总页数");
-//        }
 
         //获取当页的数据
         List<Notification> notificationList = notificationMapper.queryNotificationList(newpage,total);

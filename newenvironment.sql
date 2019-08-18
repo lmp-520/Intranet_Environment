@@ -11,7 +11,7 @@
  Target Server Version : 80016
  File Encoding         : 65001
 
- Date: 16/08/2019 18:24:48
+ Date: 18/08/2019 18:50:53
 */
 
 SET NAMES utf8mb4;
@@ -84,10 +84,10 @@ CREATE TABLE `acceptance_certificate`  (
 -- ----------------------------
 -- Records of acceptance_certificate
 -- ----------------------------
-INSERT INTO `acceptance_certificate` VALUES (1, NULL, '第一文号', '第一课题编号', '第一课题名称', '第一完成单位', '第一验收组织部门', '1201-09-21', '第一单位名称', 1, '第一所在地区', '第一法定代表人', '15668486', '第一联系人', '第一联系人电话', '第一邮政编码', '489486@qq.com', '第一通讯地址', '第一主管部门', '1754-06-11', '1854-04-11', '第一成果形式', 1, '5', '2', '5', '5', '4', '4', 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, '第一解决关键技术与创新点', '第一技术与环境完成情况', '第一课题实施绩效', '第一完成单位部门意见', '第一验收部门意见', '第一环境厅意见', '第一验收证书url');
-INSERT INTO `acceptance_certificate` VALUES (2, NULL, '第二文号', '第二课题编号', '第二课题名称', '第二完成单位', '第二验收组织部门', '1201-09-21', '第二单位名称', 1, '第二所在地区', '第二法定代表人', '15668486', '第二联系人', '第二联系人电话', '第二邮政编码', '489486@qq.com', '第二通讯地址', '第二主管部门', '1754-06-11', '1854-04-11', '第二成果形式', 2, '12', '1', '4', '8', '5', '5', 2121.45, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, '第二解决关键技术与创新点', '第二技术与环境完成情况', '第二课题实施绩效', '第二完成单位部门意见', '第二验收部门意见', '第二环境厅意见', '第二验收证书url');
-INSERT INTO `acceptance_certificate` VALUES (3, NULL, '第三文号', '第三课题编号', '第三课题名称', '第三完成单位', '第三验收组织部门', '1201-09-21', '第三单位名称', 2, '第三所在地区', '第三法定代表人', '15668486', '第三联系人', '第三联系人电话', '第三邮政编码', '489486@qq.com', '第三通讯地址', '第三主管部门', '1754-06-11', '1854-04-11', '第三成果形式', 1, '54', '3', '1', '4', '6', '5', 12.74, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, '第三解决关键技术与创新点', '第三技术与环境完成情况', '第三课题实施绩效', '第三完成单位部门意见', '第三验收部门意见', '第三环境厅意见', '第三验收证书url');
-INSERT INTO `acceptance_certificate` VALUES (5, 57, '文号1', '课题编号1', '课题名称11', '完成单位11', '验收组织部门111', '2000-01-04', '单位名称11', 3, '所在地区111', '法定代表人111', '1234567489', '联系人12', '18855536468', '233000', '85465122@qq.com', '通信地址', '主管部门', '2111-1-1', '2222-2-2', '成果形式121', 2, '4', '6', '6', '32', '1', '11', 12.30, 11.10, 11.40, 12.40, 3.20, 232.30, 23.30, 12.90, 65.50, 94.30, 12.30, 66.50, 12.30, 43.40, 23.30, 11.10, 6.50, 32.40, 23.20, 23.30, '主要解决的技术难点', '主要技术', '课题实施的绩效', '科技部门意见', '组织验收部门意见', '省生态环境厅意见', NULL);
+INSERT INTO `acceptance_certificate` VALUES (1, 49, '第一文号', '第一课题编号', '第一课题名称', '第一完成单位', '第一验收组织部门', '1201-09-21', '第一单位名称', 1, '第一所在地区', '第一法定代表人', '15668486', '第一联系人', '第一联系人电话', '第一邮政编码', '489486@qq.com', '第一通讯地址', '第一主管部门', '1754-06-11', '1854-04-11', '第一成果形式', 1, '5', '2', '5', '5', '4', '4', 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, '第一解决关键技术与创新点', '第一技术与环境完成情况', '第一课题实施绩效', '第一完成单位部门意见', '第一验收部门意见', '第一环境厅意见', '第一验收证书url');
+INSERT INTO `acceptance_certificate` VALUES (2, 48, '第二文号', '第二课题编号', '第二课题名称', '第二完成单位', '第二验收组织部门', '1201-09-21', '第二单位名称', 1, '第二所在地区', '第二法定代表人', '15668486', '第二联系人', '第二联系人电话', '第二邮政编码', '489486@qq.com', '第二通讯地址', '第二主管部门', '1754-06-11', '1854-04-11', '第二成果形式', 2, '12', '1', '4', '8', '5', '5', 2121.45, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, '第二解决关键技术与创新点', '第二技术与环境完成情况', '第二课题实施绩效', '第二完成单位部门意见', '第二验收部门意见', '第二环境厅意见', '第二验收证书url');
+INSERT INTO `acceptance_certificate` VALUES (3, 47, '第三文号', '第三课题编号', '第三课题名称', '第三完成单位', '第三验收组织部门', '1201-09-21', '第三单位名称', 2, '第三所在地区', '第三法定代表人', '15668486', '第三联系人', '第三联系人电话', '第三邮政编码', '489486@qq.com', '第三通讯地址', '第三主管部门', '1754-06-11', '1854-04-11', '第三成果形式', 1, '54', '3', '1', '4', '6', '5', 12.74, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, 12.20, '第三解决关键技术与创新点', '第三技术与环境完成情况', '第三课题实施绩效', '第三完成单位部门意见', '第三验收部门意见', '第三环境厅意见', '第三验收证书url');
+INSERT INTO `acceptance_certificate` VALUES (5, 50, '文号1', '课题编号1', '课题名称11', '完成单位11', '验收组织部门111', '2000-01-04', '单位名称11', 3, '所在地区111', '法定代表人111', '1234567489', '联系人12', '18855536468', '233000', '85465122@qq.com', '通信地址', '主管部门', '2111-1-1', '2222-2-2', '成果形式121', 2, '4', '6', '6', '32', '1', '11', 12.30, 11.10, 11.40, 12.40, 3.20, 232.30, 23.30, 12.90, 65.50, 94.30, 12.30, 66.50, 12.30, 43.40, 23.30, 11.10, 6.50, 32.40, 23.20, 23.30, '主要解决的技术难点', '主要技术', '课题实施的绩效', '科技部门意见', '组织验收部门意见', '省生态环境厅意见', NULL);
 
 -- ----------------------------
 -- Table structure for acceptance_certificate_patent
@@ -120,9 +120,9 @@ CREATE TABLE `acceptance_certificate_patent`  (
 INSERT INTO `acceptance_certificate_patent` VALUES (1, 1, '第一专利申请发明', '第一专利申请使用新型', '第一专利申请外观设计', '第一专利授权发明', '第一专利授权实用新型', '第一专利授权外观设计', '第一发表论文总数', '第一科学引文索引', '第一发表论文工程索引', '第一出版科技著作', '第一制定技术标准', '第一新产品', '第一制定政策制度', '第一建成新装置', '第一新工艺');
 INSERT INTO `acceptance_certificate_patent` VALUES (2, 1, '第二专利申请发明', '第二专利申请使用新型', '第二专利申请外观设计', '第二专利授权发明', '第二专利授权实用新型', '第二专利授权外观设计', '第二发表论文总数', '第二科学引文索引', '第二发表论文工程索引', '第二出版科技著作', '第二制定技术标准', '第二新产品', '第二制定政策制度', '第二建成新装置', '第二新工艺');
 INSERT INTO `acceptance_certificate_patent` VALUES (3, 2, '第三专利申请发明', '第三专利申请使用新型', '第三专利申请外观设计', '第三专利授权发明', '第三专利授权实用新型', '第三专利授权外观设计', '第三发表论文总数', '第三科学引文索引', '第三发表论文工程索引', '第三出版科技著作', '第三制定技术标准', '第三新产品', '第三制定政策制度', '第三建成新装置', '第三新工艺');
-INSERT INTO `acceptance_certificate_patent` VALUES (4, 57, '专利申请发明', '专利申请使用新型', '专利外观设计', '专利授权发明', '专利授权实用新型', '专利授权外观设计', '8', '英文索引', '论文工程索引', '出版科技著作', '制定技术标准', '新产品', '制定政策制度', '新装置', '新工艺');
-INSERT INTO `acceptance_certificate_patent` VALUES (5, 57, '专利申请发明', '专利申请使用新型', '专利外观设计', '专利授权发明', '专利授权实用新型', '专利授权外观设计', '8', '英文索引', '论文工程索引', '出版科技著作', '制定技术标准', '新产品', '制定政策制度', '新装置', '新工艺');
-INSERT INTO `acceptance_certificate_patent` VALUES (6, 57, '专利申请发明1111', '专利申请使用新型111', '专利外观设计1111', '专利授权发明1111', '专利授权实用新型1111', '专利授权外观设计1111', '8', '英文索引111', '论文工程索引111', '出版科技著作', '制定技术标准1111', '新产品111', '制定政策制度1111', '新装置1111', '新工艺1111');
+INSERT INTO `acceptance_certificate_patent` VALUES (4, 5, '专利申请发明', '专利申请使用新型', '专利外观设计', '专利授权发明', '专利授权实用新型', '专利授权外观设计', '8', '英文索引', '论文工程索引', '出版科技著作', '制定技术标准', '新产品', '制定政策制度', '新装置', '新工艺');
+INSERT INTO `acceptance_certificate_patent` VALUES (5, 5, '专利申请发明', '专利申请使用新型', '专利外观设计', '专利授权发明', '专利授权实用新型', '专利授权外观设计', '8', '英文索引', '论文工程索引', '出版科技著作', '制定技术标准', '新产品', '制定政策制度', '新装置', '新工艺');
+INSERT INTO `acceptance_certificate_patent` VALUES (6, 5, '专利申请发明1111', '专利申请使用新型111', '专利外观设计1111', '专利授权发明1111', '专利授权实用新型1111', '专利授权外观设计1111', '8', '英文索引111', '论文工程索引111', '出版科技著作', '制定技术标准1111', '新产品111', '制定政策制度1111', '新装置1111', '新工艺1111');
 
 -- ----------------------------
 -- Table structure for acceptance_certificate_principal_personnel
@@ -146,9 +146,9 @@ CREATE TABLE `acceptance_certificate_principal_personnel`  (
 -- ----------------------------
 INSERT INTO `acceptance_certificate_principal_personnel` VALUES (1, 1, '第一主要参与人员姓名', '男', '1121-06-16', '第一主要参与人员技术职称', '第一主要参与人员学历', '第一主要参与人员工作单位', '第一承担的主要研究任务');
 INSERT INTO `acceptance_certificate_principal_personnel` VALUES (2, 1, '第二主要参与人员姓名', '男', '1121-06-16', '第二主要参与人员技术职称', '第二主要参与人员学历', '第二主要参与人员工作单位', '第二承担的主要研究任务');
-INSERT INTO `acceptance_certificate_principal_personnel` VALUES (3, 57, '第三主要参与人员姓名', '男', '1121-06-16', '第三主要参与人员技术职称', '第三主要参与人员学历', '第三主要参与人员工作单位', '第三承担的主要研究任务');
-INSERT INTO `acceptance_certificate_principal_personnel` VALUES (4, 57, '主要参与人员姓名', '男', '2000-01-02', '技术职称', '学历', '工作单位', '主要研究任务');
-INSERT INTO `acceptance_certificate_principal_personnel` VALUES (5, 57, '主要参与人员姓名1`', '男', '2222-12-12', '技术职称111', '学历11', '工作单位11', '主要研究任务11');
+INSERT INTO `acceptance_certificate_principal_personnel` VALUES (3, 5, '第三主要参与人员姓名', '男', '1121-06-16', '第三主要参与人员技术职称', '第三主要参与人员学历', '第三主要参与人员工作单位', '第三承担的主要研究任务');
+INSERT INTO `acceptance_certificate_principal_personnel` VALUES (4, 5, '主要参与人员姓名', '男', '2000-01-02', '技术职称', '学历', '工作单位', '主要研究任务');
+INSERT INTO `acceptance_certificate_principal_personnel` VALUES (5, 5, '主要参与人员姓名1`', '男', '2222-12-12', '技术职称111', '学历11', '工作单位11', '主要研究任务11');
 
 -- ----------------------------
 -- Table structure for acceptance_certificate_subject_people
@@ -173,8 +173,8 @@ CREATE TABLE `acceptance_certificate_subject_people`  (
 INSERT INTO `acceptance_certificate_subject_people` VALUES (1, 1, '第一张三', '男', '1355-07-11', '第一专业', '第一学历', '第一职称', '第一联系电话');
 INSERT INTO `acceptance_certificate_subject_people` VALUES (2, 1, '第二张三', '男', '1355-07-11', '第二专业', '第二学历', '第二职称', '第二联系电话');
 INSERT INTO `acceptance_certificate_subject_people` VALUES (3, 2, '第三张三', '男', '1355-07-11', '第三专业', '第三学历', '第三职称', '第三联系电话');
-INSERT INTO `acceptance_certificate_subject_people` VALUES (4, 57, '课题负责人姓名', '男', '2222-01-05', '专业', '学历', '责任人职称', '12354845');
-INSERT INTO `acceptance_certificate_subject_people` VALUES (5, 57, '课题负责人姓名4', '男', '2222-01-05', '专业44', '学历44', '责任人职称44', '12354845');
+INSERT INTO `acceptance_certificate_subject_people` VALUES (4, 5, '课题负责人姓名', '男', '2222-01-05', '专业', '学历', '责任人职称', '12354845');
+INSERT INTO `acceptance_certificate_subject_people` VALUES (5, 5, '课题负责人姓名4', '男', '2222-01-05', '专业44', '学历44', '责任人职称44', '12354845');
 
 -- ----------------------------
 -- Table structure for acceptance_phase
@@ -293,14 +293,14 @@ CREATE TABLE `check_apply`  (
 -- ----------------------------
 -- Records of check_apply
 -- ----------------------------
-INSERT INTO `check_apply` VALUES (50, '课题名称1', '123', 4, '公司名称1', 3, '项目负责人名1', '15588865919', '158965512@qq.com', '公司地址1', '2019-07-01', '2019-07-03', '2019-07-04', 1, '申请验收地点', '验收联系人1', '13566678482', '主要研究内容完成情况1', '提交成果情况1', '课题承担单位意见1', '所在环保部门意见1', '省生态环境评估中心初审意见1', '省环保厅主管部门意见1', '1', 3, '2019-07-18 10:15:20', '创建人1', 77, 78, NULL, NULL, 4, NULL, 76, NULL, NULL, NULL, '0');
-INSERT INTO `check_apply` VALUES (51, '课题名称2', '123', 6, '公司名称2', 2, '项目负责人名2', '15588865911', '158965512@163.com', '公司地址2', '2019-07-01', '2019-07-03', '2019-07-04', 1, '申请验收地点', '验收联系人2', '13566678482', '主要研究内容完成情况2', '提交成果情况2', '课题承担单位意见2', '所在环保部门意见2', '省生态环境评估中心初审意见2', '省环保厅主管部门意见2', '2', 3, '2019-07-18 10:15:20', '创建人2', 77, 78, NULL, NULL, 4, NULL, 76, NULL, NULL, NULL, '0');
-INSERT INTO `check_apply` VALUES (52, '课题名称3', '1234', 2, '公司名称3', 2, '项目负责人名2', '15588865741', '158965512@wixing.com', '公司地址2', '2019-07-01', '2019-07-03', '2019-07-04', 1, '申请验收地点3', '验收联系人3', '13566678485', '主要研究内容完成情况3', '提交成果情况3', '课题承担单位意见3', '所在环保部门意见3', '省生态环境评估中心初审意见3', '省环保厅主管部门意见3', '3', 1, '2019-07-18 10:15:20', '创建人1', 77, 78, NULL, NULL, 4, NULL, 76, NULL, NULL, NULL, '0');
-INSERT INTO `check_apply` VALUES (53, '课题名称5', '12345', 2, '公司名称4', 2, '项目负责人名5', '15588865741', '158965512@wixing.com', '公司地址5', '2019-07-01', '2019-07-03', '2019-07-04', 2, '申请验收地点5', '验收联系人5', '13566678485', '主要研究内容完成情况5', '提交成果情况5', '课题承担单位意见5', '所在环保部门意见5', '省生态环境评估中心初审意见5', '省环保厅主管部门意见5', '5', 4, '2019-07-18 10:15:20', '创建人1', 77, 78, NULL, NULL, 4, NULL, 76, NULL, NULL, NULL, '0');
-INSERT INTO `check_apply` VALUES (54, '课题名称7', '12345', 2, '公司名称2', 2, '项目负责人名7', '15588865741', '158965512@wixing.com', '公司地址5', '2019-07-01', '2019-07-03', '2019-07-04', 1, '申请验收地点7', '验收联系人7', '13566678485', '主要研究内容完成情况7', '提交成果情况7', '课题承担单位意见7', '所在环保部门意见7', '省生态环境评估中心初审意见7', '省环保厅主管部门意见7', '7', 77, '2019-07-18 10:15:20', '创建人1', 77, 78, NULL, NULL, 4, NULL, 76, NULL, NULL, NULL, '0');
-INSERT INTO `check_apply` VALUES (55, '课题名称666', '12345', 2, '公司名称1', 2, '项目负责人名666', '15588865741', '158965512@wixing.com', '公司地址5', '2019-07-01', '2019-07-03', '2019-07-04', 2, '申请验收地点666', '验收联系人666', '13566678485', '主要研究内容完成情况666', '提交成果情况666', '课题承担单位意见6667', '所在环保部门意见6667', '省生态环境评估中心初审意见6667', '省环保厅主管部门意见7', '6', 3, '2019-07-18 10:15:20', '创建人1', 77, 78, NULL, NULL, 77, 78, 76, NULL, 77, NULL, '0');
-INSERT INTO `check_apply` VALUES (56, '课题名称9999', '123453', 14, 'xdmd', 2, '项目负责人999', '9999999999', '9999999@qq.com', '公司地址999', '2019-07-01', '2019-07-11', '2019-07-15', 2, '申请验收地点9999', '验收联系人99999', '9999999999', '主要研究内容完成情况9999', '提交成果情况9999', '课题承担单位意见999999', '所在环保部门意见9999', '省生态环境评估中心初审意见99999', '省环保厅主管部门意见999999', '2', 5, '2019-07-23 14:12:12', '创建人999', 77, 78, NULL, NULL, NULL, 144, NULL, NULL, NULL, 88, '0');
-INSERT INTO `check_apply` VALUES (57, '656课题名称', '6565课题编号', 555, '课题承担单位121', 1, '单位负责人', '18855536494', '15615615@qq.com', '通讯地址', '2000-02-05', '2111-05-04', '2333-05-07', 2, '申请验收地点212', '验收联系人231', '15588865131', '主要完成情况', '提交成果情况54543', '课题承担单位意见839232', '环保部门意见8392', '初审意见893232', '省环保主管部门意见321', '提交清单23121', 77, '2019-08-12 20:58:45', '测试的人名', 87, 122, 77, 78, 77, 78, 86, 78, 77, 91, '0');
+INSERT INTO `check_apply` VALUES (50, '课题名称1', '123', 4, '公司名称1', 3, '项目负责人名1', '15588865919', '158965512@qq.com', '公司地址1', '2019-07-01', '2019-07-03', '2019-07-04', 1, '申请验收地点', '验收联系人1', '13566678482', '主要研究内容完成情况1', '提交成果情况1', '课题承担单位意见1', '所在环保部门意见1', '省生态环境评估中心初审意见1', '省环保厅主管部门意见1', '1', 3, '2019-07-18 10:15:20', '创建人1', 77, 78, 77, 77, 77, 77, 76, 77, 77, NULL, '0');
+INSERT INTO `check_apply` VALUES (51, '课题名称2', '123', 6, '公司名称2', 2, '项目负责人名2', '15588865911', '158965512@163.com', '公司地址2', '2019-07-01', '2019-07-03', '2019-07-04', 1, '申请验收地点', '验收联系人2', '13566678482', '主要研究内容完成情况2', '提交成果情况2', '课题承担单位意见2', '所在环保部门意见2', '省生态环境评估中心初审意见2', '省环保厅主管部门意见2', '2', 3, '2019-07-18 10:15:20', '创建人2', 77, 78, NULL, NULL, NULL, NULL, 76, NULL, NULL, NULL, '0');
+INSERT INTO `check_apply` VALUES (52, '课题名称3', '1234', 2, '公司名称3', 2, '项目负责人名2', '15588865741', '158965512@wixing.com', '公司地址2', '2019-07-01', '2019-07-03', '2019-07-04', 1, '申请验收地点3', '验收联系人3', '13566678485', '主要研究内容完成情况3', '提交成果情况3', '课题承担单位意见3', '所在环保部门意见3', '省生态环境评估中心初审意见3', '省环保厅主管部门意见3', '3', 1, '2019-07-18 10:15:20', '创建人1', 77, 78, NULL, NULL, NULL, NULL, 76, NULL, NULL, NULL, '0');
+INSERT INTO `check_apply` VALUES (53, '课题名称5', '12345', 2, '公司名称4', 2, '项目负责人名5', '15588865741', '158965512@wixing.com', '公司地址5', '2019-07-01', '2019-07-03', '2019-07-04', 2, '申请验收地点5', '验收联系人5', '13566678485', '主要研究内容完成情况5', '提交成果情况5', '课题承担单位意见5', '所在环保部门意见5', '省生态环境评估中心初审意见5', '省环保厅主管部门意见5', '5', 4, '2019-07-18 10:15:20', '创建人1', 77, 78, NULL, NULL, NULL, NULL, 76, NULL, NULL, NULL, '0');
+INSERT INTO `check_apply` VALUES (54, '课题名称7', '12345', 2, '公司名称2', 2, '项目负责人名7', '15588865741', '158965512@wixing.com', '公司地址5', '2019-07-01', '2019-07-03', '2019-07-04', 1, '申请验收地点7', '验收联系人7', '13566678485', '主要研究内容完成情况7', '提交成果情况7', '课题承担单位意见7', '所在环保部门意见7', '省生态环境评估中心初审意见7', '省环保厅主管部门意见7', '7', 77, '2019-07-18 10:15:20', '创建人1', 77, 78, NULL, NULL, NULL, NULL, 76, NULL, NULL, NULL, '0');
+INSERT INTO `check_apply` VALUES (55, '课题名称666', '12345', 2, '公司名称1', 2, '项目负责人名666', '15588865741', '158965512@wixing.com', '公司地址5', '2019-07-01', '2019-07-03', '2019-07-04', 2, '申请验收地点666', '验收联系人666', '13566678485', '主要研究内容完成情况666', '提交成果情况666', '课题承担单位意见6667', '所在环保部门意见6667', '省生态环境评估中心初审意见6667', '省环保厅主管部门意见7', '6', 3, '2019-07-18 10:15:20', '创建人1', 77, 78, NULL, NULL, NULL, NULL, 76, NULL, NULL, NULL, '0');
+INSERT INTO `check_apply` VALUES (56, '课题名称9999', '123453', 14, 'xdmd', 2, '项目负责人999', '9999999999', '9999999@qq.com', '公司地址999', '2019-07-01', '2019-07-11', '2019-07-15', 2, '申请验收地点9999', '验收联系人99999', '9999999999', '主要研究内容完成情况9999', '提交成果情况9999', '课题承担单位意见999999', '所在环保部门意见9999', '省生态环境评估中心初审意见99999', '省环保厅主管部门意见999999', '2', 5, '2019-07-23 14:12:12', '创建人999', 77, 78, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 88, '0');
+INSERT INTO `check_apply` VALUES (57, '656课题名称', '6565课题编号', 555, '课题承担单位121', 1, '单位负责人', '18855536494', '15615615@qq.com', '通讯地址', '2000-02-05', '2111-05-04', '2333-05-07', 2, '申请验收地点212', '验收联系人231', '15588865131', '主要完成情况', '提交成果情况54543', '课题承担单位意见839232', '环保部门意见8392', '初审意见893232', '省环保主管部门意见321', '提交清单23121', 77, '2019-08-12 20:58:45', '测试的人名', 87, 122, 77, 78, NULL, NULL, 86, 78, NULL, 91, '0');
 INSERT INTO `check_apply` VALUES (60, '测试课题名称', '测试课题编号', 555, '测试课题承担单位121', 1, '测试单位负责人', '18855536494', '15615615@qq.com', '通讯地址', '2000-02-05', '2111-05-04', '2333-05-07', 2, '申请验收地点212', '验收联系人231', '15588865131', '主要完成情况', '提交成果情况54543', '课题承担单位意见839232', '环保部门意见8392', '初审意见893232', '省环保主管部门意见321', '1,2,4', 2, '2019-08-15 15:10:00', '测试的人名', 130, 131, NULL, NULL, NULL, NULL, 129, NULL, NULL, NULL, NULL);
 INSERT INTO `check_apply` VALUES (61, '测试课题名称', '测试课题编号', 555, '测试课题承担单位121', 1, '测试单位负责人', '18855536494', '15615615@qq.com', '通讯地址', '2000-02-05', '2111-05-04', '2333-05-07', 2, '申请验收地点212', '验收联系人231', '15588865131', '主要完成情况', '提交成果情况54543', '课题承担单位意见839232', '环保部门意见8392', '初审意见893232', '省环保主管部门意见321', '1,2,4', 3, '2019-08-15 15:13:11', '测试的人名', 136, 137, NULL, NULL, NULL, NULL, 135, NULL, NULL, NULL, '0');
 
@@ -371,6 +371,67 @@ INSERT INTO `check_apply_state` VALUES (45, 60, '测试的人名', NULL, '公司
 INSERT INTO `check_apply_state` VALUES (46, 60, '测试的人名', NULL, '公司审批', '2019-08-15 15:10:00', '待处理', NULL, NULL);
 INSERT INTO `check_apply_state` VALUES (47, 61, '测试的人名', '测试的人名', '公司审批', '2019-08-15 15:13:11', '已处理', '审核通过', '2019-08-15 16:10:41');
 INSERT INTO `check_apply_state` VALUES (48, 61, '测试的人名', NULL, '等待验收初审', '2019-08-15 16:10:41', '等待处理', NULL, NULL);
+
+-- ----------------------------
+-- Table structure for contract_manage
+-- ----------------------------
+DROP TABLE IF EXISTS `contract_manage`;
+CREATE TABLE `contract_manage`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `subject_category` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '课题类别',
+  `project_no` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '课题编号',
+  `subject_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '课题名称',
+  `contract_start_time` date NOT NULL COMMENT '合同开始时间()',
+  `contract_end_time` date NOT NULL COMMENT '合同结束时间',
+  `subjece_leader` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '课题负责人',
+  `subject_leader_phone` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '课题负责人电话及手机',
+  `subject_contact` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '课题联系人',
+  `subject_contact_phone` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '课题联系人电话及手机',
+  `commitment_Unit` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '承担单位',
+  `commitment_unit_address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '承担单位地址',
+  `commitment_unit_zip` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '承担单位邮编',
+  `subject_supervisor_department` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '课题主管部门',
+  `open_bank` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '开户银行',
+  `open_bank_account` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '开户银行账号',
+  `email` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '电子信箱(E-mail)',
+  `guaranteed_units` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '保证单位',
+  `guaranteed_unit_contact` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '保证单位联系人',
+  `guaranteed_contact_phone` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '保证单位联系人电话\r\n',
+  `commissioning_Unit` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '委托单位（甲方）',
+  `legal_representative_entrusting_A` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '委托单位法定代表人',
+  `commissioned_unit_address_A` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '委托单位地址',
+  `commissioned_unit_zip_A` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '委托单位邮政编码',
+  `responsibility_unit_B` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '承担单位（乙方）',
+  `responsibility_legal_representative_B` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '承担单位法定代表人',
+  `commit_unit_address_B` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '承担单位地址\r\n\r\n',
+  `commit_unit_zip_B` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '承担单位邮政编码',
+  `commit_unit_leader_B` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '承担单位课题负责人',
+  `commitunit_leaders_phone_B` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '承担单位课题负责人电话（手机号）',
+  `commitment_unit_email_B` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '承担单位课题负责人电子邮件',
+  `guaranteed_unit_C` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '保证单位（丙方）',
+  `guaranteed_unit_leader_C` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '保证单位法定代表人/部门负责人',
+  `guaranteed_unit_address_C` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '保证单位地址',
+  `guaranteed_unit_zip_C` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '保证单位邮编',
+  `subject_signing_description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '课题签订说明\r\n',
+  `subject_objectives_research` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '课题的目标和主要研究内容',
+  `subject_acceptance_assessment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '课题验收内容和考核指标',
+  `other_terms` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '\r\n其他条款\r\n',
+  `approval_status` int(11) NOT NULL DEFAULT 1 COMMENT '合同审批状态(0-单位员工待提交 1-单位管理员待审批 2-评估中心员工待审批 3-法规科技处待审批)',
+  `mid_record_id` int(11) NULL DEFAULT 0 COMMENT '中期检查记录（关联表）',
+  `mid_check_annex_id` int(11) NULL DEFAULT NULL COMMENT '中期检查表附件id',
+  `expert_assessment_annex_id` int(11) NULL DEFAULT NULL COMMENT '专家评估表附件id',
+  `contract_annex_id` int(11) NULL DEFAULT NULL COMMENT '合同附件id',
+  `subject_suggest_annex_id` int(11) NULL DEFAULT NULL COMMENT '课题意见附件id',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of contract_manage
+-- ----------------------------
+INSERT INTO `contract_manage` VALUES (1, '1', 'nkhi', 'kong', '1905-07-11', '1906-07-11', 'dfss0', '12345678910', 'jbj7', '14725836910', 'vhg4', 'hgvh9', '200000', 'khnku1', 'bhcg3', '1236547899874560000', '132@qwe.com', 'bjjgfv', 'fvhyh', '15062114931', 'chdgtfh', 'buhgfyv', 'gyuf', '210000', 'gcfhfcty', 'fvfc', 'yhfy', '220000', 'vbhfvyh', '17896341796', '456@asd.com', 'hgfvy', 'uf', 'hfv', '230000', '________课题经  苏财建﹝ ﹞  号文批准列入江苏省___年环保科研计划，甲方核拨乙方课题经费____万元（大写：_____元）。依据《中华人民共和国合同法》的规定，为明确甲、乙、丙三方的权利和责任，保证课题的顺利实施和科研经费的合理使用，签订本合同', 'hgvyh', 'vyh', 'dgrg', 0, 1, 1, 2, NULL, NULL);
+INSERT INTO `contract_manage` VALUES (2, 'subjectCategory', 'subjectNot', 'lmp', '1905-02-11', '1906-06-11', 'subjeceLeader', 'subjectLeaderPhone', 'subjectContact', '14725836910', 'subjectContactPhone', 'commitmentUnit', 'commitmentUnitAddress', 'commitmentUnitZip', 'subjectSupervisorDepartment', 'openBankAccount', 'eMail', 'guaranteedUnits', 'guaranteedUnitContact', 'guaranteedContactPhone', 'commissioningUnit', 'legalRepresentativeEntrustingA', 'commissionedUnitAddressA', 'commissionedUnitZipA', 'responsibilityUnitB', 'responsibilityLegalRepresentativeB', 'commitUnitAddressB', 'commitUnitZipB', 'commitUnitLeaderB', 'commitunitLeadersPhoneB', 'commitmentUnitEmailB', 'guaranteedUnitC', 'guaranteedUnitLeaderC', 'guaranteedUnitAddressC', 'guaranteedUnitZipC', '________课题经  苏财建﹝ ﹞  号文批准列入江苏省___年环保科研计划，甲方核拨乙方课题经费____万元（大写：_____元）。依据《中华人民共和国合同法》的规定，为明确甲、乙、丙三方的权利和责任，保证课题的顺利实施和科研经费的合理使用，签订本合同', 'subjectObjectivesResearch', 'subjectAcceptanceAssessment', 'otherTerms', 0, 2, NULL, NULL, NULL, NULL);
+INSERT INTO `contract_manage` VALUES (3, 'kong', 'woxihuan', 'ln', '2019-02-11', '2019-06-11', 'subjfgfdtheceLeader', 'gfdth', 'subjectContact', '14725836910', 'subjectContactPhone', 'commitmentUnit', 'commitmentUnitAddress', 'commitmentUnitZip', 'subjectSupervisorDepartment', 'openBankAccount', 'eMail', 'guaranteedUnits', 'guaranteedUnitContact', 'guaranteedContactPhone', 'commissioningUnit', 'legalRepresentativeEntrustingA', 'commissionedUnitAddressA', 'commissionedUnitZipA', 'responsibilityUnitB', 'responsibilityLegalRepresentativeB', 'commitUnitAddressB', 'commitUnitZipB', 'commitUnitLeaderB', 'commitunitLeadersPhoneB', 'commitmentUnitEmailB', 'guaranteedUnitC', 'guaranteedUnitLeaderC', 'guaranteedUnitAddressC', 'guaranteedUnitZipC', '________课题经  苏财建﹝ ﹞  号文批准列入江苏省___年环保科研计划，甲方核拨乙方课题经费____万元（大写：_____元）。依据《中华人民共和国合同法》的规定，为明确甲、乙、丙三方的权利和责任，保证课题的顺利实施和科研经费的合理使用，签订本合同', 'subjectObjectivesResearch', 'subjectAcceptanceAssessment', 'otherTerms', 0, 1, NULL, NULL, NULL, NULL);
+INSERT INTO `contract_manage` VALUES (9, 'sdfsefsed', 'sdfesfs', 'efsefsdfsfs', '2017-08-09', '2014-09-04', 'dfsefsfss', 'fdeesefss', 'sdfsesef', 'sedfsefss', 'dsefxd', 'dfsers', 'dfsfsf', 'sefswfsefws', 'sdfsews', 'sxefewsef', 'sdfsefs', 'sedfsesf', 'sdfsef', 'sdfsese', 'xdfrgxc', 'sefsefs', 'dfsrew', 'qweasd', 'dsefsefss', 'dfsesfse', 'fvdrgtdv', '123weq', 'cxfger', 'sdfsef', 'dfsfesw', 'sdfsesf', 'sdfsese', 'sdfse', 'sdesfess', 'sefsfsefs3e', 'efsefsefssedsfe', 'sdfsesf', 'sdefsef', 0, 0, NULL, NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for dictionary
@@ -544,7 +605,9 @@ CREATE TABLE `expert_group_comments`  (
 -- ----------------------------
 -- Records of expert_group_comments
 -- ----------------------------
-INSERT INTO `expert_group_comments` VALUES (1, 56, '666测试课题名称', '测试课题编号', '课题负责人', '666课题承担单位', 11, 1.10, 1.20, 1.30, 1.40, 1.50, 1.60, 1.70, 2.0, '对课题的总体评价', '建议', 77, '专家组组长姓名', '2000-01-03', '2019-07-30 11:52:20', 'admin');
+INSERT INTO `expert_group_comments` VALUES (1, 50, '666测试课题名称', '测试课题编号', '课题负责人', '666课题承担单位', 11, 1.10, 1.20, 1.30, 1.40, 1.50, 1.60, 1.70, 2.0, '对课题的总体评价', '建议', 77, '专家组组长姓名', '2000-01-03', '2019-07-30 11:52:20', 'admin');
+INSERT INTO `expert_group_comments` VALUES (2, 55, '666测试课题名称', '测试课题编号', '课题负责人', '666课题承担单位', 11, 1.10, 1.20, 1.30, 1.40, 1.50, 1.60, 1.70, 2.0, '对课题的总体评价', '建议', 77, '专家组组长姓名', '2000-01-03', '2019-07-30 11:52:20', 'admin');
+INSERT INTO `expert_group_comments` VALUES (3, 57, '666测试课题名称', '测试课题编号', '课题负责人', '666课题承担单位', 11, 1.10, 1.20, 1.30, 1.40, 1.50, 1.60, 1.70, 2.0, '对课题的总体评价', '建议', 77, '专家组组长姓名', '2000-01-03', '2019-07-30 11:52:20', 'admin');
 
 -- ----------------------------
 -- Table structure for expert_group_comments_name
@@ -558,13 +621,16 @@ CREATE TABLE `expert_group_comments_name`  (
   `major` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '专业',
   `job` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '职务',
   PRIMARY KEY (`egc_nid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of expert_group_comments_name
 -- ----------------------------
 INSERT INTO `expert_group_comments_name` VALUES (14, 1, '9898专家姓名', '98单位名称', '99专业', '99职务');
 INSERT INTO `expert_group_comments_name` VALUES (15, 1, '121专家姓名', '321单位名称', '212专业', '121职务');
+INSERT INTO `expert_group_comments_name` VALUES (16, 2, '121专家姓名', '321单位名称', '212专业', '121职务');
+INSERT INTO `expert_group_comments_name` VALUES (17, 2, '121专家姓名', '321单位名称', '212专业', '121职务');
+INSERT INTO `expert_group_comments_name` VALUES (18, 3, '121专家姓名', '321单位名称', '212专业', '121职务');
 
 -- ----------------------------
 -- Table structure for expert_information
@@ -916,8 +982,11 @@ CREATE TABLE `notification`  (
 -- Records of notification
 -- ----------------------------
 INSERT INTO `notification` VALUES (1, '课题1', '内容1', '1998-01-14 18:16:05', 'admin', '2000-02-01', '2111-05-01', 0);
-INSERT INTO `notification` VALUES (2, '课题1', '内容1', '2019-07-02 18:16:24', 'admin', '1994-06-15', '2111-05-01', 0);
+INSERT INTO `notification` VALUES (2, '课题1', '内容1', '2019-07-02 18:16:24', 'admin', '1994-06-15', '2111-05-01', 1);
 INSERT INTO `notification` VALUES (3, '课题66', '内容12666', '2019-08-05 11:28:04', 'admin', '1221-04-08', '2019-08-12', 0);
+INSERT INTO `notification` VALUES (4, '我是测试1', '测试1111', '2019-08-18 16:44:19', 'admin', '2019-08-01', '2019-08-23', 1);
+INSERT INTO `notification` VALUES (5, '我是测试1', '测试1111', '2019-08-18 16:44:31', 'admin', '2019-08-16', '2019-08-23', 1);
+INSERT INTO `notification` VALUES (6, '2', '333', '2019-08-18 17:07:24', 'admin', '2019-08-02', '2019-08-14', 0);
 
 -- ----------------------------
 -- Table structure for outcome_information
@@ -1268,7 +1337,7 @@ CREATE TABLE `upload_file`  (
   `create_time` datetime(0) NOT NULL COMMENT '创建时间',
   `create_author` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '创建者',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 140 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 145 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of upload_file

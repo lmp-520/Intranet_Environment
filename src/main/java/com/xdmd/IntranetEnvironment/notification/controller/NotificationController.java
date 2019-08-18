@@ -59,12 +59,12 @@ public class NotificationController {
     @PostMapping("delete")
     @ResponseBody
     public ResultMap deleteNotificationService(@CookieValue(value = "IntranecToken") String token, HttpServletResponse response,
-                                               @RequestParam("nid") Integer nid){   //通知公告的id
+                                               @RequestParam Integer [] ids){   //通知公告的id
         if(StringUtils.isEmpty(token)){
             return resultMap.fail().message("请先登录");
         }
         try {
-            resultMap = notificationService.deleteNotificationService(token,response,nid);
+            resultMap = notificationService.deleteNotificationService(token,response,ids);
         } catch (Exception e) {
             e.printStackTrace();
             log.error("NotificationController 中 deleteNotificationService 方法出错 -- "+e.getMessage());

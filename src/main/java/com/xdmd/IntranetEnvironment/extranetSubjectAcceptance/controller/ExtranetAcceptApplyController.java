@@ -488,16 +488,14 @@ public class ExtranetAcceptApplyController {
     //对最终证书文件 与信息 修改
     @ResponseBody
     @PostMapping("lastReportModify")
-    public ResultMap lastReportModify(//@CookieValue(value = "token")String token,HttpServletResponse response,
+    public ResultMap lastReportModify(@CookieValue(value = "token")String token,HttpServletResponse response,
                                       @RequestParam("caId") Integer caId, //验收申请表的id
                                       @RequestPart(value = "lastReportFile",required = false) MultipartFile lastReportFile,  //最终验收报告文件
                                       @RequestPart(value = "oldLastReportFileUrl",required = false)String oldLastReportFileUrl,    //旧的最终验收报告文件
                                       @RequestPart AcceptanceCertificate acceptanceCertificate){    //最终验收报告信息
-//        if(StringUtils.isEmpty(token)){
-//            return resultMap.fail().message("请先登录");
-//        }
-        String token = "aaa";
-        HttpServletResponse response = null;
+        if(StringUtils.isEmpty(token)){
+            return resultMap.fail().message("请先登录");
+        }
 
         try {
             resultMap = extranetAcceptApplyService.lastReportModify(token,response,caId,lastReportFile,oldLastReportFileUrl,acceptanceCertificate);
@@ -508,4 +506,6 @@ public class ExtranetAcceptApplyController {
         }
         return resultMap;
     }
+
+
 }

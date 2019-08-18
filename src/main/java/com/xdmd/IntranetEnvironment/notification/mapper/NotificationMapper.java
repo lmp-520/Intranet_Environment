@@ -20,7 +20,7 @@ public interface NotificationMapper {
     int queryAllNotification();
 
     //查询当页的通知公告的信息
-    @Select("select * from notification where is_delete = 0 limit #{newpage},#{total} ")
+    @Select("select * from notification where is_delete = 0  order by create_time desc limit #{newpage},#{total} ")
     List<Notification> queryNotificationList(@Param("newpage") int newpage, @Param("total") Integer total);
 
     @Select("select * from notification where is_delete = 0 and #{nowTime} between start_time and end_time")
