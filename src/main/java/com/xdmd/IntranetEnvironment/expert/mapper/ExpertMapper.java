@@ -1,8 +1,8 @@
 package com.xdmd.IntranetEnvironment.expert.mapper;
 
-import com.xdmd.IntranetEnvironment.common.UploadFile;
 import com.xdmd.IntranetEnvironment.company.Pojo.UserInformation;
 import com.xdmd.IntranetEnvironment.expert.pojo.*;
+import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.UploadFile;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;

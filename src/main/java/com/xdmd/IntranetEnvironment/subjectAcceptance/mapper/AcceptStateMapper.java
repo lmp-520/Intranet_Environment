@@ -1,6 +1,6 @@
 package com.xdmd.IntranetEnvironment.subjectAcceptance.mapper;
 
-import com.xdmd.IntranetEnvironment.common.UploadFile;
+import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.UploadFile;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.pojo.CheckApply;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.pojo.CheckApplyState;
 import org.apache.ibatis.annotations.Insert;

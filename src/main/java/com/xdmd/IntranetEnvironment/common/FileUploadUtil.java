@@ -27,7 +27,7 @@ public class FileUploadUtil {
     public static String fileUpload(MultipartFile file, String companyName, String type) throws Exception {
         Logger log = LoggerFactory.getLogger(FileUploadUtil.class);
 
-        HashMap<String, String> result = new HashMap<>();
+        HashMap<String, String> result = new HashMap<String, String>();
 
         //获取文件名
         String originalFilename = file.getOriginalFilename();
@@ -64,7 +64,7 @@ public class FileUploadUtil {
     public static String UploadExpertInformationFile(MultipartFile file, String type) throws Exception {
         Logger log = LoggerFactory.getLogger(FileUploadUtil.class);
 
-        HashMap<String, String> result = new HashMap<>();
+        HashMap<String, String> result = new HashMap<String, String>();
 
         //获取文件名
         String originalFilename = file.getOriginalFilename();
@@ -102,7 +102,7 @@ public class FileUploadUtil {
     public static String UploadSubejctAcceptExpertFile(MultipartFile file, String type, String companyName, String subjectName) throws Exception {
         Logger log = LoggerFactory.getLogger(FileUploadUtil.class);
 
-        HashMap<String, String> result = new HashMap<>();
+        HashMap<String, String> result = new HashMap<String, String>();
 
         //获取文件名
         String originalFilename = file.getOriginalFilename();

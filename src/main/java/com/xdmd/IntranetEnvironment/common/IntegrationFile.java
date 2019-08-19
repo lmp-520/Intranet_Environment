@@ -1,5 +1,6 @@
 package com.xdmd.IntranetEnvironment.common;
 
+import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.UploadFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -11,7 +12,7 @@ import java.util.Date;
  */
 public class IntegrationFile {
 
-    public static UploadFile IntegrationFile(MultipartFile file,String fileurl, String FileType, String createname) {
+    public static UploadFile IntegrationFile(MultipartFile file, String fileurl, String FileType, String createname) {
         UploadFile uploadFile = new UploadFile();
         uploadFile.setUploadFileAddress(fileurl);
         //获取文件名

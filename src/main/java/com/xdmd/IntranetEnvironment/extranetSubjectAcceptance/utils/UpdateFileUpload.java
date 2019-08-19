@@ -26,7 +26,7 @@ public class UpdateFileUpload {
     public static HashMap<String,String> updateFileUpload(MultipartFile file, String companyName, String type, String oldUrl){
         Logger log = LoggerFactory.getLogger(UpdateFileUpload.class);
 
-        HashMap<String,String> result = new HashMap<>();
+        HashMap<String,String> result = new HashMap<String,String>();
         if (!StringUtils.isNotBlank(file.getOriginalFilename())) {
             result.put("1","文件不可以为空");
             return result;

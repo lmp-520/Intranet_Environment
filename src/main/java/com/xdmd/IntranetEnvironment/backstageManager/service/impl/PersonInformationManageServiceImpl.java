@@ -101,7 +101,7 @@ public class PersonInformationManageServiceImpl implements PersonInformationMana
 
 
         //判断文件输入的格式是否正确
-        ArrayList<String> idCardFileSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".rar", ".zip", ".7z", ".pdf"));
+        ArrayList<String> idCardFileSuffixList = new ArrayList<String>(Arrays.asList(".doc", ".docx", ".rar", ".zip", ".7z", ".pdf"));
         String idCardFileName = idCardFile.getOriginalFilename();
         Boolean aBoolean = FileSuffixJudgeUtil.SuffixJudge(idCardFileName, idCardFileSuffixList);
         if (aBoolean == false) {
@@ -186,7 +186,7 @@ public class PersonInformationManageServiceImpl implements PersonInformationMana
         String cname = jwtInformation.getCompanyName();
 
         //根据cid查询该公司下的员工
-        List<UserInformation> userInformationList = new ArrayList<>();
+        List<UserInformation> userInformationList = new ArrayList<UserInformation>();
         //查询该公司下的员工信息
         List<Subaccount> subaccountList = personInformationManageMapper.queryStaffByCid(cid);
         for (Subaccount subaccount : subaccountList) {
@@ -282,7 +282,7 @@ public class PersonInformationManageServiceImpl implements PersonInformationMana
             //此时用户重新上传了新的文件
             //首先判断上传的新的文件格式是否正确
             //判断文件输入的格式是否正确
-            ArrayList<String> idCardFileSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".rar", ".zip", ".7z", ".pdf"));
+            ArrayList<String> idCardFileSuffixList = new ArrayList<String>(Arrays.asList(".doc", ".docx", ".rar", ".zip", ".7z", ".pdf"));
             String idCardFileName = idCardFile.getOriginalFilename();
             Boolean aBoolean = FileSuffixJudgeUtil.SuffixJudge(idCardFileName, idCardFileSuffixList);
             if (aBoolean == false) {
