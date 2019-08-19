@@ -11,7 +11,7 @@
  Target Server Version : 80016
  File Encoding         : 65001
 
- Date: 18/08/2019 18:50:53
+ Date: 19/08/2019 18:58:05
 */
 
 SET NAMES utf8mb4;
@@ -241,8 +241,8 @@ INSERT INTO `administrator_information` VALUES (13, NULL, NULL, 14, '公司地�
 INSERT INTO `administrator_information` VALUES (14, NULL, NULL, 15, '公司地址1', '1', '111111112222222222', '法人姓名1', '340333655555555555', '18855532565', '8433456@11.com', 1, 1, 1, '2019-07-26 16:06:19');
 INSERT INTO `administrator_information` VALUES (15, NULL, NULL, 16, '公司地址呀', '2', '91370105MA3D5P8C9U', '法人姓名1', '340303199609280455', '18855532656', '85463221@qq.com', 1, 1, 1, '2019-08-05 14:43:25');
 INSERT INTO `administrator_information` VALUES (16, NULL, NULL, 20, '公司地址呀6666', '2', '91370105MA3D5P8C9U', '法人姓名1', '340303199609280455', '18855532656', '85463221@qq.com', 88, 89, 90, '2019-08-05 16:21:50');
-INSERT INTO `administrator_information` VALUES (17, 5, '公司名称1221', 25, '公司地址11', '2', '12100000425010757A', '法人姓名', '340303119609280415', '18855532979', '12345687@qq.com', 146, 147, 148, '2019-08-09 14:56:01');
-INSERT INTO `administrator_information` VALUES (19, 18, '公司名称1221', 16, '公司地址11', '2', '12100000425010757A', '法人姓名', '340303119609280415', '18855532979', '12345687@qq.com', 97, 98, 99, '2019-08-13 15:05:17');
+INSERT INTO `administrator_information` VALUES (17, 2, '公司名称1221', 25, '公司地址11', '2', '12100000425010757A', '法人姓名', '340303119609280415', '18855532979', '12345687@qq.com', 146, 147, 148, '2019-08-09 14:56:01');
+INSERT INTO `administrator_information` VALUES (19, 18, '公司名称12212', 16, '公司地址11', '2', '12100000425010757A', '法人姓名', '340303119609280415', '18855532979', '12345687@qq.com', 97, 98, 99, '2019-08-13 15:05:17');
 
 -- ----------------------------
 -- Table structure for check_apply
@@ -428,10 +428,10 @@ CREATE TABLE `contract_manage`  (
 -- ----------------------------
 -- Records of contract_manage
 -- ----------------------------
-INSERT INTO `contract_manage` VALUES (1, '1', 'nkhi', 'kong', '1905-07-11', '1906-07-11', 'dfss0', '12345678910', 'jbj7', '14725836910', 'vhg4', 'hgvh9', '200000', 'khnku1', 'bhcg3', '1236547899874560000', '132@qwe.com', 'bjjgfv', 'fvhyh', '15062114931', 'chdgtfh', 'buhgfyv', 'gyuf', '210000', 'gcfhfcty', 'fvfc', 'yhfy', '220000', 'vbhfvyh', '17896341796', '456@asd.com', 'hgfvy', 'uf', 'hfv', '230000', '________课题经  苏财建﹝ ﹞  号文批准列入江苏省___年环保科研计划，甲方核拨乙方课题经费____万元（大写：_____元）。依据《中华人民共和国合同法》的规定，为明确甲、乙、丙三方的权利和责任，保证课题的顺利实施和科研经费的合理使用，签订本合同', 'hgvyh', 'vyh', 'dgrg', 0, 1, 1, 2, NULL, NULL);
+INSERT INTO `contract_manage` VALUES (1, '1', 'nkhi', 'kong', '1905-07-11', '1906-07-11', 'dfss0', '12345678910', 'jbj7', '14725836910', '公司名称1221', 'hgvh9', '200000', 'khnku1', 'bhcg3', '1236547899874560000', '132@qwe.com', 'bjjgfv', 'fvhyh', '15062114931', 'chdgtfh', 'buhgfyv', 'gyuf', '210000', 'gcfhfcty', 'fvfc', 'yhfy', '220000', 'vbhfvyh', '17896341796', '456@asd.com', 'hgfvy', 'uf', 'hfv', '230000', '________课题经  苏财建﹝ ﹞  号文批准列入江苏省___年环保科研计划，甲方核拨乙方课题经费____万元（大写：_____元）。依据《中华人民共和国合同法》的规定，为明确甲、乙、丙三方的权利和责任，保证课题的顺利实施和科研经费的合理使用，签订本合同', 'hgvyh', 'vyh', 'dgrg', 0, 1, 1, 2, NULL, NULL);
 INSERT INTO `contract_manage` VALUES (2, 'subjectCategory', 'subjectNot', 'lmp', '1905-02-11', '1906-06-11', 'subjeceLeader', 'subjectLeaderPhone', 'subjectContact', '14725836910', 'subjectContactPhone', 'commitmentUnit', 'commitmentUnitAddress', 'commitmentUnitZip', 'subjectSupervisorDepartment', 'openBankAccount', 'eMail', 'guaranteedUnits', 'guaranteedUnitContact', 'guaranteedContactPhone', 'commissioningUnit', 'legalRepresentativeEntrustingA', 'commissionedUnitAddressA', 'commissionedUnitZipA', 'responsibilityUnitB', 'responsibilityLegalRepresentativeB', 'commitUnitAddressB', 'commitUnitZipB', 'commitUnitLeaderB', 'commitunitLeadersPhoneB', 'commitmentUnitEmailB', 'guaranteedUnitC', 'guaranteedUnitLeaderC', 'guaranteedUnitAddressC', 'guaranteedUnitZipC', '________课题经  苏财建﹝ ﹞  号文批准列入江苏省___年环保科研计划，甲方核拨乙方课题经费____万元（大写：_____元）。依据《中华人民共和国合同法》的规定，为明确甲、乙、丙三方的权利和责任，保证课题的顺利实施和科研经费的合理使用，签订本合同', 'subjectObjectivesResearch', 'subjectAcceptanceAssessment', 'otherTerms', 0, 2, NULL, NULL, NULL, NULL);
-INSERT INTO `contract_manage` VALUES (3, 'kong', 'woxihuan', 'ln', '2019-02-11', '2019-06-11', 'subjfgfdtheceLeader', 'gfdth', 'subjectContact', '14725836910', 'subjectContactPhone', 'commitmentUnit', 'commitmentUnitAddress', 'commitmentUnitZip', 'subjectSupervisorDepartment', 'openBankAccount', 'eMail', 'guaranteedUnits', 'guaranteedUnitContact', 'guaranteedContactPhone', 'commissioningUnit', 'legalRepresentativeEntrustingA', 'commissionedUnitAddressA', 'commissionedUnitZipA', 'responsibilityUnitB', 'responsibilityLegalRepresentativeB', 'commitUnitAddressB', 'commitUnitZipB', 'commitUnitLeaderB', 'commitunitLeadersPhoneB', 'commitmentUnitEmailB', 'guaranteedUnitC', 'guaranteedUnitLeaderC', 'guaranteedUnitAddressC', 'guaranteedUnitZipC', '________课题经  苏财建﹝ ﹞  号文批准列入江苏省___年环保科研计划，甲方核拨乙方课题经费____万元（大写：_____元）。依据《中华人民共和国合同法》的规定，为明确甲、乙、丙三方的权利和责任，保证课题的顺利实施和科研经费的合理使用，签订本合同', 'subjectObjectivesResearch', 'subjectAcceptanceAssessment', 'otherTerms', 0, 1, NULL, NULL, NULL, NULL);
-INSERT INTO `contract_manage` VALUES (9, 'sdfsefsed', 'sdfesfs', 'efsefsdfsfs', '2017-08-09', '2014-09-04', 'dfsefsfss', 'fdeesefss', 'sdfsesef', 'sedfsefss', 'dsefxd', 'dfsers', 'dfsfsf', 'sefswfsefws', 'sdfsews', 'sxefewsef', 'sdfsefs', 'sedfsesf', 'sdfsef', 'sdfsese', 'xdfrgxc', 'sefsefs', 'dfsrew', 'qweasd', 'dsefsefss', 'dfsesfse', 'fvdrgtdv', '123weq', 'cxfger', 'sdfsef', 'dfsfesw', 'sdfsesf', 'sdfsese', 'sdfse', 'sdesfess', 'sefsfsefs3e', 'efsefsefssedsfe', 'sdfsesf', 'sdefsef', 0, 0, NULL, NULL, NULL, NULL);
+INSERT INTO `contract_manage` VALUES (3, 'kong', 'woxihuan', 'ln', '2019-09-20', '2019-05-20', 'subjfgfdtheceLeader', 'gfdth', 'subjectContact', '14725836910', '公司名称1221', 'commitmentUnit', 'commitmentUnitAddress', 'commitmentUnitZip', 'subjectSupervisorDepartment', 'openBankAccount', 'eMail', 'guaranteedUnits', 'guaranteedUnitContact', 'guaranteedContactPhone', 'commissioningUnit', 'legalRepresentativeEntrustingA', 'commissionedUnitAddressA', 'commissionedUnitZipA', 'responsibilityUnitB', 'responsibilityLegalRepresentativeB', 'commitUnitAddressB', 'commitUnitZipB', 'commitUnitLeaderB', 'commitunitLeadersPhoneB', 'commitmentUnitEmailB', 'guaranteedUnitC', 'guaranteedUnitLeaderC', 'guaranteedUnitAddressC', 'guaranteedUnitZipC', '________课题经  苏财建﹝ ﹞  号文批准列入江苏省___年环保科研计划，甲方核拨乙方课题经费____万元（大写：_____元）。依据《中华人民共和国合同法》的规定，为明确甲、乙、丙三方的权利和责任，保证课题的顺利实施和科研经费的合理使用，签订本合同', 'subjectObjectivesResearch', 'subjectAcceptanceAssessment', 'otherTerms', 0, 1, NULL, NULL, NULL, NULL);
+INSERT INTO `contract_manage` VALUES (9, 'sdfsefsed', 'sdfesfs', 'efsefsdfsfs', '2017-08-09', '2019-06-12', 'dfsefsfss', 'fdeesefss', 'sdfsesef', 'sedfsefss', 'dsefxd', 'dfsers', 'dfsfsf', 'sefswfsefws', 'sdfsews', 'sxefewsef', 'sdfsefs', 'sedfsesf', 'sdfsef', 'sdfsese', 'xdfrgxc', 'sefsefs', 'dfsrew', 'qweasd', 'dsefsefss', 'dfsesfse', 'fvdrgtdv', '123weq', 'cxfger', 'sdfsef', 'dfsfesw', 'sdfsesf', 'sdfsese', 'sdfse', 'sdesfess', 'sefsfsefs3e', 'efsefsefssedsfe', 'sdfsesf', 'sdefsef', 0, 0, NULL, NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for dictionary
@@ -600,7 +600,7 @@ CREATE TABLE `expert_group_comments`  (
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
   `create_author` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建人',
   PRIMARY KEY (`egc_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of expert_group_comments
@@ -621,7 +621,7 @@ CREATE TABLE `expert_group_comments_name`  (
   `major` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '专业',
   `job` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '职务',
   PRIMARY KEY (`egc_nid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 19 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of expert_group_comments_name
@@ -976,7 +976,7 @@ CREATE TABLE `notification`  (
   `end_time` date NULL DEFAULT NULL COMMENT '结束时间',
   `is_delete` int(20) NULL DEFAULT NULL COMMENT '0:启用  1：逻辑删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of notification
@@ -1255,7 +1255,7 @@ INSERT INTO `shiro_user_information` VALUES (6, '真实专家姓名', '登陆名
 INSERT INTO `shiro_user_information` VALUES (7, '真实专家姓名', '登陆名656323565', 'ae3aaa6f80543e490d9ff9b0ede59a92', '2', '1', '1', '2');
 INSERT INTO `shiro_user_information` VALUES (9, '真实专家姓名', '登陆名6563fsgsdf23565', 'ae3aaa6f80543e490d9ff9b0ede59a92', '2', '1', '1', '2');
 INSERT INTO `shiro_user_information` VALUES (11, '真实专家姓名', '6767登陆名6563fsgsdf23565', 'ae3aaa6f80543e490d9ff9b0ede59a92', '2', '1', '1', '2');
-INSERT INTO `shiro_user_information` VALUES (12, '真实姓名', '登录名11', '21232f297a57a5a743894a0e4a801fc3', '2', '0', '0', '1');
+INSERT INTO `shiro_user_information` VALUES (12, '真实姓名', '登录名112', '21232f297a57a5a743894a0e4a801fc3', '2', '0', '0', '1');
 INSERT INTO `shiro_user_information` VALUES (14, '真实姓名', '登录名1dfd1', '登录名1dfd1@123', '2', '0', '0', '1');
 INSERT INTO `shiro_user_information` VALUES (15, '真实姓名', '登录名1dasdffd1', '登录名1dasdffd1@123', '2', '0', '0', '1');
 INSERT INTO `shiro_user_information` VALUES (16, '真实姓名121', 'zhangsan1212', 'zhangsan1212@123', '1', '1', '0', '1');

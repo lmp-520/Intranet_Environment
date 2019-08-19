@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -20,12 +22,29 @@ public class testController {
     private TestMapper testMapper;
 
     @PostMapping("one")
-    public String test(){
+    public String test() throws ParseException {
         Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String format = sdf.format(date);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String nowTime = sdf.format(date);
 
-        List<Integer> ids = testMapper.test(format);
+        List<Integer> ids = testMapper.test(nowTime);
+
+        for (Integer id : ids) {
+            String contractEndTime = testMapper.queryContractEndTime(id);
+
+            Date parse = sdf.parse(contractEndTime);
+
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(parse);
+            cal.add(Calendar.MONTH,3);
+
+            String dateOver = sdf.format(cal.getTime());
+
+            System.out.println(dateOver);
+        }
+
+
+        return "aaa";
 
 
     }

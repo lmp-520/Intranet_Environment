@@ -19,11 +19,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 @Service
@@ -719,7 +717,7 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
 
 
         //判断三个旧文件是否为空
-        if(oldSubmitInventoryFileUrl!=null){
+        if (oldSubmitInventoryFileUrl != null) {
             //提交清单不为空
             //判断文件输入的格式是否正确
             ArrayList<String> idCardFileSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".rar", ".zip", ".7z", ".pdf"));
@@ -738,13 +736,13 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
             UploadFile uploadSubmitInventoryFile = IntegrationFile.IntegrationFile(submitInventoryFile, submitInventoryFileUrl, "提交清单", uname);
             acceptApplyMapper.uploadFile(uploadSubmitInventoryFile);//对文件进行上传
             //对旧的提交清单文件id进行更新
-            acceptApplyMapper.updateSubmitInventoryIdById(extranetCheckApply.getId(),uploadSubmitInventoryFile.getId());
+            acceptApplyMapper.updateSubmitInventoryIdById(extranetCheckApply.getId(), uploadSubmitInventoryFile.getId());
 
             //把上传文件的id，存入checkApply中
             extranetCheckApply.setSubmitUrlId(uploadSubmitInventoryFile.getId());
         }
 
-        if(oldAchievementsFileUrl!=null){
+        if (oldAchievementsFileUrl != null) {
             //旧的成果附件不为null时
             //判断文件输入的格式是否正确
             ArrayList<String> idCardFileSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".rar", ".zip", ".7z", ".pdf"));
@@ -763,13 +761,13 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
             UploadFile uploadAchievementsFile = IntegrationFile.IntegrationFile(achievementsFile, achievementsFileUrl, "成果附件", uname);
             acceptApplyMapper.uploadFile(uploadAchievementsFile);//对文件进行上传
             //对旧的成果附件文件文件id进行更新
-            acceptApplyMapper.updateAchievementIdById(extranetCheckApply.getId(),uploadAchievementsFile.getId());
+            acceptApplyMapper.updateAchievementIdById(extranetCheckApply.getId(), uploadAchievementsFile.getId());
 
             //把上传文件的id，存入checkApply中
             extranetCheckApply.setAchievementUrlId(uploadAchievementsFile.getId());
         }
 
-        if(oldApplicationAcceptanceFileUrl!=null){
+        if (oldApplicationAcceptanceFileUrl != null) {
             //旧的验收申请不为null时
             ArrayList<String> idCardFileSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".rar", ".zip", ".7z", ".pdf"));
             String applicationAcceptanceFileName = applicationAcceptanceFile.getOriginalFilename();
@@ -788,7 +786,7 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
             acceptApplyMapper.uploadFile(uploadApplicationAcceptanceFile);//对文件进行上传
 
             //对旧的验收申请表文件文件id进行更新
-            acceptApplyMapper.updateApplicationAcceptanceIdById(extranetCheckApply.getId(),uploadApplicationAcceptanceFile.getId());
+            acceptApplyMapper.updateApplicationAcceptanceIdById(extranetCheckApply.getId(), uploadApplicationAcceptanceFile.getId());
 
             //把上传文件的id，存入checkApply中
             extranetCheckApply.setAchievementUrlId(uploadApplicationAcceptanceFile.getId());
@@ -824,7 +822,7 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
         Integer cid = jwtInformation.getCid();
         String cname = jwtInformation.getCompanyName();
 
-        if(expertGroupFile!=null){
+        if (expertGroupFile != null) {
             //此时专家组意见文件不为空，则意味着上传了新的专家组意见
             //判断上传的专家组意见文件是否后缀名正确
 
@@ -839,7 +837,7 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
             file.delete();
         }
 
-        if(expertAcceptanceFormFile!=null){
+        if (expertAcceptanceFormFile != null) {
             //此时专家组意见文件不为空，则意味着上传了新的专家组意见
             //判断上传的专家组意见文件是否后缀名正确
 
@@ -855,7 +853,7 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
         }
 
 
-        if(oldExpertGroupFileUrl !=null){
+        if (oldExpertGroupFileUrl != null) {
             //此时旧的专家组意见文件地址存在
 
             //对新的专家组文件进行上传
@@ -865,10 +863,10 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
             acceptApplyMapper.uploadFile(uploadExpertGroupFile);//对文件进行上传
 
             //对旧的专家组意见文件文件id进行更新
-            acceptApplyMapper.updateExpertGroupFileIdById(caId,uploadExpertGroupFile.getId());
+            acceptApplyMapper.updateExpertGroupFileIdById(caId, uploadExpertGroupFile.getId());
         }
 
-        if(oldExpertAcceptanceFormFile !=null){
+        if (oldExpertAcceptanceFormFile != null) {
             //此时旧的专家评议表文件地址存在
 
             //对新的专家组文件进行上传
@@ -878,10 +876,10 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
             acceptApplyMapper.uploadFile(uploadExpertAcceptanceFormFile);//对文件进行上传
 
             //对旧的专家组评议文件文件id进行更新
-            acceptApplyMapper.updateExpertAcceptanceFormFileIdById(caId,uploadExpertAcceptanceFormFile.getId());
+            acceptApplyMapper.updateExpertAcceptanceFormFileIdById(caId, uploadExpertAcceptanceFormFile.getId());
         }
         //对专家组意见主表进行更新
-        acceptApplyMapper.updateExpertGroupByCaId(caId,extranetExpertGroupComment);
+        acceptApplyMapper.updateExpertGroupByCaId(caId, extranetExpertGroupComment);
 
         //对专家组从表进行更新
         //对专家组意见从表旧的内容首先进行删除
@@ -920,7 +918,7 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
         Integer cid = jwtInformation.getCid();
         String cname = jwtInformation.getCompanyName();
 
-        if(lastReportFile!=null){
+        if (lastReportFile != null) {
             //此时专家组意见文件不为空，则意味着上传了新的专家组意见
             //判断上传的专家组意见文件是否后缀名正确
 
@@ -935,7 +933,7 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
             file.delete();
         }
 
-        if(oldLastReportFileUrl !=null){
+        if (oldLastReportFileUrl != null) {
             //此时旧的最终验收文件地址存在
 
             //对新的最终验收文件进行上传
@@ -945,11 +943,11 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
             acceptApplyMapper.uploadFile(uploadLastReportFile);//对文件进行上传
 
             //对旧的最终验收证书文件id进行更新
-            acceptApplyMapper.uploadLastReportFileIdById(caId,uploadLastReportFile.getId());
+            acceptApplyMapper.uploadLastReportFileIdById(caId, uploadLastReportFile.getId());
         }
 
         //对验收证书报告信息的主表进行更新
-        acceptApplyMapper.UpdateLastReportFile(caId,acceptanceCertificate);
+        acceptApplyMapper.UpdateLastReportFile(caId, acceptanceCertificate);
 
         //把验收证书中专利表对应的信息删除
         acceptApplyMapper.deleteAcceptanceCertificatePatent(caId);
@@ -980,5 +978,136 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
         }
 
         return resultMap.success().message("更新成功");
+    }
+
+    //查询可进行新增验收申请的合同
+    @Override
+    public ResultMap queryTopicName(String token, HttpServletResponse response) throws ParseException {
+        JwtInformation jwtInformation = new JwtInformation();
+        try {
+            jwtInformation = extranetTokenService.compare(response, token);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (UserNameNotExistentException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (ClaimsNullException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("MenuServiceImpl 中 TokenService 出现问题");
+            return resultMap.message("系统异常");
+        }
+
+        Integer uid = jwtInformation.getUid();
+        String uname = jwtInformation.getUsername();
+        Integer cid = jwtInformation.getCid();
+        String cname = jwtInformation.getCompanyName();
+
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String nowTime = sdf.format(date);
+
+        //首先获取该公司所有已经结束的合同id
+        List<Integer> ids = acceptApplyMapper.queryAllEndContractId(nowTime,cname);
+
+        //存放符合条件的id集合
+        List<Integer> resultIds = new ArrayList<>();
+
+        for (Integer id : ids) {
+            //根据id获取合同的结束时间
+            String contractEndTime = acceptApplyMapper.queryEndTimeById(id);
+            //把日期字符串进行Date
+            Date sqlTimeParse = sdf.parse(contractEndTime);
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(sqlTimeParse);
+            cal.add(Calendar.MONTH, 3);  //对月份加3
+            String dateOver = sdf.format(cal.getTime());
+
+            if(sdf.parse(dateOver).getTime()>sdf.parse(nowTime).getTime()){
+                //此时该合同符合要求
+                resultIds.add(id);
+            }
+        }
+        List<SubjectNameAndId> subjectNameAndIdList = new ArrayList<>();
+
+        //遍历符合要求的id，获取课题名称
+        for (Integer resultId : resultIds) {
+            SubjectNameAndId subjectNameAndId = new SubjectNameAndId();
+            //通过id，获取课题名称
+            String subjectName = acceptApplyMapper.querySubjectNameById(resultId);
+            subjectNameAndId.setId(resultId);
+            subjectNameAndId.setSubjectName(subjectName);
+            subjectNameAndIdList.add(subjectNameAndId);
+        }
+        return resultMap.success().message(subjectNameAndIdList);
+    }
+
+    //通过课题名称获取合同id
+    @Override
+    public ResultMap queryTopicNumber(String projectName) throws ParseException {
+
+        //通过课题名称获取合同id集合
+        List<Integer> ids = acceptApplyMapper.queryIdByProjectName(projectName);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        String nowTime = sdf.format(date);
+
+        //存放符合条件的id集合
+        List<Integer> resultIds = new ArrayList<>();
+
+        for (Integer id : ids) {
+            //根据id获取合同的结束时间
+            String contractEndTime = acceptApplyMapper.queryEndTimeById(id);
+            //把日期字符串进行Date
+            Date sqlTimeParse = sdf.parse(contractEndTime);
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(sqlTimeParse);
+            cal.add(Calendar.MONTH, 3);  //对月份加3
+            String dateOver = sdf.format(cal.getTime());
+
+            if(sdf.parse(dateOver).getTime()>sdf.parse(nowTime).getTime()){
+                //此时该合同符合要求
+                resultIds.add(id);
+            }
+        }
+
+        List<String> topicNumberList = new ArrayList<>();
+        for (Integer resultId : resultIds) {
+            String topicNumber = acceptApplyMapper.queryTopicNumberById(resultId);  //通过id获取课题编号
+            topicNumberList.add(topicNumber);
+        }
+
+        return resultMap.success().message(topicNumberList);
+    }
+
+    //验收申请中，根据课题编号获取信息
+    @Override
+    public ResultMap queryInformationByTopicNumber(String projectNumber) {
+        //根据课题编号获取承担单位
+        String companyName = acceptApplyMapper.queryCompanyNameByProjectNumber(projectNumber);
+        //通过承担单位名称获取单位性质
+        Integer unitNature = acceptApplyMapper.queryUnitNatureByCompanyName(companyName);
+        //获取课题负责人
+        String projectLeader = acceptApplyMapper.querySubjectLeader(projectNumber);
+        //获取课题负责人联系电话
+        String projectLeaderPhone = acceptApplyMapper.querySubjectLeaderPhone(projectNumber);
+        //获取合同开始时间
+        String contractStartTime = acceptApplyMapper.queryContractStartTime(projectNumber);
+        //获取合同结束时间
+        String contractEndTime = acceptApplyMapper.queryContractEndTime(projectNumber);
+
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("subjectUndertakingUnit",companyName);
+        result.put("unitNature",unitNature);
+        result.put("projectLeader",projectLeader);
+        result.put("projectLeaderPhone",projectLeaderPhone);
+        result.put("agreementStartTime",contractStartTime);
+        result.put("agreementEndTime",contractEndTime);
+
+        return resultMap.success().message(result);
     }
 }

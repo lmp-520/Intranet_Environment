@@ -134,4 +134,48 @@ public interface ExtranetAcceptApplyMapper<T> extends MyBaseMapper<ExtranetCheck
     //把验收证书中的课题负责人删除
     @Delete("delete from acceptance_certificate_subject_people where acceptance_certificate_id = #{caId}")
     void deleteAcceptanceCertificateSubjectPeople(@Param("caId") Integer caId);
+
+    //获取所有已经结束的合同id
+    @Select("SELECT id FROM contract_manage where #{nowTime} >contract_end_time and commitment_Unit = #{cname}")
+    List<Integer> queryAllEndContractId(@Param("nowTime") String nowTime,@Param("cname") String cname);
+
+    //根据id获取合同的结束时间
+    @Select("select contract_end_time from contract_manage where id = #{id}")
+    String queryEndTimeById(@Param("id") Integer id);
+
+    //通过合同id，获取符合要求的课题名称
+    @Select("select subject_name from contract_manage where id = #{id}")
+    String querySubjectNameById(@Param("id") Integer resultId);
+
+    //通过课题名称获取合同id
+    @Select("select id from contract_manage where subject_name  = #{projectName}")
+    List<Integer> queryIdByProjectName(@Param("projectName") String projectName);
+
+    //通过id获取课题编号
+    @Select("select project_no from contract_manage where id = #{resultId}")
+    String queryTopicNumberById(@Param("resultId") Integer resultId);
+
+    //根据课题编号获取承担单位
+    @Select("select commitment_Unit from contract_manage where project_no = #{projectNumber}")
+    String queryCompanyNameByProjectNumber(@Param("projectNumber") String projectNumber);
+
+    //通过承担单位名称获取单位性质
+    @Select("select unit_nature from administrator_information where company_name = #{companyName}")
+    Integer queryUnitNatureByCompanyName(@Param("companyName") String companyName);
+
+    //根据课题编号获取课题负责人
+    @Select("select subjece_leader from contract_manage where project_no = #{projectNumber}")
+    String querySubjectLeader(@Param("projectNumber") String projectNumber);
+
+    //根据课题编号获取课题负责人联系电话
+    @Select("select subject_leader_phone from contract_manage where project_no = #{projectNumber}")
+    String querySubjectLeaderPhone(@Param("projectNumber") String projectNumber);
+
+    //根据课题编号获取合同开始时间
+    @Select("select contract_start_time from contract_manage where project_no = #{projectNumber}")
+    String queryContractStartTime(@Param("projectNumber") String projectNumber);
+
+    //根据课题编号获取合同结束时间
+    @Select("select contract_end_time from contract_manage where project_no = #{projectNumber}")
+    String queryContractEndTime(@Param("projectNumber") String projectNumber);
 }

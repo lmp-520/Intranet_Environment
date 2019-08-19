@@ -105,17 +105,6 @@ public class AchievementServiceImpl implements AchievementService {
             return resultMap.fail().message();
         }
 
-        //判断用户输入的页数是否超过总页数
-        int allPage = 0;
-        if (alltotal % page == 0) {
-            allPage = alltotal / page;
-        } else {
-            allPage = (alltotal / page) + 1;
-        }
-        if (page > allPage) {
-            return resultMap.fail().message("页数超过总页数");
-        }
-
         //获取已经通过验收或结题的  等待加入成果库的内容
         List<TopicNumberName> topicNumberNameList = achievementMapper.queryAddChievement(topicName, companyName, newpage, total);
         for (TopicNumberName topicNumberName : topicNumberNameList) {

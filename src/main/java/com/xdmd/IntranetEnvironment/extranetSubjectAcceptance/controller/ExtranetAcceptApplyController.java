@@ -508,4 +508,47 @@ public class ExtranetAcceptApplyController {
     }
 
 
+    //外网在做课题申请时，先查询可添加的课题名称
+    @ResponseBody
+    @PostMapping("queryTopicName")
+    public ResultMap queryTopicName(@CookieValue(value = "token") String token, HttpServletResponse response){
+
+        try {
+            resultMap = extranetAcceptApplyService.queryTopicName(token,response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("ExtranetAcceptApplyController 中 queryTopicName 方法错误 -- "+e.getMessage());
+            return resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
+
+    //通过课题名称,获取课题编号
+    @ResponseBody
+    @PostMapping("queryTopicNumber")
+    public ResultMap queryTopicNumber(@RequestParam("projectName")String projectName){
+        try {
+            resultMap = extranetAcceptApplyService.queryTopicNumber(projectName);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("ExtranetAcceptApplyController 中 queryTopicNumber方法错误 "+e.getMessage());
+            return resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
+
+    //验收申请中，根据课题编号获取信息
+    @ResponseBody
+    @PostMapping("queryInformationByTopicNumber")
+    public ResultMap queryInformationByTopicNumber(@RequestParam("projectNumber")String projectNumber){
+
+        try {
+            resultMap = extranetAcceptApplyService.queryInformationByTopicNumber(projectNumber);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("ExtranetAcceptApplyController 中 queryInformationByTopicNumber 方法错误 "+e.getMessage());
+            return resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
 }

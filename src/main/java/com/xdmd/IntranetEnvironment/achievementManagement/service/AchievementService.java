@@ -15,7 +15,8 @@ public interface AchievementService {
 
     ResultMap AddAchievement(String token, HttpServletResponse response, String cid, MultipartFile achievementFileUrl, OutcomeInformationAll outcomeInformationAll);
 
+    ResultMap queryAchivement(String topicName, String companyName, Integer page, Integer total);
+
     ResultMap queryAddAchivement(String topicName, String companyName, Integer page, Integer total);
 
-    ResultMap queryAchivement(String topicName, String companyName, Integer page, Integer total);
 }

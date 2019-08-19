@@ -9,6 +9,7 @@ import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.UploadFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.text.ParseException;
 
 public interface ExtranetAcceptApplyService {
     //验收申请表的查询
@@ -41,4 +42,10 @@ public interface ExtranetAcceptApplyService {
     ResultMap expertGroupModify(String token, HttpServletResponse response, ExtranetExpertGroupComment extranetExpertGroupComment, Integer caId, String oldExpertGroupFileUrl, String oldExpertAcceptanceFormFile, MultipartFile expertGroupFile, MultipartFile expertAcceptanceFormFile) throws Exception;
 
     ResultMap lastReportModify(String token, HttpServletResponse response, Integer caId, MultipartFile lastReportFile, String oldLastReportFileUrl, AcceptanceCertificate acceptanceCertificate) throws Exception;
+
+    ResultMap queryTopicNumber(String projectName) throws ParseException;
+
+    ResultMap queryTopicName(String token, HttpServletResponse response) throws ParseException;
+
+    ResultMap queryInformationByTopicNumber(String projectNumber);
 }

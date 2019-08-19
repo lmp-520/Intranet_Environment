@@ -30,7 +30,7 @@ public class AchievementController {
     //成果库 的 成果查询
     @PostMapping("queryAchievement")
     @ResponseBody
-    public ResultMap QueryAchievement(@RequestParam(value = "topicName", required = false) String topicName,    //课题名称
+    public ResultMap QueryAchievement(@RequestParam(value = "topicName", required = false) String topicName,        //课题名称
                                       @RequestParam(value = "companyName", required = false) String companyName,    //应用单位名称
                                       @RequestParam("Page") Integer page,
                                       @RequestParam("total") Integer total) {
@@ -45,8 +45,8 @@ public class AchievementController {
     //当环保厅进行成果新增时. 进行的查询
     @ResponseBody
     @PostMapping("addAchievementQuery")
-    public ResultMap queryAddAchievement(@RequestParam(value = "topicName", required = false) String topicName,
-                                         @RequestParam(value = "companyName", required = false) String companyName,
+    public ResultMap queryAddAchievement(@RequestParam(value = "topicName", required = false) String topicName,     //课题名称
+                                         @RequestParam(value = "companyName", required = false) String companyName, //应用单位名称
                                          @RequestParam("Page") Integer page,
                                          @RequestParam("total") Integer total) {
 
