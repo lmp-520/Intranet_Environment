@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Select;
 
 public interface ExtranetExpertMapper {
     //根据登陆名获取uid
-    @Select("select uid from shiro_user_information where login_name = #{loginName}")
+    @Select("select uid from shiro_user_information where login_name = #{loginName} and is_delete = 0 and identity =2)")
     Integer queryUidByLoginNameExist(@Param("loginName") String loginName);
 
     //文件的上传
