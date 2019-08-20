@@ -33,9 +33,9 @@ public class CompanyControllerTwo {
     //公司的注册
     @ResponseBody
     @PostMapping("register")
-    public ResultMap companyRegister(@CookieValue(value = "check", required = false) String check,
+    public ResultMap companyRegister(//@CookieValue(value = "check", required = false) String check,
                                      @Valid @RequestPart UserInformation userInformation, BindingResult result,
-                                     @RequestParam("code") String code,
+                                    // @RequestParam("code") String code,
                                      @RequestPart("businessFile") MultipartFile businessFile, //营业执照扫描件
                                      @RequestPart("legalCardIdFile") MultipartFile legalCardIdFile,//法人身份证文件
                                      @RequestPart("contactCardFile") MultipartFile contactCardFile) { //联系人身份证文件
@@ -43,10 +43,10 @@ public class CompanyControllerTwo {
             return resultMap.fail().message("上传的文件不可以为空");
         }
 
-        if (!check.equalsIgnoreCase(code)) {
-            //用户输入的验证码有误
-            return resultMap.fail().message("输入的验证码有误");
-        }
+//        if (!check.equalsIgnoreCase(code)) {
+//            //用户输入的验证码有误
+//            return resultMap.fail().message("输入的验证码有误");
+//        }
 
         //用于判断用户传输的参数是否有误
         if (result.hasErrors()) {

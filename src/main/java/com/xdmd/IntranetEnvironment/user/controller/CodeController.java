@@ -62,7 +62,7 @@ public class CodeController {
         }
 
         //设置干扰线
-        for (int i = 1; i <= 10; i++) {
+        for (int i = 1; i <= 5; i++) {
             //两点连成一直线，每一个点都有一个坐标x1和y1代表起点的坐标，x2和y2代表终点的坐标
             g.drawLine(r.nextInt(width), r.nextInt(height), r.nextInt(width), r.nextInt(height));
             //设置线条的颜色
