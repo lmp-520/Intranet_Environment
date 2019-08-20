@@ -95,12 +95,12 @@ public class GuideController {
     }
 
     /**
-     * 根据勾选获取的id查询指南申报
+     * 根据勾选的指南id更新相应指南申报选中状态
      * @param ids
      * @return
      */
     @PostMapping(value = "getCollectionByIds")
-    @ApiOperation(value = "根据勾选的指南申报的id集合查询申报信息(注意:传的是指南申报id,不是汇总表id)")
+    @ApiOperation(value = "根据勾选的指南id更新相应指南申报选中状态(注意:传的是指南申报id,不是汇总表id)")
     public ResultMap getCollectionByIds(@ApiParam("指南id集合") @RequestBody List<Long> ids){
         if(ids != null && !ids.equals("") && !ids.equals("null")){
              resultMap=guideService.getCollectionByIds(ids);
@@ -146,7 +146,7 @@ public class GuideController {
      * @return
      */
     @GetMapping(value = "getAllSummary")
-    @ApiOperation(value = "分页展示汇总信息(bug:模糊查询立项时间有问题)")
+    @ApiOperation(value = "分页展示汇总信息")
     @ApiImplicitParams({
             @ApiImplicitParam(name="guideSummaryTitle",value = "汇总标题",dataType = "string"),
             @ApiImplicitParam(name="fillUnit",value = "填报单位",dataType = "string"),

@@ -3,6 +3,7 @@ package com.xdmd.IntranetEnvironment.subjectmanagement.pojo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.math.BigDecimal;
 
@@ -11,11 +12,14 @@ import java.math.BigDecimal;
  * @author Kong 2019-07-15
  */
 @Data
-@ApiModel(description ="公开招标实体类")
+@ApiModel("招标备案实体类")
 public class OpenTender{
 
-    @ApiModelProperty(name="主键【注:系统默认生成,新增时不用填】",required = false,example ="1")
+    @ApiModelProperty("主键【注:系统默认生成,新增时不用填】")
     private int id;
+
+    @ApiModelProperty("课题编号【注:系统默认生成,新增时不用填】")
+    private String projectNo;
 
     @ApiModelProperty("项目名称")
     private String projectName;
@@ -56,11 +60,23 @@ public class OpenTender{
     @ApiModelProperty("配套经费")
     private BigDecimal supportingFunds;
 
-    @ApiModelProperty("审核状态(1：企业的普通员工已提交2：企业的管理员已提交3：科室工作人员通过审核4：审核未通过)")
+    @ApiModelProperty("备注")
+    private String remark;
+
+    @ApiModelProperty("招标备案审批状态(0-单位员工待提交 1-单位管理员待审批 2-评估中心员工待审批)")
     private Integer auditStatus;
 
-    @ApiModelProperty("课题编号【注:系统默认生成,新增时可不用填】")
-    private String projectNo;
+    @ApiModelProperty("中标文件附件id")
+    private Integer winningFileAttachmentId;
+
+    @ApiModelProperty("成交公告附件")
+    private Integer announcementTransactionAnnouncementId;
+
+    @ApiModelProperty("成交通知附件id")
+    private Integer dealNotificationAttachmentId;
+
+    @ApiModelProperty("响应文件附件id")
+    private Integer responseFileAttachmentId;
 
     public OpenTender() {
     }

@@ -140,12 +140,13 @@ public class GuideServiceImpl implements GuideService {
      * 新增汇总信息实现【单条插入】
      * @param guideSummary
      * @return
-     */
+     *  */
     @Override
     public ResultMap insertSummary(GuideSummary guideSummary) {
         int number = guideMapper.insertSummary(guideSummary);
         return resultMap.success().message("汇总新增成功");
     }
+
 
     /**
      * 新增汇总信息实现【批量插入】
@@ -270,8 +271,7 @@ public class GuideServiceImpl implements GuideService {
     }
 
     /**
-     * 根据勾选的指南id获取选相应指南申报信息
-     *
+     * 根据勾选的指南id更新相应指南申报选中状态
      * @param ids
      * @return
      */

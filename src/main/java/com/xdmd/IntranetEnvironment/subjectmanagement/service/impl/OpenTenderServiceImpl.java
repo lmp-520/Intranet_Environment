@@ -2,27 +2,39 @@ package com.xdmd.IntranetEnvironment.subjectmanagement.service.impl;
 
 import com.github.pagehelper.PageHelper;
 
+import com.xdmd.IntranetEnvironment.common.AnnexUpload;
+import com.xdmd.IntranetEnvironment.common.FileSuffixJudge;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.subjectmanagement.mapper.OpenTenderMapper;
+import com.xdmd.IntranetEnvironment.subjectmanagement.mapper.UploadFileMapper;
 import com.xdmd.IntranetEnvironment.subjectmanagement.pojo.OpenTender;
 import com.xdmd.IntranetEnvironment.subjectmanagement.service.OpenTenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: Kong
  * @createDate: 2019/07/26
- * @description: 招标业务实现类
+ * @description: 招标备案业务实现
  */
 @Service
 public class OpenTenderServiceImpl implements OpenTenderService {
     @Autowired
     OpenTenderMapper openTenderMapper;
+    @Autowired
+    UploadFileMapper uploadFileMapper;
+
+
     ResultMap resultMap = new ResultMap();
+    AnnexUpload annexUpload;
 
     /**
      * 新增
@@ -31,14 +43,65 @@ public class OpenTenderServiceImpl implements OpenTenderService {
      */
     @Override
     public ResultMap insertTender(OpenTender openTender) {
-        openTender.setProjectNo(setProjectNo());
-        try {
-            int no=openTenderMapper.insertTender(openTender);
-
+        try{
+            openTender.setProjectNo(setProjectNo());
+            int insertNo=openTenderMapper.insertTender(openTender);
+            if(insertNo>0){
+                resultMap.success().message("成功新增"+insertNo+"条数据");
+            }else if(insertNo==0){
+                resultMap.success().message("新增失败");
+            }
         }catch (Exception e){
-            resultMap.fail().message("新增失败");
+            e.printStackTrace();
+            resultMap.success().message("系统异常");
         }
-        return resultMap.success().message("新增成功");
+        return resultMap;
+    }
+
+    /**
+     * 根據单位id查詢相应单位的招标公告
+     * @param uid
+     * @param projectName
+     * @param subjectName
+     * @param subjectLeader
+     * @param leaderContact
+     * @return
+     */
+    @Override
+    public ResultMap getTenderByUid(int uid, String projectName, String subjectName, String subjectLeader, String leaderContact) {
+        try{
+            List<Map> getTenderByUidMap = openTenderMapper.getTenderByUid(uid,projectName,subjectName,subjectLeader,leaderContact);
+            if(getTenderByUidMap!=null){
+                resultMap.success().message(getTenderByUidMap);
+            }else if(getTenderByUidMap==null){
+                resultMap.success().message("没有查到相关信息");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            resultMap.success().message("系统异常");
+        }
+        return resultMap;
+    }
+
+    /**
+     * 根據id获取招标公告详情
+     * @param id
+     * @return
+     */
+    @Override
+    public ResultMap getTenderById(int id) {
+        try{
+            List<Map> getTenderByIdList = openTenderMapper.getTenderById(id);
+            if(getTenderByIdList!=null){
+                resultMap.success().message(getTenderByIdList);
+            }else if(getTenderByIdList==null){
+                resultMap.success().message("没有查到相关信息");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            resultMap.success().message("系统异常");
+        }
+        return resultMap;
     }
 
     /**
@@ -73,27 +136,127 @@ public class OpenTenderServiceImpl implements OpenTenderService {
         String finalResult=sBuilder.insert(sBuilder.length(), num).toString();
         return finalResult;
     }
+
     /**
-     * 根據id查詢相应单位的招标公告
-     * @param id
+     * 分页筛选查询招标信息
+     * @param projectName
+     * @param subjectName
+     * @param subjectLeader
+     * @param leaderContact
+     * @param pageNum
+     * @param pageSize
      * @return
      */
     @Override
-    public ResultMap getTenderById(int id) {
-        List<OpenTender> getTenderByIdList = openTenderMapper.getTenderById(id);
-        return getTenderByIdList.size() > 0 ? resultMap.success().message(getTenderByIdList) : resultMap.fail().message("查询失败,该信息可能已被删除");
+    public ResultMap getTenderPageList(String projectName, String subjectName, String subjectLeader, String leaderContact, int pageNum, int pageSize) {
+        try{
+            PageHelper.startPage(pageNum, pageSize);
+            List<Map> openTenderList = openTenderMapper.getTenderPageList(projectName, subjectName, subjectLeader, leaderContact);
+            if(openTenderList!=null){
+                resultMap.success().message(openTenderList);
+            }else if(openTenderList==null){
+                resultMap.success().message("没有查到相关信息");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            resultMap.success().message("系统异常");
+        }
+        return resultMap;
     }
 
+
+    /**
+     * 根据招标备案id更新相应的附件id【外网上传附件】
+     * @param winningFileAttachmentId
+     * @param announcementTransactionAnnouncementId
+     * @param dealNotificationAttachmentId
+     * @param responseFileAttachmentId
+     * @param oid
+     * @return
+     */
     @Override
-    public List<OpenTender> getTenderPageList(String projectName, String subjectName, String subjectLeader, String leaderContact, int pageNum, int pageSize) {
-        PageHelper.startPage(pageNum, pageSize);
-        List<OpenTender> openTenderList = openTenderMapper.getTenderPageList(projectName, subjectName, subjectLeader, leaderContact);
-        return openTenderList;
+    public ResultMap updateTenderByoid(int winningFileAttachmentId, int announcementTransactionAnnouncementId, int dealNotificationAttachmentId, int responseFileAttachmentId,int oid) {
+        try{
+            int updateNo = openTenderMapper.updateTenderByoid(winningFileAttachmentId,announcementTransactionAnnouncementId,dealNotificationAttachmentId,responseFileAttachmentId,oid);
+            if(updateNo>0){
+                resultMap.success().message("成功更新"+updateNo+"条数据");
+            }else if(updateNo<0){
+                resultMap.success().message("没有查到相关信息");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            resultMap.success().message("系统异常");
+        }
+        return resultMap;
     }
 
 
     @Override
     public OpenTender getNewData() {
         return openTenderMapper.getNewData();
+    }
+
+    /**
+     * 招标附件上传
+     * @param file
+     * @param fileType
+     * @param oid
+     * @return
+     * @throws IOException
+     */
+    @Override
+    public String tenderFileUpload(MultipartFile file, String fileType, int oid) throws IOException {
+
+    //判断文件是否为空
+    if (file.isEmpty()) {
+        return "上传文件不可为空";
+    }
+    // 获取文件名拼接当前系统时间作为新文件名
+    String nowtime =  new SimpleDateFormat("yyyyMMddHHmmss").format(System.currentTimeMillis());
+    StringBuilder pinjiefileName=new StringBuilder(nowtime).append(file.getOriginalFilename());
+    String fileName =pinjiefileName.toString();
+
+    //获取课题名称
+    OpenTender openTender=new OpenTender();
+    String ketiName=openTender.getSubjectName();
+    //获取文件上传绝对路径
+    String FilePath = "D:/xdmd/environment/" +ketiName+"/"+fileType+"/";
+    StringBuilder initPath = new StringBuilder(FilePath);
+    String filePath=initPath.append(fileName).toString();
+    System.out.println("文件路径-->"+filePath);
+    File dest = new File(filePath);
+
+    //获取文件后缀名
+    String suffixName = fileName.substring(fileName.lastIndexOf(".") + 1);
+    //判断上传文件类型是否符合要求
+    Boolean typeIsOK= FileSuffixJudge.suffixJudge(file.getOriginalFilename());
+    if (typeIsOK==false){
+        return "上传的文件类型不符合要求";
+    }
+    //判断文件父目录是否存在
+    if (!dest.getParentFile().exists()) {
+        dest.getParentFile().mkdirs();
+    }
+    try {
+        //保存文件
+        file.transferTo(dest);
+        // 获取文件大小
+        File file1 = new File(filePath);
+        String fileSize = String.valueOf(file1.length());
+        System.out.println(fileName+"的文件大小-->"+fileSize);
+        //封装到uploadfile
+        annexUpload.setUploadFilePath(String.valueOf(dest));
+        annexUpload.setFileSize(fileSize);
+        annexUpload.setUploadFileName(fileName);
+        annexUpload.setUploadFileType(fileType);
+        annexUpload.setUploadSuffixName(suffixName);
+        annexUpload.setCreateAuthor("创建者");
+        //文件信息保存到数据库
+        int upNo= uploadFileMapper.insertUpload(annexUpload);
+        return "上传成功-->"+filePath;
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+       return "上传失败";
     }
 }
