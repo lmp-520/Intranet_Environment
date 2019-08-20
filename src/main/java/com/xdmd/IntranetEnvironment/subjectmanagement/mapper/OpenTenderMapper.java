@@ -2,6 +2,7 @@ package com.xdmd.IntranetEnvironment.subjectmanagement.mapper;
 
 import com.xdmd.IntranetEnvironment.subjectmanagement.pojo.OpenTender;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
@@ -174,7 +175,7 @@ public interface OpenTenderMapper {
      * @param
      * @return
      */
-    @Update(value = "UPDATE contract_manage \n" +
+    @Update(value = "UPDATE open_tender \n" +
             "SET winning_file_attachment_id = #{winningFileAttachmentId},\n" +
             "announcement_transaction_announcement_id = #{announcementTransactionAnnouncementId},\n" +
             "deal_notification_attachment_id = #{dealNotificationAttachmentId} \n" +
@@ -184,5 +185,55 @@ public interface OpenTenderMapper {
 
 
 
+
+    /**
+     * 单位管理员审核通过
+     * @return
+     */
+    @Update(value = "update open_tender set audit_status=2 where audit_status=1 and id=#{id}")
+    int updateApprovalStatusOne(@Param("id") int id);
+
+    /**
+     * 单位管理员审核不通过
+     * @return
+     */
+    @Update(value = "update open_tender set audit_status=0 where audit_status=1 and id=#{id}")
+    int updateApprovalStatusTwo(@Param("id") int id);
+
+    /**
+     * 评估中心审核通过
+     * @return
+     */
+    @Update(value = "update open_tender set audit_status=3 where audit_status=2 and id=#{id}")
+    int updateApprovalStatusThree(@Param("id") int id);
+
+    /**
+     * 评估中心审核不通过退回到重新提交
+     * @return
+     */
+    @Update(value = "update open_tender set audit_status=0 where audit_status=2 and id=#{id}")
+    int updateApprovalStatusFour(@Param("id") int id);
+
+    /**
+     * 不通过被退回时重新提交
+     * @return
+     */
+    @Update(value = "update open_tender set audit_status=1 where audit_status=0 and id=#{id}")
+    int updateApprovalStatusFive(@Param("id") int id);
+
+
+    /**
+     * 展示所有未通过审批的
+     * @return
+     */
+    @Select("select * from open_tender where audit_status<2")
+    OpenTender showAllNoAudit();
+
+    /**
+     * 展示所有评估中心通过审批的
+     * @return
+     */
+    @Select("select * from open_tender where audit_status=3")
+    OpenTender showAllAudited();
 }
 
