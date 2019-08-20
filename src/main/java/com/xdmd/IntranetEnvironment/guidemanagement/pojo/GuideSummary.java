@@ -81,8 +81,14 @@ public class GuideSummary {
     @ApiModelProperty("查重备注")
     private String checkBackNote;
 
-    @ApiModelProperty("归属大类")
+    @ApiModelProperty("归属类别")
     private Integer ownershipCategory;
+
+    @ApiModelProperty("归属领域")
+    private Integer ownershipDomain;
+
+    @ApiModelProperty("创建者")
+    private String creator;
 
     @ApiModelProperty("创建时间【注:系统默认生成,新增时不用填】")
     private Date createTime;

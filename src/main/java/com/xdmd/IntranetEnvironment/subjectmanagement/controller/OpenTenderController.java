@@ -4,21 +4,17 @@ package com.xdmd.IntranetEnvironment.subjectmanagement.controller;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.subjectmanagement.pojo.OpenTender;
 import com.xdmd.IntranetEnvironment.subjectmanagement.service.OpenTenderService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author: Kong
  * @createDate: 2019/07/26
- * @description: 招标接口
+ * @description: 招标备案接口
  */
-@Api(tags="招标公告")
+@Api(tags="招标备案接口")
 @RestController
 @RequestMapping(value = "/environment/tender")
 public class OpenTenderController  {
@@ -30,22 +26,42 @@ public class OpenTenderController  {
      * @param openTender
      * @return
      */
-    @ApiOperation(value = "新增招标信息")
+    @ApiOperation(value = "新增招标信息【外网】")
     @PostMapping(value = "insertTender")
-    ResultMap insertTender(OpenTender openTender){
-        return openTenderService.insertTender(openTender);
+    ResultMap insertTender(@RequestBody OpenTender openTender){
+        return resultMap=openTenderService.insertTender(openTender);
 
     }
 
     /**
-     * 根據id查詢相应单位的课题
+     * 根据单位的id查询招标信息
+     * @param uid
+     * @return
+     */
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "uid", value = "单位id"),
+            @ApiImplicitParam(name = "projectName", value = "项目名称"),
+            @ApiImplicitParam(name = "subjectName", value = "课题名称"),
+            @ApiImplicitParam(name = "subjectLeader", value = "课题负责人"),
+            @ApiImplicitParam(name = "leaderContact", value = "课题负责人联系方式")
+    })
+    @ApiOperation(value = "根据单位的id查询招标信息【外网】")
+    @GetMapping(value = "getTenderByUid")
+    ResultMap getTenderByUid(int uid,String projectName,String subjectName,String subjectLeader,String leaderContact){
+       return openTenderService.getTenderByUid(uid,projectName,subjectName,subjectLeader,leaderContact);
+    }
+
+    /**
+     * 根據id查詢筛选招标公告详情
      * @param id
      * @return
      */
-    @ApiOperation(value = "根据单位的id查询招标信息（不是招标公告的id）")
+    @ApiImplicitParam(name = "id", value = "招标id")
+    @ApiOperation(value = "根据id查询招标信息【内外网】")
     @GetMapping(value = "getTenderById")
     ResultMap getTenderById(int id){
-       return openTenderService.getTenderById(id);
+        return openTenderService.getTenderById(id);
+
     }
 
     /**
@@ -56,18 +72,47 @@ public class OpenTenderController  {
      * @param leaderContact
      * @return
      */
-    @ApiOperation(value = "分页展示招标信息")
+    @ApiOperation(value = "分页展示招标信息【内网】")
     @ApiImplicitParams({
-            @ApiImplicitParam(name="projectName",value = "项目名称",required = false,dataType ="string"),
-            @ApiImplicitParam(name="subjectName",value = "课题名称",required = false,dataType ="string"),
-            @ApiImplicitParam(name="subjectLeader",value = "课题负责人",required = false,dataType ="string"),
-            @ApiImplicitParam(name="leaderContact",value = "课题负责人联系方式",required = false,dataType ="string"),
-            @ApiImplicitParam(name="pageNum",value = "当前页数",required =true,dataType ="Long"),
-            @ApiImplicitParam(name="pageSize",value = "每页显示条数",required = true,dataType ="Long")
+            @ApiImplicitParam(name = "projectName", value = "项目名称"),
+            @ApiImplicitParam(name = "subjectName", value = "课题名称"),
+            @ApiImplicitParam(name = "subjectLeader", value = "课题负责人"),
+            @ApiImplicitParam(name = "leaderContact", value = "课题负责人联系方式"),
+            @ApiImplicitParam(name = "pageNum", value = "当前页数", required = true),
+            @ApiImplicitParam(name = "pageSize", value = "每页显示条数", required = true)
     })
     @GetMapping(value = "getAllTender")
-    ResultMap getAllTender(String projectName, String subjectName, String subjectLeader, String leaderContact,int pageNum, int pageSize){
-      List<OpenTender> openTenderList=openTenderService.getTenderPageList(projectName, subjectName, subjectLeader, leaderContact, pageNum, pageSize);
-        return openTenderList.size()>0?resultMap.success().message(openTenderList):resultMap.fail().message("查询失败");
+    ResultMap getTenderPageList(String projectName, String subjectName, String subjectLeader, String leaderContact, int pageNum, int pageSize) {
+        return resultMap=openTenderService.getTenderPageList(projectName,subjectName,subjectLeader,leaderContact,pageNum,pageSize);
     }
+
+    /**
+     * 根据招标备案id更新相应的附件id【还没测试】
+     * @param winningFileAttachmentId
+     * @param announcementTransactionAnnouncementId
+     * @param dealNotificationAttachmentId
+     * @param oid
+     * @return
+     */
+    ResultMap updateTenderByoid(int winningFileAttachmentId, int announcementTransactionAnnouncementId, int dealNotificationAttachmentId,int responseFileAttachment, int oid){
+        return  resultMap=openTenderService.updateTenderByoid(winningFileAttachmentId,announcementTransactionAnnouncementId,dealNotificationAttachmentId,responseFileAttachment,oid);
+    }
+
+    @PostMapping("TenderFileUpload")
+    @ApiOperation(value = "招标附件上传")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "fileType", value = "附件类型"),
+            @ApiImplicitParam(name = "oid", value = "招标id"),
+    })
+    public String midFileUpload(@RequestParam("file") @ApiParam("附件") MultipartFile file, @RequestParam("fileType") @ApiParam("文件类型")String fileType, @RequestParam("oid") @ApiParam("id") int oid){
+        String OK=null;
+        try {
+            OK=openTenderService.tenderFileUpload(file,fileType,oid);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return OK;
+    }
+
 }

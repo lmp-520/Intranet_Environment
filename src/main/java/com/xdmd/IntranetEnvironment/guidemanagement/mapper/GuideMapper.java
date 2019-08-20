@@ -100,7 +100,7 @@ public interface GuideMapper {
     List<Map> getCollectionByUid(String guideName, Integer domain, Integer category, String fillUnit, String fillContacts, String contactPhone, int Uid);
 
     /**
-     * [新增]单位关联指南征集
+     * [新增]单位关联指南征集【思路不清晰，暂不做】
      * @return
      */
     @Insert(value = "INSERT INTO unit_guide_collection (unit_id,collection_id)VALUES(#{unitId},#{collectionId})")
@@ -108,31 +108,12 @@ public interface GuideMapper {
 
 
     /**
-     * 根据勾选的指南id获取选相应指南申报信息(内网)--汇总2
+     * 根据勾选的指南id更新相应指南的选中状态(没有用到)--汇总2
      * @param ids
      * @return
     */
-    @Select(value ="<script>\n" +
-            "SELECT\n" +
-            "gc.id,\n" +
-            "gc.guide_name,\n" +
-            "dic.content As domain,\n" +
-            "d.content As category,\n" +
-            "gc.fill_unit,\n" +
-            "gc.fill_contacts,\n" +
-            "gc.reason_basis,\n" +
-            "gc.research_content_technology,\n" +
-            "gc.expected_target_outcome,\n" +
-            "gc.standards_specifications_regulatory,\n" +
-            "gc.research_period,\n" +
-            "gc.research_fund,\n" +
-            "gc.demonstration_scale,\n" +
-            "gc.demonstration_point,\n" +
-            "gc.province_domain_mechanism,\n" +
-            "gc.contact_phone\n" +
-            "FROM\n" +
-            "guide_collection AS gc,dictionary AS dic,dictionary AS d\n" +
-            "where gc.domain=dic.id AND gc.category=d.id AND gc.id in\n" +
+    @Select(value ="<script>" +
+            "update guide_collection set is_select=1 where id in " +
             "<foreach\tcollection='list'\titem='gcId'\topen='(' separator=',' close=')'>" +
             "#{gcId}\n" +
             "</foreach>\n" +
@@ -214,9 +195,10 @@ public interface GuideMapper {
 
 
     /**
-     * 新增汇总信息【单条插入】(内网)--汇总3
+     * 新增汇总信息【单条插入-暂未用到】(内网)--汇总3
      * @param guideSummary
      * @return
+     *
      */
     @Insert(value = "INSERT INTO guide_summary\n" +
             "VALUES(\n" +
@@ -243,8 +225,12 @@ public interface GuideMapper {
             "#{checkBackResult},\n" +
             "#{checkBackNote},\n" +
             "#{ownershipCategory},\n" +
+            "#{ownershipDomain},\n" +
+            "#{creator},\n" +
             "DEFAULt)")
     int insertSummary(GuideSummary guideSummary);
+
+
 
     /**
      * 新增汇总信息【批量插入】
@@ -255,60 +241,42 @@ public interface GuideMapper {
     int batchInsertSummary(@Param("list") List<GuideSummary> guideSummary);
 
     /**
-     * 分页查询全部汇总信息(要修改)--汇总4
+     * 分页查询全部汇总信息【内网】--汇总4
      * @return
      */
     @Select(value = "<script>" +
-            "SELECT\t" +
-            "gs.id," +
-            "gs.guide_name,\n" +
-            "dic.content as domain,\n" +
-            "d.content as category,\n" +
-            "gs.fill_unit,\n" +
-            "gs.fill_contacts,\n" +
-            "gs.reason_basis,\n" +
-            "gs.research_content_technology,\n" +
-            "gs.expected_target_outcome,\n" +
-            "gs.standards_specifications_regulatory,\n" +
-            "gs.research_period,\n" +
-            "gs.research_fund,\n" +
-            "gs.demonstration_scale,\n" +
-            "gs.demonstration_point,\n" +
-            "gs.province_domain_mechanism,\n" +
-            "gs.contact_phone,\n" +
-            "gs.guide_summary_title,\n" +
-            "gs.unit_category,\n" +
-            "gs.project_time,\n" +
-            "gs.note,\n" +
-            "gs.check_back_result,\n" +
-            "gs.check_back_note,\n" +
-            "gs.ownership_category\n" +
+            "SELECT\n" +
+            "DISTINCT\n" +
+            "guide_summary_title as guideSummaryTitle,\n" +
+            "ownership_domain as ownershipDomain,\n" +
+            "project_time as projectTime,\n" +
+            "creator\n" +
             "FROM\n" +
-            "guide_summary gs,dictionary dic,dictionary d\n" +
-            "where gs.domain = dic.id and gs.category=d.id\n" +
+            "guide_summary" +
+            "<where>" +
             "<if test ='null != guideSummaryTitle'>\n" +
-            "AND gs.guide_summary_title like CONCAT('%',#{guideSummaryTitle},'%')\n" +
+            "guide_summary_title like CONCAT('%',#{guideSummaryTitle},'%')\n" +
             "</if>\n" +
             "<if test ='null != fillUnit'>\n" +
-            "AND gs.fill_unit like CONCAT('%',#{fillUnit},'%')\n" +
+            "AND fill_unit like CONCAT('%',#{fillUnit},'%')\n" +
             "</if>\n" +
             "<if test ='null != domain'>\n" +
-            "AND gs.domain =#{domain}\n" +
+            "AND domain =#{domain}\n" +
             "</if>\n" +
             "<if test ='null != category'>\n" +
-            "AND gs.category like CONCAT('%',#{category},'%')\n" +
+            "AND category like CONCAT('%',#{category},'%')\n" +
             "</if>\n" +
             "<if test ='null != projectTime'>\n" +
-            "AND gs.project_time like CONCAT('%',#{projectTime},'%')\n" +
+            "AND project_time like CONCAT('%',#{projectTime},'%')\n" +
             "</if>\n" +
             "<if test ='null != researchContentTechnology'>\n" +
-            "AND gs.research_content_technology like CONCAT('%',#{researchContentTechnology},'%')\n" +
-            "</if>\n" +
+            "AND research_content_technology like CONCAT('%',#{researchContentTechnology},'%')\n" +
+            "</if></where>\n" +
             "</script>")
-    List<Map> getSummaryByParam(@Param("guideSummaryTitle") String guideSummaryTitle, @Param("fillUnit") String fillUnit, @Param("domain") Integer domain, @Param("category") Integer category, @Param("projectTime") String projectTime, @Param("researchContentTechnology") String researchContentTechnology);
+    List<Map> getSummaryByParam(@Param("guideSummaryTitle") String guideSummaryTitle, @Param("fillUnit") String fillUnit, @Param("domain") int domain, @Param("category") int category, @Param("projectTime") String projectTime, @Param("researchContentTechnology") String researchContentTechnology);
 
     /**
-     * 根据汇总标题分页查询汇总指南--汇总5
+     * 根据汇总标题查询汇总指南--汇总5
      * @return
      */
     @Select(value = "<script>" +
@@ -336,6 +304,7 @@ public interface GuideMapper {
             "gs.check_back_result,\n" +
             "gs.check_back_note,\n" +
             "gs.ownership_category\n" +
+            "gs.ownership_domain\n" +
             "FROM\n" +
             "guide_summary gs,dictionary dic,dictionary d\n" +
             "where gs.domain = dic.id and gs.category=d.id\n" +

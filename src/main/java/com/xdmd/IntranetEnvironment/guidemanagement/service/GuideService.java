@@ -77,7 +77,7 @@ public interface GuideService {
     ResultMap getCollectionByUid(String guideName, Integer domain, Integer category, String fillUnit, String fillContacts, String contactPhone, int Uid, int pageNum, int pageSize);
 
     /**
-     * [新增]单位关联指南征集
+     * [新增]单位关联指南征集【暂不做】
      * @param unitId
      * @param collectionId
      * @return
