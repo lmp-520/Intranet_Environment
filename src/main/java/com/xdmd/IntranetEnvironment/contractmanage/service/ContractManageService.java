@@ -37,10 +37,26 @@ public interface ContractManageService {
     ContractManageDTO getManageInfoById(int id);
 
     /**
+     * [查詢] 根據单位id查詢本单位合同
+     * @param uid
+     * @return
+     */
+    List<Map> getManageInfoByUid(int uid,String subjectCategory,String subjectName,
+                                 String subjectContact,String subjectContactPhone,String commitmentUnit,
+                                 String subjectSupervisorDepartment);
+
+
+    /**
      * [查詢合同主表] 查詢主表全部
      * @return
      */
-    List<ContractManageDTO> getAllInfo();
+    List<Map> getAllInfo(String subjectCategory,String subjectName, String subjectContact,String subjectContactPhone,String commitmentUnit,String subjectSupervisorDepartment);
+
+
+    ///////////////////////////以下是中期检查///////////////////////////////////
+
+
+
 
     /**
      * 根据勾选的合同主表id修改相应的中期检查记录【内网中检】

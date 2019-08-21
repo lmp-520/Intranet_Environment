@@ -13,7 +13,7 @@ import java.util.Date;
  * @description: 指南汇总实体
  */
 @Data
-@ApiModel(description ="指南汇总信息")
+@ApiModel("指南汇总信息")
 public class GuideSummary {
     @ApiModelProperty(name="主键【注:系统默认生成,新增时不用填】",required = false,example ="1")
     private Integer id;

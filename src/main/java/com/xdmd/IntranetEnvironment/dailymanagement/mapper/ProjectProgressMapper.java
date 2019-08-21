@@ -115,7 +115,7 @@ public interface ProjectProgressMapper {
      * @param currentProgress
      * @return
      */
-    @Insert(value = "<script>" +
+    @Insert("<script>" +
             "INSERT INTO  current_progress\n" +
             "VALUES\t" +
             "<foreach collection=\"list\" item=\"item\" separator=\",\">" +

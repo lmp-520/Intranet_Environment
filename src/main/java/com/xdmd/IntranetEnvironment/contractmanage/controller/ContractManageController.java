@@ -17,7 +17,7 @@ import java.util.Map;
  * @createDate: 2019/8/4
  * @description: 合同管理接口
  */
-@Api(tags = "合同管理【合同主表】")
+@Api(tags = "合同管理接口【合同主表】")
 @RestController
 @RequestMapping(value = "environment/contract")
 public class ContractManageController {
@@ -34,22 +34,44 @@ public class ContractManageController {
      */
     @ApiOperation(value = "新增合同信息【外网提交】")
     @PostMapping(value = "addContractInfo")
-    public ResultMap insertContractInfo(ContractManageDTO contractManageDTO) {
+    public ResultMap insertContractInfo(@RequestBody ContractManageDTO contractManageDTO) {
         int cm = contractManageService.insert(contractManageDTO);
-        return cm > 0 ? resultMap.success().message("新增成功") : resultMap.fail().message("新增失败");
+        return cm > 0 ? resultMap.success().message("新增成功").message(contractManageDTO.getId()) : resultMap.fail().message("新增失败");
     }
 
     /**
      * 根据id查询
-     *
      * @param id
      * @return
      */
-    @ApiOperation(value = "根据合同id查询【内网查看】")
+    @ApiOperation(value = "根据合同id查询【内外网查看】")
     @GetMapping(value = "getManageInfoById")
     public ResultMap getManageInfoById(int id) {
         ContractManageDTO cmDTO = contractManageService.getManageInfoById(id);
         return cmDTO != null ? resultMap.success().message(cmDTO) : resultMap.fail().message("查询失败");
+    }
+
+
+    /**
+     * 根据单位id查询本单位的合同
+     * @param uid
+     * @return
+     */
+    @ApiOperation(value = "根据单位id查询本单位的合同【外网查看】")
+    @GetMapping(value = "getManageInfoByUid")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="uid",value = "单位id",required = true),
+            @ApiImplicitParam(name="subjectCategory",value = "课题类别"),
+            @ApiImplicitParam(name="subjectName",value = "课题名称"),
+            @ApiImplicitParam(name="subjectContact",value = "课题联系人"),
+            @ApiImplicitParam(name="subjectContactPhone",value = "课题联系人电话或手机"),
+            @ApiImplicitParam(name="commitmentUnit",value = "承担单位"),
+            @ApiImplicitParam(name="subjectSupervisorDepartment",value = "课题主管部门")
+    })
+    public ResultMap getManageInfoByUid(int uid,String subjectCategory,String subjectName,String subjectContact,String subjectContactPhone,String commitmentUnit,
+                                        String subjectSupervisorDepartment) {
+        List<Map> cmMapByUid=contractManageService.getManageInfoByUid(uid,subjectCategory,subjectName,subjectContact,subjectContactPhone,commitmentUnit,subjectSupervisorDepartment);
+        return cmMapByUid!= null ? resultMap.success().message(cmMapByUid) : resultMap.fail().message("查询失败");
     }
 
     /**
@@ -57,11 +79,26 @@ public class ContractManageController {
      *
      * @return
      */
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="subjectCategory",value = "课题类别"),
+            @ApiImplicitParam(name="subjectName",value = "课题名称"),
+            @ApiImplicitParam(name="subjectContact",value = "课题联系人"),
+            @ApiImplicitParam(name="subjectContactPhone",value = "课题联系人电话或手机"),
+            @ApiImplicitParam(name="commitmentUnit",value = "承担单位"),
+            @ApiImplicitParam(name="subjectSupervisorDepartment",value = "课题主管部门")
+    })
     @ApiOperation(value = "查询合同主表信息")
     @GetMapping(value = "getAllInfo")
-    public List<ContractManageDTO> getAllInfo() {
-        return contractManageService.getAllInfo();
+    public ResultMap getAllInfo(String subjectCategory,String subjectName,String subjectContact,String subjectContactPhone,String commitmentUnit,
+                                              String subjectSupervisorDepartment) {
+        List<Map> allInfoMap=contractManageService.getAllInfo(subjectCategory,subjectName,subjectContact,subjectContactPhone,commitmentUnit,subjectSupervisorDepartment);
+        return allInfoMap != null ? resultMap.success().message(allInfoMap) : resultMap.fail().message("查询失败");
     }
+
+
+
+    ///////////////////////////以下是中期检查///////////////////////////////////
+
 
     /**
      * 根据勾选的合同主表id修改相应的中期检查状态【内网中检】
@@ -80,7 +117,7 @@ public class ContractManageController {
      *
      * @return
      */
-    @ApiOperation(value = "根据中期检查记录查詢相应合同主表")
+    @ApiOperation(value = "根据中期检查记录查詢相应合同主表【内网中检】")
     @GetMapping(value = "getInfoByMidRecord")
     public List<Map> getInfoByMidRecord(@RequestParam("mId") int mId) {
         return contractManageService.getInfoByMidRecord(mId);
@@ -143,10 +180,10 @@ public class ContractManageController {
     @PostMapping("midFileUpload")
     @ApiOperation(value = "中期检查附件上传")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "fileType", value = "附件类型",paramType="form"),
-            @ApiImplicitParam(name = "cid", value = "合同id", paramType = "form"),
+            @ApiImplicitParam(name = "fileType", value = "附件类型"),
+            @ApiImplicitParam(name = "cid", value = "合同id"),
     })
-    public String midFileUpload(@RequestParam("file") @ApiParam("附件") MultipartFile file,@RequestParam("fileType") @ApiParam("文件类型")String fileType,@RequestParam("cid") @ApiParam("合同id") int cid){
+    public String midFileUpload(@RequestParam("file") MultipartFile file,@RequestParam("fileType")String fileType,@RequestParam("cid") int cid){
         String OK=null;
         try {
                OK=contractManageService.midFileUpload(file,fileType,cid);

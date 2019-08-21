@@ -185,7 +185,6 @@ public class GuideServiceImpl implements GuideService {
     @Override
     public ResultMap getSummaryByParam(String guideSummaryTitle, String fillUnit, Integer domain, Integer category, String projectTime, String researchContentTechnology, int pageNum, int pageSize) {
         try{
-            //String orderBy="id desc";
             PageHelper.startPage(pageNum,pageSize);
             List<Map> guideSummaryList = guideMapper.getSummaryByParam(guideSummaryTitle, fillUnit, domain, category, projectTime, researchContentTechnology);
             if(guideSummaryList.size()>0){

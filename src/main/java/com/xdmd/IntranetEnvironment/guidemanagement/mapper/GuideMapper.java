@@ -198,7 +198,6 @@ public interface GuideMapper {
      * 新增汇总信息【单条插入-暂未用到】(内网)--汇总3
      * @param guideSummary
      * @return
-     *
      */
     @Insert(value = "INSERT INTO guide_summary\n" +
             "VALUES(\n" +
@@ -245,33 +244,34 @@ public interface GuideMapper {
      * @return
      */
     @Select(value = "<script>" +
-            "SELECT\n" +
-            "guide_summary_title as guideSummaryTitle,\n" +
-            "ownership_domain as ownershipDomain,\n" +
-            "project_time as projectTime,\n" +
-            "creator\n" +
-            "FROM\n" +
-            "guide_summary" +
+            "SELECT\t" +
+            "gs.guide_summary_title as guideSummaryTitle,\t" +
+            "d.content as ownershipDomain,\t" +
+            "gs.project_time as projectTime,\t" +
+            "gs.creator\t" +
+            "FROM\t" +
+            "guide_summary gs,dictionary d\t" +
             "<where>" +
-            "<if test ='null != guideSummaryTitle'>\n" +
-            "guide_summary_title like CONCAT('%',#{guideSummaryTitle},'%')\n" +
-            "</if>\n" +
-            "<if test ='null != fillUnit'>\n" +
-            "AND fill_unit like CONCAT('%',#{fillUnit},'%')\n" +
-            "</if>\n" +
-            "<if test ='null != domain'>\n" +
-            "AND domain =#{domain}\n" +
-            "</if>\n" +
-            "<if test ='null != category'>\n" +
+            "gs.ownership_domain=d.id" +
+            "<if test ='null != guideSummaryTitle'>\t" +
+            "and guide_summary_title like CONCAT('%',#{guideSummaryTitle},'%')\t" +
+            "</if>\t" +
+            "<if test ='null != fillUnit'>\t" +
+            "AND fill_unit like CONCAT('%',#{fillUnit},'%')\t" +
+            "</if>\t" +
+            "<if test ='null != domain'>" +
+            "AND domain =#{domain}" +
+            "</if>" +
+            "<if test ='null != category'>" +
             "AND category like CONCAT('%',#{category},'%')\n" +
-            "</if>\n" +
+            "</if>" +
             "<if test ='null != projectTime'>\n" +
             "AND project_time like CONCAT('%',#{projectTime},'%')\n" +
             "</if>\n" +
             "<if test ='null != researchContentTechnology'>\n" +
             "AND research_content_technology like CONCAT('%',#{researchContentTechnology},'%')\n" +
             "</if></where>\n" +
-            "GROUP BY guideSummaryTitle,ownershipDomain,projectTime,creator" +
+            "GROUP BY gs.guide_summary_title,gs.ownership_domain,gs.project_time,gs.creator" +
             "</script>")
     List<Map> getSummaryByParam(@Param("guideSummaryTitle") String guideSummaryTitle, @Param("fillUnit") String fillUnit, @Param("domain") Integer domain, @Param("category") Integer category, @Param("projectTime") String projectTime, @Param("researchContentTechnology") String researchContentTechnology);
 
