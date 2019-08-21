@@ -4,8 +4,9 @@ import com.xdmd.IntranetEnvironment.achievementManagement.controller.Achievement
 import com.xdmd.IntranetEnvironment.achievementManagement.mapper.AchievementMapper;
 import com.xdmd.IntranetEnvironment.achievementManagement.pojo.*;
 import com.xdmd.IntranetEnvironment.achievementManagement.service.AchievementService;
-import com.xdmd.IntranetEnvironment.common.PageBean;
-import com.xdmd.IntranetEnvironment.common.ResultMap;
+import com.xdmd.IntranetEnvironment.common.*;
+import com.xdmd.IntranetEnvironment.expert.pojo.ExpertInformation;
+import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.UploadFile;
 import com.xdmd.IntranetEnvironment.user.exception.ClaimsNullException;
 import com.xdmd.IntranetEnvironment.user.exception.UserNameNotExistentException;
 import com.xdmd.IntranetEnvironment.user.pojo.User;
@@ -18,6 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -209,7 +212,7 @@ public class AchievementServiceImpl implements AchievementService {
 
     //成果新增的提交
     @Override
-    public ResultMap AddAchievement(String token, HttpServletResponse response, String cid, MultipartFile achievementFileUrl, OutcomeInformationAll outcomeInformationAll) {
+    public ResultMap AddAchievement(String token, HttpServletResponse response, String cid, MultipartFile achievementFile, OutcomeInformationAll outcomeInformationAll) {
         User user = new User();
         try {
             user = tokenService.compare(response, token);
@@ -231,8 +234,27 @@ public class AchievementServiceImpl implements AchievementService {
         Integer uid = user.getId();
         String username = user.getUsername();
 
-//        String username = "王五";
-//        Integer uid = 888;
+        //判断上传的文件后缀名是否正确
+        List<String> achievementSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".zip", ".rar", ".7z"));
+        //获取文件名
+        String achievementFileName = achievementFile.getOriginalFilename();
+        Boolean aBoolean = FileSuffixJudgeUtil.SuffixJudge(achievementFileName, achievementSuffixList);
+        if (aBoolean == false) {
+            return resultMap.fail().message("请上传正确的成果信息文件格式");
+        }
+
+        //对成果信息文件进行上传
+        try {
+            String achievementFileUrl = FileUploadUtil.UploadExpertInformationFile(achievementFile, "成果信息文件");
+            //把成果信息文件上传到upload_file中
+            UploadFile uploadAchievementFile = IntegrationFile.IntegrationFile(achievementFile, achievementFileUrl, "成果信息文件", username);
+            achievementMapper.uploadFile(uploadAchievementFile);   //对成果信息进行上传
+            outcomeInformationAll.setAchievementUrlId(String.valueOf(uploadAchievementFile.getId()));
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("AchievementServiceImpl 中  AddAchievement 方法 成果信息文件上传失败");
+            return resultMap.fail().message("系统异常");
+        }
 
         //把保存的成果信息保存到数据库中
         outcomeInformationAll.setCreateAuthor(username);    //把创建人保存到字段中
@@ -264,7 +286,7 @@ public class AchievementServiceImpl implements AchievementService {
             achievementMapper.addAchievementInformationPatent(outcomeInformationPatent);
         }
 
-        return resultMap.success().message("保存成功");
+        return resultMap.success().message("提交成功");
 
 
     }

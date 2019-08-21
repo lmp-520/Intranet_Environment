@@ -93,7 +93,6 @@ public class FileUploadUtil {
             log.error("FileUploadUtils出错 :" + e.getMessage());
             throw new FileUploadException("文件上传失败");
         }
-
         return FilePath + newOriginalFilename;
     }
 

@@ -246,7 +246,6 @@ public interface GuideMapper {
      */
     @Select(value = "<script>" +
             "SELECT\n" +
-            "DISTINCT\n" +
             "guide_summary_title as guideSummaryTitle,\n" +
             "ownership_domain as ownershipDomain,\n" +
             "project_time as projectTime,\n" +
@@ -272,8 +271,9 @@ public interface GuideMapper {
             "<if test ='null != researchContentTechnology'>\n" +
             "AND research_content_technology like CONCAT('%',#{researchContentTechnology},'%')\n" +
             "</if></where>\n" +
+            "GROUP BY guideSummaryTitle,ownershipDomain,projectTime,creator" +
             "</script>")
-    List<Map> getSummaryByParam(@Param("guideSummaryTitle") String guideSummaryTitle, @Param("fillUnit") String fillUnit, @Param("domain") int domain, @Param("category") int category, @Param("projectTime") String projectTime, @Param("researchContentTechnology") String researchContentTechnology);
+    List<Map> getSummaryByParam(@Param("guideSummaryTitle") String guideSummaryTitle, @Param("fillUnit") String fillUnit, @Param("domain") Integer domain, @Param("category") Integer category, @Param("projectTime") String projectTime, @Param("researchContentTechnology") String researchContentTechnology);
 
     /**
      * 根据汇总标题查询汇总指南--汇总5
@@ -303,7 +303,7 @@ public interface GuideMapper {
             "gs.note,\n" +
             "gs.check_back_result,\n" +
             "gs.check_back_note,\n" +
-            "gs.ownership_category\n" +
+            "gs.ownership_category,\n" +
             "gs.ownership_domain\n" +
             "FROM\n" +
             "guide_summary gs,dictionary dic,dictionary d\n" +

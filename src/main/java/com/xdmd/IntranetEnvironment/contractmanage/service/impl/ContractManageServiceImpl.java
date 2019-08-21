@@ -7,7 +7,6 @@ import com.xdmd.IntranetEnvironment.contractmanage.mapper.ContractManageMapper;
 import com.xdmd.IntranetEnvironment.contractmanage.mapper.UploadMapper;
 import com.xdmd.IntranetEnvironment.contractmanage.pojo.ContractManageDTO;
 import com.xdmd.IntranetEnvironment.contractmanage.service.ContractManageService;
-import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.UploadFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,6 +42,7 @@ public class ContractManageServiceImpl implements ContractManageService {
      */
     @Override
     public int insert(ContractManageDTO contractManageDTO) {
+
         return contractManageMapper.insert(contractManageDTO);
     }
 

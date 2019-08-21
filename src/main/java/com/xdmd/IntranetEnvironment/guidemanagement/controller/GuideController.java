@@ -148,14 +148,14 @@ public class GuideController {
     @GetMapping(value = "getAllSummary")
     @ApiOperation(value = "分页展示汇总信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(name="guideSummaryTitle",value = "汇总标题",dataType = "string"),
-            @ApiImplicitParam(name="fillUnit",value = "填报单位",dataType = "string"),
-            @ApiImplicitParam(name="domain",value = "所属领域",dataType = "int"),
-            @ApiImplicitParam(name="category",value = "所属类别",dataType = "int"),
-            @ApiImplicitParam(name="projectTime",value = "立项时间",dataType = "string"),
-            @ApiImplicitParam(name="researchContentTechnology",value = "主要研究内容和关键技术[300字以内]",dataType = "string"),
-            @ApiImplicitParam(name="pageNum",value = "当前页数",dataType = "int",required = true),
-            @ApiImplicitParam(name="pageSize",value = "每页显示条数",dataType = "int",required = true)
+            @ApiImplicitParam(name="guideSummaryTitle",value = "汇总标题"),
+            @ApiImplicitParam(name="fillUnit",value = "填报单位"),
+            @ApiImplicitParam(name="domain",value = "所属领域"),
+            @ApiImplicitParam(name="category",value = "所属类别"),
+            @ApiImplicitParam(name="projectTime",value = "立项时间"),
+            @ApiImplicitParam(name="researchContentTechnology",value = "主要研究内容和关键技术[300字以内]"),
+            @ApiImplicitParam(name="pageNum",value = "当前页数",required = true),
+            @ApiImplicitParam(name="pageSize",value = "每页显示条数",required = true)
     })
     public ResultMap getSummaryByParam(String guideSummaryTitle,String fillUnit,Integer domain,Integer category,String projectTime,String researchContentTechnology,int pageNum,int pageSize){
         return resultMap=guideService.getSummaryByParam(guideSummaryTitle,fillUnit,domain,category,projectTime,researchContentTechnology,pageNum,pageSize);
