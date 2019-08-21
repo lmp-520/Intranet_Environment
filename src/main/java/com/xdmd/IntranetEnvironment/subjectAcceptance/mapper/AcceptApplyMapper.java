@@ -68,4 +68,8 @@ public interface AcceptApplyMapper {
     //获取最终验收报告中的课题负责人
     @Select("select * from acceptance_certificate_subject_people where acceptance_certificate_id = #{id}")
     List<AcceptanceCertificateSubjectPeople> queryAcceptanceCertificateSubjectPeople(@Param("id") Integer id);
+
+    //根据验收申请表的id，获取验收申请表的信息
+    @Select("select * from check_apply where id = #{cid}")
+    CheckApply queryCheckApply(@Param("cid") String cid);
 }

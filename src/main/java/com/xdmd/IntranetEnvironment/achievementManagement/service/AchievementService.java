@@ -19,4 +19,5 @@ public interface AchievementService {
 
     ResultMap queryAddAchivement(String topicName, String companyName, Integer page, Integer total);
 
+    ResultMap queryAllCheckApply(String cid);
 }

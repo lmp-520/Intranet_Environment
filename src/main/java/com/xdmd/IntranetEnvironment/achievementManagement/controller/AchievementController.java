@@ -105,5 +105,19 @@ public class AchievementController {
         return resultMap;
     }
 
+    @PostMapping("queryAllCheckApply")
+    @ResponseBody
+    public ResultMap queryAllCheckApply(@RequestParam("cid")String cid){
+
+        try {
+            resultMap = achievementService.queryAllCheckApply(cid);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("AchievementController 中 queryAllCheckApply 发生错误 "+e.getMessage());
+            return resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
+
 }
 
