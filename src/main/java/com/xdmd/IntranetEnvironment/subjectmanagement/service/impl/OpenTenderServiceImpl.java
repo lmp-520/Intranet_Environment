@@ -193,17 +193,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
         return openTenderMapper.getNewData();
     }
 
-    /**
-     * 备用
-     * @param token
-     * @param response
-     * @param type
-     * @param reason
-     * @param id
-     * @param specialAuditFile
-     * @param firstInspectionFile
-     * @return
-     */
+
     @Override
     public ResultMap acceptState(String token, HttpServletResponse response, Boolean type, String reason, Integer id, MultipartFile specialAuditFile, MultipartFile firstInspectionFile) {
         return null;
