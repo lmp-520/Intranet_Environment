@@ -130,7 +130,7 @@ public interface OpenTenderMapper {
             "open_tender\n" +
             "WHERE id =#{id}\n" +
             "</script>")
-        List<Map> getTenderById(int id);
+        Map getTenderById(int id);
 
 
     /**

@@ -31,10 +31,11 @@ public class OpenTenderServiceImpl implements OpenTenderService {
     OpenTenderMapper openTenderMapper;
     @Autowired
     UploadFileMapper uploadFileMapper;
-
-
+    /**
+     * 状态码
+     */
     ResultMap resultMap = new ResultMap();
-    AnnexUpload annexUpload;
+
 
     /**
      * 新增
@@ -91,10 +92,10 @@ public class OpenTenderServiceImpl implements OpenTenderService {
     @Override
     public ResultMap getTenderById(int id) {
         try{
-            List<Map> getTenderByIdList = openTenderMapper.getTenderById(id);
-            if(getTenderByIdList!=null){
-                resultMap.success().message(getTenderByIdList);
-            }else if(getTenderByIdList==null){
+            Map getTenderByIdMap = openTenderMapper.getTenderById(id);
+            if(getTenderByIdMap!=null){
+                resultMap.success().message(getTenderByIdMap);
+            }else if(getTenderByIdMap==null){
                 resultMap.success().message("没有查到相关信息");
             }
         }catch (Exception e){
@@ -217,10 +218,10 @@ public class OpenTenderServiceImpl implements OpenTenderService {
     String fileName =pinjiefileName.toString();
 
     //获取课题名称
-    OpenTender openTender=new OpenTender();
-    String ketiName=openTender.getSubjectName();
-    //获取文件上传绝对路径
-    String FilePath = "D:/xdmd/environment/" +ketiName+"/"+fileType+"/";
+        Map getTenderByIdMap=openTenderMapper.getTenderById(oid);
+        Object subjectName = getTenderByIdMap.get("subjectName");
+        //获取文件上传绝对路径
+    String FilePath = "D:/xdmd/environment/"+subjectName+"/"+fileType+"/";
     StringBuilder initPath = new StringBuilder(FilePath);
     String filePath=initPath.append(fileName).toString();
     System.out.println("文件路径-->"+filePath);
@@ -243,9 +244,9 @@ public class OpenTenderServiceImpl implements OpenTenderService {
         // 获取文件大小
         File file1 = new File(filePath);
         String fileSize = String.valueOf(file1.length());
-        System.out.println(fileName+"的文件大小-->"+fileSize);
         //封装到uploadfile
-        annexUpload.setUploadFilePath(String.valueOf(dest));
+        AnnexUpload annexUpload=new AnnexUpload();
+        annexUpload.setUploadFilePath(dest.getAbsolutePath());
         annexUpload.setFileSize(fileSize);
         annexUpload.setUploadFileName(fileName);
         annexUpload.setUploadFileType(fileType);

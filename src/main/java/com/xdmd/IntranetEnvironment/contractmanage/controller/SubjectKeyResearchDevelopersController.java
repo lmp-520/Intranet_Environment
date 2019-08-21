@@ -7,9 +7,7 @@ import com.xdmd.IntranetEnvironment.contractmanage.service.SubjectKeyResearchDev
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -32,8 +30,8 @@ public class SubjectKeyResearchDevelopersController {
      * @return
      */
     @ApiOperation(value = "新增课题预算信息")
-    @GetMapping(value = "insertInfo")
-    public ResultMap insert(SubjectKeyResearchDevelopersDTO subjectKeyResearchDevelopersDTO) {
+    @PostMapping(value = "insertInfo")
+    public ResultMap insert(@RequestBody SubjectKeyResearchDevelopersDTO subjectKeyResearchDevelopersDTO) {
         int skrd=subjectKeyResearchDevelopersService.insert(subjectKeyResearchDevelopersDTO);
         return skrd>0?resultMap.success().message("新增成功"):resultMap.fail().message("新增失败");
     }

@@ -30,7 +30,7 @@ public class SubjectFundsBudgetController {
      */
     @ApiOperation(value = "新增课题预算信息")
     @PostMapping(value = "insertInfo")
-    public ResultMap insert(SubjectFundsBudgetDTO subjectFundsBudgetDTO) {
+    public ResultMap insert(@RequestBody SubjectFundsBudgetDTO subjectFundsBudgetDTO) {
         int sfb=subjectFundsBudgetService.insert(subjectFundsBudgetDTO);
         return sfb>0?resultMap.success().message("新增成功"):resultMap.fail().message("新增失败");
 

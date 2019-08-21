@@ -12,7 +12,7 @@ import lombok.Data;
  */
 @Data
 @AllArgsConstructor
-@ApiModel(description = "合同管理主表")
+@ApiModel("合同管理主表")
 public class ContractManageDTO {
     @ApiModelProperty(name="主键【注:系统默认生成,新增时不用填】",required = false)
     private Integer id;

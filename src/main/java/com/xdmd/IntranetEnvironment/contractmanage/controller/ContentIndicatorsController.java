@@ -4,6 +4,7 @@ package com.xdmd.IntranetEnvironment.contractmanage.controller;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.contractmanage.pojo.ContentIndicatorsDTO;
 import com.xdmd.IntranetEnvironment.contractmanage.service.ContentIndicatorsService;
+import com.xdmd.IntranetEnvironment.dailymanagement.pojo.CurrentProgressDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,16 +26,17 @@ public class ContentIndicatorsController {
     ResultMap resultMap=new ResultMap();
     /**
      * 新增
-     * @param contentIndicatorsDTO
+     * @param contentIndicators
      * @return
      */
     @ApiOperation(value = "添加",notes="新增计划内容信息")
-    @PostMapping(value = "addContentInfo")
-    public ResultMap insert(ContentIndicatorsDTO contentIndicatorsDTO) {
-        int ci=contentIndicatorsService.insert(contentIndicatorsDTO);
+    @PostMapping(value = "insertCI")
+    public ResultMap insertCI(@RequestBody List<ContentIndicatorsDTO> contentIndicators) {
+        int ci=contentIndicatorsService.insertCI(contentIndicators);
         return ci>0?resultMap.success().message("新增成功"):resultMap.fail().message("新增失败");
 
     }
+
 
     /**
      * 根据id单查

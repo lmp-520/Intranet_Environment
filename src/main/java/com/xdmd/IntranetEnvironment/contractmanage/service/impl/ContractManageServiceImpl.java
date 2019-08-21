@@ -28,7 +28,6 @@ public class ContractManageServiceImpl implements ContractManageService {
     ContractManageMapper contractManageMapper;
     @Autowired
     UploadMapper uploadMapper;
-    AnnexUpload annexUpload;
 
     @Override
     public ContractManageDTO getNewData() {
@@ -42,7 +41,6 @@ public class ContractManageServiceImpl implements ContractManageService {
      */
     @Override
     public int insert(ContractManageDTO contractManageDTO) {
-
         return contractManageMapper.insert(contractManageDTO);
     }
 
@@ -56,13 +54,30 @@ public class ContractManageServiceImpl implements ContractManageService {
         return contractManageMapper.getManageInfoById(id);
     }
 
+
+    /**
+     * 根据单位id查询本单位的合同
+     * @param uid
+     * @param subjectCategory
+     * @param subjectName
+     * @param subjectContact
+     * @param subjectContactPhone
+     * @param commitmentUnit
+     * @param subjectSupervisorDepartment
+     * @return
+     */
+    @Override
+    public List<Map> getManageInfoByUid(int uid, String subjectCategory, String subjectName, String subjectContact, String subjectContactPhone, String commitmentUnit, String subjectSupervisorDepartment) {
+        return contractManageMapper.getManageInfoByUid(uid,subjectCategory,subjectName,subjectContact,subjectContactPhone,commitmentUnit,subjectSupervisorDepartment);
+    }
+
     /**
      * 全查
      * @return
      */
     @Override
-    public List<ContractManageDTO> getAllInfo() {
-        return contractManageMapper.getAllInfo();
+    public List<Map> getAllInfo(String subjectCategory, String subjectName, String subjectContact, String subjectContactPhone, String commitmentUnit, String subjectSupervisorDepartment) {
+        return contractManageMapper.getAllInfo(subjectCategory,subjectName,subjectContact,subjectContactPhone,commitmentUnit,subjectSupervisorDepartment);
     }
 
     /**
@@ -146,7 +161,7 @@ public class ContractManageServiceImpl implements ContractManageService {
         StringBuilder initPath = new StringBuilder(FilePath);
         String filePath=initPath.append(fileName).toString();
         System.out.println("文件路径-->"+filePath);
-        File dest = new File(filePath);
+        File dest=new File(filePath);
 
         //获取文件后缀名
         String suffixName = fileName.substring(fileName.lastIndexOf(".") + 1);
@@ -167,7 +182,8 @@ public class ContractManageServiceImpl implements ContractManageService {
             String fileSize = String.valueOf(file1.length());
             System.out.println(fileName+"的文件大小-->"+fileSize);
             //封装到uploadfile
-            annexUpload.setUploadFilePath(String.valueOf(dest));
+            AnnexUpload annexUpload = new AnnexUpload();
+            annexUpload.setUploadFilePath(filePath);
             annexUpload.setFileSize(fileSize);
             annexUpload.setUploadFileName(fileName);
             annexUpload.setUploadFileType(fileType);
@@ -175,7 +191,6 @@ public class ContractManageServiceImpl implements ContractManageService {
             annexUpload.setCreateAuthor("创建者");
             //文件信息保存到数据库
             int upNo= uploadMapper.insertUpload(annexUpload);
-            System.out.println("影响行数"+upNo);
             return "上传成功-->"+filePath;
         } catch (Exception e) {
             e.printStackTrace();

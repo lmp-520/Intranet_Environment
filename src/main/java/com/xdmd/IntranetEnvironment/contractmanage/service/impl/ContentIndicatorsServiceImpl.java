@@ -18,14 +18,15 @@ import java.util.List;
 public class ContentIndicatorsServiceImpl implements ContentIndicatorsService {
     @Autowired
     ContentIndicatorsMapper contentIndicatorsMapper;
+
     /**
      * 新增
-     * @param contentIndicatorsDTO
+     * @param contentIndicators
      * @return
      */
     @Override
-    public int insert(ContentIndicatorsDTO contentIndicatorsDTO) {
-        return contentIndicatorsMapper.insert(contentIndicatorsDTO);
+    public int insertCI(List<ContentIndicatorsDTO> contentIndicators) {
+        return contentIndicatorsMapper.insertCI(contentIndicators);
     }
 
     /**

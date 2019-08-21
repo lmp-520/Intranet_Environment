@@ -1,6 +1,7 @@
 package com.xdmd.IntranetEnvironment.contractmanage.mapper;
 
 import com.xdmd.IntranetEnvironment.contractmanage.pojo.ContractManageDTO;
+import com.xdmd.IntranetEnvironment.subjectmanagement.pojo.OpenTender;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
@@ -23,10 +24,11 @@ public interface ContractManageMapper {
     ContractManageDTO getNewData();
 
     /**
-     * [新增]
+     * [新增]合同
      * @param contractManageDTO
      * @return
      */
+    @Options(useGeneratedKeys=true,keyProperty="id", keyColumn="id")
     @Insert(value = "INSERT INTO contract_manage\n" +
             "VALUES(\n" +
             "DEFAULT,\n" +
@@ -67,7 +69,6 @@ public interface ContractManageMapper {
             "#{subjectSigningDescription},\n" +
             "#{subjectObjectivesResearch},\n" +
             "#{subjectAcceptanceAssessment},\n" +
-            "#{otherTerms}," +
             "DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT)")
     int insert(ContractManageDTO contractManageDTO);
 
@@ -79,13 +80,89 @@ public interface ContractManageMapper {
     @Select(value = "select * from contract_manage where id=#{id}")
     ContractManageDTO getManageInfoById(@Param("id") int id);
 
+
+    /**
+     * [查詢] 根據单位id查詢本单位合同
+     * @param uid
+     * @return
+     */
+    @Select("<script>" +
+            "SELECT\n" +
+            "cm.id\n" +
+            "cm.subject_category as subjectCategory\n" +
+            "cm.subject_name as subjectName\n" +
+            "cm.subject_objectives_research as subjectObjectivesResearch\n" +
+            "cm.subject_contact_phone as subjectContactPhone\n" +
+            "cm.commitment_unit as commitmentUnit\n" +
+            "cm.subject_supervisor_department as subjectSupervisorDepartment\n" +
+            "From\n" +
+            "contract_manage cm,unit_contract uc\t" +
+            "<where>\n" +
+            "cm.id=uc.contract_id and uc .unit_id= #{uid}\n" +
+            "<if test ='null != subjectCategory'>\n" +
+            "AND cm.subject_category like CONCAT('%',#{subjectCategory},'%')\n" +
+            "</if>\n" +
+            "<if test ='null != subjectName'>\n" +
+            "AND cm.subject_name like CONCAT('%',#{subjectName},'%')\n" +
+            "</if>\n" +
+            "<if test ='null != subjectContact'>\n" +
+            "AND cm.subject_contact like CONCAT('%',#{subjectContact},'%')\n" +
+            "</if>\n" +
+            "<if test ='null != subjectContactPhone'>\n" +
+            "AND cm.subject_contact_phone like CONCAT('%',#{subjectContactPhone},'%')\n" +
+            "</if>\n" +
+            "<if test ='null != commitmentUnit'>\n" +
+            "AND cm.commitment_Unit like CONCAT('%',#{commitmentUnit},'%')\n" +
+            "</if>\n" +
+            "<if test ='null != subjectSupervisorDepartment'>\n" +
+            "AND cm.subject_supervisor_department like CONCAT('%',#{subjectSupervisorDepartment},'%')\n" +
+            "</if></where>" +
+            "</script>")
+    List<Map> getManageInfoByUid(@Param("uid") int uid,@Param("subjectCategory") String subjectCategory,@Param("subjectName")String subjectName,
+                                         @Param("subjectContact")String subjectContact,@Param("subjectContactPhone")String subjectContactPhone,@Param("commitmentUnit")String commitmentUnit,
+                                         @Param("subjectSupervisorDepartment")String subjectSupervisorDepartment);
+
     /**
      * [查詢] 查詢全部合同主表
      * @param
      * @return
      */
-    @Select(value = "select * from contract_manage")
-    List<ContractManageDTO> getAllInfo();
+    @Select(value = "<script>" +
+            "SELECT\n" +
+            "id\n" +
+            "subject_category as subjectCategory\n" +
+            "subject_name as subjectName\n" +
+            "subject_objectives_research as subjectObjectivesResearch\n" +
+            "subject_contact_phone as subjectContactPhone\n" +
+            "commitment_unit as commitmentUnit\n" +
+            "subject_supervisor_department as subjectSupervisorDepartment\n" +
+            "From\n" +
+            "contract_manage cm\n" +
+            "<where>\n" +
+            "<if test ='null != subjectCategory'>\n" +
+            "AND subject_category like CONCAT('%',#{ subjectCategory},'%')\n" +
+            "</if>\n" +
+            "<if test ='null != subjectName'>\n" +
+            "AND subject_name like CONCAT('%',#{ subjectName},'%')\n" +
+            "</if>\n" +
+            "<if test ='null != subjectContact'>\n" +
+            "AND subject_contact like CONCAT('%',#{ subjectContact},'%')\n" +
+            "</if>\n" +
+            "<if test ='null != subjectContactPhone'>\n" +
+            "AND subject_contact_phone like CONCAT('%',#{ subjectContactPhone },'%')\n" +
+            "</if>\n" +
+            "<if test ='null != commitmentUnit'>\n" +
+            "AND commitment_Unit like CONCAT('%',#{commitmentUnit},'%')\n" +
+            "</if>\n" +
+            "<if test ='null != subjectSupervisorDepartment'>\n" +
+            "AND subject_supervisor_department like CONCAT('%',#{ subjectSupervisorDepartment},'%')\n" +
+            "</if></where>" +
+            "</script>")
+    List<Map> getAllInfo(@Param("subjectCategory") String subjectCategory,@Param("subjectName")String subjectName,
+                         @Param("subjectContact")String subjectContact,@Param("subjectContactPhone")String subjectContactPhone,@Param("commitmentUnit")String commitmentUnit,
+                         @Param("subjectSupervisorDepartment")String subjectSupervisorDepartment);
+
+    ///////////////////////////以下是中期检查///////////////////////////////////
 
     /**
      * [查詢] 根据中期检查记录id查詢相应合同主表【内网一[第几次检查]】
@@ -156,48 +233,77 @@ public interface ContractManageMapper {
 
 
 
-
+    ///////////////////////////以下是合同审批///////////////////////////////////
 
     /**
-     * 单位管理员审核通过
+     * 单位管理员审核通过【暂未用】
      * @return
      */
     @Update(value = "update contract_manage set approval_status=2 where approval_status=1 and id=#{id}")
     int updateApprovalStatusOne(@Param("id") int id);
 
     /**
-     * 单位管理员审核不通过
+     * 单位管理员审核不通过【暂未用】
      * @return
      */
     @Update(value = "update contract_manage set approval_status=0 where approval_status=1 and id=#{id}")
     int updateApprovalStatusTwo(@Param("id") int id);
 
+
+
     /**
      * 评估中心审核通过
      * @return
      */
-    @Update(value = "update contract_manage set approval_status=3 where approval_status=2 and id=#{id}")
+    @Update(value = "update contract_manage set approval_status=2 where approval_status=1 and id=#{id}")
     int updateApprovalStatusThree(@Param("id") int id);
 
     /**
      * 评估中心审核不通过
      * @return
      */
-    @Update(value = "update contract_manage set approval_status=1 where approval_status=2 and id=#{id}")
+    @Update(value = "update contract_manage set approval_status=0 where approval_status=1 and id=#{id}")
     int updateApprovalStatusFour(@Param("id") int id);
 
     /**
      * 法规科技处审核通过
      * @return
      */
-    @Update(value = "update contract_manage set approval_status=4 where approval_status=3 and id=#{id}")
+    @Update(value = "update contract_manage set approval_status=3 where approval_status=2 and id=#{id}")
     int updateApprovalStatusF(@Param("id") int id);
 
     /**
      * 法规科技处审核不通过
      * @return
      */
-    @Update(value = "update contract_manage set approval_status=0 where approval_status=3 and id=#{id}")
+    @Update(value = "update contract_manage set approval_status=0 where approval_status=2 and id=#{id}")
     int updateApprovalStatusiveSix(@Param("id") int id);
+
+
+    /**
+     * 不通过被退回时重新提交
+     * @return
+     */
+    @Update(value = "update contract_manage set approval_status=1 where approval_status=0 and id=#{id}")
+    int updateApprovalStatusFive(@Param("id") int id);
+
+
+    /**
+     * 展示所有未通过审批的
+     * @return
+     */
+    @Select("select * from contract_manage where approval_status<3")
+    ContractManageDTO showAllNoAudit();
+
+    /**
+     * 展示通过所有法规科技处审批的
+     * @return
+     */
+    @Select("select * from contract_manage where approval_status=3")
+    ContractManageDTO showAllAudited();
+
+
+
+
 
 }
