@@ -13,10 +13,11 @@ import java.util.List;
 public interface AchievementService {
     ResultMap AddAchievementSave(String token, HttpServletResponse response, String cid, MultipartFile achievementFileUrl, OutcomeInformationAll outcomeInformationAll);
 
-    ResultMap AddAchievement(String token, HttpServletResponse response, String cid, MultipartFile achievementFileUrl, OutcomeInformationAll outcomeInformationAll);
+    ResultMap AddAchievement(String token, HttpServletResponse response, String cid, MultipartFile achievementFile, OutcomeInformationAll outcomeInformationAll);
 
     ResultMap queryAchivement(String topicName, String companyName, Integer page, Integer total);
 
     ResultMap queryAddAchivement(String topicName, String companyName, Integer page, Integer total);
 
+    ResultMap queryAllCheckApply(String cid);
 }
