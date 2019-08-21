@@ -4,10 +4,7 @@ import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.subjectmanagement.pojo.OpenTender;
 import org.springframework.web.multipart.MultipartFile;
 
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 招标业务
@@ -67,12 +64,16 @@ public interface OpenTenderService {
      */
     OpenTender getNewData();
 
-
     /**
-     * 招标附件上传
-     * @param file
-     * @param oid
+     * 招标审核
+     * @param token
+     * @param response
+     * @param type
+     * @param reason
+     * @param id
+     * @param specialAuditFile
+     * @param firstInspectionFile
      * @return
      */
-    String tenderFileUpload(MultipartFile file, String fileType, int oid) throws IOException;
+    ResultMap acceptState(String token, HttpServletResponse response, Boolean type, String reason, Integer id, MultipartFile specialAuditFile, MultipartFile firstInspectionFile);
 }
