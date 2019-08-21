@@ -184,17 +184,18 @@ public interface OpenTenderMapper {
     int updateTenderByoid(int winningFileAttachmentId, int announcementTransactionAnnouncementId, int dealNotificationAttachmentId,int responseFileAttachment, int oid);
 
 
+    /////////////////招标备案审核//////////////////////////////////
 
 
     /**
-     * 单位管理员审核通过
+     * 单位管理员审核通过【备用】
      * @return
      */
     @Update(value = "update open_tender set audit_status=2 where audit_status=1 and id=#{id}")
     int updateApprovalStatusOne(@Param("id") int id);
 
     /**
-     * 单位管理员审核不通过
+     * 单位管理员审核不通过【备用】
      * @return
      */
     @Update(value = "update open_tender set audit_status=0 where audit_status=1 and id=#{id}")

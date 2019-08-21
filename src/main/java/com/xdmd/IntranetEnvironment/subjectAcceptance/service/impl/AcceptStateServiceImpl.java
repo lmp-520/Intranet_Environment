@@ -36,6 +36,7 @@ public class AcceptStateServiceImpl implements AcceptStateService {
     private AcceptStateMapper acceptStateMapper;
     @Autowired
     private AcceptApplyMapper acceptApplyMapper;
+
     ResultMap resultMap = new ResultMap();
     PageBean pageBean = new PageBean();
     private static Logger log = LoggerFactory.getLogger(AcceptStateServiceImpl.class);
