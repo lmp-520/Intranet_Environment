@@ -1,6 +1,7 @@
 package com.xdmd.IntranetEnvironment.achievementManagement.mapper;
 
 import com.xdmd.IntranetEnvironment.achievementManagement.pojo.*;
+import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.UploadFile;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -75,4 +76,7 @@ public interface AchievementMapper {
     //根据成果附件的id，获取成果附件的真实名字
     @Select("select upload_file_name from upload_file where id = (SELECT achievement_url_id FROM outcome_information where id = #{id})")
     String queryOutcomeInformationById(@Param("id") Integer id);
+
+    //把文件上传到文件数据库中
+    void uploadFile(@Param("uploadFile") UploadFile uploadBusinessFile);
 }

@@ -90,6 +90,7 @@
                 and acceptance_phase_id in (77,88) and is_outcome = 0
             </if>
         </where>
+        limit #{newpage},#{total}
     </select>
 
     <insert id="addAchievementInformation" useGeneratedKeys="true" keyProperty="id">
@@ -219,4 +220,26 @@
          patent_application_number = #{outcomeInformationPatent.patentApplicationNumber}
          where id = #{outcomeInformationPatent.id}
     </update>
+
+    <insert id="uploadFile" useGeneratedKeys="true" keyProperty="id">
+        insert into upload_file(
+        id,
+        upload_file_address,
+        upload_file_name,
+        upload_file_type,
+        upload_suffix_name,
+        file_size,
+        create_time,
+        create_author)
+        values(
+        #{uploadFile.id},
+        #{uploadFile.uploadFileAddress},
+        #{uploadFile.uploadFileName},
+        #{uploadFile.uploadFileType},
+        #{uploadFile.uploadSuffixName},
+        #{uploadFile.fileSize},
+        #{uploadFile.createTime},
+        #{uploadFile.createAuthor}
+        )
+    </insert>
 </mapper>

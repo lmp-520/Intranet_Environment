@@ -89,14 +89,14 @@ public class AchievementController {
     @ResponseBody
     public ResultMap AddAchievement(@CookieValue(value = "IntranecToken") String token, HttpServletResponse response,
                                     @RequestParam("cid") String cid, //验收申请表的id
-                                    @RequestPart("achievementFileUrl")MultipartFile achievementFileUrl, //成果附件地址
+                                    @RequestPart("achievementFileUrl")MultipartFile achievementFile, //成果附件地址
                                     @RequestPart OutcomeInformationAll outcomeInformationAll   ){ //成果信息
         if(StringUtils.isEmpty(token)){
             return resultMap.fail().message("请先登录");
         }
 
         try {
-            resultMap = achievementService.AddAchievement(token,response,cid,achievementFileUrl,outcomeInformationAll);
+            resultMap = achievementService.AddAchievement(token,response,cid,achievementFile,outcomeInformationAll);
         } catch (Exception e) {
             e.printStackTrace();
             log.error("AchievementController 中 AddAchievement 方法错误 -- "+e.getMessage());
