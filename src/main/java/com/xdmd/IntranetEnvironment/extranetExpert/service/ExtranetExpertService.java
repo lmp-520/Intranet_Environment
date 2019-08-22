@@ -11,4 +11,8 @@ public interface ExtranetExpertService {
     ResultMap register(UserInformation userInformation, MultipartFile expertFile);
 
     ResultMap login(String loginName, String password, HttpServletResponse response);
+
+    ResultMap queryOwnInformation(Integer uid);
+
+    ResultMap updateOwnInformation(UserInformation userInformation, MultipartFile expertInformationFile, String oldExpertInformationFile) throws Exception;
 }
