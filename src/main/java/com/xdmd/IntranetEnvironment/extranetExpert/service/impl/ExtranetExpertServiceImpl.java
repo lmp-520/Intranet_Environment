@@ -160,7 +160,7 @@ public class ExtranetExpertServiceImpl implements ExtranetExpertService {
 
         if(uid ==null){
             //如果id为空，意味着数据库中没有这个账号
-            return resultMap.success().message("没有此账号,请先注册");
+            return resultMap.fail().message("没有此账号,请先注册");
         }
 
         //判断这个账号是否被启用
