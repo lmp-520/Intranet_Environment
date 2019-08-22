@@ -90,4 +90,39 @@ public class ExtranetExpertController {
         }
         return resultMap;
     }
+
+    //当专家账号审核不通过时，可以通过uid获取个人信息
+    @PostMapping("queryOwnInformation")
+    @ResponseBody
+    public ResultMap queryOwnInformation(@RequestParam("uid")Integer uid){
+
+        try {
+            resultMap = extranetExpertService.queryOwnInformation(uid);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("ExtranetExpertController 中 queryOwnInformation 方法出错 --"+e.getMessage());
+            return resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
+
+    //对个人信息进行修改
+    @ResponseBody
+    @PostMapping("updateOwnInformation")
+    public ResultMap updateOwnInformation(@RequestPart("userInformation")UserInformation userInformation,
+                                          @RequestPart(value = "ExpertInformationFile",required = false)MultipartFile ExpertInformationFile,
+                                          @RequestPart(value = "oldExpertInformationFile",required = false)String oldExpertInformationFile){
+
+        try {
+            resultMap = extranetExpertService.updateOwnInformation(userInformation,ExpertInformationFile,oldExpertInformationFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("ExtranetExpertController 中 updateOwnInformation 方法 -- "+e.getMessage());
+            return resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
+
+
+
 }

@@ -182,4 +182,28 @@
           #{expertInformationResearchDirection.mainResearchDirections}
           )
     </insert>
+
+    <update id="updateExpertInformationById">
+        update expert_information set
+          sex = #{expertInformation.sex},
+          birth_date = #{expertInformation.birthDate},
+          education = #{expertInformation.education},
+          present_post = #{expertInformation.presentPost},
+          technical_title = #{expertInformation.technicalTitle},
+          study_major = #{expertInformation.studyMajor},
+          professionalism = #{expertInformation.professionalism},
+          work_unit = #{expertInformation.workUnit},
+          postal_address = #{expertInformation.postalAddress},
+          postal_code = #{expertInformation.postalCode},
+          work_telephone = #{expertInformation.workTelephone},
+          phone = #{expertInformation.phone},
+          mail = #{expertInformation.mail},
+          nature_work = #{expertInformation.natureWork},
+          professional_field = #{expertInformation.professionalField},
+          curriculum_vitae = #{expertInformation.curriculumVitae},
+          recommendation_unit_opinion = #{expertInformation.recommendationUnitOpinion},
+          is_province = #{expertInformation.isProvince},
+          reason = null
+        where id = #{expertInformation.id}
+    </update>
 </mapper>

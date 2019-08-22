@@ -2,15 +2,13 @@ package com.xdmd.IntranetEnvironment.company.Service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.xdmd.IntranetEnvironment.common.FileSuffixJudgeUtil;
-import com.xdmd.IntranetEnvironment.common.FileUploadUtil;
-import com.xdmd.IntranetEnvironment.common.MD5Utils;
-import com.xdmd.IntranetEnvironment.common.ResultMap;
+import com.xdmd.IntranetEnvironment.common.*;
 import com.xdmd.IntranetEnvironment.company.Pojo.AdministratorInformation;
 import com.xdmd.IntranetEnvironment.company.Pojo.LoginReturnContent;
 import com.xdmd.IntranetEnvironment.company.Pojo.UserInformation;
 import com.xdmd.IntranetEnvironment.company.Service.CompanyServiceTwo;
 import com.xdmd.IntranetEnvironment.company.mapper.CompanyMapper;
+import com.xdmd.IntranetEnvironment.company.mapper.ExtranetLoginLogMapper;
 import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.JwtInformation;
 import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.UploadFile;
 import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.utils.IntegrationFile;
@@ -39,6 +37,8 @@ public class CompanyServiceTwoImpl implements CompanyServiceTwo {
     private CompanyMapper companyMapper;
     ResultMap resultMap = new ResultMap();
     private static Logger log = LoggerFactory.getLogger(CompanyServiceTwoImpl.class);
+    @Autowired
+    private ExtranetLoginLogMapper extranetLoginLogMapper;
 
     //公司的注册
     @Override
@@ -233,6 +233,18 @@ public class CompanyServiceTwoImpl implements CompanyServiceTwo {
             JSONObject jsonObject = JSON.parseObject(loginReturnContent.toString());
             jsonObject.put("isFirst",1);    //设置为多次登陆
 
+            //把登陆信息插入到外网登陆日志表中
+            ExtranetLoginLog extranetLoginLog = new ExtranetLoginLog();
+            extranetLoginLog.setIdentity(0);     //身份( 0：管理员 1：员工 2：专家)
+            extranetLoginLog.setLoginName(loginName);
+            //获取当前时间
+            Date date = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String nowTime = sdf.format(date);
+            extranetLoginLog.setLoginTime(nowTime);
+            //新增登陆日志表
+            extranetLoginLogMapper.addLoginLog(extranetLoginLog);
+
             return resultMap.success().message(jsonObject);
         }else {
             //员工登陆
@@ -273,6 +285,18 @@ public class CompanyServiceTwoImpl implements CompanyServiceTwo {
                 //多次登陆
                 jsonObject.put("isFirst",1);
             }
+
+            //把登陆信息插入到外网登陆日志表中
+            ExtranetLoginLog extranetLoginLog = new ExtranetLoginLog();
+            extranetLoginLog.setIdentity(1);     //身份( 0：管理员 1：员工 2：专家)
+            extranetLoginLog.setLoginName(loginName);
+            //获取当前时间
+            Date date = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String nowTime = sdf.format(date);
+            extranetLoginLog.setLoginTime(nowTime);
+            //新增登陆日志表
+            extranetLoginLogMapper.addLoginLog(extranetLoginLog);
 
             return resultMap.success().message(jsonObject);
         }

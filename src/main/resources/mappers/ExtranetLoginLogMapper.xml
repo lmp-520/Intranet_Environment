@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xdmd.IntranetEnvironment.company.mapper.ExtranetLoginLogMapper">
+    <insert id="addLoginLog">
+        insert into extranet_login_log(
+          login_name,
+          identity,
+          login_time
+        )values (
+          #{extranetLoginLog.loginName},
+          #{extranetLoginLog.identity},
+          #{extranetLoginLog.loginTime}
+        )
+    </insert>
+</mapper>
