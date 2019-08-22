@@ -1,6 +1,6 @@
 package com.xdmd.IntranetEnvironment.contractmanage.mapper;
 
-import com.xdmd.IntranetEnvironment.contractmanage.pojo.SubjectKeyResearchDevelopersDTO;
+import com.xdmd.IntranetEnvironment.contractmanage.pojo.SubjectParticipatingUnitDTO;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -11,10 +11,10 @@ import java.util.List;
 /**
  * @author: Kong
  * @createDate: 2019/08/06
- * @description: 课题承担单位、参加单位及主要研究开发人员
+ * @description: 课题参与单位
  */
 @Repository
-public interface SubjectKeyResearchDevelopersMapper {
+public interface SubjectParticipatingUnitMapper {
     /**
      * [新增]
      * @author Kong
@@ -35,10 +35,8 @@ public interface SubjectKeyResearchDevelopersMapper {
             "#{professionalTitle}," +
             "#{professional}," +
             "#{workTask}," +
-            "#{workingTime}," +
-            "#{keyResearchDevelopers}," +
-            "#{isLeader})")
-    int insert(SubjectKeyResearchDevelopersDTO subjectKeyResearchDevelopersDTO);
+            "#{workingTime})")
+    int insert(SubjectParticipatingUnitDTO subjectParticipatingUnitDTO);
 
 
     /**
@@ -48,7 +46,7 @@ public interface SubjectKeyResearchDevelopersMapper {
      **/
     @Select(value = "select ci.* from subject_key_research_developers skrd,contract_manage cm\n" +
             "where skrd.contract_id=cm.id and cm.id=#{id}")
-    SubjectKeyResearchDevelopersDTO getDeveloperInfoById(@Param("id") int id);
+    SubjectParticipatingUnitDTO getDeveloperInfoById(@Param("id") int id);
 
     /**
      * [查詢] 全部查詢
@@ -56,5 +54,5 @@ public interface SubjectKeyResearchDevelopersMapper {
      * @date 2019/08/06
      **/
     @Select(value = "select * from subject_key_research_developers")
-    List<SubjectKeyResearchDevelopersDTO> getAllInfo();
+    List<SubjectParticipatingUnitDTO> getAllInfo();
 }

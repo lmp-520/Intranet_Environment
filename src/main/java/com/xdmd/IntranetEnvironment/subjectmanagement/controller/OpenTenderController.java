@@ -104,10 +104,10 @@ public class OpenTenderController  {
             @ApiImplicitParam(name = "fileType", value = "附件类型"),
             @ApiImplicitParam(name = "oid", value = "招标id"),
     })
-    public String midFileUpload(@RequestParam("file") MultipartFile file, @RequestParam("fileType")String fileType, @RequestParam("oid")int oid){
+    public String midFileUpload(@RequestParam("file") MultipartFile file, @RequestParam("fileType")String fileType,@RequestParam("uploader") String uploader,@RequestParam("unitName")String unitName,  @RequestParam("oid")int oid){
         String OK=null;
         try {
-            OK=openTenderService.tenderFileUpload(file,fileType,oid);
+            OK=openTenderService.tenderFileUpload(file,uploader,unitName,fileType,oid);
         }
         catch (Exception e){
             e.printStackTrace();

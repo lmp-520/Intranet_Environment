@@ -9,13 +9,13 @@ import java.math.BigDecimal;
 /**
  * @author: Kong
  * @createDate: 2019/8/4
- * @description: 课题经费预算【合同子表三】
+ * @description: 课题经费预算【合同子表四】
  */
 @Data
-@ApiModel("课题经费预算【合同子表三】")
+@ApiModel("课题经费预算【合同子表四】")
 public class SubjectFundsBudgetDTO {
 
-    @ApiModelProperty(name="主键【注:系统默认生成,新增时不用填】",required = false,example ="1")
+    @ApiModelProperty(name="主键【注:系统默认生成,新增时不用填】",required = false)
     private Integer id;
 
     @ApiModelProperty("合同主表id")
