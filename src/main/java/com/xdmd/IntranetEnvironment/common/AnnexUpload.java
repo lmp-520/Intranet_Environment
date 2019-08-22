@@ -1,5 +1,6 @@
 package com.xdmd.IntranetEnvironment.common;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -11,6 +12,7 @@ import java.util.Date;
  * @description: 上传文件实体类
  */
 @Data
+@AllArgsConstructor
 public class AnnexUpload implements Serializable {
 
     /**

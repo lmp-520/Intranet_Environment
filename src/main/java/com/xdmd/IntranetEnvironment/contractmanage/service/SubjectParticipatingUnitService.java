@@ -1,6 +1,6 @@
 package com.xdmd.IntranetEnvironment.contractmanage.service;
 
-import com.xdmd.IntranetEnvironment.contractmanage.pojo.SubjectKeyResearchDevelopersDTO;
+import com.xdmd.IntranetEnvironment.contractmanage.pojo.SubjectParticipatingUnitDTO;
 
 import java.util.List;
 
@@ -9,13 +9,13 @@ import java.util.List;
  * @createDate: 2019/08/06
  * @description: 课题承担单位、参加单位及主要研究开发人员
  */
-public interface SubjectKeyResearchDevelopersService {
+public interface SubjectParticipatingUnitService {
     /**
      * [新增]
-     * @param subjectKeyResearchDevelopersDTO
+     * @param subjectParticipatingUnitDTO
      * @return
      */
-    int insert(SubjectKeyResearchDevelopersDTO subjectKeyResearchDevelopersDTO);
+    int insert(SubjectParticipatingUnitDTO subjectParticipatingUnitDTO);
 
 
     /**
@@ -23,11 +23,11 @@ public interface SubjectKeyResearchDevelopersService {
      * @param id
      * @return
      */
-    SubjectKeyResearchDevelopersDTO getDeveloperInfoById(int id);
+    SubjectParticipatingUnitDTO getDeveloperInfoById(int id);
 
     /**
      * [查詢] 全部查詢
      * @return
      */
-    List<SubjectKeyResearchDevelopersDTO> getAllInfo();
+    List<SubjectParticipatingUnitDTO> getAllInfo();
 }

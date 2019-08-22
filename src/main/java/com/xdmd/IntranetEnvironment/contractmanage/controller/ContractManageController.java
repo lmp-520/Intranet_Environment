@@ -85,14 +85,15 @@ public class ContractManageController {
             @ApiImplicitParam(name="subjectContact",value = "课题联系人"),
             @ApiImplicitParam(name="subjectContactPhone",value = "课题联系人电话或手机"),
             @ApiImplicitParam(name="commitmentUnit",value = "承担单位"),
-            @ApiImplicitParam(name="subjectSupervisorDepartment",value = "课题主管部门")
+            @ApiImplicitParam(name="subjectSupervisorDepartment",value = "课题主管部门"),
+            @ApiImplicitParam(name = "pageNum", value = "当前页数", required = true),
+            @ApiImplicitParam(name = "pageSize", value = "每页显示条数", required = true)
     })
     @ApiOperation(value = "查询合同主表信息")
     @GetMapping(value = "getAllInfo")
     public ResultMap getAllInfo(String subjectCategory,String subjectName,String subjectContact,String subjectContactPhone,String commitmentUnit,
-                                              String subjectSupervisorDepartment) {
-        List<Map> allInfoMap=contractManageService.getAllInfo(subjectCategory,subjectName,subjectContact,subjectContactPhone,commitmentUnit,subjectSupervisorDepartment);
-        return allInfoMap != null ? resultMap.success().message(allInfoMap) : resultMap.fail().message("查询失败");
+                                              String subjectSupervisorDepartment,int pageNum,int pageSize) {
+        return resultMap=contractManageService.getAllInfo(subjectCategory,subjectName,subjectContact,subjectContactPhone,commitmentUnit,subjectSupervisorDepartment,pageNum,pageSize);
     }
 
 

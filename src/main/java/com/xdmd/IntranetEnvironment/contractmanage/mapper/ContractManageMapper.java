@@ -1,7 +1,6 @@
 package com.xdmd.IntranetEnvironment.contractmanage.mapper;
 
 import com.xdmd.IntranetEnvironment.contractmanage.pojo.ContractManageDTO;
-import com.xdmd.IntranetEnvironment.subjectmanagement.pojo.OpenTender;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
@@ -129,33 +128,33 @@ public interface ContractManageMapper {
      */
     @Select(value = "<script>" +
             "SELECT\n" +
-            "id\n" +
-            "subject_category as subjectCategory\n" +
-            "subject_name as subjectName\n" +
-            "subject_objectives_research as subjectObjectivesResearch\n" +
-            "subject_contact_phone as subjectContactPhone\n" +
-            "commitment_unit as commitmentUnit\n" +
+            "id,\n" +
+            "subject_category as subjectCategory,\n" +
+            "subject_name as subjectName,\n" +
+            "subject_objectives_research as subjectObjectivesResearch,\n" +
+            "subject_contact_phone as subjectContactPhone,\n" +
+            "commitment_unit as commitmentUnit,\n" +
             "subject_supervisor_department as subjectSupervisorDepartment\n" +
             "From\n" +
-            "contract_manage cm\n" +
+            "contract_manage\n" +
             "<where>\n" +
             "<if test ='null != subjectCategory'>\n" +
-            "AND subject_category like CONCAT('%',#{ subjectCategory},'%')\n" +
+            "AND subject_category like CONCAT('%',#{subjectCategory},'%')\n" +
             "</if>\n" +
             "<if test ='null != subjectName'>\n" +
-            "AND subject_name like CONCAT('%',#{ subjectName},'%')\n" +
+            "AND subject_name like CONCAT('%',#{subjectName},'%')\n" +
             "</if>\n" +
             "<if test ='null != subjectContact'>\n" +
-            "AND subject_contact like CONCAT('%',#{ subjectContact},'%')\n" +
+            "AND subject_contact like CONCAT('%',#{subjectContact},'%')\n" +
             "</if>\n" +
             "<if test ='null != subjectContactPhone'>\n" +
-            "AND subject_contact_phone like CONCAT('%',#{ subjectContactPhone },'%')\n" +
+            "AND subject_contact_phone like CONCAT('%',#{subjectContactPhone },'%')\n" +
             "</if>\n" +
             "<if test ='null != commitmentUnit'>\n" +
             "AND commitment_Unit like CONCAT('%',#{commitmentUnit},'%')\n" +
             "</if>\n" +
             "<if test ='null != subjectSupervisorDepartment'>\n" +
-            "AND subject_supervisor_department like CONCAT('%',#{ subjectSupervisorDepartment},'%')\n" +
+            "AND subject_supervisor_department like CONCAT('%',#{subjectSupervisorDepartment},'%')\n" +
             "</if></where>" +
             "</script>")
     List<Map> getAllInfo(@Param("subjectCategory") String subjectCategory,@Param("subjectName")String subjectName,

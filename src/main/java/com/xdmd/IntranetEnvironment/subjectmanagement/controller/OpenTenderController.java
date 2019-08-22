@@ -107,7 +107,7 @@ public class OpenTenderController  {
     public String midFileUpload(@RequestParam("file") MultipartFile file, @RequestParam("fileType")String fileType, @RequestParam("oid")int oid){
         String OK=null;
         try {
-//            OK=openTenderService.tenderFileUpload(file,fileType,oid);
+            OK=openTenderService.tenderMultiUpload(file,fileType,oid);
         }
         catch (Exception e){
             e.printStackTrace();

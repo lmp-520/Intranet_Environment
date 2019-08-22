@@ -23,12 +23,15 @@ public interface SubjectFundsBudgetMapper {
     @Insert(value = "insert into subject_funds_budget\n" +
             "VALUES(\n" +
             "DEFAULT," +
-            "#{contractId}," +
+            "#{contractId},\n" +
             "#{fundingSourcesBudget},\n" +
             "#{currentYear},\n" +
             "#{nextYear},\n" +
             "#{afterYear},\n" +
-            "#{note},\n" +
+            "#{fundingSourcesNote},\n" +
+            "#{currentYearSourceTotal},\n" +
+            "#{nextYearSourceTotal},\n" +
+            "#{afterYearSourceTotal},\n" +
             "#{provincialBudget},\n" +
             "#{provincialCurrentBudget},\n" +
             "#{provincialNextBudget},\n" +
@@ -50,6 +53,11 @@ public interface SubjectFundsBudgetMapper {
             "#{otherAfterBudget},\n" +
             "#{otherNoteBudget},\n" +
             "#{expenditureBudget},\n" +
+            "#{currentYearExpenditureTotal},\n" +
+            "#{nextYearExpenditureTotal},\n" +
+            "#{afterYearExpenditureTotal},\n" +
+            "#{selfTotalExpenditures},\n" +
+            "#{totalExpendituresNote},\n" +
             "#{equipmentBudget},\n" +
             "#{equipmentCurrentBudget},\n" +
             "#{equipmentNextBudget},\n" +
@@ -97,7 +105,7 @@ public interface SubjectFundsBudgetMapper {
             "#{dailyNextBudget},\n" +
             "#{dailyAfterBudget},\n" +
             "#{dailySupportingBudget},\n" +
-            "#{dailyNoteBudget})\n")
+            "#{dailyNoteBudget}\n)")
     int insert(SubjectFundsBudgetDTO subjectFundsBudgetDTO);
 
     /**
