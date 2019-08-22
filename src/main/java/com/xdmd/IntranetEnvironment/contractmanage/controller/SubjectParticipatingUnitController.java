@@ -16,7 +16,7 @@ import java.util.List;
  * @createDate: 2019/08/06
  * @description: 课题参加单位及课题负责人接口
  */
-@Api(tags = "课题参加单位及课题负责人接口【合同子表三】")
+@Api(tags = "课题参加单位及课题负责人接口【合同子表二】")
 @RestController
 @RequestMapping(value = "environment/contract/subject_participa_unit")
 public class SubjectParticipatingUnitController {
@@ -29,7 +29,7 @@ public class SubjectParticipatingUnitController {
      * @param subjectParticipatingUnitDTO
      * @return
      */
-    @ApiOperation(value = "新增课题预算信息")
+    @ApiOperation(value = "新增课题参加单位及课题负责人")
     @PostMapping(value = "insertInfo")
     public ResultMap insert(@RequestBody SubjectParticipatingUnitDTO subjectParticipatingUnitDTO) {
         int skrd= subjectParticipatingUnitService.insert(subjectParticipatingUnitDTO);
@@ -56,4 +56,11 @@ public class SubjectParticipatingUnitController {
     public List<SubjectParticipatingUnitDTO> getAllInfo() {
         return subjectParticipatingUnitService.getAllInfo();
     }
+
+
+
+
+
+
+
 }

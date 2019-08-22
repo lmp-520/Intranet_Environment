@@ -4,11 +4,10 @@ package com.xdmd.IntranetEnvironment.dailymanagement.controller;
 import com.xdmd.IntranetEnvironment.common.AnnexUpload;
 import com.xdmd.IntranetEnvironment.common.FileSuffixJudge;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
-import com.xdmd.IntranetEnvironment.contractmanage.mapper.UploadMapper;
 import com.xdmd.IntranetEnvironment.contractmanage.pojo.ContractManageDTO;
 import com.xdmd.IntranetEnvironment.dailymanagement.pojo.*;
 import com.xdmd.IntranetEnvironment.dailymanagement.service.ProjectProgressService;
-import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.UploadFile;
+import com.xdmd.IntranetEnvironment.subjectmanagement.mapper.UploadFileMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -34,8 +33,7 @@ public class ProjectProgressController {
     @Autowired
     ProjectProgressService projectProgressService;
     @Autowired
-    UploadMapper uploadMapper;
-    AnnexUpload annexUpload;
+    UploadFileMapper uploadFileMapper;
     ResultMap resultMap=new ResultMap();
 
     /**
@@ -214,7 +212,6 @@ public class ProjectProgressController {
         String FilePath = "D:/xdmd/environment/" +ketiName+ "/课题进展情况附件/";
         StringBuilder initPath = new StringBuilder(FilePath);
         String filePath=initPath.append(fileName).toString();
-        System.out.println("文件路径-->"+filePath);
         File dest = new File(filePath);
 
         //获取文件类型
@@ -238,6 +235,7 @@ public class ProjectProgressController {
             String fileSize = String.valueOf(file1.length());
             System.out.println(fileName+"的文件大小-->"+fileSize);
             //封装到uploadfile
+            AnnexUpload annexUpload=new AnnexUpload();
             annexUpload.setUploadFilePath(String.valueOf(dest));
             annexUpload.setFileSize(fileSize);
             annexUpload.setUploadFileName(fileName);
@@ -245,8 +243,8 @@ public class ProjectProgressController {
             annexUpload.setUploadSuffixName(suffixName);
             annexUpload.setCreateAuthor("创建者");
             //文件信息保存到数据库
-            uploadMapper.insertUpload(annexUpload);
-            return "上传成功";
+            uploadFileMapper.insertUpload(annexUpload);
+            return "上传成功--->"+filePath;
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -20,7 +20,7 @@ public interface SubjectParticipatingUnitMapper {
      * @author Kong
      * @date 2019/08/06
      **/
-    @Insert(value = "insert into subject_key_research_developers\n" +
+    @Insert(value = "insert into subject_participating_unit\n" +
             "values(" +
             "DEFAULT," +
             "#{contractId}," +
@@ -44,8 +44,8 @@ public interface SubjectParticipatingUnitMapper {
      * @author Kong
      * @date 2019/08/06
      **/
-    @Select(value = "select ci.* from subject_key_research_developers skrd,contract_manage cm\n" +
-            "where skrd.contract_id=cm.id and cm.id=#{id}")
+    @Select(value = "select spu.* from subject_participating_unit spu,contract_manage cm\n" +
+            "where spu.contract_id=cm.id and cm.id=#{id}")
     SubjectParticipatingUnitDTO getDeveloperInfoById(@Param("id") int id);
 
     /**
@@ -53,6 +53,6 @@ public interface SubjectParticipatingUnitMapper {
      * @author Kong
      * @date 2019/08/06
      **/
-    @Select(value = "select * from subject_key_research_developers")
+    @Select(value = "select * from subject_participating_unit")
     List<SubjectParticipatingUnitDTO> getAllInfo();
 }

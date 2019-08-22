@@ -4,7 +4,6 @@ import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.subjectmanagement.pojo.OpenTender;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -68,11 +67,9 @@ public interface OpenTenderService {
     /**
      * 招标附件上传
      * @param file
-     * @param uploader
-     * @param unitName
      * @param fileType
      * @param oid
      * @return
      */
-    String tenderFileUpload(MultipartFile file,String uploader,String unitName,String fileType,int oid) throws IOException;
+    String tenderMultiUpload(MultipartFile file,String fileType,int oid) throws IOException;
 }

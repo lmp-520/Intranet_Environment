@@ -1,12 +1,14 @@
 package com.xdmd.IntranetEnvironment.contractmanage.service.impl;
 
 
+import com.github.pagehelper.PageHelper;
 import com.xdmd.IntranetEnvironment.common.AnnexUpload;
 import com.xdmd.IntranetEnvironment.common.FileSuffixJudge;
+import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.contractmanage.mapper.ContractManageMapper;
-import com.xdmd.IntranetEnvironment.contractmanage.mapper.UploadMapper;
 import com.xdmd.IntranetEnvironment.contractmanage.pojo.ContractManageDTO;
 import com.xdmd.IntranetEnvironment.contractmanage.service.ContractManageService;
+import com.xdmd.IntranetEnvironment.subjectmanagement.mapper.UploadFileMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,7 +29,8 @@ public class ContractManageServiceImpl implements ContractManageService {
     @Autowired
     ContractManageMapper contractManageMapper;
     @Autowired
-    UploadMapper uploadMapper;
+    UploadFileMapper uploadFileMapper;
+    ResultMap resultMap=new ResultMap();
 
     @Override
     public ContractManageDTO getNewData() {
@@ -76,8 +79,20 @@ public class ContractManageServiceImpl implements ContractManageService {
      * @return
      */
     @Override
-    public List<Map> getAllInfo(String subjectCategory, String subjectName, String subjectContact, String subjectContactPhone, String commitmentUnit, String subjectSupervisorDepartment) {
-        return contractManageMapper.getAllInfo(subjectCategory,subjectName,subjectContact,subjectContactPhone,commitmentUnit,subjectSupervisorDepartment);
+    public ResultMap getAllInfo(String subjectCategory, String subjectName, String subjectContact, String subjectContactPhone, String commitmentUnit, String subjectSupervisorDepartment,int pageNum,int pageSize) {
+        try{
+            PageHelper.startPage(pageNum,pageSize);
+            List<Map> contractMap =contractManageMapper.getAllInfo(subjectCategory,subjectName,subjectContact,subjectContactPhone,commitmentUnit,subjectSupervisorDepartment);
+           if(contractMap.size()>0){
+                resultMap.success().message(contractMap);
+            }else if(contractMap.size()==0){
+                resultMap.success().message("没有查到相关信息");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            resultMap.success().message("系统异常");
+        }
+        return resultMap;
     }
 
     /**
@@ -190,7 +205,7 @@ public class ContractManageServiceImpl implements ContractManageService {
             annexUpload.setUploadSuffixName(suffixName);
             annexUpload.setCreateAuthor("创建者");
             //文件信息保存到数据库
-            int upNo= uploadMapper.insertUpload(annexUpload);
+            int upNo= uploadFileMapper.insertUpload(annexUpload);
             return "上传成功-->"+filePath;
         } catch (Exception e) {
             e.printStackTrace();

@@ -128,6 +128,10 @@ public class ContractManageDTO {
     @ApiModelProperty("课题验收内容和考核指标")
     private String subjectAcceptanceAssessment;
 
+    @ApiModelProperty("课题验收内容和考核指标")
+    private String otherConditions;
+
+
     @ApiModelProperty("合同审批状态【0-单位员工待提交 1-单位管理员待审批 2-评估中心员工待审批 3-法规科技处待审批 4-法规科技处已审批】")
     private Integer approvalStatus;
 

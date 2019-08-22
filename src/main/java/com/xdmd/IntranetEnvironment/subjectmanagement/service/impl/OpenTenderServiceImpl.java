@@ -11,6 +11,7 @@ import com.xdmd.IntranetEnvironment.subjectmanagement.service.OpenTenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -206,7 +207,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
      * @throws IOException
      */
     @Override
-    public String tenderFileUpload(MultipartFile file, String uploader, String unitName, String fileType, int oid) throws IOException {
+    public String tenderMultiUpload(MultipartFile file, String fileType, int oid) throws IOException {
         //判断文件是否为空
         if (file.isEmpty()) {
             return "上传文件不可为空";
@@ -216,11 +217,12 @@ public class OpenTenderServiceImpl implements OpenTenderService {
         StringBuilder pinjiefileName=new StringBuilder(nowtime).append(file.getOriginalFilename());
         String fileName =pinjiefileName.toString();
 
-        //获取招标课题名称
-        Map getTenderByIdMap = openTenderMapper.getTenderById(oid);;
-        Object ketiName = getTenderByIdMap.get("subjectName");
+        //获取招标课题名稱
+        Object ketiName = openTenderMapper.getTenderById(oid).get("subjectName");
+        //获取招标课题編號
+        Object ketiNo=openTenderMapper.getTenderById(oid).get("ProjectNo");
         //获取文件上传绝对路径
-        String FilePath = "D:/xdmd/environment/"+unitName+"/"+ketiName+"/"+fileType+"/";
+        String FilePath = "D:/xdmd/environment/"+"單位名稱"+"/"+ketiName+"/"+ketiNo+"/"+fileType+"/";
         StringBuilder initPath = new StringBuilder(FilePath);
         String filePath=initPath.append(fileName).toString();
         System.out.println("文件路径-->"+filePath);
@@ -250,7 +252,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
             annexUpload.setUploadFileName(fileName);
             annexUpload.setUploadFileType(fileType);
             annexUpload.setUploadSuffixName(suffixName);
-            annexUpload.setCreateAuthor(uploader);
+            annexUpload.setCreateAuthor("創建者");
             //文件信息保存到数据库
             int upNo= uploadFileMapper.insertUpload(annexUpload);
             return "上传成功-->"+filePath;
@@ -259,7 +261,5 @@ public class OpenTenderServiceImpl implements OpenTenderService {
         }
         return "上传失败";
     }
-
-
 
 }

@@ -1,5 +1,6 @@
 package com.xdmd.IntranetEnvironment.contractmanage.service;
 
+import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.contractmanage.pojo.ContractManageDTO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.web.multipart.MultipartFile;
@@ -50,7 +51,7 @@ public interface ContractManageService {
      * [查詢合同主表] 查詢主表全部
      * @return
      */
-    List<Map> getAllInfo(String subjectCategory,String subjectName, String subjectContact,String subjectContactPhone,String commitmentUnit,String subjectSupervisorDepartment);
+    ResultMap getAllInfo(String subjectCategory, String subjectName, String subjectContact, String subjectContactPhone, String commitmentUnit, String subjectSupervisorDepartment, int pageNum, int pageSize);
 
 
     ///////////////////////////以下是中期检查///////////////////////////////////
