@@ -29,18 +29,15 @@ public class ExpertController {
     @Autowired
     private ExpertService expertService;
 
-
     //分配账号
     @PostMapping("distributionExpertAccount")
     @ResponseBody
-    public ResultMap distributionExpertAccount(@CookieValue(value = "IntranecToken") String token, HttpServletResponse response,
+    public ResultMap distributionExpertAccount(@CookieValue(value = "IntranecToken",required = false) String token, HttpServletResponse response,
                                                @RequestPart UserInformation userInformation,
                                                @RequestPart ("expertFile") MultipartFile expertFile){
-
         if(StringUtils.isEmpty(token)){
             return resultMap.fail().message("请先登录");
         }
-
         try {
             resultMap = expertService.distributionExpertAccount(token,response,userInformation,expertFile);
         } catch (Exception e) {
@@ -50,7 +47,6 @@ public class ExpertController {
         }
         return resultMap;
     }
-
 
     //专家的查询
     @ResponseBody
@@ -73,7 +69,6 @@ public class ExpertController {
         }
         return resultMap;
     }
-
 
     //专家账号的审核
     @ResponseBody
@@ -105,7 +100,6 @@ public class ExpertController {
         if(StringUtils.isEmpty(token)){
             return resultMap.fail().message("请先登录");
         }
-
         try {
             resultMap = expertService.expertModify(token,response,oldExpertFile,expertInformation,expertFile);
         } catch (Exception e) {
@@ -116,7 +110,6 @@ public class ExpertController {
         return resultMap;
     }
 
-
     //修改专家的启用或者停用状态
     @PostMapping("changeState")
     @ResponseBody
@@ -126,7 +119,6 @@ public class ExpertController {
         if(StringUtils.isEmpty(token)){
             return resultMap.fail().message("请先登录");
         }
-
         try {
             resultMap = expertService.changeState(token,response,id,type);
         } catch (Exception e) {
@@ -136,5 +128,4 @@ public class ExpertController {
         }
         return resultMap;
     }
-
 }

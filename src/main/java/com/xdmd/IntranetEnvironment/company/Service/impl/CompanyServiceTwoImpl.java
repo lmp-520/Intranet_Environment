@@ -47,6 +47,7 @@ public class CompanyServiceTwoImpl implements CompanyServiceTwo {
 
         //判断上传文件的类型是否正确
 
+
         //营业执照的格式判断
         List<String> businessSuffixList = new ArrayList<String>(Arrays.asList(".jpg", ".png", ".jpeg", ".pdf"));
         //获取文件名

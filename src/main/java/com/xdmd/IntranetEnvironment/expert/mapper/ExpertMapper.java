@@ -60,7 +60,7 @@ public interface ExpertMapper {
     void ExpertStateSuccess(@Param("id") Integer id);
 
     //此时审核未通过，修改账号的状态与未通过的原因
-    @Update("update shiro_user_information set is_state = 0 where uid = #{id}")
+    @Update("update shiro_user_information set is_state = 3 where uid = #{id}")
     void ExpertStateFail(@Param("id") Integer id, @Param("reason") String reason);
 
     //把文件上传的信息存储到upload_file表中
@@ -137,4 +137,8 @@ public interface ExpertMapper {
     //停用这个专家账号
     @Update("update shiro_user_information set is_delete = 1 where uid = #{id}")
     void changeStateEnd(@Param("id") Integer id);
+
+    //把审核未通过的原因写入数据库
+    @Update("update expert_information set reason = #{reason} where aid = #{id}")
+    void ExpertReason(@Param("id") Integer id, @Param("reason") String reason);
 }

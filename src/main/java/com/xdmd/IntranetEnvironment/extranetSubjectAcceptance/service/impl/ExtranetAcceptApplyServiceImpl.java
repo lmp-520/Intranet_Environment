@@ -8,6 +8,7 @@ import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.mapper.ExtranetAcc
 import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.*;
 import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.service.ExtranetAcceptApplyService;
 import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.utils.IntegrationFile;
+import com.xdmd.IntranetEnvironment.subjectAcceptance.pojo.CheckApplyState;
 import com.xdmd.IntranetEnvironment.user.exception.ClaimsNullException;
 import com.xdmd.IntranetEnvironment.user.exception.UserNameNotExistentException;
 import org.slf4j.Logger;
@@ -435,7 +436,7 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
         }
 
         //查询所有的结题 通过验收 没通过验收 的信息内容
-        List<ExtranetCheckApply> extranetCheckApplyList = acceptApplyMapper.queryResultCheckApply(cid, topicName, topicNumber, page, total);
+        List<ExtranetCheckApply> extranetCheckApplyList = acceptApplyMapper.queryResultCheckApply(cid, topicName, topicNumber, newpage, total);
 
         for (ExtranetCheckApply extranetCheckApply : extranetCheckApplyList) {
             Integer id = extranetCheckApply.getId();   //获取验收申请表的id

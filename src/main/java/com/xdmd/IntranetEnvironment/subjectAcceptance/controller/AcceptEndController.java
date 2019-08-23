@@ -52,7 +52,7 @@ public class AcceptEndController {
     //验收结束的审核
     @ResponseBody
     @PostMapping("examine")
-    public ResultMap AcceptEndState(@CookieValue(value = "IntranecToken") String token, HttpServletResponse response,
+    public ResultMap AcceptEndState(@CookieValue(value = "IntranecToken",required = false) String token, HttpServletResponse response,
                                     @RequestParam("type") Boolean type,//审核的状态.   true为审核通过  false为审核未通过
                                     @RequestParam(value = "reason", required = false) String reason,//审核未通过原因
                                     @RequestParam("id") Integer id){
@@ -66,7 +66,6 @@ public class AcceptEndController {
             log.error("AcceptEndController 中 AcceptEndState方法出错----"+e.getMessage());
             return resultMap.fail().message("系统异常");
         }
-
         return resultMap;
     }
 

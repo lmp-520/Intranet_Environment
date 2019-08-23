@@ -246,31 +246,28 @@ public class PersonInformationManageServiceImpl implements PersonInformationMana
     //对员工信息进行修改
     @Override
     public ResultMap modify(String token, HttpServletResponse response, String oldFileUrl, Subaccount subaccount, MultipartFile idCardFile) throws Exception {
-//        JwtInformation jwtInformation = new JwtInformation();
-//        try {
-//            jwtInformation = tokenService.compare(response, token);
-//        } catch (NullPointerException e) {
-//            e.printStackTrace();
-//            return resultMap.fail().message("请先登录");
-//        } catch (UserNameNotExistentException e) {
-//            e.printStackTrace();
-//            return resultMap.fail().message("请先登录");
-//        } catch (ClaimsNullException e) {
-//            e.printStackTrace();
-//            return resultMap.fail().message("请先登录");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            log.error("MenuServiceImpl 中 TokenService 出现问题");
-//            return resultMap.message("系统异常");
-//        }
-//
-//        Integer uid = jwtInformation.getUid();
-//        String uname = jwtInformation.getUsername();
-//        Integer cid = jwtInformation.getCid();
-//        String cname = jwtInformation.getCompanyName();
+        JwtInformation jwtInformation = new JwtInformation();
+        try {
+            jwtInformation = tokenService.compare(response, token);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (UserNameNotExistentException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (ClaimsNullException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("MenuServiceImpl 中 TokenService 出现问题");
+            return resultMap.message("系统异常");
+        }
 
-        String uname = "修改人名";
-        String cname = "修改公司名";
+        Integer uid = jwtInformation.getUid();
+        String uname = jwtInformation.getUsername();
+        Integer cid = jwtInformation.getCid();
+        String cname = jwtInformation.getCompanyName();
 
 
         //判断用户是否上传新的文件
