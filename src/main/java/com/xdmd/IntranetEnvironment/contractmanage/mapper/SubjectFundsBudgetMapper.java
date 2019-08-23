@@ -113,7 +113,7 @@ public interface SubjectFundsBudgetMapper {
      * @author Kong
      * @date 2019/08/06
      **/
-    @Select(value = "select ci.* from subject_funds_budget as sfb,contract_manage as cm where sfb.contract_id=cm.id and cm.id=#{id}")
+    @Select(value = "select sfb.* from subject_funds_budget as sfb,contract_manage as cm where sfb.contract_id=cm.id and cm.id=#{id}")
     SubjectFundsBudgetDTO getBudgetInfoById(@Param("id") int id);
 
     /**

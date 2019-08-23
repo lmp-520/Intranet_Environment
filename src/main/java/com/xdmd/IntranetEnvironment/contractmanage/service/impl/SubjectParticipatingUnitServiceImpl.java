@@ -29,7 +29,7 @@ public class SubjectParticipatingUnitServiceImpl implements SubjectParticipating
         return subjectParticipatingUnitMapper.insert(subjectParticipatingUnitDTO);
     }
     /**
-     * [查詢] 根據主鍵 id 查詢
+     * [查詢] 根據合同主表id查詢
      * @param id
      * @return
      */

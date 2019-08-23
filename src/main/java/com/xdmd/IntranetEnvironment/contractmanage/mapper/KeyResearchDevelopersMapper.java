@@ -29,8 +29,8 @@ public interface KeyResearchDevelopersMapper {
      * @author Kong
      * @date 2019/08/06
      **/
-    @Select(value = "select ci.* from key_research_developers skrd,contract_manage cm\n" +
-            "where skrd.contract_id=cm.id and cm.id=#{cid}")
+    @Select(value = "select krd.* from key_research_developers krd,contract_manage cm\n" +
+            "where krd.contract_id=cm.id and cm.id=#{cid}")
     List<KeyResearchDevelopersDTO> getDeveloperInfoById(@Param("cid") int cid);
 
 }

@@ -1,6 +1,7 @@
 package com.xdmd.IntranetEnvironment.dailymanagement.service.impl;
 
 
+import com.github.pagehelper.PageHelper;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.dailymanagement.mapper.MajorMattersFilingMapper;
 import com.xdmd.IntranetEnvironment.dailymanagement.pojo.AdjustTypeDTO;
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author: Kong
@@ -33,14 +33,15 @@ public class MajorMattersFilingServiceImpl implements MajorMattersFilingService 
     public ResultMap insert(MajorMattersFilingDTO majorMattersFiling) {
         try{
             int insertNo= majorMattersFilingMapper.insert(majorMattersFiling);
+            System.out.println(insertNo);
             if(insertNo>0){
-                resultMap.success().message("成功新增"+insertNo+"条数据");
+                resultMap.success().message("新增"+insertNo+"条数据");
             }else if(insertNo==0){
-                resultMap.success().message("没有查到相关信息");
+                resultMap.fail().message("新增失败");
             }
         }catch (Exception e){
             e.printStackTrace();
-            resultMap.success().message("系统异常");
+            resultMap.fail().message("系统异常");
         }
         return resultMap;
     }
@@ -56,11 +57,11 @@ public class MajorMattersFilingServiceImpl implements MajorMattersFilingService 
             if(updateNo>0){
                 resultMap.success().message("成功更新"+updateNo+"条数据");
             }else if(updateNo==0){
-                resultMap.success().message("没有查到相关信息");
+                resultMap.fail().message("没有查到相关信息");
             }
         }catch (Exception e){
             e.printStackTrace();
-            resultMap.success().message("系统异常");
+            resultMap.fail().message("系统异常");
         }
         return resultMap;
     }
@@ -77,56 +78,34 @@ public class MajorMattersFilingServiceImpl implements MajorMattersFilingService 
             if(majors!=null){
                 resultMap.success().message(majors);
             }else if(majors==null){
-                resultMap.success().message("没有查到相关信息");
+                resultMap.fail().message("没有查到相关信息");
             }
         }catch (Exception e){
             e.printStackTrace();
-            resultMap.success().message("系统异常");
+            resultMap.fail().message("系统异常");
         }
         return resultMap;
     }
 
     /**
      * [查詢] 分頁查詢【内网】
-     * @param offset
-     * @param pagesize
+     * @param pageNum
+     * @param pageSize
      * @return
      */
     @Override
-    public ResultMap pageList(String subjectName,String commitmentUnit,int adjustTypId,int adjustmentMattersId,int offset,int pagesize) {
+    public ResultMap getAllMajorInfo(String subjectName, String commitmentUnit, Integer adjustTypId, Integer adjustmentMattersId, int pageNum, int pageSize) {
         try{
-            List<Map> mapList = majorMattersFilingMapper.pageList(subjectName,commitmentUnit,adjustTypId,adjustmentMattersId,offset,pagesize);
-            if(mapList!=null){
-                resultMap.success().message(mapList);
-            }else if(mapList==null){
-                resultMap.success().message("没有查到相关信息");
+            PageHelper.startPage(pageNum, pageSize);
+            List<MajorMattersFilingDTO> majorList = majorMattersFilingMapper.getAllMajorInfo(subjectName,commitmentUnit,adjustTypId,adjustmentMattersId);
+            if(majorList!=null){
+                resultMap.success().message(majorList);
+            }else if(majorList==null){
+                resultMap.fail().message("没有查到相关信息");
             }
         }catch (Exception e){
             e.printStackTrace();
-            resultMap.success().message("系统异常");
-        }
-        return resultMap;
-    }
-
-
-    /**
-     * [查詢] 分頁查詢 count【内网】
-     * @param offset
-     * @param pagesize
-     * @return
-     */
-    @Override
-    public ResultMap pageListCount(int offset, int pagesize) {
-        try{
-            int majorNo = majorMattersFilingMapper.pageListCount(offset,pagesize);
-            if(majorNo>0){
-                resultMap.success().message("共有"+majorNo+"条数据");
-            }else if(majorNo==0){
-                resultMap.success().message("没有查到相关信息");
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-            resultMap.success().message("系统异常");
+            resultMap.fail().message("系统异常");
         }
         return resultMap;
     }
@@ -142,18 +121,18 @@ public class MajorMattersFilingServiceImpl implements MajorMattersFilingService 
             if(adjustTypeList!=null){
                 resultMap.success().message(adjustTypeList);
             }else if(adjustTypeList==null){
-                resultMap.success().message("没有查到相关信息");
+                resultMap.fail().message("没有查到相关信息");
             }
         }catch (Exception e){
             e.printStackTrace();
-            resultMap.success().message("系统异常");
+            resultMap.fail().message("系统异常");
         }
         return resultMap;
     }
 
 
     /**
-     * 查询所有调整类型
+     * 查询所有调整事项
      * @return
      */
     @Override
@@ -163,11 +142,11 @@ public class MajorMattersFilingServiceImpl implements MajorMattersFilingService 
             if(adjustmentMattersList!=null){
                 resultMap.success().message(adjustmentMattersList);
             }else if(adjustmentMattersList==null){
-                resultMap.success().message("没有查到相关信息");
+                resultMap.fail().message("没有查到相关信息");
             }
         }catch (Exception e){
             e.printStackTrace();
-            resultMap.success().message("系统异常");
+            resultMap.fail().message("系统异常");
         }
         return resultMap;
     }

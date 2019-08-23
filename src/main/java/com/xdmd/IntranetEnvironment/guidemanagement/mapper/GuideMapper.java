@@ -22,9 +22,24 @@ public interface GuideMapper {
      * @param guideCollection
      * @return
      */
-        @Insert(value = "INSERT INTO guide_collection\t"+
-                "VALUES(" +
-                "DEFAULT,\n" +
+        @Insert(value = "insert into guide_collection(\n" +
+                "guide_name,\n" +
+                "category,\n" +
+                "domain,\n" +
+                "fill_unit,\n" +
+                "fill_contacts,\n" +
+                "unit_principal,\n" +
+                "reason_basis,\n" +
+                "research_content_technology,\n" +
+                "expected_target_outcome,\n" +
+                "standards_specifications_regulatory,\n" +
+                "research_period,\n" +
+                "research_fund,\n" +
+                "demonstration_scale,\n" +
+                "demonstration_point,\n" +
+                "province_domain_mechanism,\n" +
+                "contact_phone)\n" +
+                "VALUES(\n" +
                 "#{guideName},\n" +
                 "#{category},\n" +
                 "#{domain},\n" +
@@ -40,8 +55,7 @@ public interface GuideMapper {
                 "#{demonstrationScale},\n" +
                 "#{demonstrationPoint},\n" +
                 "#{provinceDomainMechanism},\n" +
-                "#{contactPhone},\n" +
-                "DEFAULT,DEFAULT,DEFAULT)")
+                "#{contactPhone})")
     int insertGuideInfo(GuideCollection guideCollection);
 
     /**

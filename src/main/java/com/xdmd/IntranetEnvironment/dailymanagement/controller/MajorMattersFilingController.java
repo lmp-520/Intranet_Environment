@@ -5,15 +5,16 @@ import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.dailymanagement.pojo.MajorMattersFilingDTO;
 import com.xdmd.IntranetEnvironment.dailymanagement.service.MajorMattersFilingService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
  * 重大事项
  */
-@Api(tags = "重大重大事项管理")
+@Api(tags = "重大事项管理")
 @RestController
 @RequestMapping("enviroment/daily/major")
 public class MajorMattersFilingController {
@@ -49,38 +50,43 @@ public class MajorMattersFilingController {
      */
     @ApiOperation("根據主鍵 id 查詢【外网】")
     @GetMapping("getMajorById")
-    public ResultMap getMajorById(@Param("id") int id){
+    public ResultMap getMajorById(@RequestParam("id") int id){
         return  resultMap= majorMattersFilingService.getMajorById(id);
     }
 
     /**
      * [查詢] 分頁查詢【内网】
-     * @param offset
-     * @param pagesize
+     * @param subjectName
+     * @param commitmentUnit
+     * @param adjustTypId
+     * @param adjustmentMattersId
+     * @param pageNum
+     * @param pageSize
      * @return
      */
-    @ApiOperation("根據主鍵 id 查詢【外网】")
-    @GetMapping("pageList")
-    //public ResultMap pageList(@Param("offset") int offset,
-    //                   @Param("pagesize") int pagesize){
-    //    return  resultMap= majorMattersFilingService.getMajorById(id);
-    //}
 
-    /**
-     * [查詢] 分頁查詢 count【内网】
-     * @param offset
-     * @param pagesize
-     * @return
-     */
-    public ResultMap pageListCount(@Param("offset") int offset,
-                            @Param("pagesize") int pagesize){
-        return  resultMap= majorMattersFilingService.pageListCount(offset,pagesize);
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="subjectName",value = "课题名称"),
+            @ApiImplicitParam(name="commitmentUnit",value = "承担单位"),
+            @ApiImplicitParam(name="adjustTypId",value = "调整类型id"),
+            @ApiImplicitParam(name="adjustmentMattersId",value = "调整事项id"),
+            @ApiImplicitParam(name="pageNum",value = "当前页数",required = true),
+            @ApiImplicitParam(name="pageSize",value = "每页条数",required = true)
+    })
+    @ApiOperation("分頁筛选查詢【内网】")
+    @GetMapping("getAllMajorInfo")
+    public ResultMap getAllMajorInfo(String subjectName, String commitmentUnit, Integer adjustTypId, Integer adjustmentMattersId, int pageNum, int pageSize){
+        return  resultMap= majorMattersFilingService.getAllMajorInfo(subjectName,commitmentUnit,adjustTypId,adjustmentMattersId,pageNum,pageSize);
     }
+
+
 
     /**
      * 查询所有调整类型
      * @return
      */
+    @ApiOperation("查詢调整类型【内网】")
+    @GetMapping("getAllAdjustType")
     public ResultMap  AdjustType(){
         return  resultMap= majorMattersFilingService.AdjustType();
     }
@@ -89,6 +95,8 @@ public class MajorMattersFilingController {
      * 查询所有调整类型
      * @return
      */
+    @ApiOperation("查詢调整类型【内网】")
+    @GetMapping("getAllAdjustmentMatters")
    public ResultMap  AdjustmentMatters(){
        return  resultMap= majorMattersFilingService.AdjustType();
    }

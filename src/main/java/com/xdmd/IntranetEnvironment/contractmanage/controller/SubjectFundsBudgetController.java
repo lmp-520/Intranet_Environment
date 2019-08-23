@@ -16,7 +16,7 @@ import java.util.List;
  * @createDate: 2019/08/06
  * @description: 课题经费预算接口
  */
-@Api(tags = "课题经费预算【合同子表三】")
+@Api(tags = "课题经费预算【合同子表四】")
 @RestController
 @RequestMapping(value = "environment/contract/subjectfundbudget")
 public class SubjectFundsBudgetController {
@@ -36,11 +36,11 @@ public class SubjectFundsBudgetController {
 
     }
     /**
-     * [查詢] 根據主鍵 id 查詢
+     * [查詢] 根據合同 id 查詢
      * @param id
      * @return
      */
-    @ApiOperation(value = "根据id单查课题预算信息")
+    @ApiOperation(value = "根據合同id查詢课题预算信息")
     @GetMapping(value = "getInfoById")
     public ResultMap getInfoById(@RequestParam("id") int id) {
         SubjectFundsBudgetDTO sfbDTO= subjectFundsBudgetService.getBudgetInfoById(id);

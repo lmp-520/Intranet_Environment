@@ -1,7 +1,6 @@
 package com.xdmd.IntranetEnvironment.contractmanage.mapper;
 
 import com.xdmd.IntranetEnvironment.contractmanage.pojo.ContentIndicatorsDTO;
-import com.xdmd.IntranetEnvironment.dailymanagement.pojo.CurrentProgressDTO;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -36,7 +35,7 @@ public interface ContentIndicatorsMapper {
      * @date 2019/08/06
      **/
     @Select(value = "select ci.* from content_indicators as ci,contract_manage as cm where ci.contract_id=cm.id and cm.id=#{id}")
-    ContentIndicatorsDTO getIndicatorById(@Param("id") int id);
+    List<ContentIndicatorsDTO> getIndicatorById(@Param("id") int id);
 
     /**
      * [查詢] 查詢全部计划内容

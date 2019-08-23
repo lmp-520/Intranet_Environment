@@ -16,7 +16,7 @@ import java.util.List;
  * @createDate: 2019/08/22
  * @description: 主要开发人员接口
  */
-@Api(tags = "主要开发人员接口【合同子表四】")
+@Api(tags = "主要开发人员接口【合同子表三】")
 @RequestMapping("environment/contract/keydev")
 @RestController
 public class KeyResearchDevelopersController {
