@@ -226,6 +226,7 @@
                 and subject_undertaking_unit_id = #{cid} and acceptance_phase_id in(77,88,99)
             </if>
         </where>
+        limit #{page},#{total}
     </select>
 
     <insert id="addExpertGroupComment" useGeneratedKeys="true" keyProperty="egcId">
