@@ -28,7 +28,7 @@ public  class SubjectFundsBudgetServiceImpl implements SubjectFundsBudgetService
         return subjectFundsBudgetMapper.insert(subjectFundsBudgetDTO);
     }
     /**
-     * [查詢] 根據主鍵 id 查詢
+     * [查詢] 根据合同 id 查詢
      * @param id
      * @return
      */

@@ -4,7 +4,6 @@ package com.xdmd.IntranetEnvironment.contractmanage.controller;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.contractmanage.pojo.ContentIndicatorsDTO;
 import com.xdmd.IntranetEnvironment.contractmanage.service.ContentIndicatorsService;
-import com.xdmd.IntranetEnvironment.dailymanagement.pojo.CurrentProgressDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +28,7 @@ public class ContentIndicatorsController {
      * @param contentIndicators
      * @return
      */
-    @ApiOperation(value = "添加",notes="新增计划内容信息")
+    @ApiOperation(value = "新增计划内容信息")
     @PostMapping(value = "insertCI")
     public ResultMap insertCI(@RequestBody List<ContentIndicatorsDTO> contentIndicators) {
         int ci=contentIndicatorsService.insertCI(contentIndicators);
@@ -39,14 +38,14 @@ public class ContentIndicatorsController {
 
 
     /**
-     * 根据id单查
+     * 根据合同id查询
      * @param id
      * @return
      */
-    @ApiOperation(value = "获取计划内容信息",notes = "根据id查询")
+    @ApiOperation(value = "根据合同id查询获取计划内容信息")
     @GetMapping (value = "getIndicatorById")
     public ResultMap getIndicatorById(int id) {
-        ContentIndicatorsDTO indicatorsDTO=contentIndicatorsService.getIndicatorById(id);
+        List<ContentIndicatorsDTO> indicatorsDTO=contentIndicatorsService.getIndicatorById(id);
         return indicatorsDTO!=null?resultMap.success().message(indicatorsDTO):resultMap.fail().message("查询失败");
     }
 
@@ -54,7 +53,7 @@ public class ContentIndicatorsController {
      * 全部查询
      * @return
      */
-    @ApiOperation(value = "获取计划内容信息",notes = "查询全部")
+    @ApiOperation(value = "查询全部")
     @GetMapping (value = "getAllnfo")
     public ResultMap getAllnfo() {
         List<ContentIndicatorsDTO> dtoList=contentIndicatorsService.getAllInfo();

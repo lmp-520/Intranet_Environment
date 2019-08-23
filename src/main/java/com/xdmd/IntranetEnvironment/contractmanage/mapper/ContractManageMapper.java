@@ -87,12 +87,13 @@ public interface ContractManageMapper {
      */
     @Select("<script>" +
             "SELECT\n" +
-            "cm.id\n" +
-            "cm.subject_category as subjectCategory\n" +
-            "cm.subject_name as subjectName\n" +
-            "cm.subject_objectives_research as subjectObjectivesResearch\n" +
-            "cm.subject_contact_phone as subjectContactPhone\n" +
-            "cm.commitment_unit as commitmentUnit\n" +
+            "cm.id,\n" +
+            "cm.subject_category as subjectCategory,\n" +
+            "cm.subject_name as subjectName,\n" +
+            "cm.subject_objectives_research as subjectObjectivesResearch,\n" +
+            "cm.subject_contact as subjectContact,\n" +
+            "cm.subject_contact_phone as subjectContactPhone,\n" +
+            "cm.commitment_unit as commitmentUnit,\n" +
             "cm.subject_supervisor_department as subjectSupervisorDepartment\n" +
             "From\n" +
             "contract_manage cm,unit_contract uc\t" +
@@ -132,6 +133,7 @@ public interface ContractManageMapper {
             "subject_category as subjectCategory,\n" +
             "subject_name as subjectName,\n" +
             "subject_objectives_research as subjectObjectivesResearch,\n" +
+            "subject_contact as subjectContact,\n" +
             "subject_contact_phone as subjectContactPhone,\n" +
             "commitment_unit as commitmentUnit,\n" +
             "subject_supervisor_department as subjectSupervisorDepartment\n" +

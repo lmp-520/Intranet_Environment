@@ -37,17 +37,18 @@ public class MajorMattersFilingDTO {
     @ApiModelProperty("具体情况说明")
     private String specificFacts;
 
-    @ApiModelProperty("变更申请表附件")
-    private Integer changeApplicationAttachment;
+    @ApiModelProperty("变更申请表附件id")
+    private Integer changeApplicationAttachmentId;
 
-    @ApiModelProperty("专家论证意见附件")
-    private Integer expertArgumentationAttachment;
+    @ApiModelProperty("专家论证意见附件id")
+    private Integer expertArgumentationAttachmentId;
 
-    @ApiModelProperty("备案申请表附件")
-    private Integer filingApplicationAttachment;
+    @ApiModelProperty("备案申请表附件id")
+    private Integer filingApplicationAttachmentId;
 
-    @ApiModelProperty("批准文件附件")
-    private Integer approvalDocumentsAttachment;
+    @ApiModelProperty("批准文件附件id")
+    private Integer approvalDocumentsAttachmentId;
+
 
     public MajorMattersFilingDTO() {
     }

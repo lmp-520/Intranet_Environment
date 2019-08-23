@@ -36,11 +36,11 @@ public class SubjectParticipatingUnitController {
         return skrd>0?resultMap.success().message("新增成功"):resultMap.fail().message("新增失败");
     }
     /**
-     * [查詢] 根據主鍵 id 查詢
+     * [查詢] 根據合同主表id查詢
      * @param id
      * @return
      */
-    @ApiOperation(value = "根据id查询")
+    @ApiOperation(value = "根據合同主表id查詢")
     @GetMapping(value = "getDeveloperInfoById")
     public ResultMap getDeveloperInfoById(int id) {
         SubjectParticipatingUnitDTO skrdDTO= subjectParticipatingUnitService.getDeveloperInfoById(id);

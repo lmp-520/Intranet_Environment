@@ -11,7 +11,6 @@ import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 重大事项管理
@@ -28,19 +27,18 @@ public interface MajorMattersFilingMapper {
             "commitment_unit,\n" +
             "unit_head,\n" +
             "unit_head_phone,\n" +
-            "adjust_type,\n" +
-            "adjustment_matters,\n" +
-            "specific_facts,\n" +
-            ")\t" +
+            "adjust_type_id,\n" +
+            "adjustment_matters_id,\n" +
+            "specific_facts)\n" +
             "VALUES(\n" +
             "#{subjectName},\n" +
             "#{commitmentUnit},\n" +
             "#{unitHead},\n" +
             "#{unitHeadPhone},\n" +
-            "#{adjustType},\n" +
-            "#{adjustmentMatters},\n" +
+            "#{adjustTypeId},\n" +
+            "#{adjustmentMattersId},\n" +
             "#{specificFacts})")
-    int insert(@Param("majorMattersFiling") MajorMattersFilingDTO majorMattersFiling);
+    int insert(MajorMattersFilingDTO majorMattersFiling);
     /**
      * [更新]重大事项附件id
      * @author Kong
@@ -74,18 +72,19 @@ public interface MajorMattersFilingMapper {
      * @author Kong
      * @date 2019/08/19
      **/
-    @Select("<SCRIPT>" +
+    @Select(value = "<script>" +
             "SELECT\n" +
-            "mmf.subject_name,\n" +
-            "mmf.commitment_unit,\n" +
-            "adt.adjust_type,\n" +
-            "am.adjustment_matters,\n" +
-            "mmf.unit_head,\n" +
-            "mmf.unit_head_phone\n" +
+            "mmf.*" +
+            //"mmf.subject_name as subjectName,\n" +
+            //"mmf.commitment_unit as commitmentUnit,\n" +
+            //"adt.adjust_type AS adjustType,\n" +
+            //"am.adjustment_matters AS adjustmentMatters,\n" +
+            //"mmf.unit_head AS unitHead,\n" +
+            //"mmf.unit_head_phone AS unitHeadPhone\n" +
             "FROM \n" +
-            "major_matters_filing mmf,adjust_type adt,adjustment_matters am\n" +
-            "WHERE\n" +
-            "mmf.adjust_type_id=adt.id and mmf.adjustment_matters_id=am.id\n" +
+            "major_matters_filing as mmf,adjust_type as adt,adjustment_matters as am\n" +
+            "where\n" +
+            "mmf.adjust_type_id=adt.id and mmf.adjustment_matters_id=am.id and adt.id=am.adjust_type_id\n" +
             "<if test ='null != subjectName'>\n" +
             "AND mmf.subject_name like CONCAT('%',#{subjectName},'%')\n" +
             "</if>\n" +
@@ -97,18 +96,10 @@ public interface MajorMattersFilingMapper {
             "</if>\n" +
             "<if test ='null != adjustmentMattersId'>\n" +
             "AND mmf.adjustment_matters_id like CONCAT('%',#{adjustmentMattersId},'%')\n" +
-            "</if>\n" +
-            "LIMIT #{offset}, #{pageSize}" +
+            "</if>" +
             "</script>")
-    List<Map> pageList(String subjectName, String commitmentUnit, int adjustTypId, int adjustmentMattersId, int offset, int pagesize);
+    List<MajorMattersFilingDTO> getAllMajorInfo(@Param("subjectName")String subjectName, @Param("commitmentUnit")String commitmentUnit,@Param("adjustTypId") int adjustTypId,@Param("adjustmentMattersId")int adjustmentMattersId);
 
-    /**
-     * [查詢] 分頁查詢 count【内网】
-     * @author Kong
-     * @date 2019/08/19
-     **/
-    int pageListCount(@Param("offset") int offset,
-                      @Param("pagesize") int pagesize);
 
     /**
      * 查询所有调整类型
@@ -117,7 +108,7 @@ public interface MajorMattersFilingMapper {
     List<AdjustTypeDTO>  getAllAdjustType();
 
     /**
-     * 查询所有调整类型
+     * 查询所有调整事項
      * @return
      */
     List<AdjustmentMattersDTO>  getAllAdjustmentMatters();

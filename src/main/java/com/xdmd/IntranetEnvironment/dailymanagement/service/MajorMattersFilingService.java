@@ -30,21 +30,12 @@ public interface MajorMattersFilingService {
     ResultMap getMajorById(@Param("id") int id);
 
     /**
-     * [查詢] 分頁查詢【内网】
-     * @param offset
-     * @param pagesize
+     * [查詢] 分頁筛选查詢【内网】
      * @return
      */
-    ResultMap pageList(String subjectName, String commitmentUnit, int adjustTypId, int adjustmentMattersId, int offset, int pagesize);
+    ResultMap getAllMajorInfo(String subjectName, String commitmentUnit, Integer adjustTypId, Integer adjustmentMattersId, int pageNum, int pageSize);
 
-    /**
-     * [查詢] 分頁查詢 count【内网】
-     * @param offset
-     * @param pagesize
-     * @return
-     */
-    ResultMap pageListCount(@Param("offset") int offset,
-                            @Param("pagesize") int pagesize);
+
 
     /**
      * 查询所有调整类型
@@ -57,4 +48,5 @@ public interface MajorMattersFilingService {
      * @return
      */
     ResultMap  AdjustmentMatters();
+
 }
