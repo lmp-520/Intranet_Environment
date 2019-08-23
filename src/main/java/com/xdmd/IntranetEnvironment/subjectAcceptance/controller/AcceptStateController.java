@@ -55,7 +55,7 @@ public class AcceptStateController {
     //验收申请的审核
     @PostMapping("examine")
     @ResponseBody
-    public ResultMap acceptState(@CookieValue(value = "IntranecToken") String token, HttpServletResponse response,
+    public ResultMap acceptState(@CookieValue(value = "IntranecToken",required = false) String token, HttpServletResponse response,
                                  @RequestParam("type") Boolean type,//审核的状态.   true为审核通过  false为审核未通过
                                  @RequestParam(value = "reason", required = false) String reason,//审核未通过原因
                                  @RequestParam("id") Integer id,//验收申请表id

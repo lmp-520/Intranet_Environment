@@ -21,7 +21,6 @@
         topic_name,
         application_unit_name,
         postal_address,
-        correspondence_code,
         achievement_start_time,
         economic_performance,
         achievement_url_id,
@@ -100,15 +99,12 @@
             topic_name,
             application_unit_name,
             postal_address,
-            correspondence_code,
             achievement_start_time,
             economic_performance,
             achievement_url_id,
             achievement_end_time,
             create_author,
             create_time,
-            is_submit,
-            uid,
             check_apply_id)
         values (
             #{outcomeInformationAll.id},
@@ -116,15 +112,12 @@
             #{outcomeInformationAll.topicName},
             #{outcomeInformationAll.applicationUnitName},
             #{outcomeInformationAll.postalAddress},
-            #{outcomeInformationAll.correspondenceCode},
             #{outcomeInformationAll.achievementStartTime},
             #{outcomeInformationAll.economicPerformance},
             #{outcomeInformationAll.achievementUrlId},
             #{outcomeInformationAll.achievementEndTime},
             #{outcomeInformationAll.createAuthor},
             #{outcomeInformationAll.createTime},
-            #{outcomeInformationAll.isSubmit},
-            #{outcomeInformationAll.uid},
             #{outcomeInformationAll.checkApplyId}
         )
     </insert>

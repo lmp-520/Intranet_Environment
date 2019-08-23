@@ -462,6 +462,7 @@ public class ExpertServiceImpl implements ExpertService {
             //此时审核未通过，修改账号的状态与未通过的原因
             try {
                 expertMapper.ExpertStateFail(id,reason);
+                expertMapper.ExpertReason(id,reason);       //把审核未通过的原因写入数据库
             } catch (Exception e) {
                 e.printStackTrace();
                 throw new updateSqlException("ExpertServiceImpl中expertState方法 审核未通过时，更新账号状态错误"+e.getMessage());
