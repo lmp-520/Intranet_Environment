@@ -36,7 +36,6 @@ public interface MajorMattersFilingService {
     ResultMap getAllMajorInfo(String subjectName, String commitmentUnit, Integer adjustTypId, Integer adjustmentMattersId, int pageNum, int pageSize);
 
 
-
     /**
      * 查询所有调整类型
      * @return

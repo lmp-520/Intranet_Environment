@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: Kong
@@ -22,24 +23,25 @@ import java.util.List;
 public class MajorMattersFilingServiceImpl implements MajorMattersFilingService {
     @Autowired
     MajorMattersFilingMapper majorMattersFilingMapper;
-    ResultMap resultMap=new ResultMap();
+    ResultMap resultMap = new ResultMap();
 
     /**
      * 新增
+     *
      * @param majorMattersFiling
      * @return
      */
     @Override
     public ResultMap insert(MajorMattersFilingDTO majorMattersFiling) {
-        try{
-            int insertNo= majorMattersFilingMapper.insert(majorMattersFiling);
+        try {
+            int insertNo = majorMattersFilingMapper.insert(majorMattersFiling);
             System.out.println(insertNo);
-            if(insertNo>0){
-                resultMap.success().message("新增"+insertNo+"条数据");
-            }else if(insertNo==0){
+            if (insertNo > 0) {
+                resultMap.success().message("新增" + insertNo + "条数据");
+            } else if (insertNo == 0) {
                 resultMap.fail().message("新增失败");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             resultMap.fail().message("系统异常");
         }
@@ -48,18 +50,19 @@ public class MajorMattersFilingServiceImpl implements MajorMattersFilingService 
 
     /**
      * [更新]重大事项附件id
+     *
      * @return
      */
     @Override
-    public ResultMap updateAnnexId(int changeApplicationAttachmentId,int expertArgumentationAttachmentId,int filingApplicationAttachmentId,int approvalDocumentsAttachmentId,int id) {
-        try{
-            int updateNo= majorMattersFilingMapper.updateAnnexId(changeApplicationAttachmentId,expertArgumentationAttachmentId, filingApplicationAttachmentId, approvalDocumentsAttachmentId, id);
-            if(updateNo>0){
-                resultMap.success().message("成功更新"+updateNo+"条数据");
-            }else if(updateNo==0){
+    public ResultMap updateAnnexId(int changeApplicationAttachmentId, int expertArgumentationAttachmentId, int filingApplicationAttachmentId, int approvalDocumentsAttachmentId, int id) {
+        try {
+            int updateNo = majorMattersFilingMapper.updateAnnexId(changeApplicationAttachmentId, expertArgumentationAttachmentId, filingApplicationAttachmentId, approvalDocumentsAttachmentId, id);
+            if (updateNo > 0) {
+                resultMap.success().message("成功更新" + updateNo + "条数据");
+            } else if (updateNo == 0) {
                 resultMap.fail().message("没有查到相关信息");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             resultMap.fail().message("系统异常");
         }
@@ -68,19 +71,20 @@ public class MajorMattersFilingServiceImpl implements MajorMattersFilingService 
 
     /**
      * [查詢] 根據主鍵 id 查詢
+     *
      * @param id
      * @return
      */
     @Override
     public ResultMap getMajorById(int id) {
-        try{
+        try {
             MajorMattersFilingDTO majors = majorMattersFilingMapper.getMajorById(id);
-            if(majors!=null){
+            if (majors != null) {
                 resultMap.success().message(majors);
-            }else if(majors==null){
+            } else if (majors == null) {
                 resultMap.fail().message("没有查到相关信息");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             resultMap.fail().message("系统异常");
         }
@@ -88,42 +92,49 @@ public class MajorMattersFilingServiceImpl implements MajorMattersFilingService 
     }
 
     /**
-     * [查詢] 分頁查詢【内网】
+     * 分页筛选查询
+     *
+     * @param subjectName
+     * @param commitmentUnit
+     * @param adjustTypId
+     * @param adjustmentMattersId
      * @param pageNum
      * @param pageSize
      * @return
      */
     @Override
     public ResultMap getAllMajorInfo(String subjectName, String commitmentUnit, Integer adjustTypId, Integer adjustmentMattersId, int pageNum, int pageSize) {
-        try{
-            PageHelper.startPage(pageNum, pageSize);
-            List<MajorMattersFilingDTO> majorList = majorMattersFilingMapper.getAllMajorInfo(subjectName,commitmentUnit,adjustTypId,adjustmentMattersId);
-            if(majorList!=null){
-                resultMap.success().message(majorList);
-            }else if(majorList==null){
+        try {
+            PageHelper.startPage(pageNum, pageSize, true, true, true);
+            Map majorMap = majorMattersFilingMapper.getAllMajorInfo(subjectName, commitmentUnit, adjustTypId, adjustmentMattersId);
+            if (majorMap != null) {
+                resultMap.success().message(majorMap);
+            } else if (majorMap == null) {
                 resultMap.fail().message("没有查到相关信息");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             resultMap.fail().message("系统异常");
         }
         return resultMap;
     }
 
+
     /**
      * 查询所有调整类型
+     *
      * @return
      */
     @Override
     public ResultMap AdjustType() {
-        try{
+        try {
             List<AdjustTypeDTO> adjustTypeList = majorMattersFilingMapper.getAllAdjustType();
-            if(adjustTypeList!=null){
+            if (adjustTypeList != null) {
                 resultMap.success().message(adjustTypeList);
-            }else if(adjustTypeList==null){
+            } else if (adjustTypeList == null) {
                 resultMap.fail().message("没有查到相关信息");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             resultMap.fail().message("系统异常");
         }
@@ -133,18 +144,19 @@ public class MajorMattersFilingServiceImpl implements MajorMattersFilingService 
 
     /**
      * 查询所有调整事项
+     *
      * @return
      */
     @Override
     public ResultMap AdjustmentMatters() {
-        try{
+        try {
             List<AdjustmentMattersDTO> adjustmentMattersList = majorMattersFilingMapper.getAllAdjustmentMatters();
-            if(adjustmentMattersList!=null){
+            if (adjustmentMattersList != null) {
                 resultMap.success().message(adjustmentMattersList);
-            }else if(adjustmentMattersList==null){
+            } else if (adjustmentMattersList == null) {
                 resultMap.fail().message("没有查到相关信息");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             resultMap.fail().message("系统异常");
         }
