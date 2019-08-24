@@ -81,8 +81,8 @@ public class ContractManageServiceImpl implements ContractManageService {
     @Override
     public ResultMap getAllInfo(String subjectCategory, String subjectName, String subjectContact, String subjectContactPhone, String commitmentUnit, String subjectSupervisorDepartment,int pageNum,int pageSize) {
         try{
-            PageHelper.startPage(pageNum,pageSize);
-            List<Map> contractMap =contractManageMapper.getAllInfo(subjectCategory,subjectName,subjectContact,subjectContactPhone,commitmentUnit,subjectSupervisorDepartment);
+           PageHelper.startPage(pageNum,pageSize,true);
+           List<Map> contractMap =contractManageMapper.getAllInfo(subjectCategory,subjectName,subjectContact,subjectContactPhone,commitmentUnit,subjectSupervisorDepartment);
            if(contractMap.size()>0){
                 resultMap.success().message(contractMap);
             }else if(contractMap.size()==0){
