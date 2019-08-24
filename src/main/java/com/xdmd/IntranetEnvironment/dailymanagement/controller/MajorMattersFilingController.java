@@ -56,12 +56,6 @@ public class MajorMattersFilingController {
 
     /**
      * [查詢] 分頁查詢【内网】
-     * @param subjectName
-     * @param commitmentUnit
-     * @param adjustTypId
-     * @param adjustmentMattersId
-     * @param pageNum
-     * @param pageSize
      * @return
      */
 
@@ -74,9 +68,9 @@ public class MajorMattersFilingController {
             @ApiImplicitParam(name="pageSize",value = "每页条数",required = true)
     })
     @ApiOperation("分頁筛选查詢【内网】")
-    @GetMapping("getAllMajorInfo")
+    @PostMapping("getAllMajorInfo")
     public ResultMap getAllMajorInfo(String subjectName, String commitmentUnit, Integer adjustTypId, Integer adjustmentMattersId, int pageNum, int pageSize){
-        return  resultMap= majorMattersFilingService.getAllMajorInfo(subjectName,commitmentUnit,adjustTypId,adjustmentMattersId,pageNum,pageSize);
+        return  resultMap= majorMattersFilingService.getAllMajorInfo(subjectName, commitmentUnit, adjustTypId, adjustmentMattersId,pageNum,pageSize);
     }
 
 
@@ -92,12 +86,12 @@ public class MajorMattersFilingController {
     }
 
     /**
-     * 查询所有调整类型
+     * 查询所有调整事项
      * @return
      */
-    @ApiOperation("查詢调整类型【内网】")
+    @ApiOperation("查询所有调整事项【内网】")
     @GetMapping("getAllAdjustmentMatters")
    public ResultMap  AdjustmentMatters(){
-       return  resultMap= majorMattersFilingService.AdjustType();
+       return  resultMap= majorMattersFilingService.AdjustmentMatters();
    }
 }
