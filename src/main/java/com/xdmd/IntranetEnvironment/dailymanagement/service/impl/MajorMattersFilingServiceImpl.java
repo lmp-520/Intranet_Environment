@@ -2,6 +2,7 @@ package com.xdmd.IntranetEnvironment.dailymanagement.service.impl;
 
 
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.dailymanagement.mapper.MajorMattersFilingMapper;
 import com.xdmd.IntranetEnvironment.dailymanagement.pojo.AdjustTypeDTO;
@@ -12,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author: Kong
@@ -35,7 +35,6 @@ public class MajorMattersFilingServiceImpl implements MajorMattersFilingService 
     public ResultMap insert(MajorMattersFilingDTO majorMattersFiling) {
         try {
             int insertNo = majorMattersFilingMapper.insert(majorMattersFiling);
-            System.out.println(insertNo);
             if (insertNo > 0) {
                 resultMap.success().message("新增" + insertNo + "条数据");
             } else if (insertNo == 0) {
@@ -105,11 +104,14 @@ public class MajorMattersFilingServiceImpl implements MajorMattersFilingService 
     @Override
     public ResultMap getAllMajorInfo(String subjectName, String commitmentUnit, Integer adjustTypId, Integer adjustmentMattersId, int pageNum, int pageSize) {
         try {
-            PageHelper.startPage(pageNum, pageSize, true, true, true);
-            Map majorMap = majorMattersFilingMapper.getAllMajorInfo(subjectName, commitmentUnit, adjustTypId, adjustmentMattersId);
-            if (majorMap != null) {
-                resultMap.success().message(majorMap);
-            } else if (majorMap == null) {
+            PageHelper.startPage(pageNum,pageSize,true);
+            List<MajorMattersFilingDTO> majors = majorMattersFilingMapper.getAllMajorInfo(subjectName, commitmentUnit, adjustTypId, adjustmentMattersId);
+            PageInfo pageInfo=new PageInfo(majors);
+            //System.out.println("获取一下总数 "+);
+            //System.out.println("总页数有 "+pageInfo.getPages());
+            if (pageInfo != null) {
+                resultMap.success().message(pageInfo);
+            } else if (pageInfo == null) {
                 resultMap.fail().message("没有查到相关信息");
             }
         } catch (Exception e) {

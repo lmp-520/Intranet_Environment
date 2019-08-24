@@ -11,7 +11,6 @@ import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 重大事项管理
@@ -97,7 +96,7 @@ public interface MajorMattersFilingMapper {
             "<if test ='null != adjustmentMattersId'>" +
             "AND mmf.adjustment_matters_id =#{adjustmentMattersId}" +
             "</if></script>")
-    Map getAllMajorInfo(@Param("subjectName") String subjectName, @Param("commitmentUnit")String commitmentUnit,
+    List<MajorMattersFilingDTO> getAllMajorInfo(@Param("subjectName") String subjectName, @Param("commitmentUnit")String commitmentUnit,
                         @Param("adjustTypeId") Integer adjustTypeId, @Param("adjustmentMattersId") Integer adjustmentMattersId);
 
 
