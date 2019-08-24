@@ -64,8 +64,8 @@
         <!-- 分页插件 -->
         <dependency>
             <groupId>com.github.pagehelper</groupId>
-            <artifactId>pagehelper-spring-boot-starter</artifactId>
-            <version>1.2.12</version>
+            <artifactId>pagehelper</artifactId>
+            <version>LATEST</version>
         </dependency>
         <!--jackson -->
         <dependency>
