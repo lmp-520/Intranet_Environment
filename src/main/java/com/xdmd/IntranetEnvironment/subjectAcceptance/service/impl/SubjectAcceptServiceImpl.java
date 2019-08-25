@@ -179,9 +179,6 @@ public class SubjectAcceptServiceImpl implements SubjectAcceptSerivce {
         Integer uid = user.getId();
         String username = user.getUsername();
 
-//        String username = "王二麻子";
-//        Integer uid = 5;
-
         //判断是审核通过还是审核未通过
         if (type) {
             //如果审核通过，则意味着，专家的两个文件一定是有的，那么先判断这两个文件，是原先公司已经上传过的，还是内网上传的
@@ -510,7 +507,6 @@ public class SubjectAcceptServiceImpl implements SubjectAcceptSerivce {
                     e.printStackTrace();
                     throw new InsertSqlException("专家组意见主表进行新增时出错-- " + e.getMessage());
                 }
-
                 //遍历专家组意见表的专家姓名
                 List<ExpertGroupCommentsName> expertGroupCommentsNameList = expertGroupComment.getExpertGroupCommentsNameList();
 
@@ -524,10 +520,8 @@ public class SubjectAcceptServiceImpl implements SubjectAcceptSerivce {
                         throw new InsertSqlException("专家组意见表中的专家信息进行新增时 出现错误" + e.getMessage());
                     }
                 }
-
             }
         }
-
         return resultMap.success().message();
     }
 

@@ -9,6 +9,9 @@ import com.xdmd.IntranetEnvironment.subjectmanagement.mapper.OpenTenderMapper;
 import com.xdmd.IntranetEnvironment.subjectmanagement.mapper.UploadFileMapper;
 import com.xdmd.IntranetEnvironment.subjectmanagement.pojo.OpenTender;
 import com.xdmd.IntranetEnvironment.subjectmanagement.service.OpenTenderService;
+import com.xdmd.IntranetEnvironment.user.service.impl.TokenService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,10 +30,17 @@ import java.util.Map;
  */
 @Service
 public class OpenTenderServiceImpl implements OpenTenderService {
+    /**
+     * log日志
+     */
+    private static Logger log = LoggerFactory.getLogger(OpenTenderServiceImpl.class);
     @Autowired
     OpenTenderMapper openTenderMapper;
     @Autowired
     UploadFileMapper uploadFileMapper;
+    @Autowired
+    TokenService tokenService;
+
     /**
      * 状态码
      */
@@ -226,7 +236,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
         //获取招标课题編號
         Object ketiNo=openTenderMapper.getTenderById(oid).get("ProjectNo");
         //获取文件上传绝对路径
-        String FilePath = "D:/xdmd/environment/"+"單位名稱"+"/"+ketiName+"/"+ketiNo+"/"+fileType+"/";
+        String FilePath = "D:/xdmd/environment/"+"單位名稱"+"/"+ketiName+"/"+fileType+"/";
         StringBuilder initPath = new StringBuilder(FilePath);
         String filePath=initPath.append(fileName).toString();
         System.out.println("文件路径-->"+filePath);
@@ -265,5 +275,9 @@ public class OpenTenderServiceImpl implements OpenTenderService {
         }
         return "上传失败";
     }
+
+
+
+
 
 }

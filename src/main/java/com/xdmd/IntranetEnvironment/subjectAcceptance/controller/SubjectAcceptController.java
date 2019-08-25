@@ -21,12 +21,10 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 @RequestMapping("subjectAccept")
 public class SubjectAcceptController {
-
     @Autowired
     private SubjectAcceptSerivce subjectAcceptSerivce;
     ResultMap resultMap = new ResultMap();
     private static Logger log = LoggerFactory.getLogger(SubjectAcceptController.class);
-
 
     //课题验收的查询
     @ResponseBody
@@ -61,13 +59,10 @@ public class SubjectAcceptController {
                                         @RequestPart ExpertGroupComment expertGroupComment, //专家组意见表
                                         @RequestPart(value = "expertGroupCommentsFile", required = false) MultipartFile expertGroupCommentsFile,  //专家意见表文件
                                         @RequestPart(value = "expertAcceptanceFormFile", required = false) MultipartFile expertAcceptanceFormFile) { //专家评议表文件
-//
-
         //首先判断token是否存在
         if (StringUtils.isEmpty(token)) {
             return resultMap.fail().message("请先登录");
         }
-
         try {
             resultMap = subjectAcceptSerivce.SubjectAcceptState(token, response, type, reason, id, expertGroupCommentsFile, expertAcceptanceFormFile, acceptanceFinalResultId,expertGroupComment);
         } catch (UpdateSqlException e) {
@@ -85,7 +80,6 @@ public class SubjectAcceptController {
         }
         return resultMap;
     }
-
 
     //在审核时，如果是内网上传的专家组意见，则先上传专家组意见
     @PostMapping("ExpertGroup")

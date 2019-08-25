@@ -154,6 +154,7 @@ public class ContractManageServiceImpl implements ContractManageService {
         return contractManageMapper.updateContractAnnexIdByCid(contractAnnexId,cid);
     }
 
+
     /**
      * 中期检查附件上传
      * @param file
@@ -214,3 +215,6 @@ public class ContractManageServiceImpl implements ContractManageService {
         return "上传失败";
     }
 }
+
+
+
