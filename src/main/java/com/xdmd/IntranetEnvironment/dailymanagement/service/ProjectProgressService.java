@@ -29,7 +29,7 @@ public interface ProjectProgressService {
      * @param progress
      * @return
      */
-    ResultMap getInfoByParam(String subjectName, String bearerUnit, Integer progress);
+    ResultMap getInfoByParam(String subjectName, String bearerUnit, Integer progress,int pageNum,int pageSize);
 
 
     /**

@@ -26,7 +26,7 @@ public class MajorMattersFilingServiceImpl implements MajorMattersFilingService 
     ResultMap resultMap = new ResultMap();
 
     /**
-     * 新增
+     * 新增【外网】
      *
      * @param majorMattersFiling
      * @return
@@ -48,7 +48,7 @@ public class MajorMattersFilingServiceImpl implements MajorMattersFilingService 
     }
 
     /**
-     * [更新]重大事项附件id
+     * [更新]重大事项附件id【外网】
      *
      * @return
      */
@@ -69,7 +69,7 @@ public class MajorMattersFilingServiceImpl implements MajorMattersFilingService 
     }
 
     /**
-     * [查詢] 根據主鍵 id 查詢
+     * [查詢] 根據主鍵 id 查詢【内外网】
      *
      * @param id
      * @return
@@ -91,8 +91,7 @@ public class MajorMattersFilingServiceImpl implements MajorMattersFilingService 
     }
 
     /**
-     * 分页筛选查询
-     *
+     * 分页筛选查询【内网】
      * @param subjectName
      * @param commitmentUnit
      * @param adjustTypId
@@ -107,11 +106,61 @@ public class MajorMattersFilingServiceImpl implements MajorMattersFilingService 
             PageHelper.startPage(pageNum,pageSize,true);
             List<MajorMattersFilingDTO> majors = majorMattersFilingMapper.getAllMajorInfo(subjectName, commitmentUnit, adjustTypId, adjustmentMattersId);
             PageInfo pageInfo=new PageInfo(majors);
-            //System.out.println("获取一下总数 "+);
-            //System.out.println("总页数有 "+pageInfo.getPages());
-            if (pageInfo != null) {
+            if (majors != null) {
                 resultMap.success().message(pageInfo);
-            } else if (pageInfo == null) {
+            } else if (majors == null) {
+                resultMap.fail().message("没有查到相关信息");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
+
+
+    /**
+     * 根据单位id分页筛选查询【内网】
+     * @param uid
+     * @param subjectName
+     * @param commitmentUnit
+     * @param adjustTypId
+     * @param adjustmentMattersId
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public ResultMap getAllMajorInfoByUid(int uid, String subjectName, String commitmentUnit, Integer adjustTypId, Integer adjustmentMattersId, int pageNum, int pageSize) {
+        try {
+            PageHelper.startPage(pageNum,pageSize,true);
+            List<MajorMattersFilingDTO> majorsByUid = majorMattersFilingMapper.getAllMajorInfoByUid(uid,subjectName, commitmentUnit, adjustTypId, adjustmentMattersId);
+            PageInfo pageInfo=new PageInfo((List) majorsByUid);
+            if (majorsByUid != null) {
+                resultMap.success().message(pageInfo);
+            } else if (majorsByUid == null) {
+                resultMap.fail().message("没有查到相关信息");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
+
+    /**
+     * 更新重大审核状态
+     * @param status
+     * @param id
+     * @return
+     */
+    @Override
+    public ResultMap updateMajorStatus(int status, int id) {
+        try {
+            int updateNo = majorMattersFilingMapper.updateMajorStatus(status,id);
+            if (updateNo > 0) {
+                resultMap.success().message("成功更新" + updateNo + "条数据");
+            } else if (updateNo == 0) {
                 resultMap.fail().message("没有查到相关信息");
             }
         } catch (Exception e) {

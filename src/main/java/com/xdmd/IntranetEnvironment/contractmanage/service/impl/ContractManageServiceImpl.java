@@ -2,6 +2,7 @@ package com.xdmd.IntranetEnvironment.contractmanage.service.impl;
 
 
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.xdmd.IntranetEnvironment.common.AnnexUpload;
 import com.xdmd.IntranetEnvironment.common.FileSuffixJudge;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
@@ -83,17 +84,19 @@ public class ContractManageServiceImpl implements ContractManageService {
         try{
            PageHelper.startPage(pageNum,pageSize,true);
            List<Map> contractMap =contractManageMapper.getAllInfo(subjectCategory,subjectName,subjectContact,subjectContactPhone,commitmentUnit,subjectSupervisorDepartment);
+           PageInfo pageInfo=new PageInfo(contractMap);
            if(contractMap.size()>0){
-                resultMap.success().message(contractMap);
+                resultMap.success().message(pageInfo);
             }else if(contractMap.size()==0){
-                resultMap.success().message("没有查到相关信息");
+                resultMap.fail().message("没有查到相关信息");
             }
         }catch (Exception e){
             e.printStackTrace();
-            resultMap.success().message("系统异常");
+            resultMap.fail().message("系统异常");
         }
         return resultMap;
     }
+
 
     /**
      * 根据勾选的合同主表id修改相应的中期检查记录【内网中检】
@@ -151,6 +154,7 @@ public class ContractManageServiceImpl implements ContractManageService {
         return contractManageMapper.updateContractAnnexIdByCid(contractAnnexId,cid);
     }
 
+
     /**
      * 中期检查附件上传
      * @param file
@@ -172,16 +176,15 @@ public class ContractManageServiceImpl implements ContractManageService {
         //获取课题名称
         String ketiName=getManageInfoById(cid).getSubjectName();
         //获取文件上传绝对路径
-        String FilePath = "D:/xdmd/environment/" +ketiName+"/"+fileType+"/";
+        String FilePath = "D:/xdmd/environment/"+ketiName+"/"+fileType+"/";
         StringBuilder initPath = new StringBuilder(FilePath);
         String filePath=initPath.append(fileName).toString();
-        System.out.println("文件路径-->"+filePath);
         File dest=new File(filePath);
 
         //获取文件后缀名
         String suffixName = fileName.substring(fileName.lastIndexOf(".") + 1);
         //判断上传文件类型是否符合要求
-        Boolean typeIsOK= FileSuffixJudge.suffixJudge(file.getOriginalFilename());
+        Boolean typeIsOK=FileSuffixJudge.suffixJudge(file.getOriginalFilename());
         if (typeIsOK==false){
             return "上传的文件类型不符合要求";
         }
@@ -195,7 +198,6 @@ public class ContractManageServiceImpl implements ContractManageService {
             // 获取文件大小
             File file1 = new File(filePath);
             String fileSize = String.valueOf(file1.length());
-            System.out.println(fileName+"的文件大小-->"+fileSize);
             //封装到uploadfile
             AnnexUpload annexUpload = new AnnexUpload();
             annexUpload.setUploadFilePath(filePath);
@@ -206,10 +208,13 @@ public class ContractManageServiceImpl implements ContractManageService {
             annexUpload.setCreateAuthor("创建者");
             //文件信息保存到数据库
             int upNo= uploadFileMapper.insertUpload(annexUpload);
-            return "上传成功-->"+filePath;
+            return "上传成功";
         } catch (Exception e) {
             e.printStackTrace();
         }
         return "上传失败";
     }
 }
+
+
+

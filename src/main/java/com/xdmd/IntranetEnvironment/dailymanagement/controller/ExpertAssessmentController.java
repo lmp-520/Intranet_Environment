@@ -54,8 +54,8 @@ public class ExpertAssessmentController {
      */
     @ApiOperation(value = "查詢全部专家评估信息")
     @GetMapping("getAllEA")
-    ResultMap getAllEA(){
-        return resultMap=expertAssessmentService.getAllEA();
+    ResultMap getAllEA(int pageNum,int pageSize){
+        return resultMap=expertAssessmentService.getAllEA(pageNum,pageSize);
     }
 
     /**

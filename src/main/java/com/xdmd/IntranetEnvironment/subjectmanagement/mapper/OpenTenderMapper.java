@@ -186,6 +186,15 @@ public interface OpenTenderMapper {
 
     /////////////////招标备案审核//////////////////////////////////
 
+   //根据数据的id，把处理人，审核状态，审核内容内容，处理时间更新
+   // @Update("update check_apply_state set state =#{state},second_handler =#{uname} ,handle_content = #{handleContent} ,second_handle_time = #{date} where id = #{id} order by first_handle_time desc limit 1")
+   // void updateOpenTenderState(@Param("id") Integer id, @Param("uname") String uname, @Param("state") String state, @Param("handleContent") String handleContent, @Param("date") String nowTime);
+
+   //新增下一条的数据状态
+   // @Insert("INSERT INTO check_apply_state(check_apply_id, fist_handler, audit_step, first_handle_time, state) VALUES (#{id},#{uname},#{auditStep},#{nowTime},#{newState});")
+   // void addNewCheckApplyState(@Param("id") Integer id, @Param("uname") String uname, @Param("auditStep") String auditStep, @Param("nowTime") String nowTime, @Param("newState") String newState);
+
+
 
     /**
      * 单位管理员审核通过【备用】

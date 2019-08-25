@@ -67,13 +67,15 @@ public class ProjectProgressController {
      */
     @ApiOperation(value = "根據参数查詢课题进展主体")
     @ApiImplicitParams({
-            @ApiImplicitParam(name="subjectName",value = "课题名称",dataType = "string"),
-            @ApiImplicitParam(name="bearerUnit",value = "承担单位",dataType = "string"),
-            @ApiImplicitParam(name="progress",value = "课题进展类型【45-超前 46-正常 47-滞后】",dataType = "int"),
+            @ApiImplicitParam(name="subjectName",value = "课题名称",paramType = "string"),
+            @ApiImplicitParam(name="bearerUnit",value = "承担单位",paramType = "string"),
+            @ApiImplicitParam(name="progress",value = "课题进展类型【45-超前 46-正常 47-滞后】",paramType = "int"),
+            @ApiImplicitParam(name="pageNum",value = "当前页数",required = true),
+            @ApiImplicitParam(name="pageSize",value = "每页显示多少条数",required = true)
     })
     @GetMapping("getInfoByParam")
-    public ResultMap getInfoByParam(String subjectName,String bearerUnit,Integer progress) {
-        return  resultMap=projectProgressService.getInfoByParam(subjectName,bearerUnit,progress);
+    public ResultMap getInfoByParam(String subjectName,String bearerUnit,Integer progress,int pageNum,int pageSize) {
+        return  resultMap=projectProgressService.getInfoByParam(subjectName,bearerUnit,progress,pageNum,pageSize);
     }
 
 

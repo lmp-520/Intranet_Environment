@@ -1,6 +1,7 @@
 package com.xdmd.IntranetEnvironment.subjectmanagement.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.xdmd.IntranetEnvironment.common.AnnexUpload;
 import com.xdmd.IntranetEnvironment.common.FileSuffixJudge;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
@@ -8,6 +9,9 @@ import com.xdmd.IntranetEnvironment.subjectmanagement.mapper.OpenTenderMapper;
 import com.xdmd.IntranetEnvironment.subjectmanagement.mapper.UploadFileMapper;
 import com.xdmd.IntranetEnvironment.subjectmanagement.pojo.OpenTender;
 import com.xdmd.IntranetEnvironment.subjectmanagement.service.OpenTenderService;
+import com.xdmd.IntranetEnvironment.user.service.impl.TokenService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,10 +30,17 @@ import java.util.Map;
  */
 @Service
 public class OpenTenderServiceImpl implements OpenTenderService {
+    /**
+     * log日志
+     */
+    private static Logger log = LoggerFactory.getLogger(OpenTenderServiceImpl.class);
     @Autowired
     OpenTenderMapper openTenderMapper;
     @Autowired
     UploadFileMapper uploadFileMapper;
+    @Autowired
+    TokenService tokenService;
+
     /**
      * 状态码
      */
@@ -49,11 +60,11 @@ public class OpenTenderServiceImpl implements OpenTenderService {
             if(insertNo>0){
                 resultMap.success().message("成功新增"+insertNo+"条数据");
             }else if(insertNo==0){
-                resultMap.success().message("新增失败");
+                resultMap.fail().message("新增失败");
             }
         }catch (Exception e){
             e.printStackTrace();
-            resultMap.success().message("系统异常");
+            resultMap.fail().message("系统异常");
         }
         return resultMap;
     }
@@ -68,17 +79,19 @@ public class OpenTenderServiceImpl implements OpenTenderService {
      * @return
      */
     @Override
-    public ResultMap getTenderByUid(int uid, String projectName, String subjectName, String subjectLeader, String leaderContact) {
+    public ResultMap getTenderByUid(int uid, String projectName, String subjectName, String subjectLeader, String leaderContact,int pagenNum,int pageSize) {
         try{
+            PageHelper.startPage(pagenNum,pageSize,true);
             List<Map> getTenderByUidMap = openTenderMapper.getTenderByUid(uid,projectName,subjectName,subjectLeader,leaderContact);
+            PageInfo pageInfo=new PageInfo(getTenderByUidMap);
             if(getTenderByUidMap!=null){
-                resultMap.success().message(getTenderByUidMap);
+                resultMap.success().message(pageInfo);
             }else if(getTenderByUidMap==null){
-                resultMap.success().message("没有查到相关信息");
+                resultMap.fail().message("没有查到相关信息");
             }
         }catch (Exception e){
             e.printStackTrace();
-            resultMap.success().message("系统异常");
+            resultMap.fail().message("系统异常");
         }
         return resultMap;
     }
@@ -95,11 +108,11 @@ public class OpenTenderServiceImpl implements OpenTenderService {
             if(getTenderByIdMap!=null){
                 resultMap.success().message(getTenderByIdMap);
             }else if(getTenderByIdMap==null){
-                resultMap.success().message("没有查到相关信息");
+                resultMap.fail().message("没有查到相关信息");
             }
         }catch (Exception e){
             e.printStackTrace();
-            resultMap.success().message("系统异常");
+            resultMap.fail().message("系统异常");
         }
         return resultMap;
     }
@@ -152,14 +165,15 @@ public class OpenTenderServiceImpl implements OpenTenderService {
         try{
             PageHelper.startPage(pageNum, pageSize);
             List<Map> openTenderList = openTenderMapper.getTenderPageList(projectName, subjectName, subjectLeader, leaderContact);
+            PageInfo pageInfo=new PageInfo(openTenderList);
             if(openTenderList!=null){
-                resultMap.success().message(openTenderList);
+                resultMap.success().message(pageInfo);
             }else if(openTenderList==null){
-                resultMap.success().message("没有查到相关信息");
+                resultMap.fail().message("没有查到相关信息");
             }
         }catch (Exception e){
             e.printStackTrace();
-            resultMap.success().message("系统异常");
+            resultMap.fail().message("系统异常");
         }
         return resultMap;
     }
@@ -181,11 +195,11 @@ public class OpenTenderServiceImpl implements OpenTenderService {
             if(updateNo>0){
                 resultMap.success().message("成功更新"+updateNo+"条数据");
             }else if(updateNo<0){
-                resultMap.success().message("没有查到相关信息");
+                resultMap.fail().message("没有查到相关信息");
             }
         }catch (Exception e){
             e.printStackTrace();
-            resultMap.success().message("系统异常");
+            resultMap.fail().message("系统异常");
         }
         return resultMap;
     }
@@ -222,7 +236,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
         //获取招标课题編號
         Object ketiNo=openTenderMapper.getTenderById(oid).get("ProjectNo");
         //获取文件上传绝对路径
-        String FilePath = "D:/xdmd/environment/"+"單位名稱"+"/"+ketiName+"/"+ketiNo+"/"+fileType+"/";
+        String FilePath = "D:/xdmd/environment/"+"單位名稱"+"/"+ketiName+"/"+fileType+"/";
         StringBuilder initPath = new StringBuilder(FilePath);
         String filePath=initPath.append(fileName).toString();
         System.out.println("文件路径-->"+filePath);
@@ -261,5 +275,9 @@ public class OpenTenderServiceImpl implements OpenTenderService {
         }
         return "上传失败";
     }
+
+
+
+
 
 }

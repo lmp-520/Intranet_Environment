@@ -97,7 +97,53 @@ public interface MajorMattersFilingMapper {
             "AND mmf.adjustment_matters_id =#{adjustmentMattersId}" +
             "</if></script>")
     List<MajorMattersFilingDTO> getAllMajorInfo(@Param("subjectName") String subjectName, @Param("commitmentUnit")String commitmentUnit,
-                        @Param("adjustTypeId") Integer adjustTypeId, @Param("adjustmentMattersId") Integer adjustmentMattersId);
+                              @Param("adjustTypeId") Integer adjustTypeId, @Param("adjustmentMattersId") Integer adjustmentMattersId);
+
+
+
+    /**
+     * [查詢] 根据单位id分頁筛选查詢【外网】
+     * @author Kong
+     * @date 2019/08/19
+     **/
+    @Select("<script>" +
+            "SELECT\n" +
+            "mmf.subject_name as subjectName,\n" +
+            "mmf.commitment_unit as commitmentUnit,\n" +
+            "adt.adjust_type AS adjustType,\n" +
+            "am.adjustment_matters AS adjustmentMatters,\n" +
+            "mmf.unit_head AS unitHead,\n" +
+            "mmf.unit_head_phone AS unitHeadPhone\n" +
+            "FROM\n" +
+            "major_matters_filing as mmf,adjust_type as adt,adjustment_matters as am,unit_major um\n" +
+            "where\n" +
+            "mmf.adjust_type_id=adt.id and mmf.adjustment_matters_id=am.id and adt.id=am.adjust_type_id and mmf.id=major_id and um.unit_id=#{uid}\n" +
+            "<if test ='null != subjectName'>\n" +
+            "AND mmf.subject_name like CONCAT('%',#{subjectName},'%')"+
+            "</if>\n" +
+            "<if test ='null != commitmentUnit'>\n" +
+            "AND mmf.commitment_unit like CONCAT('%',#{commitmentUnit},'%')" +
+            "</if>\n" +
+            "<if test ='null != adjustTypeId'>\n" +
+            "AND mmf.adjust_type_id =#{adjustTypeId}" +
+            "</if>\n" +
+            "<if test ='null != adjustmentMattersId'>" +
+            "AND mmf.adjustment_matters_id =#{adjustmentMattersId}" +
+            "</if></script>")
+    List<MajorMattersFilingDTO> getAllMajorInfoByUid(@Param("uid") int uid, @Param("subjectName") String subjectName, @Param("commitmentUnit")String commitmentUnit,
+                                     @Param("adjustTypeId") Integer adjustTypeId, @Param("adjustmentMattersId") Integer adjustmentMattersId);
+
+
+    /**
+     * 更新重大事项的审核状态【内网】
+     * @param status
+     * @param id
+     * @return
+     */
+    @Update("update major_matters_filing set shenhe_status=1 where shenhe_status=#{status} and id=#{id}")
+    int updateMajorStatus(@Param("status")int status,@Param("id")int id);
+
+
 
 
     /**

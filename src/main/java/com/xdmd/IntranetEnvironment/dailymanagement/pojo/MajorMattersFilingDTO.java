@@ -49,6 +49,9 @@ public class MajorMattersFilingDTO {
     @ApiModelProperty("批准文件附件id")
     private Integer approvalDocumentsAttachmentId;
 
+    @ApiModelProperty("审批状态【0-未审批 1-已审批】")
+    private Integer shenheStatus;
+
 
     public MajorMattersFilingDTO() {
     }

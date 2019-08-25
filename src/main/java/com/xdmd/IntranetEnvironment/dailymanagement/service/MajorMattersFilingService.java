@@ -37,6 +37,23 @@ public interface MajorMattersFilingService {
 
 
     /**
+     * [查詢] 根据单位id分頁筛选查詢【内网】
+     * @return
+     */
+    ResultMap getAllMajorInfoByUid(int uid,String subjectName, String commitmentUnit, Integer adjustTypId, Integer adjustmentMattersId, int pageNum, int pageSize);
+
+
+    /**
+     * 更新重大事项的审核状态【内网】
+     * @param status
+     * @param id
+     * @return
+     */
+    ResultMap updateMajorStatus(int status,int id);
+
+
+
+    /**
      * 查询所有调整类型
      * @return
      */
