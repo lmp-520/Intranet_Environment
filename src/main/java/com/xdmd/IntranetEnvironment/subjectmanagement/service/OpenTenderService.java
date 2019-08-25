@@ -28,7 +28,7 @@ public interface OpenTenderService {
      * @param leaderContact
      * @return
      */
-    ResultMap getTenderByUid(int uid,String projectName,String subjectName,String subjectLeader,String leaderContact);
+    ResultMap getTenderByUid(int uid, String projectName, String subjectName, String subjectLeader, String leaderContact,int pagenNum,int pageSize);
 
     /**
      * 根據id查詢筛选招标公告详情

@@ -43,12 +43,14 @@ public class OpenTenderController  {
             @ApiImplicitParam(name = "projectName", value = "项目名称"),
             @ApiImplicitParam(name = "subjectName", value = "课题名称"),
             @ApiImplicitParam(name = "subjectLeader", value = "课题负责人"),
-            @ApiImplicitParam(name = "leaderContact", value = "课题负责人联系方式")
+            @ApiImplicitParam(name = "leaderContact", value = "课题负责人联系方式"),
+            @ApiImplicitParam(name = "pageNum", value = "当前页数", required = true),
+            @ApiImplicitParam(name = "pageSize", value = "每页显示条数", required = true)
     })
     @ApiOperation(value = "根据单位的id查询招标信息【外网】")
     @GetMapping(value = "getTenderByUid")
-    ResultMap getTenderByUid(int uid,String projectName,String subjectName,String subjectLeader,String leaderContact){
-       return openTenderService.getTenderByUid(uid,projectName,subjectName,subjectLeader,leaderContact);
+    ResultMap getTenderByUid(int uid, String projectName, String subjectName, String subjectLeader, String leaderContact,int pagenNum,int pageSize){
+       return openTenderService.getTenderByUid(uid,projectName,subjectName,subjectLeader,leaderContact,pagenNum,pageSize);
     }
 
     /**
@@ -87,7 +89,7 @@ public class OpenTenderController  {
     }
 
     /**
-     * 根据招标备案id更新相应的附件id【还没测试】
+     * 根据招标备案id更新相应的附件id【外网】
      * @param winningFileAttachmentId
      * @param announcementTransactionAnnouncementId
      * @param dealNotificationAttachmentId

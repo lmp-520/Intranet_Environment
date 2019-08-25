@@ -30,7 +30,7 @@ public interface ExpertAssessmentService {
      * @author Kong
      * @date 2019/08/17
      **/
-    ResultMap getAllEA();
+    ResultMap getAllEA(int pageNum,int pageSize);
     /**
      * [查詢] 查詢全部评估内容
      * @author Kong

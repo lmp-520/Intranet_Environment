@@ -44,15 +44,16 @@ public class MajorMattersFilingController {
     }
 
     /**
-     * [查詢] 根據主鍵 id 查詢
+     * [查詢] 根據id查詢详情
      * @param id
      * @return
      */
-    @ApiOperation("根據主鍵 id 查詢【外网】")
+    @ApiOperation("根據主鍵id查詢【内外网】")
     @GetMapping("getMajorById")
     public ResultMap getMajorById(@RequestParam("id") int id){
         return  resultMap= majorMattersFilingService.getMajorById(id);
     }
+
 
     /**
      * [查詢] 分頁查詢【内网】
@@ -68,10 +69,53 @@ public class MajorMattersFilingController {
             @ApiImplicitParam(name="pageSize",value = "每页条数",required = true)
     })
     @ApiOperation("分頁筛选查詢【内网】")
-    @PostMapping("getAllMajorInfo")
+    @GetMapping("getAllMajorInfo")
     public ResultMap getAllMajorInfo(String subjectName, String commitmentUnit, Integer adjustTypId, Integer adjustmentMattersId, int pageNum, int pageSize){
         return  resultMap= majorMattersFilingService.getAllMajorInfo(subjectName, commitmentUnit, adjustTypId, adjustmentMattersId,pageNum,pageSize);
     }
+
+    /**
+     * [查詢] 根据单位id分頁查詢【外网】
+     * @return
+     */
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="uid",value = "单位id",required = true),
+            @ApiImplicitParam(name="subjectName",value = "课题名称"),
+            @ApiImplicitParam(name="commitmentUnit",value = "承担单位"),
+            @ApiImplicitParam(name="adjustTypId",value = "调整类型id"),
+            @ApiImplicitParam(name="adjustmentMattersId",value = "调整事项id"),
+            @ApiImplicitParam(name="pageNum",value = "当前页数",required = true),
+            @ApiImplicitParam(name="pageSize",value = "每页条数",required = true)
+    })
+    @ApiOperation("根据单位id分頁查詢【外网】")
+    @GetMapping("getAllMajorInfoByUid")
+    public ResultMap getAllMajorInfoByUid(int uid,String subjectName, String commitmentUnit, Integer adjustTypId, Integer adjustmentMattersId, int pageNum, int pageSize){
+        return  resultMap= majorMattersFilingService.getAllMajorInfoByUid(uid,subjectName, commitmentUnit, adjustTypId, adjustmentMattersId,pageNum,pageSize);
+    }
+
+
+    /**
+     * 更新重大事项的审核状态【内网】
+     * @param status
+     * @param id
+     * @return
+     */
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="status",value = "审核状态",required = true,paramType = "int"),
+            @ApiImplicitParam(name="id",value = "主键id",required = true,paramType = "int")
+    })
+    @ApiOperation("更新重大事项的审核状态【内网】")
+    @PostMapping("updateMajorStatus")
+    public ResultMap updateMajorStatus(int status, int id){
+        return resultMap=majorMattersFilingService.updateMajorStatus(status,id);
+    }
+
+
+
+
+
+
 
 
 
