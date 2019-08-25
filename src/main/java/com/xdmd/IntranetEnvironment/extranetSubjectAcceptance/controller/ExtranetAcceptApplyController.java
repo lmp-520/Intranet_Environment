@@ -9,7 +9,6 @@ import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.service.impl.Extra
 import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.utils.IntegrationFile;
 import com.xdmd.IntranetEnvironment.user.exception.ClaimsNullException;
 import com.xdmd.IntranetEnvironment.user.exception.UserNameNotExistentException;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +18,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.text.SimpleDateFormat;
@@ -31,14 +29,12 @@ import java.util.List;
 @Controller
 @RequestMapping("apply")
 public class ExtranetAcceptApplyController {
-
     @Autowired
     ExtranetAcceptApplyService extranetAcceptApplyService;
     ResultMap resultMap = new ResultMap();
     private static Logger log = LoggerFactory.getLogger(ExtranetAcceptApplyController.class);
     @Autowired
     private ExtranetTokenService extranetTokenService;
-
 
     //员工填写验收申请表
     @ResponseBody
@@ -459,7 +455,6 @@ public class ExtranetAcceptApplyController {
         return resultMap;
     }
 
-
     //对专家组信息，专家组文件，专家组评议表文件进行修改上传
     @ResponseBody
     @PostMapping("ExpertGroupModify")
@@ -506,7 +501,6 @@ public class ExtranetAcceptApplyController {
         }
         return resultMap;
     }
-
 
     //外网在做课题申请时，先查询可添加的课题名称
     @ResponseBody

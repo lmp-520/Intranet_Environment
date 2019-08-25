@@ -19,7 +19,7 @@ import java.io.IOException;
 public class FileDownLoadController {
 
     //对文件进行下载
-    @PostMapping("queryFileStream")
+    @GetMapping("queryFileStream")
     public void downLoad(HttpServletResponse response, HttpServletRequest request,
                          @RequestParam("fileUrl")String fileUrl,//文件路径
                          @RequestParam("fileName")String fileName) throws IOException {     //文件名称

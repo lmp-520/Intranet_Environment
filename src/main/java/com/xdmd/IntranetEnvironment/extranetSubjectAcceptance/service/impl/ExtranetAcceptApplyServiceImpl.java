@@ -8,7 +8,6 @@ import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.mapper.ExtranetAcc
 import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.*;
 import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.service.ExtranetAcceptApplyService;
 import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.utils.IntegrationFile;
-import com.xdmd.IntranetEnvironment.subjectAcceptance.pojo.CheckApplyState;
 import com.xdmd.IntranetEnvironment.user.exception.ClaimsNullException;
 import com.xdmd.IntranetEnvironment.user.exception.UserNameNotExistentException;
 import org.slf4j.Logger;
@@ -251,6 +250,58 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
 
         //遍历验收申请的表格，获取每条信息的审核记录
         for (ExtranetCheckApply extranetCheckApply : extranetCheckApplyList) {
+            //查询专家信息组意见信息  根据验收申请表的id查询
+            ExtranetExpertGroupComment extranetExpertGroupComment = null;
+            try {
+                extranetExpertGroupComment = acceptApplyMapper.queryExpertGroupComment(extranetCheckApply.getId());
+            } catch (NullPointerException e) {
+                extranetExpertGroupComment = null;
+            }
+            //根据验收专家组意见表的id，获取对应的专家组成员信息
+            List<ExtranetExpertGroupCommentsName> extranetExpertGroupCommentsNameList = null;
+            try {
+                extranetExpertGroupCommentsNameList = acceptApplyMapper.queryExpertGroupCommentsName(extranetExpertGroupComment.getEgcId());
+                extranetExpertGroupComment.setExtranetExpertGroupCommentsNameList(extranetExpertGroupCommentsNameList);//把专家组成员信息存放到专家组信息中
+            } catch (NullPointerException e) {
+                extranetExpertGroupCommentsNameList = null;
+            }
+            extranetCheckApply.setExtranetExpertGroupComment(extranetExpertGroupComment);   //把专家组信息插入到验收申请实体类中
+
+            //根据验收申请表的id，查询最终验收报告主表信息
+            AcceptanceCertificate acceptanceCertificate = null;
+            try {
+                acceptanceCertificate = acceptApplyMapper.queryAcceptanceCertificate(extranetCheckApply.getId());
+            } catch (NullPointerException e) {
+                acceptanceCertificate = null;
+            }
+            //根据最终验收报告的id，查询验收报告中的专利信息
+            List<AcceptanceCertificatePatent> acceptanceCertificatePatentList = null;
+            try {
+                acceptanceCertificatePatentList = acceptApplyMapper.queryAcceptanceCertificatePatentByCid(acceptanceCertificate.getId());
+                acceptanceCertificate.setAcceptanceCertificatePatentList(acceptanceCertificatePatentList);  //把专利表的信息插入到最终验收报告中
+
+            } catch (NullPointerException e) {
+                acceptanceCertificatePatentList = null;
+            }
+            //根据最终验收报告的id，查询验收报告中的主要参与人员信息
+            List<AcceptanceCertificatePrincipalPersonnel>  acceptanceCertificatePrincipalPersonnelList = null;
+            try {
+                acceptanceCertificatePrincipalPersonnelList = acceptApplyMapper.queryAcceptanceCertificatePersonnel(acceptanceCertificate.getId());
+                acceptanceCertificate.setAcceptanceCertificatePrincipalPersonnelList(acceptanceCertificatePrincipalPersonnelList);//把查询出来的主要参与人员信息插入到最终验收报告中
+            } catch (NullPointerException e) {
+                acceptanceCertificatePrincipalPersonnelList = null;
+            }
+            //根据验收报告的id，查询出验收报告中的课题负责人信息
+            List<AcceptanceCertificateSubjectPeople> acceptanceCertificateSubjectPeopleList = null;
+            try {
+                acceptanceCertificateSubjectPeopleList = acceptApplyMapper.queryAcceptanceCertificateSubjectPeople(acceptanceCertificate.getId());
+                acceptanceCertificate.setAcceptanceCertificateSubjectPeopleList(acceptanceCertificateSubjectPeopleList);
+            } catch (NullPointerException e) {
+                acceptanceCertificateSubjectPeopleList = null;
+            }
+            //把最终验收报告信息存入验收申请表中
+            extranetCheckApply.setAcceptanceCertificate(acceptanceCertificate);
+
             Integer id = extranetCheckApply.getId();   //获取验收申请表的id
             //通过验收申请表的id，获取到对应的审核状态
             List<ExtranetCheckApplyState> extranetCheckApplyStateList = acceptApplyMapper.queryCheckApplyState(id);
@@ -439,6 +490,59 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
         List<ExtranetCheckApply> extranetCheckApplyList = acceptApplyMapper.queryResultCheckApply(cid, topicName, topicNumber, newpage, total);
 
         for (ExtranetCheckApply extranetCheckApply : extranetCheckApplyList) {
+            //查询专家信息组意见信息  根据验收申请表的id查询
+            ExtranetExpertGroupComment extranetExpertGroupComment = null;
+            try {
+                extranetExpertGroupComment = acceptApplyMapper.queryExpertGroupComment(extranetCheckApply.getId());
+            } catch (NullPointerException e) {
+                extranetExpertGroupComment = null;
+            }
+            //根据验收专家组意见表的id，获取对应的专家组成员信息
+            List<ExtranetExpertGroupCommentsName> extranetExpertGroupCommentsNameList = null;
+            try {
+                extranetExpertGroupCommentsNameList = acceptApplyMapper.queryExpertGroupCommentsName(extranetExpertGroupComment.getEgcId());
+                extranetExpertGroupComment.setExtranetExpertGroupCommentsNameList(extranetExpertGroupCommentsNameList);//把专家组成员信息存放到专家组信息中
+            } catch (NullPointerException e) {
+                extranetExpertGroupCommentsNameList = null;
+            }
+            extranetCheckApply.setExtranetExpertGroupComment(extranetExpertGroupComment);   //把专家组信息插入到验收申请实体类中
+
+            //根据验收申请表的id，查询最终验收报告主表信息
+            AcceptanceCertificate acceptanceCertificate = null;
+            try {
+                acceptanceCertificate = acceptApplyMapper.queryAcceptanceCertificate(extranetCheckApply.getId());
+            } catch (NullPointerException e) {
+                acceptanceCertificate = null;
+            }
+            //根据最终验收报告的id，查询验收报告中的专利信息
+            List<AcceptanceCertificatePatent> acceptanceCertificatePatentList = null;
+            try {
+                acceptanceCertificatePatentList = acceptApplyMapper.queryAcceptanceCertificatePatentByCid(acceptanceCertificate.getId());
+                acceptanceCertificate.setAcceptanceCertificatePatentList(acceptanceCertificatePatentList);  //把专利表的信息插入到最终验收报告中
+
+            } catch (NullPointerException e) {
+                acceptanceCertificatePatentList = null;
+            }
+            //根据最终验收报告的id，查询验收报告中的主要参与人员信息
+            List<AcceptanceCertificatePrincipalPersonnel>  acceptanceCertificatePrincipalPersonnelList = null;
+            try {
+                acceptanceCertificatePrincipalPersonnelList = acceptApplyMapper.queryAcceptanceCertificatePersonnel(acceptanceCertificate.getId());
+                acceptanceCertificate.setAcceptanceCertificatePrincipalPersonnelList(acceptanceCertificatePrincipalPersonnelList);//把查询出来的主要参与人员信息插入到最终验收报告中
+            } catch (NullPointerException e) {
+                acceptanceCertificatePrincipalPersonnelList = null;
+            }
+            //根据验收报告的id，查询出验收报告中的课题负责人信息
+            List<AcceptanceCertificateSubjectPeople> acceptanceCertificateSubjectPeopleList = null;
+            try {
+                acceptanceCertificateSubjectPeopleList = acceptApplyMapper.queryAcceptanceCertificateSubjectPeople(acceptanceCertificate.getId());
+                acceptanceCertificate.setAcceptanceCertificateSubjectPeopleList(acceptanceCertificateSubjectPeopleList);
+            } catch (NullPointerException e) {
+                acceptanceCertificateSubjectPeopleList = null;
+            }
+            //把最终验收报告信息存入验收申请表中
+            extranetCheckApply.setAcceptanceCertificate(acceptanceCertificate);
+
+
             Integer id = extranetCheckApply.getId();   //获取验收申请表的id
             //通过验收申请表的id，获取到对应的审核状态
             List<ExtranetCheckApplyState> extranetCheckApplyStateList = acceptApplyMapper.queryCheckApplyState(id);
