@@ -16,12 +16,10 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("checkApply")
 public class AcceptApplyController {
-
     private ResultMap resultMap = new ResultMap();
     @Autowired
     private AcceptApplySerivce acceptApplySerivce;
     private static Logger log = LoggerFactory.getLogger(AcceptApplyController.class);
-
 
     /**
      * 查询企业提交的验收申请
