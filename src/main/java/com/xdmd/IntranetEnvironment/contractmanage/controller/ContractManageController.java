@@ -109,8 +109,9 @@ public class ContractManageController {
      */
     @ApiOperation(value = "根据勾选的合同主表id修改相应的中期检查记录【内网中检】")
     @PostMapping(value = "updateContractByIds")
-    public int updateContractByIds(@RequestParam("mid") @ApiParam("中检id") int mid, @RequestBody @ApiParam("合同id集合") List<Long> ids) {
-        return contractManageService.updateContractByIds(mid, ids);
+    public ResultMap updateContractByIds(@RequestParam("mid") @ApiParam("中检id") int mid, @RequestBody @ApiParam("合同id集合") List<Long> ids) {
+         int no=contractManageService.updateContractByIds(mid, ids);
+         return  no>0?resultMap.success():resultMap.fail();
     }
 
     /**
@@ -120,8 +121,9 @@ public class ContractManageController {
      */
     @ApiOperation(value = "根据中期检查记录查詢相应合同主表【内网中检】")
     @GetMapping(value = "getInfoByMidRecord")
-    public List<Map> getInfoByMidRecord(@RequestParam("mId") int mId) {
-        return contractManageService.getInfoByMidRecord(mId);
+    public ResultMap getInfoByMidRecord(@RequestParam("mId") int mId) {
+        List<Map> mapList=contractManageService.getInfoByMidRecord(mId);
+        return mapList.size()>0?resultMap.success():resultMap.fail();
     }
 
 
@@ -137,8 +139,9 @@ public class ContractManageController {
             @ApiImplicitParam(name = "Mid", value = "中检记录id", dataType = "Long"),
     })
     @GetMapping(value = "getContractByUid")
-    public List<Map> getContractByUid(@RequestParam("Uid") int Uid, @RequestParam("Mid") int Mid) {
-        return contractManageService.getContractByUid(Uid, Mid);
+    public ResultMap getContractByUid(@RequestParam("Uid") int Uid, @RequestParam("Mid") int Mid) {
+        List<Map> maps=contractManageService.getContractByUid(Uid, Mid);
+        return  maps.size()>0?resultMap.success():resultMap.fail();
     }
 
     /**
@@ -151,14 +154,15 @@ public class ContractManageController {
      */
     @ApiOperation(value = "根据合同id更新相应的附件id【外网中检】")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "midCheckAnnexId", value = "中期检查附件id", paramType = "int"),
-            @ApiImplicitParam(name = "expertAssessmentAnnexId", value = "专家评估附件id", paramType = "int"),
-            @ApiImplicitParam(name = "subjectSuggestAnnexId", value = "课题意见附件id", paramType = "int"),
-            @ApiImplicitParam(name = "cid", value = "合同id", paramType = "int"),
+            @ApiImplicitParam(name = "midCheckAnnexId", value = "中期检查附件id"),
+            @ApiImplicitParam(name = "expertAssessmentAnnexId", value = "专家评估附件id"),
+            @ApiImplicitParam(name = "subjectSuggestAnnexId", value = "课题意见附件id"),
+            @ApiImplicitParam(name = "cid", value = "合同id"),
     })
     @PostMapping(value = "updateContractByCid")
-    public int updateContractByCid(int midCheckAnnexId, int expertAssessmentAnnexId, int subjectSuggestAnnexId, int cid) {
-        return contractManageService.updateContractByCid(midCheckAnnexId, expertAssessmentAnnexId, subjectSuggestAnnexId, cid);
+    public ResultMap updateContractByCid(int midCheckAnnexId, int expertAssessmentAnnexId, int subjectSuggestAnnexId, int cid) {
+        int num= contractManageService.updateContractByCid(midCheckAnnexId, expertAssessmentAnnexId, subjectSuggestAnnexId, cid);
+        return  num>0?resultMap.success():resultMap.fail();
     }
 
     /**
@@ -194,4 +198,5 @@ public class ContractManageController {
             }
             return OK;
     }
+
 }

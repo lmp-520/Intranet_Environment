@@ -11,6 +11,7 @@ import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 重大事项管理
@@ -26,7 +27,8 @@ public interface MajorMattersFilingMapper {
             "subject_name,\n" +
             "commitment_unit,\n" +
             "unit_head,\n" +
-            "unit_head_phone,\n" +
+            "unit_head_phone," +
+            "project_no,\n" +
             "adjust_type_id,\n" +
             "adjustment_matters_id,\n" +
             "specific_facts)\n" +
@@ -34,7 +36,8 @@ public interface MajorMattersFilingMapper {
             "#{subjectName},\n" +
             "#{commitmentUnit},\n" +
             "#{unitHead},\n" +
-            "#{unitHeadPhone},\n" +
+            "#{unitHeadPhone}" +
+            "#{projectNo},\n" +
             "#{adjustTypeId},\n" +
             "#{adjustmentMattersId},\n" +
             "#{specificFacts})")
@@ -74,12 +77,13 @@ public interface MajorMattersFilingMapper {
      **/
     @Select("<script>" +
             "SELECT\n" +
+            "mmf.id," +
             "mmf.subject_name as subjectName,\n" +
             "mmf.commitment_unit as commitmentUnit,\n" +
             "adt.adjust_type AS adjustType,\n" +
             "am.adjustment_matters AS adjustmentMatters,\n" +
             "mmf.unit_head AS unitHead,\n" +
-            "mmf.unit_head_phone AS unitHeadPhone\n" +
+            "mmf.shenhe_status\n" +
             "FROM \n" +
             "major_matters_filing as mmf,adjust_type as adt,adjustment_matters as am\n" +
             "where\n" +
@@ -91,12 +95,12 @@ public interface MajorMattersFilingMapper {
             "AND mmf.commitment_unit like CONCAT('%',#{commitmentUnit},'%')" +
             "</if>\n" +
             "<if test ='null != adjustTypeId'>\n" +
-            "AND mmf.adjust_type_id =#{adjustTypeId}=" +
+            "AND mmf.adjust_type_id = #{adjustTypeId}" +
             "</if>\n" +
             "<if test ='null != adjustmentMattersId'>" +
-            "AND mmf.adjustment_matters_id =#{adjustmentMattersId}" +
+            "AND mmf.adjustment_matters_id = #{adjustmentMattersId}" +
             "</if></script>")
-    List<MajorMattersFilingDTO> getAllMajorInfo(@Param("subjectName") String subjectName, @Param("commitmentUnit")String commitmentUnit,
+    List<Map> getAllMajorInfo(@Param("subjectName") String subjectName, @Param("commitmentUnit")String commitmentUnit,
                               @Param("adjustTypeId") Integer adjustTypeId, @Param("adjustmentMattersId") Integer adjustmentMattersId);
 
 
@@ -108,12 +112,13 @@ public interface MajorMattersFilingMapper {
      **/
     @Select("<script>" +
             "SELECT\n" +
+            "mmf.id," +
             "mmf.subject_name as subjectName,\n" +
             "mmf.commitment_unit as commitmentUnit,\n" +
             "adt.adjust_type AS adjustType,\n" +
             "am.adjustment_matters AS adjustmentMatters,\n" +
             "mmf.unit_head AS unitHead,\n" +
-            "mmf.unit_head_phone AS unitHeadPhone\n" +
+            "mmf.shenhe_status as shenheStatus\t" +
             "FROM\n" +
             "major_matters_filing as mmf,adjust_type as adt,adjustment_matters as am,unit_major um\n" +
             "where\n" +
@@ -130,18 +135,17 @@ public interface MajorMattersFilingMapper {
             "<if test ='null != adjustmentMattersId'>" +
             "AND mmf.adjustment_matters_id =#{adjustmentMattersId}" +
             "</if></script>")
-    List<MajorMattersFilingDTO> getAllMajorInfoByUid(@Param("uid") int uid, @Param("subjectName") String subjectName, @Param("commitmentUnit")String commitmentUnit,
+    List<Map> getAllMajorInfoByUid(@Param("uid") int uid, @Param("subjectName") String subjectName, @Param("commitmentUnit")String commitmentUnit,
                                      @Param("adjustTypeId") Integer adjustTypeId, @Param("adjustmentMattersId") Integer adjustmentMattersId);
 
 
     /**
      * 更新重大事项的审核状态【内网】
-     * @param status
      * @param id
      * @return
      */
-    @Update("update major_matters_filing set shenhe_status=1 where shenhe_status=#{status} and id=#{id}")
-    int updateMajorStatus(@Param("status")int status,@Param("id")int id);
+    @Update("update major_matters_filing set shenhe_status=1 where shenhe_status=0 and id=#{id}")
+    int updateMajorStatus(@Param("id") int id);
 
 
 

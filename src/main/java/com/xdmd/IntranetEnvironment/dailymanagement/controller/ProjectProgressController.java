@@ -43,7 +43,7 @@ public class ProjectProgressController {
      */
     @ApiOperation(value = "新增课题进展主体")
     @PostMapping("insertProgress")
-    public ResultMap insert(ProjectProgressDTO progressDTO) {
+    public ResultMap insert(@RequestBody ProjectProgressDTO progressDTO) {
        return resultMap=projectProgressService.insert(progressDTO);
     }
 

@@ -4,6 +4,9 @@ package com.xdmd.IntranetEnvironment.dailymanagement.service;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.dailymanagement.pojo.MajorMattersFilingDTO;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 /**
  * 重大事项管理
@@ -45,12 +48,19 @@ public interface MajorMattersFilingService {
 
     /**
      * 更新重大事项的审核状态【内网】
-     * @param status
      * @param id
      * @return
      */
-    ResultMap updateMajorStatus(int status,int id);
+    ResultMap updateMajorStatus(int id);
 
+    /**
+     * 重大事项变更附件上传
+     * @param file
+     * @param fileType
+     * @param mid
+     * @return
+     */
+    String MultipartFileUpload(MultipartFile file, String fileType, int mid)throws IOException;
 
 
     /**

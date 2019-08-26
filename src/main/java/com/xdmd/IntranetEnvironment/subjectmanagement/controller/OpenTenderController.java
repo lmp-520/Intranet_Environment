@@ -10,7 +10,6 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author: Kong
@@ -109,21 +108,22 @@ public class OpenTenderController {
         return resultMap = openTenderService.updateTenderByoid(winningFileAttachmentId, announcementTransactionAnnouncementId, dealNotificationAttachmentId, responseFileAttachment, oid);
     }
 
-    @PostMapping("TenderFileUpload")
-    @ApiOperation(value = "招标附件上传")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "fileType", value = "附件类型"),
-            @ApiImplicitParam(name = "oid", value = "招标id"),
-    })
-    public String midFileUpload(@RequestParam("file") MultipartFile file, @RequestParam("fileType") String fileType, @RequestParam("oid") int oid) {
-        String OK = null;
-        try {
-            OK = openTenderService.tenderMultiUpload(file, fileType, oid);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return OK;
-    }
+  //  @PostMapping("TenderFileUpload")
+  //  @ApiOperation(value = "招标附件上传")
+  //  @ApiImplicitParams({
+  //          @ApiImplicitParam(name = "fileType", value = "附件类型"),
+  //          @ApiImplicitParam(name = "oid", value = "招标id"),
+  //  })
+  //  public String midFileUpload(@RequestParam("file") MultipartFile file, @RequestParam("fileType") String fileType, @RequestParam("oid") int oid) {
+  //      String OK = null;
+  //      try {
+  //          OK = openTenderService.tenderMultiUpload(file, fileType, oid);
+  //      } catch (Exception e) {
+  //          e.printStackTrace();
+  //      }
+  //      return OK;
+  //  }
+
 }
 
 

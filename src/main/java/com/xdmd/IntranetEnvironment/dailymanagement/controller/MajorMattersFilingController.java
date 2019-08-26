@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 重大事项
@@ -97,26 +98,15 @@ public class MajorMattersFilingController {
 
     /**
      * 更新重大事项的审核状态【内网】
-     * @param status
      * @param id
      * @return
      */
-    @ApiImplicitParams({
-            @ApiImplicitParam(name="status",value = "审核状态",required = true,paramType = "int"),
-            @ApiImplicitParam(name="id",value = "主键id",required = true,paramType = "int")
-    })
+    @ApiImplicitParam(name="id",value = "主键id",required = true)
     @ApiOperation("更新重大事项的审核状态【内网】")
     @PostMapping("updateMajorStatus")
-    public ResultMap updateMajorStatus(int status, int id){
-        return resultMap=majorMattersFilingService.updateMajorStatus(status,id);
+    public ResultMap updateMajorStatus(int id){
+        return resultMap=majorMattersFilingService.updateMajorStatus(id);
     }
-
-
-
-
-
-
-
 
 
     /**
@@ -138,4 +128,20 @@ public class MajorMattersFilingController {
    public ResultMap  AdjustmentMatters(){
        return  resultMap= majorMattersFilingService.AdjustmentMatters();
    }
+
+    @PostMapping("MajorFileUpload")
+    @ApiOperation(value = "重大事项变更附件上传")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "fileType", value = "附件类型"),
+            @ApiImplicitParam(name = "mid", value = "招标id"),
+    })
+    public String midFileUpload(@RequestParam("file") MultipartFile file, @RequestParam("fileType") String fileType, @RequestParam("mid") int mid) {
+        String OK = null;
+        try {
+            OK = majorMattersFilingService.MultipartFileUpload(file, fileType, mid);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return OK;
+    }
 }

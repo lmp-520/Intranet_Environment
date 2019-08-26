@@ -60,7 +60,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
             if(insertNo>0){
                 resultMap.success().message("成功新增"+insertNo+"条数据");
             }else if(insertNo==0){
-                resultMap.fail().message("新增失败");
+                resultMap.success().message("新增失败");
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -87,7 +87,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
             if(getTenderByUidMap!=null){
                 resultMap.success().message(pageInfo);
             }else if(getTenderByUidMap==null){
-                resultMap.fail().message("没有查到相关信息");
+                resultMap.success().message("没有查到相关信息");
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -108,7 +108,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
             if(getTenderByIdMap!=null){
                 resultMap.success().message(getTenderByIdMap);
             }else if(getTenderByIdMap==null){
-                resultMap.fail().message("没有查到相关信息");
+                resultMap.success().message("没有查到相关信息");
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -169,7 +169,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
             if(openTenderList!=null){
                 resultMap.success().message(pageInfo);
             }else if(openTenderList==null){
-                resultMap.fail().message("没有查到相关信息");
+                resultMap.success().message("没有查到相关信息");
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -195,7 +195,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
             if(updateNo>0){
                 resultMap.success().message("成功更新"+updateNo+"条数据");
             }else if(updateNo<0){
-                resultMap.fail().message("没有查到相关信息");
+                resultMap.success().message("没有查到相关信息");
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -212,6 +212,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
     public OpenTender getNewData() {
         return openTenderMapper.getNewData();
     }
+
 
     /**
      * 招标附件上传
@@ -275,9 +276,5 @@ public class OpenTenderServiceImpl implements OpenTenderService {
         }
         return "上传失败";
     }
-
-
-
-
 
 }

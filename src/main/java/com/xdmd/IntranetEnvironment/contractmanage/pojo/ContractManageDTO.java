@@ -128,7 +128,7 @@ public class ContractManageDTO {
     @ApiModelProperty("课题验收内容和考核指标")
     private String subjectAcceptanceAssessment;
 
-    @ApiModelProperty("课题验收内容和考核指标")
+    @ApiModelProperty("其他条件")
     private String otherConditions;
 
 
