@@ -6,6 +6,8 @@ import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.AcceptanceCer
 import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.AcceptanceCertificateSubjectPeople;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.pojo.CheckApply;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.pojo.CheckApplyState;
+import com.xdmd.IntranetEnvironment.subjectAcceptance.pojo.ExpertGroupComment;
+import com.xdmd.IntranetEnvironment.subjectAcceptance.pojo.ExpertGroupCommentsName;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -94,4 +96,12 @@ public interface AcceptEndMapper {
     //根据验收申请表的id，获取该申请表的审核状态
     @Select("SELECT * FROM check_apply_state where check_apply_id = #{id} ORDER BY first_handle_time")
     List<CheckApplyState> queryCheckApplyStateByCid(@Param("id") Integer id);
+
+    //查询专家组意见信息
+    @Select("select * from expert_group_comments where ca_id = #{id}")
+    ExpertGroupComment queryExpertGroupComment(@Param("id") Integer id);
+
+    //根据验收专家组意见表的id，获取对应的专家组成员信息
+    @Select("select * from expert_group_comments_name where egc_id = #{egcId}")
+    List<ExpertGroupCommentsName> queryExpertGroupCommentsName(@Param("egcId") Integer egcId);
 }

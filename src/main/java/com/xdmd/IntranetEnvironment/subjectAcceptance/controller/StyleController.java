@@ -39,5 +39,11 @@ public class StyleController {
         return resultMap;
     }
 
-
+    //专家组意见中的最终验收结果
+    @PostMapping("finalAcceptanceMethod")
+    @ResponseBody
+    public ResultMap finalAcceptanceMethod(){
+        resultMap = styleService.finalAcceptanceMethod();
+        return resultMap;
+    }
 }

@@ -19,4 +19,6 @@ public interface StyleMapper {
     @Select("SELECT id,content FROM dictionary where classification_id =3 and state = 1")
     List<Dictionary> applicationSubmitList();
 
+    @Select("SELECT id,content FROM dictionary where classification_id =20 and state = 1")
+    List<Dictionary> finalAcceptanceMethod();
 }
