@@ -36,4 +36,11 @@ public class StyleServiceImpl implements StyleService {
         List<Dictionary> dictionaryList = styleMapper.applicationSubmitList();
         return resultMap.success().message(dictionaryList);
     }
+
+    //专家组意见中的最终验收结果
+    @Override
+    public ResultMap finalAcceptanceMethod() {
+        List<Dictionary> dictionaryList = styleMapper.finalAcceptanceMethod();
+        return resultMap.success().message(dictionaryList);
+    }
 }

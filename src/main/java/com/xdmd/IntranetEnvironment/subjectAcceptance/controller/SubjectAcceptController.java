@@ -56,7 +56,7 @@ public class SubjectAcceptController {
                                         @RequestParam(value = "reason", required = false) String reason,//审核未通过原因
                                         @RequestParam("id") Integer id,//验收申请数据的id
                                         @RequestParam("acceptanceFinalResultId") Integer acceptanceFinalResultId,//最终验收结果id
-                                        @RequestPart ExpertGroupComment expertGroupComment, //专家组意见表
+                                        @RequestPart(value = "expertGroupComment",required = false) ExpertGroupComment expertGroupComment, //专家组意见表
                                         @RequestPart(value = "expertGroupCommentsFile", required = false) MultipartFile expertGroupCommentsFile,  //专家意见表文件
                                         @RequestPart(value = "expertAcceptanceFormFile", required = false) MultipartFile expertAcceptanceFormFile) { //专家评议表文件
         //首先判断token是否存在
