@@ -67,6 +67,7 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
     }
 
     //企业修改验收申请表
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public ResultMap updateAcceptApply(ExtranetCheckApply extranetCheckApply, MultipartFile submitInventoryFile, MultipartFile applicationAcceptanceFile, MultipartFile achievementsFile, String createname) throws MysqlErrorException {
         int number = 0;

@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * 文件上传工具类
@@ -17,7 +16,7 @@ import java.util.List;
 public class FileUploadUtil {
 
     /**
-     * 0 为正确  1未错误
+     * 0 为正确  1 为错误
      *
      * @param file        上传的文件
      * @param companyName 公司名
