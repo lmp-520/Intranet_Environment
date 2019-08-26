@@ -11,6 +11,8 @@ import com.xdmd.IntranetEnvironment.subjectAcceptance.exception.UpdateSqlExcepti
 import com.xdmd.IntranetEnvironment.subjectAcceptance.mapper.AcceptEndMapper;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.pojo.CheckApply;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.pojo.CheckApplyState;
+import com.xdmd.IntranetEnvironment.subjectAcceptance.pojo.ExpertGroupComment;
+import com.xdmd.IntranetEnvironment.subjectAcceptance.pojo.ExpertGroupCommentsName;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.service.AcceptEndService;
 import com.xdmd.IntranetEnvironment.user.exception.ClaimsNullException;
 import com.xdmd.IntranetEnvironment.user.exception.UserNameNotExistentException;
@@ -259,7 +261,6 @@ public class AcceptEndServiceImpl implements AcceptEndService {
             List<CheckApplyState> checkApplyStateList = acceptEndMapper.queryCheckApplyStateByCid(checkApply.getId());
             checkApply.setCheckApplyStateList(checkApplyStateList);
 
-
             //根据各个文件的id，获取各个文件的地址
             String achievementUrl = acceptEndMapper.queryFileUrlByFileId(checkApply.getAchievementUrlId());            //获取成果附件地址
             checkApply.setAchievementsUrl(achievementUrl);
@@ -300,6 +301,12 @@ public class AcceptEndServiceImpl implements AcceptEndService {
             List<AcceptanceCertificateSubjectPeople> acceptanceCertificateSubjectPeopleList = new ArrayList<AcceptanceCertificateSubjectPeople>();
             //获取验收证书课题负责人
             acceptanceCertificateSubjectPeopleList = acceptEndMapper.queryAcceptanceCertificateSubjectPeople(checkApply.getId());
+
+            //查询专家组意见信息
+            ExpertGroupComment expertGroupComment = acceptEndMapper.queryExpertGroupComment(checkApply.getId());
+            List<ExpertGroupCommentsName> ExpertGroupCommentsNameList = acceptEndMapper.queryExpertGroupCommentsName(expertGroupComment.getEgcId());
+            expertGroupComment.setExpertGroupCommentsNameList(ExpertGroupCommentsNameList);
+            checkApply.setExpertGroupComment(expertGroupComment);
 
             acceptanceCertificate.setAcceptanceCertificatePatentList(acceptanceCertificatePatentList);
             acceptanceCertificate.setAcceptanceCertificatePrincipalPersonnelList(acceptanceCertificatePrincipalPersonnelList);

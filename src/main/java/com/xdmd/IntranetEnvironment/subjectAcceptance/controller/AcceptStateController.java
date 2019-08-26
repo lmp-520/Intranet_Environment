@@ -51,7 +51,6 @@ public class AcceptStateController {
         return resultMap;
     }
 
-
     //验收申请的审核
     @PostMapping("examine")
     @ResponseBody
