@@ -66,10 +66,9 @@ public interface OpenTenderService {
 
     /**
      * 招标附件上传
-     * @param file
      * @param fileType
      * @param oid
      * @return
      */
-    String tenderMultiUpload(MultipartFile file,String fileType,int oid) throws IOException;
+    String tenderMultiUpload(MultipartFile file, String fileType, int oid) throws IOException;
 }
