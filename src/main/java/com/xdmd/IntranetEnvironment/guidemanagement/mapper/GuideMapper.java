@@ -18,7 +18,7 @@ import java.util.Map;
 @Repository
 public interface GuideMapper {
     /**
-     * 新增指南申报建议(外网)
+     * 新增指南申报建议(waiwang)
      * @param guideCollection
      * @return
      */
@@ -59,7 +59,7 @@ public interface GuideMapper {
     int insertGuideInfo(GuideCollection guideCollection);
 
     /**
-     * 根据单位id查询单位指南申报(外网)
+     * 根据单位id查询单位指南申报(waiwang)
      * 注意:传的是单位id，不是指南申报id
      * @param Uid
      * @return

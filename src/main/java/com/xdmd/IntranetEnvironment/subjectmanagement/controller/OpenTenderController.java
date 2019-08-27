@@ -34,7 +34,7 @@ public class OpenTenderController {
      * @param openTender
      * @return
      */
-    @ApiOperation(value = "新增招标信息【外网】")
+    @ApiOperation(value = "新增招标信息【waiwang】")
     @PostMapping(value = "insertTender")
     ResultMap insertTender(@RequestBody OpenTender openTender) {
         return resultMap = openTenderService.insertTender(openTender);
@@ -56,7 +56,7 @@ public class OpenTenderController {
             @ApiImplicitParam(name = "pageNum", value = "当前页数", required = true),
             @ApiImplicitParam(name = "pageSize", value = "每页显示条数", required = true)
     })
-    @ApiOperation(value = "根据单位的id查询招标信息【外网】")
+    @ApiOperation(value = "根据单位的id查询招标信息【waiwang】")
     @GetMapping(value = "getTenderByUid")
     ResultMap getTenderByUid(int uid, String projectName, String subjectName, String subjectLeader, String leaderContact, int pagenNum, int pageSize) {
         return openTenderService.getTenderByUid(uid, projectName, subjectName, subjectLeader, leaderContact, pagenNum, pageSize);
@@ -100,7 +100,7 @@ public class OpenTenderController {
     }
 
     /**
-     * 根据招标备案id更新相应的附件id【外网】
+     * 根据招标备案id更新相应的附件id【waiwang】
      *
      * @param winningFileAttachmentId
      * @param announcementTransactionAnnouncementId
@@ -112,6 +112,14 @@ public class OpenTenderController {
         return resultMap = openTenderService.updateTenderByoid(winningFileAttachmentId, announcementTransactionAnnouncementId, dealNotificationAttachmentId, responseFileAttachment, oid);
     }
 
+
+    /**
+     * 招标附件上传
+     * @param file
+     * @param fileType
+     * @param oid
+     * @return
+     */
     @PostMapping("TenderFileUpload")
     @ApiOperation(value = "招标附件上传")
     @ApiImplicitParams({
@@ -127,6 +135,27 @@ public class OpenTenderController {
         }
         return OK;
     }
+
+
+
+    public ResultMap tenderShenHe(@RequestParam("type")Boolean type,//审核结果 true为审核通过，false为审核不通过
+                              @RequestParam("cid") Integer oid,
+                              @RequestParam(value = "reason",required = false) String reason//审核不通过的原因
+
+    ){
+        try {
+            resultMap = openTenderService.tenderShenHe(type,reason,oid);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
 }
 
 
+   // @RequestParam(value = "fileType",required = false)String fileType,//上传文件类型
+   // @RequestPart(value = "file",required = false)MultipartFile winningDocument,//中标文件附件
+   // @RequestPart(value = "file",required = false)MultipartFile transactionAnnouncement,//成交公告附件
+   // @RequestPart(value = "file",required = false)MultipartFile noticeTransaction,//成交通知书附件
+   // @RequestPart(value = "file",required = false)MultipartFile responseFile//响应文件附件

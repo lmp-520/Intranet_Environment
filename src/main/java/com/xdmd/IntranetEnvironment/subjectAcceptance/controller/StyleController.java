@@ -62,4 +62,5 @@ public class StyleController {
         resultMap = styleService.queryAchievementLevel();
         return resultMap;
     }
+
 }

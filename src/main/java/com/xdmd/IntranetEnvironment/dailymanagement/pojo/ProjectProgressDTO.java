@@ -21,11 +21,14 @@ public class ProjectProgressDTO {
     @ApiModelProperty("承担单位")
     private String bearerUnit;
 
+    @ApiModelProperty("填报日期")
+    private String fillTime;
+
     @ApiModelProperty("课题名称")
     private String subjectName;
 
     @ApiModelProperty("课题编号")
-    private String subjectNo;
+    private String projectNo;
 
     @ApiModelProperty("项目负责人")
     private String projectLeader;
@@ -33,11 +36,13 @@ public class ProjectProgressDTO {
     @ApiModelProperty("项目负责人电话")
     private String projectLeaderPhone;
 
-    @ApiModelProperty("主要联系人")
+    @ApiModelProperty("项目负责人")
     private String primaryContacts;
 
     @ApiModelProperty("项目负责人电话")
     private String primaryContactsPhone;
+
+
 
     @ApiModelProperty("进展情况类型/45-超前 46-正常 47-滞后")
     private Integer progress;
@@ -69,20 +74,20 @@ public class ProjectProgressDTO {
     @ApiModelProperty("预计申请课题验收时间")
     private String estimatedAcceptanceTime;
 
-    @ApiModelProperty("单位审核意见")
+    @ApiModelProperty("s varchar(255)")
     private String unitAuditComments;
 
-    @ApiModelProperty("开题报告附件")
-    private Integer openReportAttachment;
+    @ApiModelProperty("开题报告附件id")
+    private Integer openReportAnnexId;
 
-    @ApiModelProperty("专家意见附件")
-    private Integer expertOpinionAnnex;
+    @ApiModelProperty("专家意见附件id")
+    private Integer expertSuggestAnnexId;
 
-    @ApiModelProperty("经费进展情况报告附件")
-    private Integer progressReportAnnex;
+    @ApiModelProperty("课题进展附件id")
+    private Integer subjectProgressAnnexId;
 
-    @ApiModelProperty("课题进展情况附件")
-    private Integer subjectProgressAnnex;
+    @ApiModelProperty("进度情况经费使用情况附件id")
+    private Integer fundProgressAnnexId;
 
     @ApiModelProperty("进展提交时间")
     private Date commitTime;

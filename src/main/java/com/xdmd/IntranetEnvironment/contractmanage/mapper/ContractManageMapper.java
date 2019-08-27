@@ -237,18 +237,18 @@ public interface ContractManageMapper {
     ///////////////////////////以下是合同审批///////////////////////////////////
 
     /**
-     * 单位管理员审核通过【暂未用】
+     * 单位管理员审核通过
      * @return
      */
     @Update(value = "update contract_manage set approval_status=2 where approval_status=1 and id=#{id}")
-    int updateApprovalStatusOne(@Param("id") int id);
+    int updateStatusPassByUnitManager(@Param("id") int id);
 
     /**
-     * 单位管理员审核不通过【暂未用】
+     * 单位管理员审核不通过
      * @return
      */
     @Update(value = "update contract_manage set approval_status=0 where approval_status=1 and id=#{id}")
-    int updateApprovalStatusTwo(@Param("id") int id);
+    int updateStatusNoPassByUnitManager(@Param("id") int id);
 
 
 
@@ -256,37 +256,37 @@ public interface ContractManageMapper {
      * 评估中心审核通过
      * @return
      */
-    @Update(value = "update contract_manage set approval_status=2 where approval_status=1 and id=#{id}")
-    int updateApprovalStatusThree(@Param("id") int id);
+    @Update(value = "update contract_manage set approval_status=3 where approval_status=2 and id=#{id}")
+    int updateStatusPassByPingGu(@Param("id") int id);
 
     /**
      * 评估中心审核不通过
      * @return
      */
-    @Update(value = "update contract_manage set approval_status=0 where approval_status=1 and id=#{id}")
-    int updateApprovalStatusFour(@Param("id") int id);
+    @Update(value = "update contract_manage set approval_status=0 where approval_status=2 and id=#{id}")
+    int updateStatusNoPassByPingGu(@Param("id") int id);
 
     /**
      * 法规科技处审核通过
      * @return
      */
-    @Update(value = "update contract_manage set approval_status=3 where approval_status=2 and id=#{id}")
-    int updateApprovalStatusF(@Param("id") int id);
+    @Update(value = "update contract_manage set approval_status=4 where approval_status=3 and id=#{id}")
+    int updateStatusPassByFaGui(@Param("id") int id);
 
     /**
      * 法规科技处审核不通过
      * @return
      */
-    @Update(value = "update contract_manage set approval_status=0 where approval_status=2 and id=#{id}")
-    int updateApprovalStatusiveSix(@Param("id") int id);
+    @Update(value = "update contract_manage set approval_status=0 where approval_status=3 and id=#{id}")
+    int updateStatusNoPassByFaGui(@Param("id") int id);
 
 
     /**
-     * 不通过被退回时重新提交
+     * 不通过被退回时重新提交审核
      * @return
      */
     @Update(value = "update contract_manage set approval_status=1 where approval_status=0 and id=#{id}")
-    int updateApprovalStatusFive(@Param("id") int id);
+    int updateStatusByReturnCommit(@Param("id") int id);
 
 
     /**
@@ -294,14 +294,14 @@ public interface ContractManageMapper {
      * @return
      */
     @Select("select * from contract_manage where approval_status<3")
-    ContractManageDTO showAllNoAudit();
+    List<ContractManageDTO> showAllNoPassAudit();
 
     /**
      * 展示通过所有法规科技处审批的
      * @return
      */
     @Select("select * from contract_manage where approval_status=3")
-    ContractManageDTO showAllAudited();
+    List<ContractManageDTO> showAllPassAudit();
 
 
 

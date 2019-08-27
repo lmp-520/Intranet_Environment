@@ -57,4 +57,5 @@ public class StyleServiceImpl implements StyleService {
         List<Dictionary> dictionaryList = styleMapper.queryAchievementLevel();
         return resultMap.success().message(dictionaryList);
     }
+
 }

@@ -33,7 +33,7 @@ public class KeyResearchDevelopersServiceImpl implements KeyResearchDevelopersSe
             if(insertNo>0){
                 resultMap.success().message("成功新增"+insertNo+"条数据");
             }else if(insertNo==0){
-                resultMap.fail().message("没有查到相关信息");
+                resultMap.success().message("没有查到相关信息");
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -54,7 +54,7 @@ public class KeyResearchDevelopersServiceImpl implements KeyResearchDevelopersSe
             if(keyDevDTO.size()>0){
                 resultMap.success().message(keyDevDTO);
             }else if(keyDevDTO.size()==0){
-                resultMap.fail();
+                resultMap.success().message("没有查到相关信息");
             }
         }catch (Exception e){
             e.printStackTrace();

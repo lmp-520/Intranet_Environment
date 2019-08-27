@@ -33,7 +33,7 @@ public class ProjectProgressServiceImpl implements ProjectProgressService {
         try{
             int insertNo=projectProgressMapper.insert(progressDTO);
             if(insertNo>0){
-                resultMap.success().message("新增成功");
+                resultMap.success().message(progressDTO.getId());
             }else if(insertNo==0){
                 resultMap.fail().message("新增失败");
             }

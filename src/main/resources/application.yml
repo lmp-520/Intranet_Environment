@@ -20,6 +20,9 @@ spring:
   devtools:
     restart:
       enabled: true  #开启热部署
+
+      #允许调用静态资源文件
+
   resources:
     add-mappings: true
 #  jpa:
@@ -32,6 +35,8 @@ mybatis:
     map-underscore-to-camel-case: true   #开启驼峰转换
   mapper-locations: classpath:mappers/*.xml
 
+
+
 #logging:
 #  level:
 #    root: INFO
@@ -40,9 +45,12 @@ mybatis:
 #      org.springframework.web: EDBUG
 #  file: D:\\xdmd_hbkj\\hbkj.log
 
+
 logging:
   level:
     root: info
     com.bestvike: debug
     org.springframework.security: warn
+
   file: D:\\xdmd_hbkj\\hbkj.log
+

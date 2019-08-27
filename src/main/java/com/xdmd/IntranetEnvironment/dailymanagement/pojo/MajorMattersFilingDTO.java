@@ -10,7 +10,7 @@ import lombok.Data;
  * @description: 重大事项
  */
 @Data
-@ApiModel("major_matters_filing")
+@ApiModel("重大事项")
 public class MajorMattersFilingDTO {
 
     @ApiModelProperty("主键")
@@ -28,11 +28,14 @@ public class MajorMattersFilingDTO {
     @ApiModelProperty("单位负责人电话")
     private String unitHeadPhone;
 
+    @ApiModelProperty("課題編號")
+    private String projectNo;
+
     @ApiModelProperty("调整类型")
     private Integer adjustTypeId;
 
     @ApiModelProperty("调整事项")
-    private Integer adjustmentMattersId;
+    private String adjustmentMattersId;
 
     @ApiModelProperty("具体情况说明")
     private String specificFacts;

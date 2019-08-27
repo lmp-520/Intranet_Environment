@@ -16,9 +16,10 @@ public class IntranetEnvironmentApplication extends SpringBootServletInitializer
     }
 
 
-    //打jar包时注释这个方法和【extends SpringBootServletInitializer】
-    @Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
-        return builder.sources(IntranetEnvironmentApplication.class);
-    }
+   //打jar包时注释这个方法和【extends SpringBootServletInitializer】
+   @Override
+   protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+       return builder.sources(IntranetEnvironmentApplication.class);
+   }
+
 }

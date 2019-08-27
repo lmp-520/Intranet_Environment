@@ -10,8 +10,6 @@ import com.xdmd.IntranetEnvironment.subjectmanagement.mapper.UploadFileMapper;
 import com.xdmd.IntranetEnvironment.subjectmanagement.pojo.OpenTender;
 import com.xdmd.IntranetEnvironment.subjectmanagement.service.OpenTenderService;
 import com.xdmd.IntranetEnvironment.user.service.impl.TokenService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,10 +28,6 @@ import java.util.Map;
  */
 @Service
 public class OpenTenderServiceImpl implements OpenTenderService {
-    /**
-     * log日志
-     */
-    private static Logger log = LoggerFactory.getLogger(OpenTenderServiceImpl.class);
     @Autowired
     OpenTenderMapper openTenderMapper;
     @Autowired
@@ -60,7 +54,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
             if(insertNo>0){
                 resultMap.success().message("成功新增"+insertNo+"条数据");
             }else if(insertNo==0){
-                resultMap.fail().message("新增失败");
+                resultMap.success().message("新增失败");
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -87,7 +81,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
             if(getTenderByUidMap!=null){
                 resultMap.success().message(pageInfo);
             }else if(getTenderByUidMap==null){
-                resultMap.fail().message("没有查到相关信息");
+                resultMap.success().message("没有查到相关信息");
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -108,7 +102,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
             if(getTenderByIdMap!=null){
                 resultMap.success().message(getTenderByIdMap);
             }else if(getTenderByIdMap==null){
-                resultMap.fail().message("没有查到相关信息");
+                resultMap.success().message("没有查到相关信息");
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -169,7 +163,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
             if(openTenderList!=null){
                 resultMap.success().message(pageInfo);
             }else if(openTenderList==null){
-                resultMap.fail().message("没有查到相关信息");
+                resultMap.success().message("没有查到相关信息");
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -195,7 +189,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
             if(updateNo>0){
                 resultMap.success().message("成功更新"+updateNo+"条数据");
             }else if(updateNo<0){
-                resultMap.fail().message("没有查到相关信息");
+                resultMap.success().message("没有查到相关信息");
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -212,6 +206,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
     public OpenTender getNewData() {
         return openTenderMapper.getNewData();
     }
+
 
     /**
      * 招标附件上传
@@ -277,7 +272,17 @@ public class OpenTenderServiceImpl implements OpenTenderService {
     }
 
 
-
+    /**
+     * 招标备案审核
+     * @param type 审核状态
+     * @param reason 审核不通过原因
+     * @param oid 审核表id
+     * @return
+     */
+    @Override
+    public ResultMap tenderShenHe(Boolean type, String reason, Integer oid) {
+        return null;
+    }
 
 
 }

@@ -105,6 +105,66 @@ public interface ContractManageService {
      * @return
      */
     String midFileUpload(MultipartFile file, String fileType, int cid) throws IOException;
+
+
+    ///////////////////////////以下是合同审批///////////////////////////////////
+
+  //  /**
+  //   * 单位管理员审核通过
+  //   * @return
+  //   */
+  //  int updateStatusPassByUnitManager(@Param("id") int id);
+//
+  //  /**
+  //   * 单位管理员审核不通过
+  //   * @return
+  //   */
+  //  int updateStatusNoPassByUnitManager(@Param("id") int id);
+//
+  //  /**
+  //   * 评估中心审核通过
+  //   * @return
+  //   */
+  //  int updateStatusPassByPingGu(@Param("id") int id);
+//
+  //  /**
+  //   * 评估中心审核不通过
+  //   * @return
+  //   */
+  //  int updateStatusNoPassByPingGu(@Param("id") int id);
+//
+  //  /**
+  //   * 法规科技处审核通过
+  //   * @return
+  //   */
+  //  int updateStatusPassByFaGui(@Param("id") int id);
+//
+  //  /**
+  //   * 法规科技处审核不通过
+  //   * @return
+  //   */
+  //  int updateStatusNoPassByFaGui(@Param("id") int id);
+//
+//
+  //  /**
+  //   * 不通过被退回时重新提交审核
+  //   * @return
+  //   */
+  //  int updateStatusByReturnCommit(@Param("id") int id);
+//
+//
+  //  /**
+  //   * 展示所有未通过审批的
+  //   * @return
+  //   */
+  //  List<ContractManageDTO> showAllNoPassAudit(int pageNum,int pageSize);
+//
+  //  /**
+  //   * 展示通过所有法规科技处审批的
+  //   * @return
+  //   */
+  //  List<ContractManageDTO> showAllPassAudit(int pageNum,int pageSize);
+
 }
 
 

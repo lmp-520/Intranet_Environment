@@ -88,7 +88,7 @@ public class ContractManageServiceImpl implements ContractManageService {
            if(contractMap.size()>0){
                 resultMap.success().message(pageInfo);
             }else if(contractMap.size()==0){
-                resultMap.fail().message("没有查到相关信息");
+                resultMap.success().message("没有查到相关信息");
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -156,7 +156,7 @@ public class ContractManageServiceImpl implements ContractManageService {
 
 
     /**
-     * 中期检查附件上传
+     * 合同附件上传
      * @param file
      * @param fileType
      * @return
@@ -214,6 +214,101 @@ public class ContractManageServiceImpl implements ContractManageService {
         }
         return "上传失败";
     }
+
+
+ //   /**
+ //    * 单位管理员审核通过
+ //    * @param id
+ //    * @return
+ //    */
+ //   @Override
+ //   public int updateStatusPassByUnitManager(int id) {
+ //       return contractManageMapper.updateStatusPassByUnitManager(id);
+ //   }
+//
+ //   /**
+ //    * 单位管理员审核不通过
+ //    * @param id
+ //    * @return
+ //    */
+ //   @Override
+ //   public int updateStatusNoPassByUnitManager(int id) {
+ //       return contractManageMapper.updateStatusNoPassByUnitManager(id);
+ //   }
+//
+//
+ //   /**
+ //    * 评估中心审核通过
+ //    * @param id
+ //    * @return
+ //    */
+ //   @Override
+ //   public int updateStatusPassByPingGu(int id) {
+ //       return contractManageMapper.updateStatusPassByPingGu(id);
+ //   }
+//
+ //   /**
+ //    * 评估中心审核不通过
+ //    * @param id
+ //    * @return
+ //    */
+ //   @Override
+ //   public int updateStatusNoPassByPingGu(int id) {
+ //       return contractManageMapper.updateStatusNoPassByPingGu(id);
+ //   }
+//
+ //   /**
+ //    * 法规科技处审核通过
+ //    * @param id
+ //    * @return
+ //    */
+ //   @Override
+ //   public int updateStatusPassByFaGui(int id) {
+ //       return contractManageMapper.updateStatusPassByFaGui(id);
+ //   }
+//
+ //   /**
+ //    * 法规科技处审核不通过
+ //    * @param id
+ //    * @return
+ //    */
+ //   @Override
+ //   public int updateStatusNoPassByFaGui(int id) {
+ //       return contractManageMapper.updateStatusNoPassByFaGui(id);
+ //   }
+//
+//
+ //   /**
+ //    * 不通过被退回时重新提交
+ //    * @param id
+ //    * @return
+ //    */
+ //   @Override
+ //   public int updateStatusByReturnCommit(int id) {
+ //       return contractManageMapper.updateStatusByReturnCommit(id);
+ //   }
+//
+ //   /**
+ //    * 展示所有未通过审批的
+ //    * @return
+ //    */
+ //   @Override
+ //   public List<ContractManageDTO> showAllNoPassAudit(int pageNum,int pageSize) {
+ //       PageHelper.startPage(pageNum,pageSize,true);
+ //       List<ContractManageDTO> contractManageList=contractManageMapper.showAllNoPassAudit();
+ //       return contractManageList;
+ //   }
+//
+ //   /**
+ //    * 展示通过所有法规科技处审批的
+ //    * @return
+ //    */
+ //   @Override
+ //   public List<ContractManageDTO> showAllPassAudit(int pageNum,int pageSize) {
+ //       PageHelper.startPage(pageNum,pageSize,true);
+ //       List<ContractManageDTO> contractManageList=contractManageMapper.showAllPassAudit();
+ //       return contractManageList;
+ //   }
 }
 
 

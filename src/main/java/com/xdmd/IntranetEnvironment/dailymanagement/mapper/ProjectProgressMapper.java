@@ -1,10 +1,7 @@
 package com.xdmd.IntranetEnvironment.dailymanagement.mapper;
 
 import com.xdmd.IntranetEnvironment.dailymanagement.pojo.*;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -21,32 +18,48 @@ public interface ProjectProgressMapper {
      * @author Kong
      * @date 2019/08/14
      **/
-    @Insert(value = "INSERT INTO project_progress\t" +
-            "VALUES(" +
-            "DEFAULT," +
-            "#{bearerUnit}," +
-            "#{subjectName}," +
-            "#{subjectNo}," +
-            "#{projectLeader}," +
-            "#{projectLeaderPhone}," +
-            "#{primaryContacts}," +
-            "#{primaryContactsPhone}," +
-            "#{progress}," +
-            "#{progressCompletedPercentage}," +
-            "#{totalFundsInplace}," +
-            "#{projectFundsUsed}," +
-            "#{totalFunding}," +
-            "#{provincialEnvironmentalFundsUsed}," +
-            "#{provincialEnvironmentalFundsPercent}," +
-            "#{contractAgreedClosingTime}," +
-            "#{isComplateContract}," +
-            "#{estimatedAcceptanceTime}," +
-            "#{unitAuditComments}," +
-            "#{openReportAttachment}," +
-            "#{expertOpinionAnnex}," +
-            "#{progressReportAnnex}," +
-            "#{subjectProgressAnnex}," +
-            "DEFAULT)")
+    @Options(useGeneratedKeys=true, keyProperty="id", keyColumn="id")
+    @Insert("INSERT INTO project_progress(\n" +
+            "bearer_unit,\n" +
+            "fill_time,\n" +
+            "subject_name,\n" +
+            "project_no,\n" +
+            "project_leader,\n" +
+            "project_leader_phone,\n" +
+            "primary_contacts,\n" +
+            "primary_contacts_phone,\n" +
+            "progress,\n" +
+            "progress_completed_percentage,\n" +
+            "total_funds_inplace,\n" +
+            "project_funds_used,\n" +
+            "total_funding,\n" +
+            "provincial_environmental_funds_used,\n" +
+            "provincial_environmental_funds_percent,\n" +
+            "contract_agreed_closing_time,\n" +
+            "is_complate_contract,\n" +
+            "estimated_acceptance_time,\n" +
+            "unit_audit_comments\n" +
+            ")\n" +
+            "VALUES(\n" +
+            "#{bearerUnit},\n" +
+            "#{fillTime},\n" +
+            "#{subjectName},\n" +
+            "#{projectNo},\n" +
+            "#{projectLeader},\n" +
+            "#{projectLeaderPhone},\n" +
+            "#{primaryContacts},\n" +
+            "#{primaryContactsPhone},\n" +
+            "#{progress},\n" +
+            "#{progressCompletedPercentage},\n" +
+            "#{totalFundsInplace},\n" +
+            "#{projectFundsUsed},\n" +
+            "#{totalFunding},\n" +
+            "#{provincialEnvironmentalFundsUsed},\n" +
+            "#{provincialEnvironmentalFundsPercent},\n" +
+            "#{contractAgreedClosingTime},\n" +
+            "#{isComplateContract},\n" +
+            "#{estimatedAcceptanceTime},\n" +
+            "#{unitAuditComments})")
     int insert(ProjectProgressDTO progressDTO);
 
     /**

@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 重大事项
@@ -27,7 +28,7 @@ public class MajorMattersFilingController {
      * @param majorMattersFiling
      * @return
      */
-    @ApiOperation("新增重大事项变更【外网】")
+    @ApiOperation("新增重大事项变更【waiwang】")
     @PostMapping("insertMajor")
     public ResultMap insert(@RequestBody MajorMattersFilingDTO majorMattersFiling){
         return  resultMap= majorMattersFilingService.insert(majorMattersFiling);
@@ -37,7 +38,7 @@ public class MajorMattersFilingController {
      * [更新]重大事项附件id
      * @return
      */
-    @ApiOperation("更新重大事项附件【外网】")
+    @ApiOperation("更新重大事项附件【waiwang】")
     @PostMapping("updateAnnexId")
     public ResultMap updateAnnexId(int changeApplicationAttachmentId,int expertArgumentationAttachmentId,int filingApplicationAttachmentId,int approvalDocumentsAttachmentId,int id){
         return  resultMap= majorMattersFilingService.updateAnnexId(changeApplicationAttachmentId,expertArgumentationAttachmentId, filingApplicationAttachmentId, approvalDocumentsAttachmentId, id);
@@ -75,7 +76,7 @@ public class MajorMattersFilingController {
     }
 
     /**
-     * [查詢] 根据单位id分頁查詢【外网】
+     * [查詢] 根据单位id分頁查詢【waiwang】
      * @return
      */
 
@@ -88,7 +89,7 @@ public class MajorMattersFilingController {
             @ApiImplicitParam(name="pageNum",value = "当前页数",required = true),
             @ApiImplicitParam(name="pageSize",value = "每页条数",required = true)
     })
-    @ApiOperation("根据单位id分頁查詢【外网】")
+    @ApiOperation("根据单位id分頁查詢【waiwang】")
     @GetMapping("getAllMajorInfoByUid")
     public ResultMap getAllMajorInfoByUid(int uid,String subjectName, String commitmentUnit, Integer adjustTypId, Integer adjustmentMattersId, int pageNum, int pageSize){
         return  resultMap= majorMattersFilingService.getAllMajorInfoByUid(uid,subjectName, commitmentUnit, adjustTypId, adjustmentMattersId,pageNum,pageSize);
@@ -97,26 +98,15 @@ public class MajorMattersFilingController {
 
     /**
      * 更新重大事项的审核状态【内网】
-     * @param status
      * @param id
      * @return
      */
-    @ApiImplicitParams({
-            @ApiImplicitParam(name="status",value = "审核状态",required = true,paramType = "int"),
-            @ApiImplicitParam(name="id",value = "主键id",required = true,paramType = "int")
-    })
+    @ApiImplicitParam(name="id",value = "主键id",required = true)
     @ApiOperation("更新重大事项的审核状态【内网】")
     @PostMapping("updateMajorStatus")
-    public ResultMap updateMajorStatus(int status, int id){
-        return resultMap=majorMattersFilingService.updateMajorStatus(status,id);
+    public ResultMap updateMajorStatus(int id){
+        return resultMap=majorMattersFilingService.updateMajorStatus(id);
     }
-
-
-
-
-
-
-
 
 
     /**
@@ -138,4 +128,20 @@ public class MajorMattersFilingController {
    public ResultMap  AdjustmentMatters(){
        return  resultMap= majorMattersFilingService.AdjustmentMatters();
    }
+
+    @PostMapping("MajorFileUpload")
+    @ApiOperation(value = "重大事项变更附件上传")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "fileType", value = "附件类型"),
+            @ApiImplicitParam(name = "mid", value = "招标id"),
+    })
+    public String midFileUpload(@RequestParam("file") MultipartFile file, @RequestParam("fileType") String fileType, @RequestParam("mid") int mid) {
+        String OK = null;
+        try {
+            OK = majorMattersFilingService.MultipartFileUpload(file, fileType, mid);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return OK;
+    }
 }
