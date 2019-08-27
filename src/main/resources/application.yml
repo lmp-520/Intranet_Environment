@@ -6,20 +6,22 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/newenvironment?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true
     username: root
-    password: 1123
+    password: 123456
     # 解决post请求乱码
   http:
     encoding:
       charset: utf-8
       force: true
       enabled: true
-    servlet:
-      multipart:
-        max-file-size: 100MB
-        max-request-size: 1000MB
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 1000MB
   devtools:
     restart:
       enabled: true  #开启热部署
+  resources:
+    add-mappings: true
 #  jpa:
 #    hibernate:
 #      ddl-auto: validate
@@ -37,3 +39,10 @@ mybatis:
 #      root: INFO
 #      org.springframework.web: EDBUG
 #  file: D:\\xdmd_hbkj\\hbkj.log
+
+logging:
+  level:
+    root: info
+    com.bestvike: debug
+    org.springframework.security: warn
+  file: D:\\xdmd_hbkj\\hbkj.log
