@@ -181,7 +181,7 @@ public interface OpenTenderMapper {
             "deal_notification_attachment_id = #{dealNotificationAttachmentId} \n" +
             "response_file_attachment_id = #{responseFileAttachmentId} \n" +
             "WHERE id = #{oid}")
-    int updateTenderByoid(int winningFileAttachmentId, int announcementTransactionAnnouncementId, int dealNotificationAttachmentId,int responseFileAttachment, int oid);
+    int updateAnnexByoid(int winningFileAttachmentId, int announcementTransactionAnnouncementId, int dealNotificationAttachmentId,int responseFileAttachmentId, int oid);
 
 
     /////////////////招标备案审核//////////////////////////////////
@@ -245,5 +245,9 @@ public interface OpenTenderMapper {
      */
     @Select("select * from open_tender where audit_status=3")
     OpenTender showAllAudited();
+
+    //根据招标备案表的id 获取该单位的名字
+    @Select("select responsible_unit from open_tender where id = #{oid}")
+    String queryUnitNameByOid(@Param("id") Integer oid);
 }
 

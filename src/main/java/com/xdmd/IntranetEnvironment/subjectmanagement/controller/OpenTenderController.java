@@ -8,11 +8,15 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * @author: Kong
@@ -115,47 +119,44 @@ public class OpenTenderController {
 
     /**
      * 招标附件上传
-     * @param file
-     * @param fileType
-     * @param oid
+     *
+     * @param oid                     招标备案表id
+     * @param fileType                文件类型
+     * @param winningDocument         中标文件附件
+     * @param transactionAnnouncement 成交公告附件
+     * @param noticeTransaction       成交通知书附件
+     * @param responseFile            响应文件附件
      * @return
      */
     @PostMapping("TenderFileUpload")
     @ApiOperation(value = "招标附件上传")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "fileType", value = "附件类型"),
             @ApiImplicitParam(name = "oid", value = "招标id"),
+            @ApiImplicitParam(name = "fileType", value = "附件类型"),
+            @ApiImplicitParam(name = "winningDocument", value = "中标文件附件"),
+            @ApiImplicitParam(name = "transactionAnnouncement", value = "成交公告附件"),
+            @ApiImplicitParam(name = "noticeTransaction", value = "成交通知书附件"),
+            @ApiImplicitParam(name = "responseFile", value = "响应文件附件"),
     })
-    public String midFileUpload(@RequestParam("file") MultipartFile file, @RequestParam("fileType") String fileType, @RequestParam("oid") int oid) {
-        String OK = null;
-        try {
-            OK = openTenderService.tenderMultiUpload(file, fileType, oid);
-        } catch (Exception e) {
-            e.printStackTrace();
+    public ResultMap tenderFileUpload(@CookieValue(value = "IntranecToken", required = false) String token, HttpServletResponse response,
+                                      @RequestParam("oid") int oid,
+                                      @RequestParam(value = "fileType", required = false) String fileType,
+                                      @RequestPart(value = "file", required = false) MultipartFile winningDocument,
+                                      @RequestPart(value = "file", required = false) MultipartFile transactionAnnouncement,
+                                      @RequestPart(value = "file", required = false) MultipartFile noticeTransaction,
+                                      @RequestPart(value = "file", required = false) MultipartFile responseFile) {
+
+        if (StringUtils.isEmpty(token)) {
+            return resultMap.fail().message("请先登录");
         }
-        return OK;
-    }
-
-
-
-    public ResultMap tenderShenHe(@RequestParam("type")Boolean type,//审核结果 true为审核通过，false为审核不通过
-                              @RequestParam("cid") Integer oid,
-                              @RequestParam(value = "reason",required = false) String reason//审核不通过的原因
-
-    ){
         try {
-            resultMap = openTenderService.tenderShenHe(type,reason,oid);
-        } catch (Exception e) {
+            resultMap = openTenderService.tenderMultiUpload(token, response, oid, fileType, winningDocument, transactionAnnouncement, noticeTransaction, responseFile);
+
+        } catch (IOException e) {
             e.printStackTrace();
+            log.error("OpenTenderController 中 tenderFileUpload 方法 -- " + e.getMessage());
             return resultMap.fail().message("系统异常");
         }
         return resultMap;
     }
 }
-
-
-   // @RequestParam(value = "fileType",required = false)String fileType,//上传文件类型
-   // @RequestPart(value = "file",required = false)MultipartFile winningDocument,//中标文件附件
-   // @RequestPart(value = "file",required = false)MultipartFile transactionAnnouncement,//成交公告附件
-   // @RequestPart(value = "file",required = false)MultipartFile noticeTransaction,//成交通知书附件
-   // @RequestPart(value = "file",required = false)MultipartFile responseFile//响应文件附件

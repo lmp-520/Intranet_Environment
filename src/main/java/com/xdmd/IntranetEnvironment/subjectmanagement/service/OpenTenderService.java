@@ -1,9 +1,11 @@
 package com.xdmd.IntranetEnvironment.subjectmanagement.service;
 
+import com.xdmd.IntranetEnvironment.common.FileUploadException;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.subjectmanagement.pojo.OpenTender;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -66,26 +68,24 @@ public interface OpenTenderService {
 
     /**
      * 招标附件上传
-     * @param file
-     * @param oid
+     * @param oid 招标备案表id
+     * @param winningDocument 中标文件附件
+     * @param transactionAnnouncement 成交公告附件
+     * @param noticeTransaction 成交通知书附件
+     * @param responseFile 响应文件附件
      * @return
+     * @throws IOException
      */
-    String tenderMultiUpload(MultipartFile file, String fileType, int oid) throws IOException;
+    ResultMap tenderMultiUpload(String token, HttpServletResponse response, Integer oid, MultipartFile winningDocument, MultipartFile transactionAnnouncement, MultipartFile noticeTransaction, MultipartFile responseFile) throws IOException, FileUploadException;
 
 
     /**
      * 招标备案审核
      * @param type 审核状态
      * @param reason 审核不通过原因
-    //* @param fileType 文件类型
-     * @param cid 审核表id
-    // * @param winningDocument 中标文件附件
-    // * @param transactionAnnouncement 成交公告附件
-    // * @param noticeTransaction 成交通知书附件
-    //* @param responseFile 响应文件附件
+     * @param oid 审核表id
      * @return
      */
-    //ResultMap tenderShenHe(Boolean type, String reason, String fileType, Integer cid, MultipartFile winningDocument, MultipartFile transactionAnnouncement, MultipartFile noticeTransaction, MultipartFile responseFile);
-    ResultMap tenderShenHe(Boolean type, String reason, Integer cid);
+    ResultMap tenderShenHe(Boolean type, String reason, Integer oid);
 
 }
