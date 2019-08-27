@@ -36,7 +36,7 @@ public class MajorMattersFilingServiceImpl implements MajorMattersFilingService 
     ResultMap resultMap = new ResultMap();
 
     /**
-     * 新增【外网】
+     * 新增【waiwang】
      *
      * @param majorMattersFiling
      * @return
@@ -58,7 +58,7 @@ public class MajorMattersFilingServiceImpl implements MajorMattersFilingService 
     }
 
     /**
-     * [更新]重大事项附件id【外网】
+     * [更新]重大事项附件id【waiwang】
      *
      * @return
      */

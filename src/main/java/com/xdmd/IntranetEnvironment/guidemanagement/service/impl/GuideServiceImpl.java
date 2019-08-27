@@ -1,6 +1,7 @@
 package com.xdmd.IntranetEnvironment.guidemanagement.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.guidemanagement.mapper.GuideMapper;
 import com.xdmd.IntranetEnvironment.guidemanagement.pojo.GuideCollection;
@@ -46,8 +47,9 @@ public class GuideServiceImpl implements GuideService {
             String orderBy="gc.id desc";
             PageHelper.startPage(pageNum,pageSize,orderBy);
             List<Map> guideCollectionList = guideMapper.getCollectionByParam(guideName, domain, category, fillUnit, fillContacts, contactPhone);
+            PageInfo pageInfo=new PageInfo(guideCollectionList);
             if(guideCollectionList.size()>0){
-                resultMap.success().message(guideCollectionList);
+                resultMap.success().message(pageInfo);
             }else if(guideCollectionList.size()==0){
                 resultMap.success().message("没有查到相关信息");
             }
@@ -187,8 +189,9 @@ public class GuideServiceImpl implements GuideService {
         try{
             PageHelper.startPage(pageNum,pageSize);
             List<Map> guideSummaryList = guideMapper.getSummaryByParam(guideSummaryTitle, fillUnit, domain, category, projectTime, researchContentTechnology);
+           PageInfo pageInfo=new PageInfo(guideSummaryList);
             if(guideSummaryList.size()>0){
-                resultMap.success().message(guideSummaryList);
+                resultMap.success().message(pageInfo);
             }else if(guideSummaryList.size()==0){
                 resultMap.success().message("没有查到相关信息");
             }
@@ -232,11 +235,9 @@ public class GuideServiceImpl implements GuideService {
             String orderBy="gc.id desc";
             PageHelper.startPage(pageNum,pageSize,orderBy);
             List<Map> mapList=guideMapper.getCollectionByUid(guideName,domain,category,fillUnit,fillContacts,contactPhone,Uid);
-            //PageInfo pageResult = new PageInfo(mapList);
-            //获取到总条数
-            //pageResult.getTotal();
+            PageInfo pageInfo=new PageInfo(mapList);
             if(mapList.size()>0){
-                resultMap.success().message(mapList);
+                resultMap.success().message(pageInfo);
             }else if(mapList.size()==0){
                 resultMap.success().message("没有查到相关信息");
             }
@@ -270,14 +271,13 @@ public class GuideServiceImpl implements GuideService {
     }
 
     /**
-     * 根据勾选的指南id更新相应指南申报选中状态
+     * 根据勾选的指南id更新相应指南申报选中状态  【没用到】
      * @param ids
      * @return
      */
     @Override
     public ResultMap getCollectionByIds(List<Long> ids) {
         try{
-            ids.forEach(id -> System.out.println("id-->" + id));
             List<Map> guideMap=guideMapper.getCollectionByIds(ids);
             if(!guideMap.isEmpty()){
                 resultMap.success().message(guideMap);

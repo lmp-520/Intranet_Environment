@@ -106,7 +106,7 @@ public interface MajorMattersFilingMapper {
 
 
     /**
-     * [查詢] 根据单位id分頁筛选查詢【外网】
+     * [查詢] 根据单位id分頁筛选查詢【waiwang】
      * @author Kong
      * @date 2019/08/19
      **/

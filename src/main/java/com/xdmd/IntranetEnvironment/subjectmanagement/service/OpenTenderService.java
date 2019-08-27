@@ -72,13 +72,20 @@ public interface OpenTenderService {
      */
     String tenderMultiUpload(MultipartFile file, String fileType, int oid) throws IOException;
 
+
     /**
      * 招标备案审核
-     * @param type
-     * @param reason
-     * @param file
-     * @param cid
+     * @param type 审核状态
+     * @param reason 审核不通过原因
+    //* @param fileType 文件类型
+     * @param cid 审核表id
+    // * @param winningDocument 中标文件附件
+    // * @param transactionAnnouncement 成交公告附件
+    // * @param noticeTransaction 成交通知书附件
+    //* @param responseFile 响应文件附件
      * @return
      */
-    //ResultMap tenderReview(Boolean type, String reason, MultipartFile file, Integer cid);
+    //ResultMap tenderShenHe(Boolean type, String reason, String fileType, Integer cid, MultipartFile winningDocument, MultipartFile transactionAnnouncement, MultipartFile noticeTransaction, MultipartFile responseFile);
+    ResultMap tenderShenHe(Boolean type, String reason, Integer cid);
+
 }

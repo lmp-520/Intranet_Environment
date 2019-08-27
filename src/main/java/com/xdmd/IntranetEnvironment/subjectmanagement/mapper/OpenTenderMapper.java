@@ -18,7 +18,7 @@ import java.util.Map;
 @Repository
 public interface OpenTenderMapper {
     /**
-     * 新增招标备案【外网】
+     * 新增招标备案【waiwang】
      * @param openTender
      * @return
      */
@@ -57,7 +57,7 @@ public interface OpenTenderMapper {
     int insertTender(OpenTender openTender);
 
     /**
-     * 获取最新的id【外网-课题编号】
+     * 获取最新的id【waiwang-课题编号】
      * @return
      */
     @Select(value = "SELECT id,project_no FROM open_tender ORDER BY id DESC LIMIT 1")
@@ -66,7 +66,7 @@ public interface OpenTenderMapper {
 
 
     /**
-     * [查詢] 根據单位id查詢相应单位的课题【外网】
+     * [查詢] 根據单位id查詢相应单位的课题【waiwang】
      * @author Kong
      * @date 2019/07/26
      **/

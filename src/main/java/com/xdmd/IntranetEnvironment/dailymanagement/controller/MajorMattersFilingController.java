@@ -28,7 +28,7 @@ public class MajorMattersFilingController {
      * @param majorMattersFiling
      * @return
      */
-    @ApiOperation("新增重大事项变更【外网】")
+    @ApiOperation("新增重大事项变更【waiwang】")
     @PostMapping("insertMajor")
     public ResultMap insert(@RequestBody MajorMattersFilingDTO majorMattersFiling){
         return  resultMap= majorMattersFilingService.insert(majorMattersFiling);
@@ -38,7 +38,7 @@ public class MajorMattersFilingController {
      * [更新]重大事项附件id
      * @return
      */
-    @ApiOperation("更新重大事项附件【外网】")
+    @ApiOperation("更新重大事项附件【waiwang】")
     @PostMapping("updateAnnexId")
     public ResultMap updateAnnexId(int changeApplicationAttachmentId,int expertArgumentationAttachmentId,int filingApplicationAttachmentId,int approvalDocumentsAttachmentId,int id){
         return  resultMap= majorMattersFilingService.updateAnnexId(changeApplicationAttachmentId,expertArgumentationAttachmentId, filingApplicationAttachmentId, approvalDocumentsAttachmentId, id);
@@ -76,7 +76,7 @@ public class MajorMattersFilingController {
     }
 
     /**
-     * [查詢] 根据单位id分頁查詢【外网】
+     * [查詢] 根据单位id分頁查詢【waiwang】
      * @return
      */
 
@@ -89,7 +89,7 @@ public class MajorMattersFilingController {
             @ApiImplicitParam(name="pageNum",value = "当前页数",required = true),
             @ApiImplicitParam(name="pageSize",value = "每页条数",required = true)
     })
-    @ApiOperation("根据单位id分頁查詢【外网】")
+    @ApiOperation("根据单位id分頁查詢【waiwang】")
     @GetMapping("getAllMajorInfoByUid")
     public ResultMap getAllMajorInfoByUid(int uid,String subjectName, String commitmentUnit, Integer adjustTypId, Integer adjustmentMattersId, int pageNum, int pageSize){
         return  resultMap= majorMattersFilingService.getAllMajorInfoByUid(uid,subjectName, commitmentUnit, adjustTypId, adjustmentMattersId,pageNum,pageSize);

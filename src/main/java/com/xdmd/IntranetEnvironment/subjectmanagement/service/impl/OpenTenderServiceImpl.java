@@ -10,8 +10,6 @@ import com.xdmd.IntranetEnvironment.subjectmanagement.mapper.UploadFileMapper;
 import com.xdmd.IntranetEnvironment.subjectmanagement.pojo.OpenTender;
 import com.xdmd.IntranetEnvironment.subjectmanagement.service.OpenTenderService;
 import com.xdmd.IntranetEnvironment.user.service.impl.TokenService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,10 +28,6 @@ import java.util.Map;
  */
 @Service
 public class OpenTenderServiceImpl implements OpenTenderService {
-    /**
-     * log日志
-     */
-    private static Logger log = LoggerFactory.getLogger(OpenTenderServiceImpl.class);
     @Autowired
     OpenTenderMapper openTenderMapper;
     @Autowired
@@ -276,5 +270,19 @@ public class OpenTenderServiceImpl implements OpenTenderService {
         }
         return "上传失败";
     }
+
+
+    /**
+     * 招标备案审核
+     * @param type 审核状态
+     * @param reason 审核不通过原因
+     * @param oid 审核表id
+     * @return
+     */
+    @Override
+    public ResultMap tenderShenHe(Boolean type, String reason, Integer oid) {
+        return null;
+    }
+
 
 }
