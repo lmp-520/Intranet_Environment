@@ -46,4 +46,20 @@ public class StyleController {
         resultMap = styleService.finalAcceptanceMethod();
         return resultMap;
     }
+
+    //成果形式
+    @PostMapping("queryAchievementShape")
+    @ResponseBody
+    public ResultMap queryAchievementShape(){
+        resultMap = styleService.queryAchievementShape();
+        return resultMap;
+    }
+
+    //成果水平
+    @PostMapping("queryAchievementLevel")
+    @ResponseBody
+    public ResultMap queryAchievementLevel(){
+        resultMap = styleService.queryAchievementLevel();
+        return resultMap;
+    }
 }

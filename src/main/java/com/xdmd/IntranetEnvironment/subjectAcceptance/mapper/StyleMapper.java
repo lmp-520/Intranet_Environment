@@ -21,4 +21,10 @@ public interface StyleMapper {
 
     @Select("SELECT id,content FROM dictionary where classification_id =20 and state = 1")
     List<Dictionary> finalAcceptanceMethod();
+
+    @Select("SELECT id,content FROM dictionary where classification_id =4 and state = 1")
+    List<Dictionary> queryAchievementShape();
+
+    @Select("SELECT id,content FROM dictionary where classification_id =5 and state = 1")
+    List<Dictionary> queryAchievementLevel();
 }
