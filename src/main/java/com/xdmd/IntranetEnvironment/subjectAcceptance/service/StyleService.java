@@ -11,4 +11,8 @@ public interface StyleService {
 
     ResultMap finalAcceptanceMethod();
 
+
+    ResultMap queryAchievementShape();
+
+    ResultMap queryAchievementLevel();
 }

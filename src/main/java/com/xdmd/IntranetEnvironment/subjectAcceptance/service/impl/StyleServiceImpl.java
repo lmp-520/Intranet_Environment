@@ -43,4 +43,19 @@ public class StyleServiceImpl implements StyleService {
         List<Dictionary> dictionaryList = styleMapper.finalAcceptanceMethod();
         return resultMap.success().message(dictionaryList);
     }
+
+    //成果形式
+    @Override
+    public ResultMap queryAchievementShape() {
+        List<Dictionary> dictionaryList = styleMapper.queryAchievementShape();
+        return resultMap.success().message(dictionaryList);
+    }
+
+    //成果水平
+    @Override
+    public ResultMap queryAchievementLevel() {
+        List<Dictionary> dictionaryList = styleMapper.queryAchievementLevel();
+        return resultMap.success().message(dictionaryList);
+    }
+
 }

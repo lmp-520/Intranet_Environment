@@ -106,6 +106,7 @@ public class NotificationController {
     @PostMapping("query")
     @ResponseBody
     public ResultMap queryNotification(@RequestParam("page") Integer page,@RequestParam("total") Integer total){
+
         if (page <= 0 || total <= 0) {
             return resultMap.fail().message("请返回正确的页数或每页显示条数");
         }
@@ -114,7 +115,7 @@ public class NotificationController {
             resultMap  =  notificationService.queryNotification(page,total);
         } catch (Exception e) {
             e.printStackTrace();
-            log.error("NotificationController 中 queryNotification方法出错 -- "+e.getMessage());
+            log.error("NotificationController 中 queryNotification方法出错 -- "+e.getMessage()+e.toString());
             return resultMap.fail().message("系统异常");
         }
         return resultMap;
