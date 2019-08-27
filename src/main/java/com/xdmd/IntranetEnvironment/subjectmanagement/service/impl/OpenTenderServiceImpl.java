@@ -2,24 +2,26 @@ package com.xdmd.IntranetEnvironment.subjectmanagement.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.xdmd.IntranetEnvironment.common.AnnexUpload;
-import com.xdmd.IntranetEnvironment.common.FileSuffixJudge;
-import com.xdmd.IntranetEnvironment.common.ResultMap;
+import com.xdmd.IntranetEnvironment.common.*;
 import com.xdmd.IntranetEnvironment.subjectmanagement.mapper.OpenTenderMapper;
 import com.xdmd.IntranetEnvironment.subjectmanagement.mapper.UploadFileMapper;
 import com.xdmd.IntranetEnvironment.subjectmanagement.pojo.OpenTender;
 import com.xdmd.IntranetEnvironment.subjectmanagement.service.OpenTenderService;
+import com.xdmd.IntranetEnvironment.user.exception.ClaimsNullException;
+import com.xdmd.IntranetEnvironment.user.exception.UserNameNotExistentException;
+import com.xdmd.IntranetEnvironment.user.pojo.User;
 import com.xdmd.IntranetEnvironment.user.service.impl.TokenService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author: Kong
@@ -28,12 +30,15 @@ import java.util.Map;
  */
 @Service
 public class OpenTenderServiceImpl implements OpenTenderService {
+    Logger log = LoggerFactory.getLogger(OpenTenderServiceImpl.class);
+
     @Autowired
     OpenTenderMapper openTenderMapper;
     @Autowired
     UploadFileMapper uploadFileMapper;
     @Autowired
     TokenService tokenService;
+
 
     /**
      * 状态码
@@ -185,7 +190,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
     @Override
     public ResultMap updateTenderByoid(int winningFileAttachmentId, int announcementTransactionAnnouncementId, int dealNotificationAttachmentId, int responseFileAttachmentId,int oid) {
         try{
-            int updateNo = openTenderMapper.updateTenderByoid(winningFileAttachmentId,announcementTransactionAnnouncementId,dealNotificationAttachmentId,responseFileAttachmentId,oid);
+            int updateNo = openTenderMapper.updateAnnexByoid(winningFileAttachmentId,announcementTransactionAnnouncementId,dealNotificationAttachmentId,responseFileAttachmentId,oid);
             if(updateNo>0){
                 resultMap.success().message("成功更新"+updateNo+"条数据");
             }else if(updateNo<0){
@@ -210,13 +215,114 @@ public class OpenTenderServiceImpl implements OpenTenderService {
 
     /**
      * 招标附件上传
+     * @param oid 招标备案表id
+     * @param winningDocument 中标文件附件
+     * @param transactionAnnouncement 成交公告附件
+     * @param noticeTransaction 成交通知书附件
+     * @param responseFile 响应文件附件
+     * @return
+     * @throws IOException
+     */
+    @Override
+    public ResultMap tenderMultiUpload(String token, HttpServletResponse response, Integer oid, MultipartFile winningDocument, MultipartFile transactionAnnouncement, MultipartFile noticeTransaction, MultipartFile responseFile) throws IOException, FileUploadException {
+        User user = new User();
+        try {
+            user = tokenService.compare(response, token);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (UserNameNotExistentException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (ClaimsNullException e){
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        }catch (Exception e) {
+            e.printStackTrace();
+            log.error("MenuServiceImpl 中 TokenService 出现问题");
+            return resultMap.message("系统异常");
+        }
+        //当前登录者
+        Integer uid = user.getId();
+        String username = user.getUsername();
+        //根据招标备案表的id 获取该公司的名字
+        String uname = openTenderMapper.queryUnitNameByOid(oid);
+
+
+        //判断上传中标文件附件的后缀名是否正确
+        String winningDocumentName = winningDocument.getOriginalFilename();
+        List<String> winningDocumentSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".xlsx", ".zip", ".7z", ".rar"));
+        Boolean aBoolean = FileSuffixJudgeUtil.SuffixJudge(winningDocumentName, winningDocumentSuffixList);
+        //判断上传成交公告附件的后缀名是否正确
+        String transactionAnnouncementName = transactionAnnouncement.getOriginalFilename();
+        List<String> transactionAnnouncementSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".xlsx", ".zip", ".7z", ".rar"));
+        Boolean bBoolean = FileSuffixJudgeUtil.SuffixJudge(transactionAnnouncementName, transactionAnnouncementSuffixList);
+        //判断上传成交公告附件的后缀名是否正确
+        String noticeTransactionName = noticeTransaction.getOriginalFilename();
+        List<String> noticeTransactionSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".xlsx", ".zip", ".7z", ".rar"));
+        Boolean cBoolean = FileSuffixJudgeUtil.SuffixJudge(noticeTransactionName, noticeTransactionSuffixList);
+        //判断上传响应文件附件的后缀名是否正确
+        String responseFileName = responseFile.getOriginalFilename();
+        List<String> responseFileSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".xlsx", ".zip", ".7z", ".rar"));
+        Boolean dBoolean = FileSuffixJudgeUtil.SuffixJudge(responseFileName, responseFileSuffixList);
+
+        if(aBoolean == false || bBoolean == false||cBoolean == false || dBoolean == false){
+            //四个文件中存在有一个错误，意味着有文件上传的格式不正确
+            return resultMap.fail().message("请上传正确的文件格式");
+        }
+        /**
+         * 上传中标文件附件
+         */
+        //获取中标文件附件的地址
+        String winningDocumentUrl =MultiFileUpload(winningDocument,uname,"中标文件附件",oid);
+        //获取文件后缀名
+        String winningDocumentSuffixName = winningDocumentName.substring(winningDocumentName.lastIndexOf(".") + 1);
+        // 获取文件大小
+        File winningDocumentFile= new File(winningDocumentUrl);
+        String winningDocumentFileSize = String.valueOf(winningDocumentFile.length());
+        AnnexUpload annexUpload0=new AnnexUpload(0,winningDocumentUrl,winningDocumentName,"中标文件附件",winningDocumentSuffixName,winningDocumentFileSize,null,username);
+        //把该文件上传到文件表中
+        uploadFileMapper.insertUpload(annexUpload0);
+        /**
+         * 成交公告附件
+         */
+        //获取中标文件附件的地址
+        String transactionAnnouncementUrl =MultiFileUpload(transactionAnnouncement,uname,"中标文件附件",oid);
+        //获取文件后缀名
+        String transactionAnnouncementSuffixName = transactionAnnouncementName.substring(winningDocumentName.lastIndexOf(".") + 1);
+        // 获取文件大小
+        File transactionAnnouncementFile= new File(transactionAnnouncementUrl);
+        String transactionAnnouncementFileSize = String.valueOf(winningDocumentFile.length());
+        AnnexUpload annexUpload1=new AnnexUpload(0,transactionAnnouncementUrl,transactionAnnouncementName,"成交公告附件",transactionAnnouncementSuffixName,transactionAnnouncementFileSize,null,username);
+        //把该文件上传到文件表中
+        uploadFileMapper.insertUpload(annexUpload1);
+        /**
+         * 暂未写完
+         */
+
+
+
+
+
+
+
+
+
+
+
+        //openTenderMapper.updateCheckApplyFileId(id,uploadSpecialAudit.getId());//把新增该专项审计报告文件的id取出，存到check_apply中
+        return resultMap.success().message("上传成功");
+    }
+
+
+    /**
+     *　文件上传
      * @param file
      * @param fileType
      * @return
      * @throws IOException
      */
-    @Override
-    public String tenderMultiUpload(MultipartFile file, String fileType, int oid) throws IOException {
+    public String MultiFileUpload(MultipartFile file, String unitName,String fileType, int oid) throws IOException, FileUploadException {
         //判断文件是否为空
         if (file.isEmpty()) {
             return "上传文件不可为空";
@@ -230,20 +336,21 @@ public class OpenTenderServiceImpl implements OpenTenderService {
         Object ketiName = openTenderMapper.getTenderById(oid).get("subjectName");
         //获取招标课题編號
         Object ketiNo=openTenderMapper.getTenderById(oid).get("ProjectNo");
+
         //获取文件上传绝对路径
-        String FilePath = "D:/xdmd/environment/"+"單位名稱"+"/"+ketiName+"/"+fileType+"/";
+        String FilePath = "D:/xdmd/environment/"+unitName+"/"+ketiName+"/"+ketiNo+"/"+fileType+"/";
         StringBuilder initPath = new StringBuilder(FilePath);
         String filePath=initPath.append(fileName).toString();
-        System.out.println("文件路径-->"+filePath);
         File dest = new File(filePath);
 
         //获取文件后缀名
-        String suffixName = fileName.substring(fileName.lastIndexOf(".") + 1);
+        //String suffixName = fileName.substring(fileName.lastIndexOf(".") + 1);
         //判断上传文件类型是否符合要求
-        Boolean typeIsOK= FileSuffixJudge.suffixJudge(file.getOriginalFilename());
-        if (typeIsOK==false){
-            return "上传的文件类型不符合要求";
-        }
+        //Boolean typeIsOK= FileSuffixJudge.suffixJudge(file.getOriginalFilename());
+        //if (typeIsOK==false){
+          //  return "上传的文件类型不符合要求";
+        //}
+
         //判断文件父目录是否存在
         if (!dest.getParentFile().exists()) {
             dest.getParentFile().mkdirs();
@@ -254,21 +361,13 @@ public class OpenTenderServiceImpl implements OpenTenderService {
             // 获取文件大小
             File file1 = new File(filePath);
             String fileSize = String.valueOf(file1.length());
-            //封装到uploadfile
-            AnnexUpload annexUpload=new AnnexUpload();
-            annexUpload.setUploadFilePath(dest.getAbsolutePath());
-            annexUpload.setFileSize(fileSize);
-            annexUpload.setUploadFileName(fileName);
-            annexUpload.setUploadFileType(fileType);
-            annexUpload.setUploadSuffixName(suffixName);
-            annexUpload.setCreateAuthor("創建者");
-            //文件信息保存到数据库
-            int upNo= uploadFileMapper.insertUpload(annexUpload);
-            return "上传成功-->"+filePath;
+            //返回文件url
+            return filePath;
         } catch (Exception e) {
             e.printStackTrace();
+            log.error("FileUploadUtils出错 :" + e.getMessage());
+            throw new FileUploadException("文件上传失败");
         }
-        return "上传失败";
     }
 
 
