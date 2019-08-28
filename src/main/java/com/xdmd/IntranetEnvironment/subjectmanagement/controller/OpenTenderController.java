@@ -1,6 +1,7 @@
 package com.xdmd.IntranetEnvironment.subjectmanagement.controller;
 
 
+import com.xdmd.IntranetEnvironment.common.FileUploadException;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.subjectmanagement.pojo.OpenTender;
 import com.xdmd.IntranetEnvironment.subjectmanagement.service.OpenTenderService;
@@ -104,7 +105,7 @@ public class OpenTenderController {
     }
 
     /**
-     * 根据招标备案id更新相应的附件id【waiwang】
+     * 根据招标备案id更新相应的附件id【外网】
      *
      * @param winningFileAttachmentId
      * @param announcementTransactionAnnouncementId
@@ -121,42 +122,68 @@ public class OpenTenderController {
      * 招标附件上传
      *
      * @param oid                     招标备案表id
-     * @param fileType                文件类型
      * @param winningDocument         中标文件附件
      * @param transactionAnnouncement 成交公告附件
      * @param noticeTransaction       成交通知书附件
      * @param responseFile            响应文件附件
      * @return
      */
-    @PostMapping("TenderFileUpload")
+    @PostMapping(value = "TenderFileUpload",headers = "content-type=multipart/form-data")
     @ApiOperation(value = "招标附件上传")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "oid", value = "招标id"),
-            @ApiImplicitParam(name = "fileType", value = "附件类型"),
-            @ApiImplicitParam(name = "winningDocument", value = "中标文件附件"),
-            @ApiImplicitParam(name = "transactionAnnouncement", value = "成交公告附件"),
-            @ApiImplicitParam(name = "noticeTransaction", value = "成交通知书附件"),
-            @ApiImplicitParam(name = "responseFile", value = "响应文件附件"),
+            @ApiImplicitParam(name = "oid", value = "招标id",required = true),
+            @ApiImplicitParam(name = "winningDocument", value = "中标文件附件",dataType = "file",paramType ="form",allowMultiple=true),
+            @ApiImplicitParam(name = "transactionAnnouncement", value = "成交公告附件",dataType = "file",paramType ="form",allowMultiple=true),
+            @ApiImplicitParam(name = "noticeTransaction", value = "成交通知书附件",dataType = "file",paramType ="form",allowMultiple=true),
+            @ApiImplicitParam(name = "responseFile", value = "响应文件附件",dataType = "file",paramType ="form",allowMultiple=true),
     })
-    public ResultMap tenderFileUpload(@CookieValue(value = "IntranecToken", required = false) String token, HttpServletResponse response,
-                                      @RequestParam("oid") int oid,
-                                      @RequestParam(value = "fileType", required = false) String fileType,
-                                      @RequestPart(value = "file", required = false) MultipartFile winningDocument,
-                                      @RequestPart(value = "file", required = false) MultipartFile transactionAnnouncement,
-                                      @RequestPart(value = "file", required = false) MultipartFile noticeTransaction,
-                                      @RequestPart(value = "file", required = false) MultipartFile responseFile) {
+    public ResultMap tenderFileUpload(//@CookieValue(value = "IntranecToken", required = false) String token, HttpServletResponse response,
+                                       int oid,
+                                       MultipartFile winningDocument,
+                                       MultipartFile transactionAnnouncement,
+                                       MultipartFile noticeTransaction,
+                                       MultipartFile responseFile) {
 
+        String token="aaa";
+        HttpServletResponse response =null;
         if (StringUtils.isEmpty(token)) {
             return resultMap.fail().message("请先登录");
         }
         try {
-            resultMap = openTenderService.tenderMultiUpload(token, response, oid, fileType, winningDocument, transactionAnnouncement, noticeTransaction, responseFile);
+            resultMap = openTenderService.tenderMultiUpload(token, response, oid, winningDocument, transactionAnnouncement, noticeTransaction, responseFile);
 
         } catch (IOException e) {
+            e.printStackTrace();
+            log.error("OpenTenderController 中 tenderFileUpload 方法 -- " + e.getMessage());
+            return resultMap.fail().message("系统异常");
+        } catch (FileUploadException e) {
             e.printStackTrace();
             log.error("OpenTenderController 中 tenderFileUpload 方法 -- " + e.getMessage());
             return resultMap.fail().message("系统异常");
         }
         return resultMap;
     }
+
+
+    /**
+     * 招标备案审核
+     * @param type 审核状态
+     * @param reason 审核不通过原因
+     * @param oid 审核表id
+     * @return
+     */
+    public ResultMap tenderShenHe(@RequestParam("type")Boolean type,
+                                  @RequestParam("reason")String reason,
+                                  @RequestParam("oid")Integer oid){
+        try {
+            resultMap = openTenderService.tenderShenHe(type,reason,oid);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return resultMap.fail().message("系统异常");
+        }
+        return resultMap.success();
+    }
 }
+//[备用]@RequestPart(value = "file", required = false)
+
+

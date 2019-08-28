@@ -59,7 +59,7 @@ public interface GuideMapper {
     int insertGuideInfo(GuideCollection guideCollection);
 
     /**
-     * 根据单位id查询单位指南申报(waiwang)
+     * 根据单位id查询单位指南申报【外网】
      * 注意:传的是单位id，不是指南申报id
      * @param Uid
      * @return
@@ -110,8 +110,9 @@ public interface GuideMapper {
             "<if test ='null != contactPhone'>\n" +
             "AND gc.contact_phone like CONCAT('%',#{contactPhone},'%')</if>\n" +
             "</where>" +
+            "order by gc.id desc" +
             "</script>")
-    List<Map> getCollectionByUid(String guideName, Integer domain, Integer category, String fillUnit, String fillContacts, String contactPhone, int Uid);
+    List<GuideCollection> getCollectionByUid(String guideName, Integer domain, Integer category, String fillUnit, String fillContacts, String contactPhone, int Uid);
 
     /**
      * [新增]单位关联指南征集【思路不清晰，暂不做】
@@ -186,6 +187,7 @@ public interface GuideMapper {
             "<if test ='null != contactPhone'>\n" +
             "AND gc.contact_phone like CONCAT('%',#{contactPhone},'%')</if>\n" +
             "</where>" +
+            "order by gc.id desc" +
             "</script>")
     List<Map> getCollectionByParam(String guideName, Integer domain, Integer category, String fillUnit, String fillContacts, String contactPhone);
 

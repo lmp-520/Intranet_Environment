@@ -79,10 +79,17 @@
         </dependency>
         <!-- #################################  Kong用到的依赖START############################ -->
         <!-- 分页插件 -->
+        <!--
         <dependency>
             <groupId>com.github.pagehelper</groupId>
             <artifactId>pagehelper</artifactId>
-            <version>LATEST</version>
+            <version>RELEASE</version>
+        </dependency>
+        -->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>RELEASE</version>
         </dependency>
         <!--jackson -->
         <dependency>
