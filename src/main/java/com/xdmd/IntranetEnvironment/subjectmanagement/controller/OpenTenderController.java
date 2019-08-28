@@ -120,7 +120,6 @@ public class OpenTenderController {
 
     /**
      * 招标附件上传
-     *
      * @param oid                     招标备案表id
      * @param winningDocument         中标文件附件
      * @param transactionAnnouncement 成交公告附件
@@ -166,24 +165,84 @@ public class OpenTenderController {
 
 
     /**
-     * 招标备案审核
+     * 单位管理员审核
      * @param type 审核状态
      * @param reason 审核不通过原因
      * @param oid 审核表id
      * @return
      */
-    public ResultMap tenderShenHe(@RequestParam("type")Boolean type,
-                                  @RequestParam("reason")String reason,
-                                  @RequestParam("oid")Integer oid){
+    @PostMapping(value = "tenderShenHeByUnitManager")
+    @ApiOperation(value = "单位管理员审核")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "type", value = "审核状态",required = true),
+            @ApiImplicitParam(name = "reason", value = "审核不通过原因",required = false),
+            @ApiImplicitParam(name = "oid", value = "审核表id",required = true),
+    })
+    public ResultMap tenderShenHeByUnitManager(Boolean type, String reason,Integer oid){
         try {
-            resultMap = openTenderService.tenderShenHe(type,reason,oid);
+            resultMap = openTenderService.tenderShenHeByUnitManager(type,reason,oid);
         } catch (Exception e) {
             e.printStackTrace();
             return resultMap.fail().message("系统异常");
         }
         return resultMap.success();
     }
+
+    /**
+     * 评估中心审核
+     * @param type 审核状态
+     * @param reason 审核不通过原因
+     * @param oid 审核表id
+     * @return
+     */
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "type", value = "审核状态",required = true),
+            @ApiImplicitParam(name = "reason", value = "审核不通过原因",required = false),
+            @ApiImplicitParam(name = "oid", value = "审核表id",required = true),
+    })
+    @PostMapping(value = "tenderShenHeByPingGuCenter")
+    @ApiOperation(value = "评估中心审核")
+    public ResultMap tenderShenHeByPingGuCenter(Boolean type, String reason, Integer oid){
+        try {
+            resultMap = openTenderService.tenderShenHeByPingGuCenter(type,reason,oid);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return resultMap.fail().message("系统异常");
+        }
+        return resultMap.success();
+    }
+
+    /**
+     * 展示所有通过单位管理员审批的
+     * @return
+     */
+    public ResultMap showAllPassTenderReviewByUnitManager(int pageNum,int pageSize){
+        return resultMap=openTenderService.showAllPassTenderReviewByUnitManager(pageNum,pageSize);
+    }
+    /**
+     * 展示所有未通过单位管理员审批的
+     * @return
+     */
+    public ResultMap showAllNoPassTenderReviewByUnitManager(int pageNum,int pageSize){
+        return resultMap=openTenderService.showAllNoPassTenderReviewByUnitManager(pageNum,pageSize);
+    }
+
+    /**
+     * 展示所有通过评估中心审批的
+     * @return
+     */
+    public ResultMap showAllPassTenderReviewByPingGu(int pageNum,int pageSize){
+        return resultMap=openTenderService.showAllPassTenderReviewByPingGu(pageNum,pageSize);
+    }
+
+    /**
+     * 展示所有未通过评估中心审批的
+     * @return
+     */
+    public ResultMap showAllNoPassReviewTenderByPingGu(int pageNum, int pageSize){
+        return resultMap=openTenderService.showAllNoPassReviewTenderByPingGu(pageNum,pageSize);
+    }
 }
-//[备用]@RequestPart(value = "file", required = false)
+
 
 
