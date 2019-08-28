@@ -81,12 +81,43 @@ public interface OpenTenderService {
 
 
     /**
-     * 招标备案审核
+     * 单位管理员审核
      * @param type 审核状态
      * @param reason 审核不通过原因
      * @param oid 审核表id
      * @return
      */
-    ResultMap tenderShenHe(Boolean type, String reason, Integer oid) throws UpdateSqlException;
+    ResultMap tenderShenHeByUnitManager(Boolean type, String reason, Integer oid) throws UpdateSqlException;
 
+    /**
+     * 评估中心审核
+     * @param type
+     * @param reason
+     * @param oid
+     * @return
+     */
+    ResultMap tenderShenHeByPingGuCenter(Boolean type, String reason, Integer oid);
+
+    /**
+     * 展示所有未通过单位管理员审批的
+     * @return
+     */
+    ResultMap showAllPassTenderReviewByUnitManager(int pageNum,int pageSize);
+    /**
+     * 展示所有已通过单位管理员审批的
+     * @return
+     */
+    ResultMap showAllNoPassTenderReviewByUnitManager(int pageNum,int pageSize);
+
+    /**
+     * 展示所有通过评估中心审批的
+     * @return
+     */
+    ResultMap showAllPassTenderReviewByPingGu(int pageNum,int pageSize);
+
+    /**
+     * 展示所有未通过评估中心审批的
+     * @return
+     */
+    ResultMap showAllNoPassReviewTenderByPingGu(int pageNum, int pageSize);
 }

@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -188,27 +189,27 @@ public interface OpenTenderMapper {
 
     /**
      * 根据数据的id，把处理人，审核状态，审核内容内容，处理时间更新
-     * @param id
+     * @param oid
      * @param uname
      * @param state
      * @param handleContent
      * @param nowTime
      * @return
      */
-    @Update("update tender_contract_shenhejilu set state =#{state},second_handler =#{uname} ,handle_content = #{handleContent} ,second_handle_time = #{date} where id = #{id} order by first_handle_time desc limit 1")
-    int updateOpenTenderStateRecord(@Param("id") Integer id, @Param("uname") String uname, @Param("state") String state, @Param("handleContent") String handleContent, @Param("date") String nowTime);
+    @Update("update tender_contract_shenhe_record set state =#{state},second_handler =#{uname} ,handle_content = #{handleContent} ,second_handle_time = #{nowTime} where id = #{oid} order by first_handle_time desc limit 1")
+    int updateOpenTenderStateRecord(@Param("oid") Integer oid, @Param("uname") String uname, @Param("state") String state, @Param("handleContent") String handleContent, @Param("nowTime") String nowTime);
 
     /**
      * 新增下一条的数据状态
-     * @param id
+     * @param oid
      * @param uname
      * @param auditStep
      * @param nowTime
      * @param newState
      * @return
      */
-    @Insert("INSERT INTO tender_contract_shenhejilu(shenhe_table_id, fist_handler, audit_step, first_handle_time, state) VALUES (#{id},#{uname},#{auditStep},#{nowTime},#{newState});")
-    int insertNewOpenTenderStateRecord(@Param("id") Integer id, @Param("uname") String uname, @Param("auditStep") String auditStep, @Param("nowTime") String nowTime, @Param("newState") String newState);
+    @Insert("INSERT INTO tender_contract_shenhe_record(shenhe_table_id, fist_handler, audit_step, first_handle_time, state) VALUES (#{oid},#{uname},#{auditStep},#{nowTime},#{newState});")
+    int insertNewOpenTenderStateRecord(@Param("oid") Integer oid, @Param("uname") String uname, @Param("auditStep") String auditStep, @Param("nowTime") String nowTime, @Param("newState") String newState);
 
 
 
@@ -229,25 +230,75 @@ public interface OpenTenderMapper {
 
     /**
      * 不通过被退回时重新提交
+     * @param projectNo
+     * @param projectName
+     * @param tenderNo
+     * @param subcontractingNo
+     * @param subjectName
+     * @param responsibleUnit
+     * @param bidders
+     * @param subjectLeader
+     * @param leaderContact
+     * @param joinTenderUnits
+     * @param operator
+     * @param operatorContact
+     * @param winningAmount
+     * @param supportingFunds
+     * @param remark
+     * @param id
      * @return
      */
-    @Update(value = "update open_tender set audit_status=1 where audit_status=0 and id=#{id}")
-    int updateTenderStatusByReturnCommit(@Param("id") int id);
+    @Update("update open_tender set\n" +
+            "project_no=#{projectNo},\n" +
+            "project_name=#{projectName},\n" +
+            "tender_no=#{tenderNo},\n" +
+            "subcontracting_no=#{subcontractingNo},\n" +
+            "subject_name=#{subjectName},\n" +
+            "responsible_unit=#{responsibleUnit},\n" +
+            "bidders=#{bidders},\n" +
+            "subject_leader=#{subjectLeader},\n" +
+            "leader_contact=#{leaderContact},\n" +
+            "join_tender_units=#{joinTenderUnits},\n" +
+            "operator=#{operator},\n" +
+            "operator_contact=#{operatorContact},\n" +
+            "winning_amount=#{winningAmount},\n" +
+            "supporting_funds=#{supportingFunds},\n" +
+            "remark=#{remark}\n" +
+            "where id=#{id}")
+    int updateTenderStatusByReturnCommit(@Param("projectNo") String projectNo, @Param("projectName") String projectName, @Param("tenderNo") String tenderNo,
+                                         @Param("subcontractingNo") String subcontractingNo, @Param("subjectName") String subjectName, @Param("responsibleUnit") String responsibleUnit,
+                                         @Param("bidders") String bidders, @Param("subjectLeader") String subjectLeader, @Param("leaderContact") String leaderContact,
+                                         @Param("joinTenderUnits") String joinTenderUnits, @Param("operator") String operator, @Param("operatorContact") String operatorContact,
+                                         @Param("winningAmount") BigDecimal winningAmount, @Param("supportingFunds")BigDecimal supportingFunds, @Param("remark") String remark,
+                                         @Param("id") int id);
 
 
     /**
-     * 展示所有未通过审批的
+     * 展示所有未通过单位管理员审批的
      * @return
      */
     @Select("select * from open_tender where audit_status<2")
-    OpenTender showAllPassReviewTender();
+    List<OpenTender> showAllPassTenderReviewByUnitManager();
+    /**
+     * 展示所有通过单位管理员审批的
+     * @return
+     */
+    @Select("select * from open_tender where audit_status>1")
+    List<OpenTender> showAllNoPassTenderReviewByUnitManager();
 
     /**
-     * 展示所有评估中心通过审批的
+     * 展示所有通过评估中心审批的
      * @return
      */
     @Select("select * from open_tender where audit_status=3")
-    OpenTender showAllNoPassReviewTender();
+    List<OpenTender> showAllPassTenderReviewByPingGu();
+
+    /**
+     * 展示所有未通过评估中心审批的
+     * @return
+     */
+    @Select("select * from open_tender where audit_status=2")
+    List<OpenTender> showAllNoPassTenderReviewByPingGu();
 
     /**
      * 根据招标备案表的id 获取该单位的名字
@@ -255,6 +306,6 @@ public interface OpenTenderMapper {
      * @return
      */
     @Select("select responsible_unit from open_tender where id = #{oid}")
-    String queryUnitNameByOid(@Param("id") Integer oid);
+    String queryUnitNameByoid(Integer oid);
 }
 
