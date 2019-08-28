@@ -186,50 +186,53 @@ public interface OpenTenderMapper {
 
     /////////////////招标备案审核//////////////////////////////////
 
-   //根据数据的id，把处理人，审核状态，审核内容内容，处理时间更新
-   // @Update("update check_apply_state set state =#{state},second_handler =#{uname} ,handle_content = #{handleContent} ,second_handle_time = #{date} where id = #{id} order by first_handle_time desc limit 1")
-   // void updateOpenTenderState(@Param("id") Integer id, @Param("uname") String uname, @Param("state") String state, @Param("handleContent") String handleContent, @Param("date") String nowTime);
+    /**
+     * 根据数据的id，把处理人，审核状态，审核内容内容，处理时间更新
+     * @param id
+     * @param uname
+     * @param state
+     * @param handleContent
+     * @param nowTime
+     * @return
+     */
+    @Update("update tender_contract_shenhejilu set state =#{state},second_handler =#{uname} ,handle_content = #{handleContent} ,second_handle_time = #{date} where id = #{id} order by first_handle_time desc limit 1")
+    int updateOpenTenderStateRecord(@Param("id") Integer id, @Param("uname") String uname, @Param("state") String state, @Param("handleContent") String handleContent, @Param("date") String nowTime);
 
-   //新增下一条的数据状态
-   // @Insert("INSERT INTO check_apply_state(check_apply_id, fist_handler, audit_step, first_handle_time, state) VALUES (#{id},#{uname},#{auditStep},#{nowTime},#{newState});")
-   // void addNewCheckApplyState(@Param("id") Integer id, @Param("uname") String uname, @Param("auditStep") String auditStep, @Param("nowTime") String nowTime, @Param("newState") String newState);
+    /**
+     * 新增下一条的数据状态
+     * @param id
+     * @param uname
+     * @param auditStep
+     * @param nowTime
+     * @param newState
+     * @return
+     */
+    @Insert("INSERT INTO tender_contract_shenhejilu(shenhe_table_id, fist_handler, audit_step, first_handle_time, state) VALUES (#{id},#{uname},#{auditStep},#{nowTime},#{newState});")
+    int insertNewOpenTenderStateRecord(@Param("id") Integer id, @Param("uname") String uname, @Param("auditStep") String auditStep, @Param("nowTime") String nowTime, @Param("newState") String newState);
+
 
 
 
     /**
-     * 单位管理员审核通过【备用】
+     * 招标备案审核状态【0-单位员工待提交(或不通过被退回时重新提交) 1-单位管理员待审批 2-评估中心员工待审批 3-评估中心员工已审批】
      * @return
      */
-    @Update(value = "update open_tender set audit_status=2 where audit_status=1 and id=#{id}")
-    int updateApprovalStatusOne(@Param("id") int id);
+    @Update(value = "update open_tender set audit_status=#{auditStatus} where id=#{id}")
+    int updateTenderStatus(@Param("auditStatus") int auditStatus,@Param("id") int id);
 
     /**
-     * 单位管理员审核不通过【备用】
+     * 评估中心审核通过【备用】
      * @return
-     */
-    @Update(value = "update open_tender set audit_status=0 where audit_status=1 and id=#{id}")
-    int updateApprovalStatusTwo(@Param("id") int id);
-
-    /**
-     * 评估中心审核通过
-     * @return
-     */
     @Update(value = "update open_tender set audit_status=3 where audit_status=2 and id=#{id}")
-    int updateApprovalStatusThree(@Param("id") int id);
-
-    /**
-     * 评估中心审核不通过退回到重新提交
-     * @return
+    int updateTenderStatusPassByPingGu(@Param("id") int id);
      */
-    @Update(value = "update open_tender set audit_status=0 where audit_status=2 and id=#{id}")
-    int updateApprovalStatusFour(@Param("id") int id);
 
     /**
      * 不通过被退回时重新提交
      * @return
      */
     @Update(value = "update open_tender set audit_status=1 where audit_status=0 and id=#{id}")
-    int updateApprovalStatusFive(@Param("id") int id);
+    int updateTenderStatusByReturnCommit(@Param("id") int id);
 
 
     /**
@@ -237,16 +240,20 @@ public interface OpenTenderMapper {
      * @return
      */
     @Select("select * from open_tender where audit_status<2")
-    OpenTender showAllNoAudit();
+    OpenTender showAllPassReviewTender();
 
     /**
      * 展示所有评估中心通过审批的
      * @return
      */
     @Select("select * from open_tender where audit_status=3")
-    OpenTender showAllAudited();
+    OpenTender showAllNoPassReviewTender();
 
-    //根据招标备案表的id 获取该单位的名字
+    /**
+     * 根据招标备案表的id 获取该单位的名字
+     * @param oid
+     * @return
+     */
     @Select("select responsible_unit from open_tender where id = #{oid}")
     String queryUnitNameByOid(@Param("id") Integer oid);
 }

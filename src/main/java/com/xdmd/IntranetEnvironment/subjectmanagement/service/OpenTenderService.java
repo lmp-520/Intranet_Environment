@@ -2,6 +2,7 @@ package com.xdmd.IntranetEnvironment.subjectmanagement.service;
 
 import com.xdmd.IntranetEnvironment.common.FileUploadException;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
+import com.xdmd.IntranetEnvironment.subjectAcceptance.exception.UpdateSqlException;
 import com.xdmd.IntranetEnvironment.subjectmanagement.pojo.OpenTender;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -86,6 +87,6 @@ public interface OpenTenderService {
      * @param oid 审核表id
      * @return
      */
-    ResultMap tenderShenHe(Boolean type, String reason, Integer oid);
+    ResultMap tenderShenHe(Boolean type, String reason, Integer oid) throws UpdateSqlException;
 
 }

@@ -241,14 +241,14 @@ public interface ContractManageMapper {
      * @return
      */
     @Update(value = "update contract_manage set approval_status=2 where approval_status=1 and id=#{id}")
-    int updateStatusPassByUnitManager(@Param("id") int id);
+    int updateContractStatusPassByUnitManager(@Param("id") int id);
 
     /**
      * 单位管理员审核不通过
      * @return
      */
     @Update(value = "update contract_manage set approval_status=0 where approval_status=1 and id=#{id}")
-    int updateStatusNoPassByUnitManager(@Param("id") int id);
+    int updateContractStatusNoPassByUnitManager(@Param("id") int id);
 
 
 
@@ -257,28 +257,28 @@ public interface ContractManageMapper {
      * @return
      */
     @Update(value = "update contract_manage set approval_status=3 where approval_status=2 and id=#{id}")
-    int updateStatusPassByPingGu(@Param("id") int id);
+    int updateContractStatusPassByPingGu(@Param("id") int id);
 
     /**
      * 评估中心审核不通过
      * @return
      */
     @Update(value = "update contract_manage set approval_status=0 where approval_status=2 and id=#{id}")
-    int updateStatusNoPassByPingGu(@Param("id") int id);
+    int updateContractStatusNoPassByPingGu(@Param("id") int id);
 
     /**
      * 法规科技处审核通过
      * @return
      */
     @Update(value = "update contract_manage set approval_status=4 where approval_status=3 and id=#{id}")
-    int updateStatusPassByFaGui(@Param("id") int id);
+    int updateContractStatusPassByFaGui(@Param("id") int id);
 
     /**
      * 法规科技处审核不通过
      * @return
      */
     @Update(value = "update contract_manage set approval_status=0 where approval_status=3 and id=#{id}")
-    int updateStatusNoPassByFaGui(@Param("id") int id);
+    int updateContractStatusNoPassByFaGui(@Param("id") int id);
 
 
     /**
@@ -286,7 +286,7 @@ public interface ContractManageMapper {
      * @return
      */
     @Update(value = "update contract_manage set approval_status=1 where approval_status=0 and id=#{id}")
-    int updateStatusByReturnCommit(@Param("id") int id);
+    int updateContractStatusByReturnCommit(@Param("id") int id);
 
 
     /**
@@ -294,14 +294,14 @@ public interface ContractManageMapper {
      * @return
      */
     @Select("select * from contract_manage where approval_status<3")
-    List<ContractManageDTO> showAllNoPassAudit();
+    List<ContractManageDTO> showAllNoPassReviewContract();
 
     /**
      * 展示通过所有法规科技处审批的
      * @return
      */
     @Select("select * from contract_manage where approval_status=3")
-    List<ContractManageDTO> showAllPassAudit();
+    List<ContractManageDTO> showAllPassReviewContract();
 
 
 

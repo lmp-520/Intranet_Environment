@@ -44,8 +44,7 @@ public class GuideServiceImpl implements GuideService {
     @Override
     public ResultMap getCollectionByParam(String guideName, Integer domain, Integer category, String fillUnit, String fillContacts, String contactPhone, int pageNum, int pageSize) {
         try{
-            String orderBy="gc.id desc";
-            PageHelper.startPage(pageNum,pageSize,orderBy);
+            PageHelper.startPage(pageNum,pageSize,true);
             List<Map> guideCollectionList = guideMapper.getCollectionByParam(guideName, domain, category, fillUnit, fillContacts, contactPhone);
             PageInfo pageInfo=new PageInfo(guideCollectionList);
             if(guideCollectionList.size()>0){
@@ -187,7 +186,7 @@ public class GuideServiceImpl implements GuideService {
     @Override
     public ResultMap getSummaryByParam(String guideSummaryTitle, String fillUnit, Integer domain, Integer category, String projectTime, String researchContentTechnology, int pageNum, int pageSize) {
         try{
-            PageHelper.startPage(pageNum,pageSize);
+            PageHelper.startPage(pageNum,pageSize,true);
             List<Map> guideSummaryList = guideMapper.getSummaryByParam(guideSummaryTitle, fillUnit, domain, category, projectTime, researchContentTechnology);
            PageInfo pageInfo=new PageInfo(guideSummaryList);
             if(guideSummaryList.size()>0){
@@ -232,9 +231,8 @@ public class GuideServiceImpl implements GuideService {
     @Override
     public ResultMap getCollectionByUid(String guideName, Integer domain, Integer category, String fillUnit, String fillContacts, String contactPhone,int Uid,int pageNum,int pageSize) {
         try{
-            String orderBy="gc.id desc";
-            PageHelper.startPage(pageNum,pageSize,orderBy);
-            List<Map> mapList=guideMapper.getCollectionByUid(guideName,domain,category,fillUnit,fillContacts,contactPhone,Uid);
+            PageHelper.startPage(pageNum,pageSize,true);
+            List<GuideCollection> mapList=guideMapper.getCollectionByUid(guideName,domain,category,fillUnit,fillContacts,contactPhone,Uid);
             PageInfo pageInfo=new PageInfo(mapList);
             if(mapList.size()>0){
                 resultMap.success().message(pageInfo);
@@ -271,7 +269,7 @@ public class GuideServiceImpl implements GuideService {
     }
 
     /**
-     * 根据勾选的指南id更新相应指南申报选中状态  【没用到】
+     * 根据勾选的指南id更新相应指南申报选中状态 【没用到】
      * @param ids
      * @return
      */
