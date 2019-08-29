@@ -33,7 +33,7 @@ public interface UploadFileMapper {
     Integer insertUpload(AnnexUpload annexUpload);
 
     /**
-     * 根据文件名查询文件路径
+     * 根据附件id查询文件信息
      * @param id
      * @return
      */

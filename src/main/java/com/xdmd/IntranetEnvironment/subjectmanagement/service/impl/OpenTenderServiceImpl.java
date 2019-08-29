@@ -6,8 +6,8 @@ import com.xdmd.IntranetEnvironment.common.AnnexUpload;
 import com.xdmd.IntranetEnvironment.common.FileSuffixJudgeUtil;
 import com.xdmd.IntranetEnvironment.common.FileUploadException;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
-import com.xdmd.IntranetEnvironment.subjectAcceptance.exception.InsertSqlException;
-import com.xdmd.IntranetEnvironment.subjectAcceptance.exception.UpdateSqlException;
+import com.xdmd.IntranetEnvironment.subjectmanagement.exception.InsertSqlException;
+import com.xdmd.IntranetEnvironment.subjectmanagement.exception.UpdateSqlException;
 import com.xdmd.IntranetEnvironment.subjectmanagement.exception.UpdateTenderStatusException;
 import com.xdmd.IntranetEnvironment.subjectmanagement.mapper.OpenTenderMapper;
 import com.xdmd.IntranetEnvironment.subjectmanagement.mapper.UploadFileMapper;
@@ -260,8 +260,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
 
         String username = "测试人员";
         //根据招标备案表的id 获取该公司的名字
-        String unitName = openTenderMapper.queryUnitNameByOid(oid);
-
+        String unitName = openTenderMapper.queryUnitNameByoid(oid);
 
         try {
             //判断上传中标文件附件的后缀名是否正确
@@ -272,7 +271,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
             String transactionAnnouncementName = transactionAnnouncement.getOriginalFilename();
             List<String> transactionAnnouncementSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".xlsx", ".zip", ".7z", ".rar"));
             Boolean bBoolean = FileSuffixJudgeUtil.SuffixJudge(transactionAnnouncementName, transactionAnnouncementSuffixList);
-            //判断上传成交公告附件的后缀名是否正确
+            //判断上传成交通知书附件的后缀名是否正确
             String noticeTransactionName = noticeTransaction.getOriginalFilename();
             List<String> noticeTransactionSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".xlsx", ".zip", ".7z", ".rar"));
             Boolean cBoolean = FileSuffixJudgeUtil.SuffixJudge(noticeTransactionName, noticeTransactionSuffixList);
@@ -281,10 +280,19 @@ public class OpenTenderServiceImpl implements OpenTenderService {
             List<String> responseFileSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".xlsx", ".zip", ".7z", ".rar"));
             Boolean dBoolean = FileSuffixJudgeUtil.SuffixJudge(responseFileName, responseFileSuffixList);
 
-            if (aBoolean == false || bBoolean == false || cBoolean == false || dBoolean == false) {
-                //四个文件中存在有一个错误，意味着有文件上传的格式不正确
-                return resultMap.fail().message("请上传正确的文件格式");
+            if (aBoolean == false) {
+                return resultMap.fail().message("中标文件附件的文件格式不正确,请上传正确的文件格式");
             }
+            if (bBoolean == false) {
+                return resultMap.fail().message("成交公告附件的文件格式不正确,请上传正确的文件格式");
+            }
+            if (cBoolean == false) {
+                return resultMap.fail().message("成交通知书附件的文件格式不正确,请上传正确的文件格式");
+            }
+            if (dBoolean == false) {
+                return resultMap.fail().message("响应文件附件的文件格式不正确,请上传正确的文件格式");
+            }
+
             /**
              * 中标文件附件
              */
@@ -410,7 +418,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
 
 
     /**
-     * 招标备案审核
+     * 单位管理员审核
      *
      * @param type   审核状态
      * @param reason 审核不通过原因
@@ -418,7 +426,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
      * @return
      */
     @Override
-    public ResultMap tenderShenHe(Boolean type, String reason, Integer oid)  {
+    public ResultMap tenderShenHeByUnitManager(Boolean type, String reason, Integer oid)  {
 //       User user = new User();
 //        try {
 //            user = tokenService.compare(response, token);
@@ -441,9 +449,9 @@ public class OpenTenderServiceImpl implements OpenTenderService {
 //        String username = user.getUsername();
 
 
-        String username = "当前登录用户";
+        String username = "单位管理员";
         //根据招标备案表的id 获取该公司的名字
-        String unitName = openTenderMapper.queryUnitNameByOid(oid);
+        String unitName = openTenderMapper.queryUnitNameByoid(oid);
         //获取当前系统时间
         String nowtime = new SimpleDateFormat("yyyy-MM-dd:HH:mm:ss").format(System.currentTimeMillis());
 
@@ -452,14 +460,15 @@ public class OpenTenderServiceImpl implements OpenTenderService {
             if (type) {
                 //此时为审核通过时
                 //审核通过时,先把上一条数据进行更新，再新增下一条数据
-                String state = "已处理";
-                String handleContent = "单位管理员审核通过";
-                //根据数据的id 把处理人，审核状态，审核内容，处理时间更新
-                int num = 0;
-                num = openTenderMapper.updateOpenTenderStateRecord(oid,username,state,handleContent,nowtime);
-                if (num == 0) {
-                        throw new UpdateSqlException("在更新审核状态，更新上一条数据时出错");
-                }
+               // String state = "已处理";
+               // String handleContent = "单位管理员审核通过";
+               // //根据数据的id 把处理人，审核状态，审核内容，处理时间更新
+               // int num = 0;
+               // num = openTenderMapper.updateOpenTenderStateRecord(oid,username,state,handleContent,nowtime);
+               // System.out.println(num);
+               // if (num == 0) {
+               //         throw new UpdateSqlException("在更新审核状态，更新上一条数据时出错");
+               // }
 
                 //新增下一条数据的处理
                 //获取上一次该状态信息的最后提交处理时间，作为新增数据的交办时间
@@ -467,7 +476,8 @@ public class OpenTenderServiceImpl implements OpenTenderService {
                 String auditStep = "通过单位管理员初审，等待评估中心审核";
                 String newState = "等待处理";
                 int num2 = 0;
-                num2 = openTenderMapper.insertNewOpenTenderStateRecord(oid, auditStep, newState, username, nowtime);
+                num2 = openTenderMapper.insertNewOpenTenderStateRecord(oid, username,auditStep,nowtime,newState);
+                System.out.println(num2);
                 if (num2 == 0) {
                     throw new InsertSqlException("审核通过时，在新增审核状态时，新增下一条数据时出错");
                 }
@@ -476,6 +486,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
                 int num3 = 0;
                 int auditStatus = 2;
                 num3 = openTenderMapper.updateTenderStatus(auditStatus,oid);
+                System.out.println(num3);
                 if (num3 == 0) {
                     throw new UpdateTenderStatusException("更新招标备案表中审核状态出错");
                 }
@@ -483,20 +494,22 @@ public class OpenTenderServiceImpl implements OpenTenderService {
             } else {
                 //此时审核未通过，首先更新上一条语句
                 //审核通过时,先把上一条数据进行更新，再新增下一条数据
-                String state = "已退回";
-                String handleContent = reason;
-                //根据数据的id 把处理人，审核状态，审核内容，处理时间更新
-                int num = 0;
-                num = openTenderMapper.updateOpenTenderStateRecord(oid,username,state,handleContent,nowtime);
-                if (num == 0) {
-                    throw new UpdateSqlException("审核未通过时，在更新审核状态，更新上一条数据时出错");
-                }
+               // String state = "已退回";
+               // String handleContent = reason;
+               // //根据数据的id 把处理人，审核状态，审核内容，处理时间更新
+               // int num = 0;
+               // num = openTenderMapper.updateOpenTenderStateRecord(oid,username,state,handleContent,nowtime);
+               // System.out.println(num);
+               // if (num == 0) {
+               //     throw new UpdateSqlException("审核未通过时，在更新审核状态，更新上一条数据时出错");
+               // }
 
                 //新增下一条数据的处理
                 String auditStep = "等待单位员工重新提交";
                 String newState = "等待处理";
                 int num2 = 0;
                 num2 = openTenderMapper.insertNewOpenTenderStateRecord(oid, auditStep, newState, username, nowtime);
+                System.out.println(num2);
                 if (num2 == 0) {
                     throw new InsertSqlException("在新增审核状态时，新增下一条数据时出错");
                 }
@@ -505,14 +518,12 @@ public class OpenTenderServiceImpl implements OpenTenderService {
                 int num3 = 0;
                 int auditStatus = 0;
                 num3 =openTenderMapper.updateTenderStatus(auditStatus,oid);
+                System.out.println(num3);
                 if (num3 == 0) {
                     throw new UpdateTenderStatusException("更新招标备案表的审核状态字段时出错");
                 }
-
+                return resultMap.fail().message("系统异常");
             }
-        } catch (UpdateSqlException e) {
-            e.printStackTrace();
-            log.info("在更新审核状态，更新上一条数据时出错");
         } catch (InsertSqlException e) {
             e.printStackTrace();
             log.info("在新增审核状态时，新增下一条数据时出错");
@@ -520,6 +531,185 @@ public class OpenTenderServiceImpl implements OpenTenderService {
             e.printStackTrace();
             log.info("更新招标备案表的审核状态字段时出错");
         }
-        return null;
+        return resultMap.success().message("通过单位管理员初审，等待评估中心审核");
     }
+
+
+    /**
+     * 评估中心审核
+     * @param type   审核状态
+     * @param reason 审核不通过原因
+     * @param oid    审核表id
+     * @return
+     */
+    @Override
+    public ResultMap tenderShenHeByPingGuCenter(Boolean type, String reason, Integer oid)  {
+//       User user = new User();
+//        try {
+//            user = tokenService.compare(response, token);
+//        } catch (NullPointerException e) {
+//            e.printStackTrace();
+//            return resultMap.fail().message("请先登录");
+//        } catch (UserNameNotExistentException e) {
+//            e.printStackTrace();
+//            return resultMap.fail().message("请先登录");
+//        } catch (ClaimsNullException e){
+//            e.printStackTrace();
+//            return resultMap.fail().message("请先登录");
+//        }catch (Exception e) {
+//            e.printStackTrace();
+//            log.error("MenuServiceImpl 中 TokenService 出现问题");
+//            return resultMap.message("系统异常");
+//        }
+//        //当前登录者
+//        Integer uid = user.getId();
+//        String username = user.getUsername();
+
+
+        String username = "评估中心";
+        //根据招标备案表的id 获取该公司的名字
+        String unitName = openTenderMapper.queryUnitNameByoid(oid);
+        //获取当前系统时间
+        String nowtime = new SimpleDateFormat("yyyy-MM-dd:HH:mm:ss").format(System.currentTimeMillis());
+
+        try {
+            //判断是审核通过还是审核未通过
+            if (type) {
+                //此时为审核通过时
+                //审核通过时,先把上一条数据进行更新，再新增下一条数据
+               String state = "已处理";
+               String handleContent = "评估中心审核通过";
+               //根据数据的id 把处理人，审核状态，审核内容，处理时间更新
+               int num = 0;
+               num = openTenderMapper.updateOpenTenderStateRecord(oid,username,state,handleContent,nowtime);
+               System.out.println(num);
+               if (num == 0) {
+                   throw new UpdateSqlException("在更新审核状态，更新上一条数据时出错");
+               }
+
+                //评估中心是最后一步审核,所以审核记录不需要在新增了
+                //当把审核状态表更新完成后，更新招标备案表中这条数据的审核状态
+                int num3 = 0;
+                int auditStatus = 3;
+                num3 = openTenderMapper.updateTenderStatus(auditStatus,oid);
+                System.out.println(num3);
+                if (num3 == 0) {
+                    throw new UpdateTenderStatusException("更新招标备案表中审核状态出错");
+                }
+
+            } else {
+                //此时审核未通过，首先更新上一条语句
+                //审核通过时,先把上一条数据进行更新，再新增下一条数据
+               String state = "已退回";
+               String handleContent = reason;
+               //根据数据的id 把处理人，审核状态，审核内容，处理时间更新
+               int num = 0;
+               num = openTenderMapper.updateOpenTenderStateRecord(oid,username,state,handleContent,nowtime);
+               System.out.println(num);
+               if (num == 0) {
+                   throw new UpdateSqlException("审核未通过时，在更新审核状态，更新上一条数据时出错");
+               }
+
+                //新增下一条数据的处理
+              //  String auditStep = "等待单位员工重新提交";
+              //  String newState = "等待处理";
+              //  int num2 = 0;
+              //  num2 = openTenderMapper.insertNewOpenTenderStateRecord(oid, auditStep, newState, username, nowtime);
+              //  System.out.println(num2);
+              //  if (num2 == 0) {
+              //      throw new InsertSqlException("在新增审核状态时，新增下一条数据时出错");
+              //  }
+
+                //当把审核状态表更新完成后，更新招标备案表中这条数据的审核状态
+                int num3 = 0;
+                int auditStatus = 0;
+                num3 =openTenderMapper.updateTenderStatus(auditStatus,oid);
+                System.out.println(num3);
+                if (num3 == 0) {
+                    throw new UpdateTenderStatusException("更新招标备案表的审核状态字段时出错");
+                }
+                return resultMap.fail().message("系统异常");
+            }
+        } catch (UpdateTenderStatusException e) {
+            e.printStackTrace();
+            log.info("更新招标备案表的审核状态字段时出错");
+        } catch (UpdateSqlException e) {
+            e.printStackTrace();
+            log.info("");
+        }
+        return resultMap.success().message("通过评估中心审核");
+    }
+
+
+    /**
+     * 展示所有未通过单位管理员审批的
+     * @return
+     */
+    @Override
+    public ResultMap showAllNoPassTenderReviewByUnitManager(int pageNum, int pageSize) {
+        try {
+            PageHelper.startPage(pageNum,pageSize,true);
+            List<OpenTender> openTenderList=openTenderMapper.showAllNoPassTenderReviewByUnitManager();
+            PageInfo pageInfo=new PageInfo(openTenderList);
+            resultMap.success().message(pageInfo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultMap.fail().message("没有找到未审批的招标备案");
+        }
+        return resultMap.fail().message("系统异常");
+    }
+
+    /**
+     * 展示所有通过单位管理员审批的
+     * @return
+     */
+    @Override
+    public ResultMap showAllPassTenderReviewByUnitManager(int pageNum, int pageSize) {
+        try {
+            PageHelper.startPage(pageNum,pageSize,true);
+            List<OpenTender> openTenderList=openTenderMapper.showAllPassTenderReviewByUnitManager();
+            PageInfo pageInfo=new PageInfo(openTenderList);
+            resultMap.success().message(pageInfo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultMap.fail().message("没有找到未审批的招标备案");
+        }
+        return resultMap.fail().message("系统异常");
+    }
+
+    /**
+     * 展示所有通过评估中心审批的
+     * @return
+     */
+    @Override
+    public ResultMap showAllPassTenderReviewByPingGu(int pageNum,int pageSize) {
+        try {
+            PageHelper.startPage(pageNum,pageSize,true);
+            List<OpenTender> openTenderList=openTenderMapper.showAllPassTenderReviewByPingGu();
+            PageInfo pageInfo=new PageInfo(openTenderList);
+            resultMap.success().message(pageInfo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultMap.fail().message("没有找到未审批的招标备案");
+        }
+        return resultMap.fail().message("系统异常");
+    }
+    /**
+     * 展示所有未通过评估中心审批的
+     * @return
+     */
+    @Override
+    public ResultMap showAllNoPassReviewTenderByPingGu(int pageNum, int pageSize) {
+        try {
+            PageHelper.startPage(pageNum,pageSize,true);
+            List<OpenTender> openTenderList=openTenderMapper.showAllNoPassTenderReviewByPingGu();
+            PageInfo pageInfo=new PageInfo(openTenderList);
+            resultMap.success().message(pageInfo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultMap.fail().message("没有找到未审批的招标备案");
+        }
+        return resultMap.fail().message("系统异常");
+    }
+
 }
