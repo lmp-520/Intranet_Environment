@@ -180,7 +180,17 @@ public class ExtranetAcceptApplyController {
         return resultMap.success().message("新增成功");
     }
 
-//    //验收申请表的查询
+
+    /**
+     * 验收申请表的查询
+     * @param token
+     * @param response
+     * @param topicName
+     * @param topicNumber
+     * @param page
+     * @param total
+     * @return
+     */
 //    @PostMapping("queryAcceptApply")
 //    @ResponseBody
 //    public ResultMap queryAcceptApply(@RequestParam(value = "subjectName", required = false) String subjectName,

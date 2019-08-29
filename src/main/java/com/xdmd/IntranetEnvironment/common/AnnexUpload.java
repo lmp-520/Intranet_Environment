@@ -23,7 +23,7 @@ public class AnnexUpload implements Serializable {
     /**
      * 上传文件地址
      */
-    private String uploadFilePath;
+    private String uploadFileAddress;
 
     /**
      * 上传文件名

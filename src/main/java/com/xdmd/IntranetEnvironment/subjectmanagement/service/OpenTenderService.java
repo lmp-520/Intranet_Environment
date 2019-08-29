@@ -3,6 +3,7 @@ package com.xdmd.IntranetEnvironment.subjectmanagement.service;
 import com.xdmd.IntranetEnvironment.common.FileUploadException;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.exception.UpdateSqlException;
+import com.xdmd.IntranetEnvironment.subjectmanagement.exception.InsertSqlException;
 import com.xdmd.IntranetEnvironment.subjectmanagement.pojo.OpenTender;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,10 +18,13 @@ import java.io.IOException;
 public interface OpenTenderService {
     /**
      * 新增招标信息
+     *
+     * @param token
+     * @param response
      * @param openTender
      * @return
      */
-    ResultMap insertTender(OpenTender openTender);
+    ResultMap insertTender(String token, HttpServletResponse response, OpenTender openTender);
 
     /**
      * 根據单位id查詢筛选本单位招标公告
@@ -77,17 +81,21 @@ public interface OpenTenderService {
      * @return
      * @throws IOException
      */
-    ResultMap tenderMultiUpload(String token, HttpServletResponse response, Integer oid, MultipartFile winningDocument, MultipartFile transactionAnnouncement, MultipartFile noticeTransaction, MultipartFile responseFile) throws IOException, FileUploadException;
+    ResultMap tenderMultiUpload(String token, HttpServletResponse response, int oid, MultipartFile winningDocument, MultipartFile transactionAnnouncement, MultipartFile noticeTransaction, MultipartFile responseFile) throws IOException, FileUploadException;
+
 
 
     /**
      * 单位管理员审核
+     *
+     * @param token
+     * @param response
      * @param type 审核状态
      * @param reason 审核不通过原因
      * @param oid 审核表id
      * @return
      */
-    ResultMap tenderShenHeByUnitManager(Boolean type, String reason, Integer oid) throws UpdateSqlException;
+    ResultMap tenderShenHeByUnitManager(String token, HttpServletResponse response, Boolean type, String reason, Integer oid) throws UpdateSqlException, InsertSqlException;
 
     /**
      * 评估中心审核
@@ -96,7 +104,7 @@ public interface OpenTenderService {
      * @param oid
      * @return
      */
-    ResultMap tenderShenHeByPingGuCenter(Boolean type, String reason, Integer oid);
+    ResultMap tenderShenHeByPingGuCenter(String token, HttpServletResponse response,Boolean type, String reason, Integer oid);
 
     /**
      * 展示所有未通过单位管理员审批的

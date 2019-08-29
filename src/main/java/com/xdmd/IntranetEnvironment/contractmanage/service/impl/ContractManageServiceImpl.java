@@ -200,7 +200,7 @@ public class ContractManageServiceImpl implements ContractManageService {
             String fileSize = String.valueOf(file1.length());
             //封装到uploadfile
             AnnexUpload annexUpload = new AnnexUpload();
-            annexUpload.setUploadFilePath(filePath);
+            annexUpload.setUploadFileAddress(filePath);
             annexUpload.setFileSize(fileSize);
             annexUpload.setUploadFileName(fileName);
             annexUpload.setUploadFileType(fileType);
