@@ -4,7 +4,6 @@ import com.xdmd.IntranetEnvironment.common.AnnexUpload;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -21,9 +20,9 @@ public interface UploadFileMapper {
      * @return
      */
     @Options(useGeneratedKeys=true, keyProperty="id", keyColumn="id")
-    @Insert(value = "INSERT INTO upload_file (upload_file_path,upload_file_name, upload_file_type,upload_suffix_name,file_size,create_time,create_author)\n" +
+    @Insert(value = "INSERT INTO upload_file (upload_file_address,upload_file_name, upload_file_type,upload_suffix_name,file_size,create_time,create_author)\n" +
             "VALUES(" +
-            "#{uploadFilePath},"+
+            "#{uploadFileAddress},"+
             "#{uploadFileName},"+
             "#{uploadFileType},"+
             "#{uploadSuffixName},"+
@@ -31,12 +30,4 @@ public interface UploadFileMapper {
             "NOW(),"+
             "#{createAuthor})")
     Integer insertUpload(AnnexUpload annexUpload);
-
-    /**
-     * 根据附件id查询文件信息
-     * @param id
-     * @return
-     */
-    @Select(value = "select upload_file_path,upload_file_name from upload_file where id= #{id}")
-    AnnexUpload getAnnexPath(int id);
 }

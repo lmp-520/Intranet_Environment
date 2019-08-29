@@ -1,10 +1,7 @@
 package com.xdmd.IntranetEnvironment.subjectmanagement.mapper;
 
 import com.xdmd.IntranetEnvironment.subjectmanagement.pojo.OpenTender;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -19,10 +16,11 @@ import java.util.Map;
 @Repository
 public interface OpenTenderMapper {
     /**
-     * 新增招标备案【waiwang】
+     * 新增招标备案【外网】
      * @param openTender
      * @return
      */
+    @Options(useGeneratedKeys = true,keyColumn = "id",keyProperty = "id")//回显id
     @Insert(value = "INSERT INTO open_tender(\n" +
             "project_no,\n" +
             "project_name,\n" +
@@ -67,7 +65,7 @@ public interface OpenTenderMapper {
 
 
     /**
-     * [查詢] 根據单位id查詢相应单位的课题【waiwang】
+     * [查詢] 根據单位id查詢相应单位的课题【外网】
      * @author Kong
      * @date 2019/07/26
      **/
@@ -165,6 +163,7 @@ public interface OpenTenderMapper {
             "<if test ='null != leaderContact'>\n" +
             "AND leader_contact like CONCAT('%',#{leaderContact},'%')\n" +
             "</if></where>" +
+            "ORDER BY id DESC" +
             "</script>")
         List<Map> getTenderPageList(String projectName, String subjectName, String subjectLeader, String leaderContact);
 
@@ -173,13 +172,14 @@ public interface OpenTenderMapper {
      * @param winningFileAttachmentId
      * @param announcementTransactionAnnouncementId
      * @param dealNotificationAttachmentId
-     * @param
+     * @param responseFileAttachmentId
+     * @param oid
      * @return
      */
-    @Update(value = "UPDATE open_tender \n" +
+    @Update("UPDATE open_tender \n" +
             "SET winning_file_attachment_id = #{winningFileAttachmentId},\n" +
             "announcement_transaction_announcement_id = #{announcementTransactionAnnouncementId},\n" +
-            "deal_notification_attachment_id = #{dealNotificationAttachmentId} \n" +
+            "deal_notification_attachment_id = #{dealNotificationAttachmentId}, \n" +
             "response_file_attachment_id = #{responseFileAttachmentId} \n" +
             "WHERE id = #{oid}")
     int updateAnnexByoid(int winningFileAttachmentId, int announcementTransactionAnnouncementId, int dealNotificationAttachmentId,int responseFileAttachmentId, int oid);
@@ -229,7 +229,7 @@ public interface OpenTenderMapper {
      */
 
     /**
-     * 不通过被退回时重新提交
+     * 不通过被退回时重新提交[修改]
      * @param projectNo
      * @param projectName
      * @param tenderNo
@@ -277,27 +277,87 @@ public interface OpenTenderMapper {
      * 展示所有未通过单位管理员审批的
      * @return
      */
-    @Select("select * from open_tender where audit_status<2")
+    @Select("SELECT\n" +
+            "id,\n" +
+            "project_name as projectName,\n" +
+            "subject_name as subjectName,\n" +
+            "winning_amount as winningAmount,\n" +
+            "supporting_funds as supportingFunds,\n" +
+            "subject_leader as subjectLeader,\n" +
+            "leader_contact as leaderContact,\n" +
+            "operator,\n" +
+            "operator_contact as operatorContact\n" +
+            "audit_status \n" +
+            "FROM\n" +
+            "open_tender \n" +
+            "WHERE\n" +
+            "audit_status < 2 \n" +
+            "ORDER BY id DESC")
     List<OpenTender> showAllPassTenderReviewByUnitManager();
     /**
      * 展示所有通过单位管理员审批的
      * @return
      */
-    @Select("select * from open_tender where audit_status>1")
+    @Select("SELECT\n" +
+            "id,\n" +
+            "project_name as projectName,\n" +
+            "subject_name as subjectName,\n" +
+            "winning_amount as winningAmount,\n" +
+            "supporting_funds as supportingFunds,\n" +
+            "subject_leader as subjectLeader,\n" +
+            "leader_contact as leaderContact,\n" +
+            "operator,\n" +
+            "operator_contact as operatorContact\n" +
+            "audit_status \n" +
+            "FROM\n" +
+            "open_tender \n" +
+            "WHERE\n" +
+            "audit_status >1 and audit_status<3" +
+            "ORDER BY id DESC")
     List<OpenTender> showAllNoPassTenderReviewByUnitManager();
 
     /**
      * 展示所有通过评估中心审批的
      * @return
      */
-    @Select("select * from open_tender where audit_status=3")
+    @Select("SELECT\n" +
+            "id,\n" +
+            "project_name as projectName,\n" +
+            "subject_name as subjectName,\n" +
+            "winning_amount as winningAmount,\n" +
+            "supporting_funds as supportingFunds,\n" +
+            "subject_leader as subjectLeader,\n" +
+            "leader_contact as leaderContact,\n" +
+            "operator,\n" +
+            "operator_contact as operatorContact\n" +
+            "audit_status \n" +
+            "FROM\n" +
+            "open_tender \n" +
+            "WHERE\n" +
+            "audit_status=3" +
+            "ORDER BY id DESC")
     List<OpenTender> showAllPassTenderReviewByPingGu();
 
     /**
      * 展示所有未通过评估中心审批的
      * @return
      */
-    @Select("select * from open_tender where audit_status=2")
+    @Select("SELECT\n" +
+            "id,\n" +
+            "project_name as projectName,\n" +
+            "subject_name as subjectName,\n" +
+            "winning_amount as winningAmount,\n" +
+            "supporting_funds as supportingFunds,\n" +
+            "subject_leader as subjectLeader,\n" +
+            "leader_contact as leaderContact,\n" +
+            "operator,\n" +
+            "operator_contact as operatorContact\n" +
+            "audit_status \n" +
+            "FROM\n" +
+            "open_tender \n" +
+            "WHERE\n" +
+            "audit_status=2" +
+            "ORDER BY id DESC")
     List<OpenTender> showAllNoPassTenderReviewByPingGu();
 
     /**

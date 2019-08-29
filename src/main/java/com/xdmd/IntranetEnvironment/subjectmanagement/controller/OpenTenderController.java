@@ -3,6 +3,8 @@ package com.xdmd.IntranetEnvironment.subjectmanagement.controller;
 
 import com.xdmd.IntranetEnvironment.common.FileUploadException;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
+import com.xdmd.IntranetEnvironment.subjectAcceptance.exception.UpdateSqlException;
+import com.xdmd.IntranetEnvironment.subjectmanagement.exception.InsertSqlException;
 import com.xdmd.IntranetEnvironment.subjectmanagement.pojo.OpenTender;
 import com.xdmd.IntranetEnvironment.subjectmanagement.service.OpenTenderService;
 import io.swagger.annotations.Api;
@@ -39,15 +41,20 @@ public class OpenTenderController {
      * @param openTender
      * @return
      */
-    @ApiOperation(value = "新增招标信息【waiwang】")
+    @ApiOperation(value = "新增招标信息【外网】")
     @PostMapping(value = "insertTender")
-    ResultMap insertTender(@RequestBody OpenTender openTender) {
-        return resultMap = openTenderService.insertTender(openTender);
-
+    ResultMap insertTender(//@CookieValue(value = "IntranecToken", required = false) String token, HttpServletResponse response,
+                           @RequestBody OpenTender openTender) {
+        String token="aaa";
+        HttpServletResponse response =null;
+        if (StringUtils.isEmpty(token)) {
+            return resultMap.fail().message("请先登录");
+        }
+        return resultMap = openTenderService.insertTender(token,response,openTender);
     }
 
     /**
-     * 根据单位的id查询招标信息
+     * 根据单位的id查询招标信息【外网】
      *
      * @param uid
      * @return
@@ -61,7 +68,7 @@ public class OpenTenderController {
             @ApiImplicitParam(name = "pageNum", value = "当前页数", required = true),
             @ApiImplicitParam(name = "pageSize", value = "每页显示条数", required = true)
     })
-    @ApiOperation(value = "根据单位的id查询招标信息【waiwang】")
+    @ApiOperation(value = "根据单位的id查询招标信息【外网】")
     @GetMapping(value = "getTenderByUid")
     ResultMap getTenderByUid(int uid, String projectName, String subjectName, String subjectLeader, String leaderContact, int pagenNum, int pageSize) {
         return openTenderService.getTenderByUid(uid, projectName, subjectName, subjectLeader, leaderContact, pagenNum, pageSize);
@@ -82,7 +89,7 @@ public class OpenTenderController {
     }
 
     /**
-     * 分页查询招标信息
+     * 分页查询招标信息【内网】
      *
      * @param projectName
      * @param subjectName
@@ -128,7 +135,7 @@ public class OpenTenderController {
      * @return
      */
     @PostMapping(value = "TenderFileUpload",headers = "content-type=multipart/form-data")
-    @ApiOperation(value = "招标附件上传")
+    @ApiOperation(value = "招标附件上传【外网】")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "oid", value = "招标id",required = true),
             @ApiImplicitParam(name = "winningDocument", value = "中标文件附件",dataType = "file",paramType ="form",allowMultiple=true),
@@ -142,7 +149,6 @@ public class OpenTenderController {
                                        MultipartFile transactionAnnouncement,
                                        MultipartFile noticeTransaction,
                                        MultipartFile responseFile) {
-
         String token="aaa";
         HttpServletResponse response =null;
         if (StringUtils.isEmpty(token)) {
@@ -172,20 +178,31 @@ public class OpenTenderController {
      * @return
      */
     @PostMapping(value = "tenderShenHeByUnitManager")
-    @ApiOperation(value = "单位管理员审核")
+    @ApiOperation(value = "单位管理员审核【外网】")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "type", value = "审核状态",required = true),
             @ApiImplicitParam(name = "reason", value = "审核不通过原因",required = false),
             @ApiImplicitParam(name = "oid", value = "审核表id",required = true),
     })
-    public ResultMap tenderShenHeByUnitManager(Boolean type, String reason,Integer oid){
-        try {
-            resultMap = openTenderService.tenderShenHeByUnitManager(type,reason,oid);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return resultMap.fail().message("系统异常");
+    public ResultMap tenderShenHeByUnitManager(//@CookieValue(value = "IntranecToken", required = false) String token, HttpServletResponse response,
+                                               Boolean type, String reason,Integer oid){
+        String token="aaa";
+        HttpServletResponse response =null;
+        if (StringUtils.isEmpty(token)) {
+            resultMap.fail().message("请先登录");
         }
-        return resultMap.success();
+        try {
+            resultMap = openTenderService.tenderShenHeByUnitManager(token, response,type,reason,oid);
+        }catch (UpdateSqlException e) {
+            e.printStackTrace();
+            log.error("OpenTenderController 中 tenderFileUpload 方法 -- " + e.getMessage());
+            resultMap.fail().message("系统异常");
+        } catch (InsertSqlException e) {
+            e.printStackTrace();
+            log.error("OpenTenderController 中 tenderFileUpload 方法 -- " + e.getMessage());
+            resultMap.fail().message("系统异常");
+        }
+        return resultMap;
     }
 
     /**
@@ -201,44 +218,53 @@ public class OpenTenderController {
             @ApiImplicitParam(name = "oid", value = "审核表id",required = true),
     })
     @PostMapping(value = "tenderShenHeByPingGuCenter")
-    @ApiOperation(value = "评估中心审核")
-    public ResultMap tenderShenHeByPingGuCenter(Boolean type, String reason, Integer oid){
-        try {
-            resultMap = openTenderService.tenderShenHeByPingGuCenter(type,reason,oid);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return resultMap.fail().message("系统异常");
+    @ApiOperation(value = "评估中心审核【内网")
+    public ResultMap tenderShenHeByPingGuCenter(//@CookieValue(value = "IntranecToken", required = false) String token, HttpServletResponse response,
+                                                Boolean type, String reason, Integer oid){
+        String token="aaa";
+        HttpServletResponse response =null;
+        if (StringUtils.isEmpty(token)) {
+            return resultMap.fail().message("请先登录");
         }
-        return resultMap.success();
+        resultMap = openTenderService.tenderShenHeByPingGuCenter(token, response,type,reason,oid);
+        return resultMap;
     }
 
     /**
-     * 展示所有通过单位管理员审批的
+     * 展示所有通过单位管理员审批的 【外网】
      * @return
      */
+    @GetMapping(value = "showAllPassTenderReviewByUnitManager")
+    @ApiOperation(value = "展示所有通过单位管理员审批的")
     public ResultMap showAllPassTenderReviewByUnitManager(int pageNum,int pageSize){
         return resultMap=openTenderService.showAllPassTenderReviewByUnitManager(pageNum,pageSize);
     }
     /**
-     * 展示所有未通过单位管理员审批的
+     * 展示所有未通过单位管理员审批的【外网】
      * @return
      */
+    @GetMapping(value = "showAllNoPassTenderReviewByUnitManager")
+    @ApiOperation(value = "展示所有未通过单位管理员审批的")
     public ResultMap showAllNoPassTenderReviewByUnitManager(int pageNum,int pageSize){
         return resultMap=openTenderService.showAllNoPassTenderReviewByUnitManager(pageNum,pageSize);
     }
 
     /**
-     * 展示所有通过评估中心审批的
+     * 展示所有通过评估中心审批的【内网】
      * @return
      */
+    @GetMapping(value = "showAllPassTenderReviewByPingGu")
+    @ApiOperation(value = "展示所有通过评估中心审批的")
     public ResultMap showAllPassTenderReviewByPingGu(int pageNum,int pageSize){
         return resultMap=openTenderService.showAllPassTenderReviewByPingGu(pageNum,pageSize);
     }
 
     /**
-     * 展示所有未通过评估中心审批的
+     * 展示所有未通过评估中心审批的【内网】
      * @return
      */
+    @GetMapping(value = "showAllNoPassReviewTenderByPingGu")
+    @ApiOperation(value = "展示所有未通过评估中心审批的")
     public ResultMap showAllNoPassReviewTenderByPingGu(int pageNum, int pageSize){
         return resultMap=openTenderService.showAllNoPassReviewTenderByPingGu(pageNum,pageSize);
     }
