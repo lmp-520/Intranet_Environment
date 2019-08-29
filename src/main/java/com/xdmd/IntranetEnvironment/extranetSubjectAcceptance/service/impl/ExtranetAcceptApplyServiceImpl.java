@@ -659,7 +659,7 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
         //根据验收申请表的id，新增最终验收报告的id
         acceptApplyMapper.updateAcceptanceFinalResultIdById(caId, uploadLastReportFile.getId());
         //修改验收证书的状态
-        acceptApplyMapper.updateAcceptancePhaseById(cid, 7);
+        acceptApplyMapper.updateAcceptancePhaseById(caId, 7);
 
         //新增最终验收报告表单
         acceptanceCertificate.setCid(caId);

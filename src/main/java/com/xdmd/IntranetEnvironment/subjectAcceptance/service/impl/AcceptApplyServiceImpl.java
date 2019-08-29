@@ -174,7 +174,12 @@ public class AcceptApplyServiceImpl implements AcceptApplySerivce {
             jsonObject.remove("applicationUrlId");
             jsonObject.remove("createTime");
             jsonObject.remove("createAuthor");
-            jsonObject.remove("acceptancePhaseId");
+            if (expertGroupCommentsUrlId == null) {
+                jsonObject.put("expertGroupComment", null);
+            }
+            if (acceptanceCertificateId == null){
+                jsonObject.put("acceptanceCertificate",null);
+            }
 
             jsonObjectList.add(jsonObject);
         }
