@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.math.BigDecimal;
 
 /**
  * 招标业务
@@ -128,4 +129,34 @@ public interface OpenTenderService {
      * @return
      */
     ResultMap showAllNoPassReviewTenderByPingGu(int pageNum, int pageSize);
+
+    /**
+     * 不通过被退回时重新提交[修改]
+     *
+     * @param token
+     * @param response
+     * @param projectNo
+     * @param projectName
+     * @param tenderNo
+     * @param subcontractingNo
+     * @param subjectName
+     * @param responsibleUnit
+     * @param bidders
+     * @param subjectLeader
+     * @param leaderContact
+     * @param joinTenderUnits
+     * @param operator
+     * @param operatorContact
+     * @param winningAmount
+     * @param supportingFunds
+     * @param remark
+     * @param oid
+     * @return
+     */
+    ResultMap updateTenderStatusByReturnCommit(String token, HttpServletResponse response, String projectNo, String projectName, String tenderNo,
+                                               String subcontractingNo, String subjectName, String responsibleUnit,
+                                               String bidders, String subjectLeader, String leaderContact,
+                                               String joinTenderUnits, String operator, String operatorContact,
+                                               BigDecimal winningAmount, BigDecimal supportingFunds, String remark,
+                                               int oid);
 }
