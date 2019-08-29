@@ -196,7 +196,7 @@ public interface OpenTenderMapper {
      * @param nowTime
      * @return
      */
-    @Update("update tender_contract_shenhe_record set state =#{state},second_handler =#{uname} ,handle_content = #{handleContent} ,second_handle_time = #{nowTime} where id = #{oid} order by first_handle_time desc limit 1")
+    @Update("update tender_contract_shenhe_record set state =#{state},second_handler =#{uname} ,handle_content = #{handleContent} ,second_handle_time = #{nowTime} where shenhe_table_id = #{oid} order by first_handle_time desc limit 1")
     int updateOpenTenderStateRecord(@Param("oid") Integer oid, @Param("uname") String uname, @Param("state") String state, @Param("handleContent") String handleContent, @Param("nowTime") String nowTime);
 
     /**
@@ -245,32 +245,34 @@ public interface OpenTenderMapper {
      * @param winningAmount
      * @param supportingFunds
      * @param remark
-     * @param id
+     * @param oid
      * @return
      */
-    @Update("update open_tender set\n" +
-            "project_no=#{projectNo},\n" +
-            "project_name=#{projectName},\n" +
-            "tender_no=#{tenderNo},\n" +
-            "subcontracting_no=#{subcontractingNo},\n" +
-            "subject_name=#{subjectName},\n" +
-            "responsible_unit=#{responsibleUnit},\n" +
-            "bidders=#{bidders},\n" +
-            "subject_leader=#{subjectLeader},\n" +
-            "leader_contact=#{leaderContact},\n" +
-            "join_tender_units=#{joinTenderUnits},\n" +
-            "operator=#{operator},\n" +
-            "operator_contact=#{operatorContact},\n" +
-            "winning_amount=#{winningAmount},\n" +
-            "supporting_funds=#{supportingFunds},\n" +
-            "remark=#{remark}\n" +
-            "where id=#{id}")
+    @Update(value = "<script>" +
+            "UPDATE open_tender SET" +
+            "<if test ='null != projectNo'>project_no = #{projectNo},</if>" +
+            "<if test ='null != projectName'>project_name = #{projectName},</if>" +
+            "<if test ='null != tenderNo'>tender_no = #{tenderNo},</if>" +
+            "<if test ='null != subcontractingNo'>subcontracting_no = #{subcontractingNo},</if>" +
+            "<if test ='null != subjectName'>subject_name = #{subjectName},</if>" +
+            "<if test ='null != responsibleUnit'>responsible_unit = #{responsibleUnit},</if>" +
+            "<if test ='null != bidders'>bidders = #{bidders},</if>" +
+            "<if test ='null != subjectLeader'>subject_leader = #{subjectLeader},</if>" +
+            "<if test ='null != leaderContact'>leader_contact = #{leaderContact},</if>" +
+            "<if test ='null != joinTenderUnits'>join_tender_units = #{joinTenderUnits},</if>" +
+            "<if test ='null != operator'>operator = #{operator},</if>" +
+            "<if test ='null != operatorContact'>operator_contact = #{operatorContact},</if>" +
+            "<if test ='null != winningAmount'>winning_amount = #{winningAmount},</if>" +
+            "<if test ='null != supportingFunds'>supporting_funds = #{supportingFunds},</if>" +
+            "<if test ='null != remark'>remark = #{remark}</if>" +
+            "\twhere id=#{oid}" +
+            "</script>")
     int updateTenderStatusByReturnCommit(@Param("projectNo") String projectNo, @Param("projectName") String projectName, @Param("tenderNo") String tenderNo,
                                          @Param("subcontractingNo") String subcontractingNo, @Param("subjectName") String subjectName, @Param("responsibleUnit") String responsibleUnit,
                                          @Param("bidders") String bidders, @Param("subjectLeader") String subjectLeader, @Param("leaderContact") String leaderContact,
                                          @Param("joinTenderUnits") String joinTenderUnits, @Param("operator") String operator, @Param("operatorContact") String operatorContact,
                                          @Param("winningAmount") BigDecimal winningAmount, @Param("supportingFunds")BigDecimal supportingFunds, @Param("remark") String remark,
-                                         @Param("id") int id);
+                                         @Param("oid") int oid);
 
 
     /**
