@@ -79,6 +79,10 @@ public class OpenTenderServiceImpl implements OpenTenderService {
 //        String username = user.getUsername();
 
             String username = "单位员工";
+            //获取课题编号
+            openTender.setProjectNo(setProjectNo());
+            //执行新增操作
+            int insertNo = openTenderMapper.insertTender(openTender);
             //获取当前系统时间
             String nowtime = new SimpleDateFormat("yyyy-MM-dd:HH:mm:ss").format(System.currentTimeMillis());
             //新增员工提交信息
@@ -90,10 +94,6 @@ public class OpenTenderServiceImpl implements OpenTenderService {
             if (num == 0) {
                 throw new InsertSqlException("审核通过时，在新增审核状态时，新增下一条数据时出错");
             }
-            //获取课题编号
-            openTender.setProjectNo(setProjectNo());
-            //执行新增操作
-            int insertNo = openTenderMapper.insertTender(openTender);
 
             if (insertNo > 0) {
                 resultMap.success().message("成功新增" + insertNo + "条数据");
