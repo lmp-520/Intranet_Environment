@@ -4,9 +4,6 @@ import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.company.Pojo.CreditCodeRegex;
 import com.xdmd.IntranetEnvironment.company.Pojo.UserInformation;
 import com.xdmd.IntranetEnvironment.company.Service.CompanyServiceTwo;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +25,6 @@ public class CompanyControllerTwo {
     private CompanyServiceTwo companyServiceTwo;
     ResultMap resultMap = new ResultMap();
     private static Logger log = LoggerFactory.getLogger(CompanyControllerTwo.class);
-
 
     //公司的注册
     @ResponseBody
@@ -101,5 +97,4 @@ public class CompanyControllerTwo {
         }
         return resultMap;
     }
-
 }

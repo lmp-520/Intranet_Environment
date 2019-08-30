@@ -22,7 +22,6 @@ public class IntegrationFile {
 
         //获取日期文件名
         Date date = new Date();
-
         //获取文件后缀名
         String substring = filename.substring(filename.lastIndexOf(".") + 1);
         uploadFile.setUploadSuffixName(substring);

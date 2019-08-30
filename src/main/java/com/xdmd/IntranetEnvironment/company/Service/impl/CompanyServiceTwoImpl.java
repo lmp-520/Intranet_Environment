@@ -204,6 +204,7 @@ public class CompanyServiceTwoImpl implements CompanyServiceTwo {
         String identity = companyMapper.queryIdentity(uid);
 
         if(identity.equals("0")){
+
             //管理员登陆
             //获取公司名 公司id
             String companyName = companyMapper.queryCompanyName(uid);

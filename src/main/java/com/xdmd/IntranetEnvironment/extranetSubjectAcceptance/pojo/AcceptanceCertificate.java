@@ -101,6 +101,9 @@ public class AcceptanceCertificate {
     //课题研发在校研究生数量
     private String schoolMasterNumber;
 
+    //课题经费支出合计
+    private BigDecimal totalExpenditure;
+
     //课题实际到位经费项目总经费
     private BigDecimal totalProjectFunds;
 
