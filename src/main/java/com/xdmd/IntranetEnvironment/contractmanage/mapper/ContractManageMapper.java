@@ -27,7 +27,7 @@ public interface ContractManageMapper {
      * @param contractManageDTO
      * @return
      */
-    @Options(useGeneratedKeys=true,keyProperty="id", keyColumn="id")
+    @Options(useGeneratedKeys=true,keyProperty="id", keyColumn="id")//回显
     @Insert(value = "INSERT INTO contract_manage\n" +
             "VALUES(\n" +
             "DEFAULT,\n" +
@@ -235,76 +235,90 @@ public interface ContractManageMapper {
 
 
     ///////////////////////////以下是合同审批///////////////////////////////////
-
     /**
-     * 单位管理员审核通过
+     * 根据数据的id，把处理人，审核状态，审核内容内容，处理时间更新
+     * @param cid
+     * @param uname
+     * @param state
+     * @param handleContent
+     * @param nowTime
      * @return
      */
-    @Update(value = "update contract_manage set approval_status=2 where approval_status=1 and id=#{id}")
-    int updateContractStatusPassByUnitManager(@Param("id") int id);
+    @Update("update tender_contract_shenhe_record set state =#{state},second_handler =#{uname} ,handle_content = #{handleContent} ,second_handle_time = #{nowTime} where shenhe_table_id = #{oid} order by first_handle_time desc limit 1")
+    int updateContractStateRecord(@Param("cid") Integer cid, @Param("uname") String uname, @Param("state") String state, @Param("handleContent") String handleContent, @Param("nowTime") String nowTime);
 
     /**
-     * 单位管理员审核不通过
+     * 新增下一条的数据状态
+     * @param cid
+     * @param uname
+     * @param auditStep
+     * @param nowTime
+     * @param newState
      * @return
      */
-    @Update(value = "update contract_manage set approval_status=0 where approval_status=1 and id=#{id}")
-    int updateContractStatusNoPassByUnitManager(@Param("id") int id);
+    @Insert("INSERT INTO tender_contract_shenhe_record(shenhe_table_id, fist_handler, audit_step, first_handle_time, state) VALUES (#{oid},#{uname},#{auditStep},#{nowTime},#{newState});")
+    int insertNewContractStateRecord(@Param("cid") Integer cid, @Param("uname") String uname, @Param("auditStep") String auditStep, @Param("nowTime") String nowTime, @Param("newState") String newState);
 
-
-
-    /**
-     * 评估中心审核通过
-     * @return
-     */
-    @Update(value = "update contract_manage set approval_status=3 where approval_status=2 and id=#{id}")
-    int updateContractStatusPassByPingGu(@Param("id") int id);
-
-    /**
-     * 评估中心审核不通过
-     * @return
-     */
-    @Update(value = "update contract_manage set approval_status=0 where approval_status=2 and id=#{id}")
-    int updateContractStatusNoPassByPingGu(@Param("id") int id);
-
-    /**
-     * 法规科技处审核通过
-     * @return
-     */
-    @Update(value = "update contract_manage set approval_status=4 where approval_status=3 and id=#{id}")
-    int updateContractStatusPassByFaGui(@Param("id") int id);
-
-    /**
-     * 法规科技处审核不通过
-     * @return
-     */
-    @Update(value = "update contract_manage set approval_status=0 where approval_status=3 and id=#{id}")
-    int updateContractStatusNoPassByFaGui(@Param("id") int id);
 
 
     /**
-     * 不通过被退回时重新提交审核
+     * 合同审核状态【0-单位员工待提交(或不通过被退回时重新提交) 1-单位管理员待审批 2-评估中心员工待审批   3-法规科技处待审批  4-法规科技处已审批】
      * @return
      */
-    @Update(value = "update contract_manage set approval_status=1 where approval_status=0 and id=#{id}")
-    int updateContractStatusByReturnCommit(@Param("id") int id);
-
+    @Update(value = "update contract_manage set approval_status=#{approvalStatus} where id=#{id}")
+    int updateContractStatus(@Param("approvalStatus") int approvalStatus,@Param("id") int id);
 
     /**
-     * 展示所有未通过审批的
+     * 根据合同主表的id 获取该单位的名字
+     * @param cid
      * @return
      */
-    @Select("select * from contract_manage where approval_status<3")
-    List<ContractManageDTO> showAllNoPassReviewContract();
+    @Select("select commitment_Unit from contract_manage where id = #{cid}")
+    String queryUnitNameByoid(Integer cid);
 
     /**
-     * 展示通过所有法规科技处审批的
+     * 不通过被退回时重新提交[修改]
+     * @param contractManageDTO
      * @return
      */
-    @Select("select * from contract_manage where approval_status=3")
-    List<ContractManageDTO> showAllPassReviewContract();
-
-
-
-
-
+    @Update("update contract_manage SET\n" +
+            "subject_category = #{subjectCategory}\n" +
+            "project_no=#{projectNo}, \n" +
+            "subject_name = #{subjectName},\n" +
+            "contract_start_time = #{contractStartTime},\n" +
+            "contract_end_time = #{contractEndTime},\n" +
+            "subjece_leader = #{subjeceLeader},\n" +
+            "subject_leader_phone = #{subjectLeaderPhone},\n" +
+            "subject_contact = #{subjectContact},\n" +
+            "subject_contact_phone = #{subjectContactPhone},\n" +
+            "commitment_unit = #{commitmentUnit},\n" +
+            "commitment_unit_address = #{commitmentUnitAddress},\n" +
+            "commitment_unit_zip = #{commitmentUnitZip},\n" +
+            "subject_supervisor_department = #{subjectSupervisorDepartment},\n" +
+            "open_bank = #{openBank},\n" +
+            "open_bank_account = #{openBankAccount},\n" +
+            "email = #{email},\n" +
+            "guaranteed_units = #{guaranteedUnits},\n" +
+            "guaranteed_unit_contact = #{guaranteedUnitContact},\n" +
+            "guaranteed_contact_phone = #{guaranteedContactPhone},\n" +
+            "commissioning_unit = #{commissioningUnit},\n" +
+            "legal_representative_entrusting_a = #{legalRepresentativeEntrustingA},\n" +
+            "commissioned_unit_address_a = #{commissionedUnitAddressA},\n" +
+            "commissioned_unit_zip_a = #{commissionedUnitZipA},\n" +
+            "responsibility_unit_b = #{responsibilityUnitB},\n" +
+            "responsibility_legal_representative_b = #{responsibilityLegalRepresentativeB},\n" +
+            "commit_unit_address_b = #{commitUnitAddressB},\n" +
+            "commit_unit_zip_b = #{commitUnitZipB},\n" +
+            "commit_unit_leader_b = #{commitUnitLeaderB},\n" +
+            "commitunit_leaders_phone_b = #{commitunitLeadersPhoneB},\n" +
+            "commitment_unit_email_b = #{commitmentUnitEmailB},\n" +
+            "guaranteed_unit_c = #{guaranteedUnitC},\n" +
+            "guaranteed_unit_leader_c = #{guaranteedUnitLeaderC},\n" +
+            "guaranteed_unit_address_c = #{guaranteedUnitAddressC},\n" +
+            "guaranteed_unit_zip_c = #{guaranteedUnitZipC},\n" +
+            "subject_signing_description = #{subjectSigningDescription},\n" +
+            "subject_objectives_research = #{subjectObjectivesResearch},\n" +
+            "subject_acceptance_assessment = #{subjectAcceptanceAssessment}\n" +
+            "where id=#{cid}")
+    int updateContractStatusByReturnCommit(@Param("contractManageDTO") ContractManageDTO contractManageDTO);
 }

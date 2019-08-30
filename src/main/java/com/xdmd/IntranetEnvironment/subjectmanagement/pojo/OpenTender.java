@@ -3,7 +3,6 @@ package com.xdmd.IntranetEnvironment.subjectmanagement.pojo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.math.BigDecimal;
 
@@ -63,7 +62,7 @@ public class OpenTender{
     @ApiModelProperty("备注")
     private String remark;
 
-    @ApiModelProperty("招标备案审批状态(0-单位员工待提交 1-单位管理员待审批 2-评估中心员工待审批)")
+    @ApiModelProperty("招标备案审批状态(0-审核被退回单位员工再次提交  1-单位管理员待审批 2-评估中心员工待审批 3-评估中心员工已审批)")
     private Integer auditStatus;
 
     @ApiModelProperty("中标文件附件id")

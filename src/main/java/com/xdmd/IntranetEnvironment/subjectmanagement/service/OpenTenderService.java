@@ -159,4 +159,12 @@ public interface OpenTenderService {
                                                String joinTenderUnits, String operator, String operatorContact,
                                                BigDecimal winningAmount, BigDecimal supportingFunds, String remark,
                                                int oid);
+
+
+    /**
+     * 根据招标备案表id获取文件路径和文件名
+     * @param id
+     * @return
+     */
+    ResultMap getfileInfo( int id);
 }

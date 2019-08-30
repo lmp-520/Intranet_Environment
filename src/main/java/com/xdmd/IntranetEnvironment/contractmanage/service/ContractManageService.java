@@ -2,9 +2,13 @@ package com.xdmd.IntranetEnvironment.contractmanage.service;
 
 import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.contractmanage.pojo.ContractManageDTO;
+import com.xdmd.IntranetEnvironment.subjectmanagement.exception.InsertSqlException;
+import com.xdmd.IntranetEnvironment.subjectmanagement.exception.UpdateSqlException;
+import com.xdmd.IntranetEnvironment.subjectmanagement.exception.UpdateStatusException;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +20,6 @@ import java.util.Map;
  */
 public interface ContractManageService {
 
-
     /**
      * 获取最新的id用于保持最新课题编号
      * @return
@@ -25,10 +28,13 @@ public interface ContractManageService {
 
     /**
      * [新增合同主表]
+     *
+     * @param token
+     * @param response
      * @param contractManageDTO
      * @return
      */
-    int insert(ContractManageDTO contractManageDTO);
+    ResultMap insert(String token, HttpServletResponse response, ContractManageDTO contractManageDTO);
 
     /**
      * [查詢合同主表] 根据合同主表id查询
@@ -36,6 +42,16 @@ public interface ContractManageService {
      * @return
      */
     ContractManageDTO getManageInfoById(int id);
+
+
+    /**
+     * 合同附件上传
+     * @param file
+     * @param cid
+     * @return
+     */
+
+    String ContractFileUpload(MultipartFile file, int cid) throws IOException;
 
     /**
      * [查詢] 根據单位id查詢本单位合同
@@ -54,10 +70,12 @@ public interface ContractManageService {
     ResultMap getAllInfo(String subjectCategory, String subjectName, String subjectContact, String subjectContactPhone, String commitmentUnit, String subjectSupervisorDepartment, int pageNum, int pageSize);
 
 
+
+
+
+
+
     ///////////////////////////以下是中期检查///////////////////////////////////
-
-
-
 
     /**
      * 根据勾选的合同主表id修改相应的中期检查记录【内网中检】
@@ -98,74 +116,85 @@ public interface ContractManageService {
      */
     int updateContractAnnexIdByCid(int contractAnnexId, int cid);
 
-    /**
-     * 中期文件上传
-     * @param file
-     * @param cid
-     * @return
-     */
-    String midFileUpload(MultipartFile file, String fileType, int cid) throws IOException;
-
 
     ///////////////////////////以下是合同审批///////////////////////////////////
 
-  //  /**
-  //   * 单位管理员审核通过
-  //   * @return
-  //   */
-  //  int updateStatusPassByUnitManager(@Param("id") int id);
-//
-  //  /**
-  //   * 单位管理员审核不通过
-  //   * @return
-  //   */
-  //  int updateStatusNoPassByUnitManager(@Param("id") int id);
-//
-  //  /**
-  //   * 评估中心审核通过
-  //   * @return
-  //   */
-  //  int updateStatusPassByPingGu(@Param("id") int id);
-//
-  //  /**
-  //   * 评估中心审核不通过
-  //   * @return
-  //   */
-  //  int updateStatusNoPassByPingGu(@Param("id") int id);
-//
-  //  /**
-  //   * 法规科技处审核通过
-  //   * @return
-  //   */
-  //  int updateStatusPassByFaGui(@Param("id") int id);
-//
-  //  /**
-  //   * 法规科技处审核不通过
-  //   * @return
-  //   */
-  //  int updateStatusNoPassByFaGui(@Param("id") int id);
-//
-//
-  //  /**
-  //   * 不通过被退回时重新提交审核
-  //   * @return
-  //   */
-  //  int updateStatusByReturnCommit(@Param("id") int id);
-//
-//
-  //  /**
-  //   * 展示所有未通过审批的
-  //   * @return
-  //   */
-  //  List<ContractManageDTO> showAllNoPassAudit(int pageNum,int pageSize);
-//
-  //  /**
-  //   * 展示通过所有法规科技处审批的
-  //   * @return
-  //   */
-  //  List<ContractManageDTO> showAllPassAudit(int pageNum,int pageSize);
+    /**
+     * 单位管理员审核
+     * @param token
+     * @param response
+     * @param type 审核状态
+     * @param reason 审核不通过原因
+     * @param oid 审核表id
+     * @return
+     */
+    ResultMap contractShenHeByUnitManager(String token, HttpServletResponse response, Boolean type, String reason, Integer oid) throws UpdateSqlException, InsertSqlException;
+
+    /**
+     * 评估中心审核
+     * @param type
+     * @param reason
+     * @param oid
+     * @return
+     */
+    ResultMap contractShenHeByPingGuCenter(String token, HttpServletResponse response,Boolean type, String reason, Integer oid);
+
+    /**
+     * 法规科技处审核
+     * @param type
+     * @param reason
+     * @param oid
+     * @return
+     */
+    ResultMap contractShenHeByFaGui(String token, HttpServletResponse response,Boolean type, String reason, Integer oid);
+
+    /**
+     * 不通过被退回时重新提交[修改]
+     * @param contractManageDTO
+     * @return
+     */
+    ResultMap updateContractStatusByReturnCommit(ContractManageDTO contractManageDTO) throws UpdateSqlException, UpdateStatusException;
+
 
 }
 
+//备忘：合同表更新字段
+//@Param("subjectCategory") String subjectCategory,
+//@Param("projectNo") String projectNo,
+//@Param("subjectName") String subjectName,
+//@Param("contractStartTime") String contractStartTime,
+//@Param("contractEndTime") String contractEndTime,
+//@Param("subjeceLeader") String subjeceLeader,
+//@Param("subjectLeaderPhone") String subjectLeaderPhone,
+//@Param("subjectContact") String subjectContact,
+//@Param("subjectContactPhone") String subjectContactPhone,
+//@Param("commitmentUnit") String commitmentUnit,
+//@Param("commitmentUnitAddress") String commitmentUnitAddress,
+//@Param("commitmentUnitZip") String commitmentUnitZip,
+//@Param("subjectSupervisorDepartment") String subjectSupervisorDepartment,
+//@Param("openBank") String openBank,
+//@Param("openBankAccount") String openBankAccount,
+//@Param("email") String email,
+//@Param("guaranteedUnits") String guaranteedUnits,
+//@Param("guaranteedUnitContact") String guaranteedUnitContact,
+//@Param("guaranteedContactPhone") String guaranteedContactPhone,
+//@Param("commissioningUnit") String commissioningUnit,
+//@Param("legalRepresentativeEntrustingA") String legalRepresentativeEntrustingA,
+//@Param("commissionedUnitAddressA") String commissionedUnitAddressA,
+//@Param("commissionedUnitZipA") String commissionedUnitZipA,
+//@Param("responsibilityUnitB") String responsibilityUnitB,
+//@Param("responsibilityLegalRepresentativeB") String responsibilityLegalRepresentativeB,
+//@Param("commitUnitAddressB") String commitUnitAddressB,
+//@Param("commitUnitZipB") String commitUnitZipB,
+//@Param("commitUnitLeaderB") String commitUnitLeaderB,
+//@Param("commitunitLeadersPhoneB") String commitunitLeadersPhoneB,
+//@Param("commitmentUnitEmailB") String commitmentUnitEmailB,
+//@Param("guaranteedUnitC") String guaranteedUnitC,
+//@Param("guaranteedUnitLeaderC") String guaranteedUnitLeaderC,
+//@Param("guaranteedUnitAddressC") String guaranteedUnitAddressC,
+//@Param("guaranteedUnitZipC") String guaranteedUnitZipC,
+//@Param("subjectSigningDescription") String subjectSigningDescription,
+//@Param("subjectObjectivesResearch") String subjectObjectivesResearch,
+//@Param("subjectAcceptanceAssessment") String subjectAcceptanceAssessment
 
 

@@ -330,6 +330,17 @@ public class OpenTenderController {
         }
         return resultMap = openTenderService.updateTenderStatusByReturnCommit(token, response,projectNo, projectName, tenderNo, subcontractingNo, subjectName, responsibleUnit, bidders, subjectLeader, leaderContact, joinTenderUnits, operator, operatorContact, winningAmount, supportingFunds, remark, oid);
     }
+
+    /**
+     * 根据招标备案表id获取文件路径和文件名
+     * @param id
+     * @return
+     */
+    @GetMapping(value = "updateTenderStatusByReturnCommit")
+    @ApiOperation(value = "根据招标备案表id获取文件路径和文件名【内外网】")
+    public ResultMap getfileInfo(int id) {
+        return  resultMap=openTenderService.getfileInfo(id);
+    }
 }
 
 
