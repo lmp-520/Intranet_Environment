@@ -153,8 +153,54 @@ public interface ContractManageService {
      * @param contractManageDTO
      * @return
      */
-    ResultMap updateContractStatusByReturnCommit(ContractManageDTO contractManageDTO) throws UpdateSqlException, UpdateStatusException;
+    ResultMap updateContractStatusByReturnCommit(String token, HttpServletResponse response,ContractManageDTO contractManageDTO) throws UpdateSqlException, UpdateStatusException;
 
+    /**
+     * 展示所有通过单位管理员审批的 【外网】
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    ResultMap showAllPassContractReviewByUnitManager(int pageNum, int pageSize);
+
+    /**
+     * 展示所有未通过单位管理员审批的 【外网】
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    ResultMap showAllNoPassContractReviewByUnitManager(int pageNum, int pageSize);
+
+    /**
+     * 展示所有通过评估中心审批的 【内网】
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    ResultMap showAllPassContractReviewByPingGu(int pageNum, int pageSize);
+    /**
+     * 展示所有未通过评估中心审批的 【内网】
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    ResultMap showAllNoPassReviewContractByPingGu(int pageNum, int pageSize);
+
+
+    /**
+     * 展示所有通过法规科技处审批的 【内网】
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    ResultMap showAllPassContractReviewByFaGui(int pageNum, int pageSize);
+    /**
+     * 展示所有未通过法规科技处审批的 【内网】
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    ResultMap showAllNoPassReviewContractByFaGui(int pageNum, int pageSize);
 
 }
 

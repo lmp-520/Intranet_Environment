@@ -289,7 +289,7 @@ public interface OpenTenderMapper {
             "ORDER BY id DESC")
     List<OpenTender> showAllPassTenderReviewByUnitManager();
     /**
-     * 展示所有通过单位管理员审批的
+     * 展示所有通过单位管理员审批的[即展示所有未通过评估中心审批的]
      * @return
      */
     @Select("SELECT\n" +
@@ -306,7 +306,7 @@ public interface OpenTenderMapper {
             "FROM\n" +
             "open_tender \n" +
             "WHERE\n" +
-            "audit_status >1 and audit_status<3" +
+            "audit_status =2" +
             "ORDER BY id DESC")
     List<OpenTender> showAllNoPassTenderReviewByUnitManager();
 
@@ -346,7 +346,7 @@ public interface OpenTenderMapper {
             "leader_contact as leaderContact,\n" +
             "operator,\n" +
             "operator_contact as operatorContact\n" +
-            "audit_status \n" +
+            "audit_status\t" +
             "FROM\n" +
             "open_tender \n" +
             "WHERE\n" +

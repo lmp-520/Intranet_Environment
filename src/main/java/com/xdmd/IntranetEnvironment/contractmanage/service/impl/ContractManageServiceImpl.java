@@ -622,12 +622,15 @@ public class ContractManageServiceImpl implements ContractManageService {
 
     /**
      * 不通过被退回时重新提交[即修改]【外网】
-     *
+     * @param token
+     * @param response
      * @param contractManageDTO
      * @return
+     * @throws UpdateSqlException
+     * @throws UpdateStatusException
      */
     @Override
-    public ResultMap updateContractStatusByReturnCommit(ContractManageDTO contractManageDTO) throws UpdateSqlException, UpdateStatusException {
+    public ResultMap updateContractStatusByReturnCommit(String token, HttpServletResponse response,ContractManageDTO contractManageDTO) throws UpdateSqlException, UpdateStatusException {
         //      User user = new User();
 //        try {
 //            user = tokenService.compare(response, token);
@@ -679,6 +682,154 @@ public class ContractManageServiceImpl implements ContractManageService {
             resultMap.success().message("重新修改并提交成功");
         } else if (updateNum == 0) {
             resultMap.fail().message("重新修改并提交失败");
+        }
+        return resultMap;
+    }
+
+
+    /**
+     * 展示所有通过单位管理员审批的 【外网】
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public ResultMap showAllPassContractReviewByUnitManager(int pageNum, int pageSize) {
+        try {
+            PageHelper.startPage(pageNum, pageSize, true);
+            List<Map> contractMap= contractManageMapper.showAllPassContractReviewByUnitManager();
+            PageInfo pageInfo = new PageInfo(contractMap);
+            if (contractMap.size() > 0) {
+                resultMap.success().message(pageInfo);
+            } else if (contractMap.size() == 0) {
+                resultMap.fail().message("没有找到数据");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
+
+    /**
+     * 展示所有未通过单位管理员审批的 【外网】
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public ResultMap showAllNoPassContractReviewByUnitManager(int pageNum, int pageSize) {
+        try {
+            PageHelper.startPage(pageNum, pageSize, true);
+            List<Map> contractMap= contractManageMapper.showAllNoPassContractReviewByUnitManager();
+            PageInfo pageInfo = new PageInfo(contractMap);
+            if (contractMap.size() > 0) {
+                resultMap.success().message(pageInfo);
+            } else if (contractMap.size() == 0) {
+                resultMap.fail().message("没有找到数据");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
+
+    /**
+     * 展示所有通过评估中心审批的 【外网】
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public ResultMap showAllPassContractReviewByPingGu(int pageNum, int pageSize) {
+        try {
+            PageHelper.startPage(pageNum, pageSize, true);
+            List<Map> contractMap= contractManageMapper.showAllPassContractReviewByPingGu();
+            PageInfo pageInfo = new PageInfo(contractMap);
+            if (contractMap.size() > 0) {
+                resultMap.success().message(pageInfo);
+            } else if (contractMap.size() == 0) {
+                resultMap.fail().message("没有找到数据");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
+
+
+    /**
+     * 展示所有未通过评估中心审批的 【外网】
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public ResultMap showAllNoPassReviewContractByPingGu(int pageNum, int pageSize) {
+        try {
+            PageHelper.startPage(pageNum, pageSize, true);
+            List<Map> contractMap= contractManageMapper.showAllNoPassReviewContractByPingGu();
+            PageInfo pageInfo = new PageInfo(contractMap);
+            if (contractMap.size() > 0) {
+                resultMap.success().message(pageInfo);
+            } else if (contractMap.size() == 0) {
+                resultMap.fail().message("没有找到数据");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
+
+
+    /**
+     * 展示所有通过法规科技处审批的 【外网】
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public ResultMap showAllPassContractReviewByFaGui(int pageNum, int pageSize) {
+        try {
+            PageHelper.startPage(pageNum, pageSize, true);
+            List<ContractManageDTO> contractMap= contractManageMapper.showAllPassContractReviewByFaGui();
+            PageInfo pageInfo = new PageInfo(contractMap);
+            if (contractMap.size() > 0) {
+                resultMap.success().message(pageInfo);
+            } else if (contractMap.size() == 0) {
+                resultMap.fail().message("没有找到数据");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
+
+
+    /**
+     * 展示所有未通过评估中心审批的 【外网】
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public ResultMap showAllNoPassReviewContractByFaGui(int pageNum, int pageSize) {
+        try {
+            PageHelper.startPage(pageNum, pageSize, true);
+            List<ContractManageDTO> contractMap= contractManageMapper.showAllNoPassReviewContractByFaGui();
+            PageInfo pageInfo = new PageInfo(contractMap);
+            if (contractMap.size() > 0) {
+                resultMap.success().message(pageInfo);
+            } else if (contractMap.size() == 0) {
+                resultMap.fail().message("没有找到数据");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultMap.fail().message("系统异常");
         }
         return resultMap;
     }

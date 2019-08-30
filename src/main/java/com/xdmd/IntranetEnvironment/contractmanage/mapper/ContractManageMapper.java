@@ -207,7 +207,7 @@ public interface ContractManageMapper {
     int updateContractByIds(@Param("mid") int mid, @Param("ids") List<Long> ids);
 
     /**
-     * 根据合同id更新相应的附件id【外网中检】
+     * 根据合同id更新中期检查所需附件id【外网中检】
      * @param cid
      * @param midCheckAnnexId
      * @param expertAssessmentAnnexId
@@ -222,7 +222,7 @@ public interface ContractManageMapper {
 
 
     /**
-     * 根据合同id更新合同附件id【外网中检】
+     * 根据合同id更新合同附件id【外网提交】
      * @param contractAnnexId
      * @param cid
      * @return
@@ -321,4 +321,130 @@ public interface ContractManageMapper {
             "subject_acceptance_assessment = #{subjectAcceptanceAssessment}\n" +
             "where id=#{cid}")
     int updateContractStatusByReturnCommit(@Param("contractManageDTO") ContractManageDTO contractManageDTO);
+
+    /**
+     * 展示所有通过单位管理员审批的 【外网】
+     * @return
+     */
+    @Select("SELECT \n" +
+            "id,\n" +
+            "subject_category as subjectCategory,\n" +
+            "subject_name as subjectName,\n" +
+            "subject_objectives_research as subjectObjectivesResearch,\n" +
+            "subject_contact as subjectContact,\n" +
+            "subject_contact_phone as subjectContactPhone,\n" +
+            "commitment_unit as commitmentUnit,\n" +
+            "subject_supervisor_department as subjectSupervisorDepartment,\n" +
+            "approval_status as approvalStatus\n" +
+            "FROM\n" +
+            "contract_manage\n" +
+            "WHERE\n" +
+            "approval_status = 2 \n" +
+            "ORDER BY id DESC")
+    List<Map> showAllPassContractReviewByUnitManager();
+
+    /**
+     * 展示所有未通过单位管理员审批的 【外网】
+     * @return
+     */
+    @Select("SELECT \n" +
+            "id,\n" +
+            "subject_category as subjectCategory,\n" +
+            "subject_name as subjectName,\n" +
+            "subject_objectives_research as subjectObjectivesResearch,\n" +
+            "subject_contact as subjectContact,\n" +
+            "subject_contact_phone as subjectContactPhone,\n" +
+            "commitment_unit as commitmentUnit,\n" +
+            "subject_supervisor_department as subjectSupervisorDepartment,\n" +
+            "approval_status as approvalStatus\n" +
+            "FROM\n" +
+            "contract_manage\n" +
+            "WHERE\n" +
+            "approval_status < 2 \n" +
+            "ORDER BY id DESC")
+    List<Map> showAllNoPassContractReviewByUnitManager();
+
+    /**
+     * 展示所有通过评估中心审批的 【内网】
+     * @return
+     */
+    @Select("SELECT \n" +
+            "id,\n" +
+            "subject_category as subjectCategory,\n" +
+            "subject_name as subjectName,\n" +
+            "subject_objectives_research as subjectObjectivesResearch,\n" +
+            "subject_contact as subjectContact,\n" +
+            "subject_contact_phone as subjectContactPhone,\n" +
+            "commitment_unit as commitmentUnit,\n" +
+            "subject_supervisor_department as subjectSupervisorDepartment,\n" +
+            "approval_status as approvalStatus\n" +
+            "FROM\n" +
+            "contract_manage\n" +
+            "WHERE\n" +
+            "approval_status=3\n" +
+            "ORDER BY id DESC")
+    List<Map> showAllPassContractReviewByPingGu();
+    /**
+     * 展示所有未通过评估中心审批的 【内网】
+     * @return
+     */
+    @Select("SELECT \n" +
+            "id,\n" +
+            "subject_category as subjectCategory,\n" +
+            "subject_name as subjectName,\n" +
+            "subject_objectives_research as subjectObjectivesResearch,\n" +
+            "subject_contact as subjectContact,\n" +
+            "subject_contact_phone as subjectContactPhone,\n" +
+            "commitment_unit as commitmentUnit,\n" +
+            "subject_supervisor_department as subjectSupervisorDepartment,\n" +
+            "approval_status as approvalStatus\n" +
+            "FROM\n" +
+            "contract_manage\n" +
+            "WHERE\n" +
+            "approval_status =2 \n" +
+            "ORDER BY id DESC")
+    List<Map> showAllNoPassReviewContractByPingGu();
+
+
+    /**
+     * 展示所有通过法规科技处审批的 【内网】
+     * @return
+     */
+    @Select("SELECT \n" +
+            "id,\n" +
+            "subject_category as subjectCategory,\n" +
+            "subject_name as subjectName,\n" +
+            "subject_objectives_research as subjectObjectivesResearch,\n" +
+            "subject_contact as subjectContact,\n" +
+            "subject_contact_phone as subjectContactPhone,\n" +
+            "commitment_unit as commitmentUnit,\n" +
+            "subject_supervisor_department as subjectSupervisorDepartment,\n" +
+            "approval_status as approvalStatus\n" +
+            "FROM\n" +
+            "contract_manage\n" +
+            "WHERE\n" +
+            "approval_status =4 \n" +
+            "ORDER BY id DESC")
+    List<ContractManageDTO> showAllPassContractReviewByFaGui();
+
+    /**
+     * 展示所有未通过法规科技处审批的 【内网】
+     * @return
+     */
+    @Select("SELECT \n" +
+            "id,\n" +
+            "subject_category as subjectCategory,\n" +
+            "subject_name as subjectName,\n" +
+            "subject_objectives_research as subjectObjectivesResearch,\n" +
+            "subject_contact as subjectContact,\n" +
+            "subject_contact_phone as subjectContactPhone,\n" +
+            "commitment_unit as commitmentUnit,\n" +
+            "subject_supervisor_department as subjectSupervisorDepartment,\n" +
+            "approval_status as approvalStatus\n" +
+            "FROM\n" +
+            "contract_manage\n" +
+            "WHERE\n" +
+            "approval_status =3 \n" +
+            "ORDER BY id DESC")
+    List<ContractManageDTO> showAllNoPassReviewContractByFaGui();
 }

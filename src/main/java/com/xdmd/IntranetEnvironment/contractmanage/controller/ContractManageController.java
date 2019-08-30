@@ -6,6 +6,7 @@ import com.xdmd.IntranetEnvironment.contractmanage.pojo.ContractManageDTO;
 import com.xdmd.IntranetEnvironment.contractmanage.service.ContractManageService;
 import com.xdmd.IntranetEnvironment.subjectmanagement.exception.InsertSqlException;
 import com.xdmd.IntranetEnvironment.subjectmanagement.exception.UpdateSqlException;
+import com.xdmd.IntranetEnvironment.subjectmanagement.exception.UpdateStatusException;
 import io.swagger.annotations.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -245,11 +246,11 @@ public class ContractManageController {
             resultMap = contractManageService.contractShenHeByUnitManager(token, response, type, reason, oid);
         } catch (UpdateSqlException e) {
             e.printStackTrace();
-            log.error("OpenTenderController 中 tenderFileUpload 方法 -- " + e.getMessage());
+            log.error("OpenContractController 中 ContractFileUpload 方法 -- " + e.getMessage());
             resultMap.fail().message("系统异常");
         } catch (InsertSqlException e) {
             e.printStackTrace();
-            log.error("OpenTenderController 中 tenderFileUpload 方法 -- " + e.getMessage());
+            log.error("OpenContractController 中 ContractFileUpload 方法 -- " + e.getMessage());
             resultMap.fail().message("系统异常");
         }
         return resultMap;
@@ -307,63 +308,90 @@ public class ContractManageController {
     }
 
 
-  //  /**
-  //   * 展示所有通过单位管理员审批的 【外网】
-  //   *
-  //   * @return
-  //   */
-  //  @GetMapping(value = "showAllPassTenderReviewByUnitManager")
-  //  @ApiOperation(value = "展示所有通过单位管理员审批的")
-  //  public ResultMap showAllPassTenderReviewByUnitManager(int pageNum, int pageSize) {
-  //      return resultMap = openTenderService.showAllPassTenderReviewByUnitManager(pageNum, pageSize);
-  //  }
-//
-  //  /**
-  //   * 展示所有未通过单位管理员审批的【外网】
-  //   *
-  //   * @return
-  //   */
-  //  @GetMapping(value = "showAllNoPassTenderReviewByUnitManager")
-  //  @ApiOperation(value = "展示所有未通过单位管理员审批的")
-  //  public ResultMap showAllNoPassTenderReviewByUnitManager(int pageNum, int pageSize) {
-  //      return resultMap = openTenderService.showAllNoPassTenderReviewByUnitManager(pageNum, pageSize);
-  //  }
-//
-  //  /**
-  //   * 展示所有通过评估中心审批的【内网】
-  //   *
-  //   * @return
-  //   */
-  //  @GetMapping(value = "showAllPassTenderReviewByPingGu")
-  //  @ApiOperation(value = "展示所有通过评估中心审批的")
-  //  public ResultMap showAllPassTenderReviewByPingGu(int pageNum, int pageSize) {
-  //      return resultMap = openTenderService.showAllPassTenderReviewByPingGu(pageNum, pageSize);
-  //  }
-//
-  //  /**
-  //   * 展示所有未通过评估中心审批的【内网】
-  //   *
-  //   * @return
-  //   */
-  //  @GetMapping(value = "showAllNoPassReviewTenderByPingGu")
-  //  @ApiOperation(value = "展示所有未通过评估中心审批的")
-  //  public ResultMap showAllNoPassReviewTenderByPingGu(int pageNum, int pageSize) {
-  //      return resultMap = openTenderService.showAllNoPassReviewTenderByPingGu(pageNum, pageSize);
-  //  }
-//
-//
-  //  @PostMapping(value = "updateTenderStatusByReturnCommit")
-  //  @ApiOperation(value = "不通过被退回时重新提交[即修改]【外网】")
-  //  public ResultMap updateTenderStatusByReturnCommit(//@CookieValue(value = "IntranecToken", required = false) String token, HttpServletResponse response,
-  //                                                    String projectNo, String projectName, String tenderNo, String subcontractingNo, String subjectName, String responsibleUnit, String bidders, String subjectLeader, String leaderContact, String joinTenderUnits, String operator, String operatorContact, BigDecimal winningAmount, BigDecimal supportingFunds, String remark, int oid) {
-//
-  //      String token = "aaa";
-  //      HttpServletResponse response = null;
-  //      if (StringUtils.isEmpty(token)) {
-  //          return resultMap.fail().message("请先登录");
-  //      }
-  //      return resultMap = openTenderService.updateTenderStatusByReturnCommit(token, response,projectNo, projectName, tenderNo, subcontractingNo, subjectName, responsibleUnit, bidders, subjectLeader, leaderContact, joinTenderUnits, operator, operatorContact, winningAmount, supportingFunds, remark, oid);
-  //  }
+    /**
+     * 展示所有通过单位管理员审批的 【外网】
+     * @return
+     */
+    @GetMapping(value = "showAllPassContractReviewByUnitManager")
+    @ApiOperation(value = "展示所有通过单位管理员审批的")
+    public ResultMap showAllPassContractReviewByUnitManager(int pageNum, int pageSize) {
+        return resultMap = contractManageService.showAllPassContractReviewByUnitManager(pageNum, pageSize);
+    }
+
+    /**
+     * 展示所有未通过单位管理员审批的【外网】
+     *
+     * @return
+     */
+    @GetMapping(value = "showAllNoPassContractReviewByUnitManager")
+    @ApiOperation(value = "展示所有未通过单位管理员审批的")
+    public ResultMap showAllNoPassContractReviewByUnitManager(int pageNum, int pageSize) {
+        return resultMap = contractManageService.showAllNoPassContractReviewByUnitManager(pageNum, pageSize);
+    }
+
+    /**
+     * 展示所有通过评估中心审批的【内网】
+     *
+     * @return
+     */
+    @GetMapping(value = "showAllPassContractReviewByPingGu")
+    @ApiOperation(value = "展示所有通过评估中心审批的")
+    public ResultMap showAllPassContractReviewByPingGu(int pageNum, int pageSize) {
+        return resultMap = contractManageService.showAllPassContractReviewByPingGu(pageNum, pageSize);
+    }
+
+    /**
+     * 展示所有未通过评估中心审批的【内网】
+     *
+     * @return
+     */
+    @GetMapping(value = "showAllNoPassReviewContractByPingGu")
+    @ApiOperation(value = "展示所有未通过评估中心审批的")
+    public ResultMap showAllNoPassReviewContractByPingGu(int pageNum, int pageSize) {
+        return resultMap = contractManageService.showAllNoPassReviewContractByPingGu(pageNum, pageSize);
+    }
+
+    /**
+     * 展示所有未通过法规科技处审批的【内网】
+     *
+     * @return
+     */
+    @GetMapping(value = "showAllNoPassReviewContractByFaGui")
+    @ApiOperation(value = "展示所有未通过法规科技处审批的")
+    public ResultMap showAllNoPassReviewContractByFaGui(int pageNum, int pageSize) {
+        return resultMap = contractManageService.showAllNoPassReviewContractByFaGui(pageNum, pageSize);
+    }
+
+    /**
+     * 展示所有通过法规科技处审批的【内网】
+     *
+     * @return
+     */
+    @GetMapping(value = "showAllPassContractReviewByFaGui")
+    @ApiOperation(value = "展示所有通过法规科技处审批的")
+    public ResultMap showAllPassContractReviewByFaGui(int pageNum, int pageSize) {
+        return resultMap = contractManageService.showAllPassContractReviewByFaGui(pageNum, pageSize);
+    }
+
+    /**
+     * 不通过被退回时重新提交[即修改]【外网】
+     * @param contractManageDTO
+     * @return
+     * @throws UpdateStatusException
+     * @throws UpdateSqlException
+     */
+   @PostMapping(value = "updateContractStatusByReturnCommit")
+   @ApiOperation(value = "不通过被退回时重新提交[即修改]【外网】")
+    public ResultMap updateContractStatusByReturnCommit(//@CookieValue(value = "IntranecToken", required = false) String token, HttpServletResponse response,
+                                                        @RequestBody ContractManageDTO contractManageDTO) throws UpdateStatusException, UpdateSqlException {
+
+        String token = "aaa";
+        HttpServletResponse response = null;
+        if (StringUtils.isEmpty(token)) {
+            return resultMap.fail().message("请先登录");
+        }
+        return resultMap = contractManageService.updateContractStatusByReturnCommit(token, response,contractManageDTO);
+    }
 
 
 
