@@ -608,7 +608,8 @@
             implementation_achievement = #{acceptanceCertificate.implementationAchievement},
             science_department_opinion = #{acceptanceCertificate.scienceDepartmentOpinion},
             check_department_opinion = #{acceptanceCertificate.checkDepartmentOpinion},
-            environment_office_opinion = #{acceptanceCertificate.environmentOfficeOpinion}
+            environment_office_opinion = #{acceptanceCertificate.environmentOfficeOpinion},
+            total_expenditure = #{acceptanceCertificate.totalExpenditure}
         where cid = #{caId}
     </update>
 </mapper>

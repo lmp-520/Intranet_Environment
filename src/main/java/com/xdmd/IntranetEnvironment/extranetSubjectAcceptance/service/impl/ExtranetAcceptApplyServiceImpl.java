@@ -1027,7 +1027,6 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
         if (lastReportFile != null) {
             //此时专家组意见文件不为空，则意味着上传了新的专家组意见
             //判断上传的专家组意见文件是否后缀名正确
-
             ArrayList<String> idCardFileSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".rar", ".zip", ".7z"));
             String lastReportFileName = lastReportFile.getOriginalFilename();
             Boolean aBoolean = FileSuffixJudgeUtil.SuffixJudge(lastReportFileName, idCardFileSuffixList);
@@ -1041,7 +1040,6 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
 
         if (oldLastReportFileUrl != null) {
             //此时旧的最终验收文件地址存在
-
             //对新的最终验收文件进行上传
             String lastReportFileUrl = FileUploadUtil.fileUpload(lastReportFile, cname, "最终验收证书文件");
             //把最终验收文件上传到upload_file中

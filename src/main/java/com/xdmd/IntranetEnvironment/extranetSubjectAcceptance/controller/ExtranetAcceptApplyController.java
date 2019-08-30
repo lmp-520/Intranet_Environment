@@ -418,7 +418,6 @@ public class ExtranetAcceptApplyController {
                                        @RequestPart ExtranetExpertGroupComment extranetExpertGroupComment, //专家组意见表
                                        @RequestPart(value = "expertGroupCommentsFile", required = false) MultipartFile expertGroupCommentsFile,  //专家意见表文件
                                        @RequestPart(value = "expertAcceptanceFormFile", required = false) MultipartFile expertAcceptanceFormFile) { //专家评议表文件
-
         if(StringUtils.isEmpty(token)){
             return resultMap.fail().message("系统异常");
         }
@@ -478,7 +477,6 @@ public class ExtranetAcceptApplyController {
         if(StringUtils.isEmpty(token)){
             return resultMap.fail().message("请先登录");
         }
-
         try {
             resultMap = extranetAcceptApplyService.expertGroupModify(token,response,extranetExpertGroupComment,caId,oldExpertGroupFileUrl,oldExpertAcceptanceFormFile,expertGroupFile,expertAcceptanceFormFile);
         } catch (Exception e) {
@@ -487,7 +485,6 @@ public class ExtranetAcceptApplyController {
             return resultMap.fail().message("系统异常");
         }
         return resultMap;
-
     }
 
     //对最终证书文件 与信息 修改
