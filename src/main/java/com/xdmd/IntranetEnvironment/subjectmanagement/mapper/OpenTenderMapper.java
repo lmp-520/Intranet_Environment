@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -222,13 +223,6 @@ public interface OpenTenderMapper {
     int updateTenderStatus(@Param("auditStatus") int auditStatus,@Param("id") int id);
 
     /**
-     * 评估中心审核通过【备用】
-     * @return
-    @Update(value = "update open_tender set audit_status=3 where audit_status=2 and id=#{id}")
-    int updateTenderStatusPassByPingGu(@Param("id") int id);
-     */
-
-    /**
      * 不通过被退回时重新提交[修改]
      * @param projectNo
      * @param projectName
@@ -248,25 +242,23 @@ public interface OpenTenderMapper {
      * @param oid
      * @return
      */
-    @Update(value = "<script>" +
-            "UPDATE open_tender SET" +
-            "<if test ='null != projectNo'>project_no = #{projectNo},</if>" +
-            "<if test ='null != projectName'>project_name = #{projectName},</if>" +
-            "<if test ='null != tenderNo'>tender_no = #{tenderNo},</if>" +
-            "<if test ='null != subcontractingNo'>subcontracting_no = #{subcontractingNo},</if>" +
-            "<if test ='null != subjectName'>subject_name = #{subjectName},</if>" +
-            "<if test ='null != responsibleUnit'>responsible_unit = #{responsibleUnit},</if>" +
-            "<if test ='null != bidders'>bidders = #{bidders},</if>" +
-            "<if test ='null != subjectLeader'>subject_leader = #{subjectLeader},</if>" +
-            "<if test ='null != leaderContact'>leader_contact = #{leaderContact},</if>" +
-            "<if test ='null != joinTenderUnits'>join_tender_units = #{joinTenderUnits},</if>" +
-            "<if test ='null != operator'>operator = #{operator},</if>" +
-            "<if test ='null != operatorContact'>operator_contact = #{operatorContact},</if>" +
-            "<if test ='null != winningAmount'>winning_amount = #{winningAmount},</if>" +
-            "<if test ='null != supportingFunds'>supporting_funds = #{supportingFunds},</if>" +
-            "<if test ='null != remark'>remark = #{remark}</if>" +
-            "\twhere id=#{oid}" +
-            "</script>")
+    @Update(value = "UPDATE open_tender SET \n" +
+            "project_no = #{projectNo}, \n" +
+            "project_name = #{projectName}, \n" +
+            "tender_no = #{tenderNo}, \n" +
+            "subcontracting_no = #{subcontractingNo}, \n" +
+            "subject_name = #{subjectName}, \n" +
+            "responsible_unit = #{responsibleUnit}, \n" +
+            "bidders = #{bidders}, \n" +
+            "subject_leader = #{subjectLeader}, \n" +
+            "leader_contact = #{leaderContact}, \n" +
+            "join_tender_units = #{joinTenderUnits}, \n" +
+            "operator = #{operator}, \n" +
+            "operator_contact = #{operatorContact}, \n" +
+            "winning_amount = #{winningAmount}, \n" +
+            "supporting_funds = #{supportingFunds}, \n" +
+            "remark = #{remark}\t" +
+            "where id=#{oid}")
     int updateTenderStatusByReturnCommit(@Param("projectNo") String projectNo, @Param("projectName") String projectName, @Param("tenderNo") String tenderNo,
                                          @Param("subcontractingNo") String subcontractingNo, @Param("subjectName") String subjectName, @Param("responsibleUnit") String responsibleUnit,
                                          @Param("bidders") String bidders, @Param("subjectLeader") String subjectLeader, @Param("leaderContact") String leaderContact,
@@ -297,7 +289,7 @@ public interface OpenTenderMapper {
             "ORDER BY id DESC")
     List<OpenTender> showAllPassTenderReviewByUnitManager();
     /**
-     * 展示所有通过单位管理员审批的
+     * 展示所有通过单位管理员审批的[即展示所有未通过评估中心审批的]
      * @return
      */
     @Select("SELECT\n" +
@@ -314,7 +306,7 @@ public interface OpenTenderMapper {
             "FROM\n" +
             "open_tender \n" +
             "WHERE\n" +
-            "audit_status >1 and audit_status<3" +
+            "audit_status =2" +
             "ORDER BY id DESC")
     List<OpenTender> showAllNoPassTenderReviewByUnitManager();
 
@@ -354,7 +346,7 @@ public interface OpenTenderMapper {
             "leader_contact as leaderContact,\n" +
             "operator,\n" +
             "operator_contact as operatorContact\n" +
-            "audit_status \n" +
+            "audit_status\t" +
             "FROM\n" +
             "open_tender \n" +
             "WHERE\n" +
@@ -369,5 +361,28 @@ public interface OpenTenderMapper {
      */
     @Select("select responsible_unit from open_tender where id = #{oid}")
     String queryUnitNameByoid(Integer oid);
+
+
+
+    /**
+     * 获取文件路径和文件名
+     * @param id
+     * @return
+     */
+    @Select("SELECT\n" +
+            "uf.id,\n" +
+            "uf.upload_file_name,\n" +
+            "uf.upload_file_address\n" +
+            "FROM\n" +
+            "upload_file uf,\n" +
+            "open_tender ot\n" +
+            "WHERE\n" +
+            "uf.id in(\n" +
+            "(select uf.id from open_tender ot,upload_file uf where uf.id=ot.winning_file_attachment_id and ot.id=#{id}),\n" +
+            "(select uf.id from open_tender ot,upload_file uf where uf.id=ot.announcement_transaction_announcement_id and ot.id=#{id),\n" +
+            "(select uf.id from open_tender ot,upload_file uf where uf.id=ot.deal_notification_attachment_id and ot.id=#{id),\n" +
+            "(select uf.id from open_tender ot,upload_file uf where uf.id=ot.response_file_attachment_id and ot.id=#{id)\n" +
+            ")")
+    HashMap getfileInfo(@Param("id") int id);
 }
 

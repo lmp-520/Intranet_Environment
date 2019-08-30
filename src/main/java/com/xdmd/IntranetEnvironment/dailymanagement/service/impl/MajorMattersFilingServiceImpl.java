@@ -11,7 +11,7 @@ import com.xdmd.IntranetEnvironment.dailymanagement.pojo.AdjustTypeDTO;
 import com.xdmd.IntranetEnvironment.dailymanagement.pojo.AdjustmentMattersDTO;
 import com.xdmd.IntranetEnvironment.dailymanagement.pojo.MajorMattersFilingDTO;
 import com.xdmd.IntranetEnvironment.dailymanagement.service.MajorMattersFilingService;
-import com.xdmd.IntranetEnvironment.subjectmanagement.mapper.UploadFileMapper;
+import com.xdmd.IntranetEnvironment.common.UploadFileMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

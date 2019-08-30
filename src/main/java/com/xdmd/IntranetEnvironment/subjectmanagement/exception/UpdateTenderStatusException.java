@@ -1,13 +1,14 @@
 package com.xdmd.IntranetEnvironment.subjectmanagement.exception;
 
 /**
- * 更新招标备案表中审核状态出错
+ * 更新审核状态出错
+ * @author Administrator
  */
-public class UpdateTenderStatusException extends Exception {
-    public UpdateTenderStatusException() {
+public class UpdateStatusException extends Exception {
+    public UpdateStatusException() {
     }
 
-    public UpdateTenderStatusException(String message) {
+    public UpdateStatusException(String message) {
         super(message);
     }
 }

@@ -1,6 +1,5 @@
-package com.xdmd.IntranetEnvironment.subjectmanagement.mapper;
+package com.xdmd.IntranetEnvironment.common;
 
-import com.xdmd.IntranetEnvironment.common.AnnexUpload;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
@@ -9,7 +8,7 @@ import org.springframework.stereotype.Repository;
 /**
  * @author: Kong
  * @createDate: 2019/07/31
- * @description: 保存文件信息到数据库
+ * @description: 保存文件信息到数据库【通用上传sql】
  */
 @Mapper
 @Repository

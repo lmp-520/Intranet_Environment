@@ -4,7 +4,7 @@ package com.xdmd.IntranetEnvironment.dailymanagement.controller;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.dailymanagement.pojo.*;
 import com.xdmd.IntranetEnvironment.dailymanagement.service.ProjectProgressService;
-import com.xdmd.IntranetEnvironment.subjectmanagement.mapper.UploadFileMapper;
+import com.xdmd.IntranetEnvironment.common.UploadFileMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
