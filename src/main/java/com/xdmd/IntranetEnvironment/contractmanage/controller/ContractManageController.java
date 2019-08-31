@@ -225,7 +225,7 @@ public class ContractManageController {
      *
      * @param type   审核状态
      * @param reason 审核不通过原因
-     * @param oid    审核表id
+     * @param cid    审核表id
      * @return
      */
     @PostMapping(value = "contractShenHeByUnitManager")
@@ -233,17 +233,17 @@ public class ContractManageController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "type", value = "审核状态", required = true),
             @ApiImplicitParam(name = "reason", value = "审核不通过原因", required = false),
-            @ApiImplicitParam(name = "oid", value = "审核表id", required = true),
+            @ApiImplicitParam(name = "cid", value = "审核表id", required = true),
     })
     public ResultMap contractShenHeByUnitManager(//@CookieValue(value = "IntranecToken", required = false) String token, HttpServletResponse response,
-                                               Boolean type, String reason, Integer oid) {
+                                               Boolean type, String reason, Integer cid) {
         String token = "aaa";
         HttpServletResponse response = null;
         if (StringUtils.isEmpty(token)) {
             resultMap.fail().message("请先登录");
         }
         try {
-            resultMap = contractManageService.contractShenHeByUnitManager(token, response, type, reason, oid);
+            resultMap = contractManageService.contractShenHeByUnitManager(token, response, type, reason, cid);
         } catch (UpdateSqlException e) {
             e.printStackTrace();
             log.error("OpenContractController 中 ContractFileUpload 方法 -- " + e.getMessage());
@@ -261,24 +261,24 @@ public class ContractManageController {
      *
      * @param type   审核状态
      * @param reason 审核不通过原因
-     * @param oid    审核表id
+     * @param cid    审核表id
      * @return
      */
     @ApiImplicitParams({
             @ApiImplicitParam(name = "type", value = "审核状态", required = true),
             @ApiImplicitParam(name = "reason", value = "审核不通过原因", required = false),
-            @ApiImplicitParam(name = "oid", value = "审核表id", required = true),
+            @ApiImplicitParam(name = "cid", value = "审核表id", required = true),
     })
     @PostMapping(value = "contractShenHeByPingGuCenter")
     @ApiOperation(value = "评估中心审核【内网")
     public ResultMap contractShenHeByPingGuCenter(//@CookieValue(value = "IntranecToken", required = false) String token, HttpServletResponse response,
-                                                Boolean type, String reason, Integer oid) {
+                                                Boolean type, String reason, Integer cid) {
         String token = "aaa";
         HttpServletResponse response = null;
         if (StringUtils.isEmpty(token)) {
             return resultMap.fail().message("请先登录");
         }
-        resultMap = contractManageService.contractShenHeByPingGuCenter(token, response, type, reason, oid);
+        resultMap = contractManageService.contractShenHeByPingGuCenter(token, response, type, reason, cid);
         return resultMap;
     }
     /**
@@ -286,24 +286,24 @@ public class ContractManageController {
      *
      * @param type   审核状态
      * @param reason 审核不通过原因
-     * @param oid    审核表id
+     * @param cid    审核表id
      * @return
      */
     @ApiImplicitParams({
             @ApiImplicitParam(name = "type", value = "审核状态", required = true),
             @ApiImplicitParam(name = "reason", value = "审核不通过原因", required = false),
-            @ApiImplicitParam(name = "oid", value = "审核表id", required = true),
+            @ApiImplicitParam(name = "cid", value = "审核表id", required = true),
     })
     @PostMapping(value = "contractShenHeByFaGui")
-    @ApiOperation(value = "评估中心审核【内网")
+    @ApiOperation(value = "法规科技处审核【内网")
     public ResultMap contractShenHeByFaGui(//@CookieValue(value = "IntranecToken", required = false) String token, HttpServletResponse response,
-                                                  Boolean type, String reason, Integer oid) {
+                                                  Boolean type, String reason, Integer cid) {
         String token = "aaa";
         HttpServletResponse response = null;
         if (StringUtils.isEmpty(token)) {
             return resultMap.fail().message("请先登录");
         }
-        resultMap = contractManageService.contractShenHeByFaGui(token, response, type, reason, oid);
+        resultMap = contractManageService.contractShenHeByFaGui(token, response, type, reason, cid);
         return resultMap;
     }
 
@@ -313,7 +313,7 @@ public class ContractManageController {
      * @return
      */
     @GetMapping(value = "showAllPassContractReviewByUnitManager")
-    @ApiOperation(value = "展示所有通过单位管理员审批的")
+    @ApiOperation(value = "展示所有通过单位管理员审批的【外网】")
     public ResultMap showAllPassContractReviewByUnitManager(int pageNum, int pageSize) {
         return resultMap = contractManageService.showAllPassContractReviewByUnitManager(pageNum, pageSize);
     }
@@ -335,7 +335,7 @@ public class ContractManageController {
      * @return
      */
     @GetMapping(value = "showAllPassContractReviewByPingGu")
-    @ApiOperation(value = "展示所有通过评估中心审批的")
+    @ApiOperation(value = "展示所有通过评估中心审批的【内网】")
     public ResultMap showAllPassContractReviewByPingGu(int pageNum, int pageSize) {
         return resultMap = contractManageService.showAllPassContractReviewByPingGu(pageNum, pageSize);
     }
@@ -346,7 +346,7 @@ public class ContractManageController {
      * @return
      */
     @GetMapping(value = "showAllNoPassReviewContractByPingGu")
-    @ApiOperation(value = "展示所有未通过评估中心审批的")
+    @ApiOperation(value = "展示所有未通过评估中心审批的【内网】")
     public ResultMap showAllNoPassReviewContractByPingGu(int pageNum, int pageSize) {
         return resultMap = contractManageService.showAllNoPassReviewContractByPingGu(pageNum, pageSize);
     }
@@ -357,7 +357,7 @@ public class ContractManageController {
      * @return
      */
     @GetMapping(value = "showAllNoPassReviewContractByFaGui")
-    @ApiOperation(value = "展示所有未通过法规科技处审批的")
+    @ApiOperation(value = "展示所有未通过法规科技处审批的【内网】")
     public ResultMap showAllNoPassReviewContractByFaGui(int pageNum, int pageSize) {
         return resultMap = contractManageService.showAllNoPassReviewContractByFaGui(pageNum, pageSize);
     }
@@ -368,7 +368,7 @@ public class ContractManageController {
      * @return
      */
     @GetMapping(value = "showAllPassContractReviewByFaGui")
-    @ApiOperation(value = "展示所有通过法规科技处审批的")
+    @ApiOperation(value = "展示所有通过法规科技处审批的【内网】")
     public ResultMap showAllPassContractReviewByFaGui(int pageNum, int pageSize) {
         return resultMap = contractManageService.showAllPassContractReviewByFaGui(pageNum, pageSize);
     }

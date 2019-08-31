@@ -125,35 +125,35 @@ public interface ContractManageService {
      * @param response
      * @param type 审核状态
      * @param reason 审核不通过原因
-     * @param oid 审核表id
+     * @param cid 审核表id
      * @return
      */
-    ResultMap contractShenHeByUnitManager(String token, HttpServletResponse response, Boolean type, String reason, Integer oid) throws UpdateSqlException, InsertSqlException;
+    ResultMap contractShenHeByUnitManager(String token, HttpServletResponse response, Boolean type, String reason, Integer cid) throws UpdateSqlException, InsertSqlException;
 
     /**
      * 评估中心审核
      * @param type
      * @param reason
-     * @param oid
+     * @param cid
      * @return
      */
-    ResultMap contractShenHeByPingGuCenter(String token, HttpServletResponse response,Boolean type, String reason, Integer oid);
+    ResultMap contractShenHeByPingGuCenter(String token, HttpServletResponse response,Boolean type, String reason, Integer cid);
 
     /**
      * 法规科技处审核
      * @param type
      * @param reason
-     * @param oid
+     * @param cid
      * @return
      */
-    ResultMap contractShenHeByFaGui(String token, HttpServletResponse response,Boolean type, String reason, Integer oid);
+    ResultMap contractShenHeByFaGui(String token, HttpServletResponse response,Boolean type, String reason, Integer cid);
 
     /**
      * 不通过被退回时重新提交[修改]
      * @param contractManageDTO
      * @return
      */
-    ResultMap updateContractStatusByReturnCommit(String token, HttpServletResponse response,ContractManageDTO contractManageDTO) throws UpdateSqlException, UpdateStatusException;
+    ResultMap updateContractStatusByReturnCommit(String token, HttpServletResponse response,ContractManageDTO contractManageDTO) throws UpdateSqlException, UpdateStatusException, UpdateStatusException;
 
     /**
      * 展示所有通过单位管理员审批的 【外网】

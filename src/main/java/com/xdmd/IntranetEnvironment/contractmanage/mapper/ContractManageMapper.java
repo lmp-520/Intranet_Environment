@@ -244,7 +244,7 @@ public interface ContractManageMapper {
      * @param nowTime
      * @return
      */
-    @Update("update tender_contract_shenhe_record set state =#{state},second_handler =#{uname} ,handle_content = #{handleContent} ,second_handle_time = #{nowTime} where shenhe_table_id = #{oid} order by first_handle_time desc limit 1")
+    @Update("update tender_contract_shenhe_record set state =#{state},second_handler =#{uname} ,handle_content = #{handleContent} ,second_handle_time = #{nowTime} where shenhe_table_id = #{cid} order by first_handle_time desc limit 1")
     int updateContractStateRecord(@Param("cid") Integer cid, @Param("uname") String uname, @Param("state") String state, @Param("handleContent") String handleContent, @Param("nowTime") String nowTime);
 
     /**
@@ -256,7 +256,7 @@ public interface ContractManageMapper {
      * @param newState
      * @return
      */
-    @Insert("INSERT INTO tender_contract_shenhe_record(shenhe_table_id, fist_handler, audit_step, first_handle_time, state) VALUES (#{oid},#{uname},#{auditStep},#{nowTime},#{newState});")
+    @Insert("INSERT INTO tender_contract_shenhe_record(shenhe_table_id, fist_handler, audit_step, first_handle_time, state) VALUES (#{cid},#{uname},#{auditStep},#{nowTime},#{newState});")
     int insertNewContractStateRecord(@Param("cid") Integer cid, @Param("uname") String uname, @Param("auditStep") String auditStep, @Param("nowTime") String nowTime, @Param("newState") String newState);
 
 
@@ -269,58 +269,58 @@ public interface ContractManageMapper {
     int updateContractStatus(@Param("approvalStatus") int approvalStatus,@Param("id") int id);
 
     /**
-     * 根据合同主表的id 获取该单位的名字
+     * 根据合同主表的id 获取该承担单位的名称
      * @param cid
      * @return
      */
     @Select("select commitment_Unit from contract_manage where id = #{cid}")
-    String queryUnitNameByoid(Integer cid);
+    String queryUnitNameBycid(Integer cid);
 
     /**
      * 不通过被退回时重新提交[修改]
      * @param contractManageDTO
      * @return
      */
-    @Update("update contract_manage SET\n" +
-            "subject_category = #{subjectCategory}\n" +
-            "project_no=#{projectNo}, \n" +
-            "subject_name = #{subjectName},\n" +
-            "contract_start_time = #{contractStartTime},\n" +
-            "contract_end_time = #{contractEndTime},\n" +
-            "subjece_leader = #{subjeceLeader},\n" +
-            "subject_leader_phone = #{subjectLeaderPhone},\n" +
-            "subject_contact = #{subjectContact},\n" +
-            "subject_contact_phone = #{subjectContactPhone},\n" +
-            "commitment_unit = #{commitmentUnit},\n" +
-            "commitment_unit_address = #{commitmentUnitAddress},\n" +
-            "commitment_unit_zip = #{commitmentUnitZip},\n" +
-            "subject_supervisor_department = #{subjectSupervisorDepartment},\n" +
-            "open_bank = #{openBank},\n" +
-            "open_bank_account = #{openBankAccount},\n" +
-            "email = #{email},\n" +
-            "guaranteed_units = #{guaranteedUnits},\n" +
-            "guaranteed_unit_contact = #{guaranteedUnitContact},\n" +
-            "guaranteed_contact_phone = #{guaranteedContactPhone},\n" +
-            "commissioning_unit = #{commissioningUnit},\n" +
-            "legal_representative_entrusting_a = #{legalRepresentativeEntrustingA},\n" +
-            "commissioned_unit_address_a = #{commissionedUnitAddressA},\n" +
-            "commissioned_unit_zip_a = #{commissionedUnitZipA},\n" +
-            "responsibility_unit_b = #{responsibilityUnitB},\n" +
-            "responsibility_legal_representative_b = #{responsibilityLegalRepresentativeB},\n" +
-            "commit_unit_address_b = #{commitUnitAddressB},\n" +
-            "commit_unit_zip_b = #{commitUnitZipB},\n" +
-            "commit_unit_leader_b = #{commitUnitLeaderB},\n" +
-            "commitunit_leaders_phone_b = #{commitunitLeadersPhoneB},\n" +
-            "commitment_unit_email_b = #{commitmentUnitEmailB},\n" +
-            "guaranteed_unit_c = #{guaranteedUnitC},\n" +
-            "guaranteed_unit_leader_c = #{guaranteedUnitLeaderC},\n" +
-            "guaranteed_unit_address_c = #{guaranteedUnitAddressC},\n" +
-            "guaranteed_unit_zip_c = #{guaranteedUnitZipC},\n" +
-            "subject_signing_description = #{subjectSigningDescription},\n" +
-            "subject_objectives_research = #{subjectObjectivesResearch},\n" +
-            "subject_acceptance_assessment = #{subjectAcceptanceAssessment}\n" +
-            "where id=#{cid}")
-    int updateContractStatusByReturnCommit(@Param("contractManageDTO") ContractManageDTO contractManageDTO);
+    @Update("update contract_manage SET\t" +
+            "subject_category = #{subjectCategory}," +
+            "project_no=#{projectNo}," +
+            "subject_name = #{subjectName}," +
+            "contract_start_time = #{contractStartTime}," +
+            "contract_end_time = #{contractEndTime}," +
+            "subjece_leader = #{subjeceLeader}," +
+            "subject_leader_phone = #{subjectLeaderPhone}," +
+            "subject_contact = #{subjectContact}," +
+            "subject_contact_phone = #{subjectContactPhone}," +
+            "commitment_unit = #{commitmentUnit}," +
+            "commitment_unit_address = #{commitmentUnitAddress}," +
+            "commitment_unit_zip = #{commitmentUnitZip}," +
+            "subject_supervisor_department = #{subjectSupervisorDepartment}," +
+            "open_bank = #{openBank}," +
+            "open_bank_account = #{openBankAccount}," +
+            "email = #{email}," +
+            "guaranteed_units = #{guaranteedUnits}," +
+            "guaranteed_unit_contact = #{guaranteedUnitContact}," +
+            "guaranteed_contact_phone = #{guaranteedContactPhone}," +
+            "commissioning_unit = #{commissioningUnit}," +
+            "legal_representative_entrusting_a = #{legalRepresentativeEntrustingA}," +
+            "commissioned_unit_address_a = #{commissionedUnitAddressA}," +
+            "commissioned_unit_zip_a = #{commissionedUnitZipA}," +
+            "responsibility_unit_b = #{responsibilityUnitB}," +
+            "responsibility_legal_representative_b = #{responsibilityLegalRepresentativeB}," +
+            "commit_unit_address_b = #{commitUnitAddressB}," +
+            "commit_unit_zip_b = #{commitUnitZipB}," +
+            "commit_unit_leader_b = #{commitUnitLeaderB}," +
+            "commitunit_leaders_phone_b = #{commitunitLeadersPhoneB}," +
+            "commitment_unit_email_b = #{commitmentUnitEmailB}," +
+            "guaranteed_unit_c = #{guaranteedUnitC}," +
+            "guaranteed_unit_leader_c = #{guaranteedUnitLeaderC}," +
+            "guaranteed_unit_address_c = #{guaranteedUnitAddressC}," +
+            "guaranteed_unit_zip_c = #{guaranteedUnitZipC}," +
+            "subject_signing_description = #{subjectSigningDescription}," +
+            "subject_objectives_research = #{subjectObjectivesResearch}," +
+            "subject_acceptance_assessment = #{subjectAcceptanceAssessment}\t" +
+            "where id=#{id}")
+    int updateContractStatusByReturnCommit(ContractManageDTO contractManageDTO);
 
     /**
      * 展示所有通过单位管理员审批的 【外网】

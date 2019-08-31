@@ -80,6 +80,7 @@ public class ContractManageServiceImpl implements ContractManageService {
             String username = "单位员工";
             //执行新增操作
             int insertNo = contractManageMapper.insert(contractManageDTO);
+            System.out.println(insertNo);
             //获取当前系统时间
             String nowtime = new SimpleDateFormat("yyyy-MM-dd:HH:mm:ss").format(System.currentTimeMillis());
             //新增员工提交信息
@@ -87,6 +88,7 @@ public class ContractManageServiceImpl implements ContractManageService {
             String newState = "等待处理";
             int num = 0;
             num = contractManageMapper.insertNewContractStateRecord(contractManageDTO.getId(), username, auditStep, nowtime, newState);
+            System.out.println(num);
             if (num == 0) {
                 throw new InsertSqlException("审核通过时，在新增审核状态时，新增数据时出错");
             }
@@ -190,7 +192,7 @@ public class ContractManageServiceImpl implements ContractManageService {
     }
 
     /**
-     * 根据合同id更新相应的附件id
+     * 根据合同id更新相应的附件id【中期检查】
      *
      * @param midCheckAnnexId
      * @param expertAssessmentAnnexId
@@ -235,11 +237,15 @@ public class ContractManageServiceImpl implements ContractManageService {
         StringBuilder pinjiefileName = new StringBuilder(nowtime).append(file.getOriginalFilename());
         String fileName = pinjiefileName.toString();
 
+        //根据合同主表的id 获取该公司的名字
+        String unitName = contractManageMapper.queryUnitNameBycid(cid);
         //获取课题名称
         String ketiName = getManageInfoById(cid).getSubjectName();
+
+
         //获取文件上传绝对路径
-        String FilePath = "D:/xdmd/environment/" + ketiName + "/" + "合同附件" + "/";
-        StringBuilder initPath = new StringBuilder(FilePath);
+        String path = "D:/xdmd/environment/" + unitName + "/" + ketiName + "/" + "合同附件" + "/";
+        StringBuilder initPath = new StringBuilder(path);
         String filePath = initPath.append(fileName).toString();
         File dest = new File(filePath);
 
@@ -263,12 +269,17 @@ public class ContractManageServiceImpl implements ContractManageService {
             AnnexUpload annexUpload = new AnnexUpload(0, filePath, fileName, "合同附件", suffixName, fileSize, null, "提交者");
             //保存到数据库中
             int insertNum = uploadFileMapper.insertUpload(annexUpload);
+            //更改相应合同附件id
+            contractManageMapper.updateContractAnnexIdByCid(annexUpload.getId(), cid);
             return "上传成功";
         } catch (Exception e) {
             e.printStackTrace();
         }
         return "上传失败";
     }
+
+
+
 
     /**
      * 单位管理员审核
@@ -277,13 +288,13 @@ public class ContractManageServiceImpl implements ContractManageService {
      * @param response
      * @param type     审核状态
      * @param reason   审核不通过原因
-     * @param oid      审核表id
+     * @param cid      审核表id
      * @return
      * @throws UpdateSqlException
      * @throws InsertSqlException
      */
     @Override
-    public ResultMap contractShenHeByUnitManager(String token, HttpServletResponse response, Boolean type, String reason, Integer oid) throws UpdateSqlException, InsertSqlException {
+    public ResultMap contractShenHeByUnitManager(String token, HttpServletResponse response, Boolean type, String reason, Integer cid) throws UpdateSqlException, InsertSqlException {
 //       User user = new User();
 //        try {
 //            user = tokenService.compare(response, token);
@@ -308,7 +319,7 @@ public class ContractManageServiceImpl implements ContractManageService {
 
         String username = "单位管理员";
         //根据合同主表的id 获取该公司的名字
-        String unitName = contractManageMapper.queryUnitNameByoid(oid);
+        String unitName = contractManageMapper.queryUnitNameBycid(cid);
         //获取当前系统时间
         String nowtime = new SimpleDateFormat("yyyy-MM-dd:HH:mm:ss").format(System.currentTimeMillis());
 
@@ -322,7 +333,7 @@ public class ContractManageServiceImpl implements ContractManageService {
                 String handleContent = "单位管理员审核通过";
                 //根据数据的id 把处理人，审核状态，审核内容，处理时间更新
                 int num = 0;
-                num = contractManageMapper.updateContractStateRecord(oid, username, state, handleContent, nowtime);
+                num = contractManageMapper.updateContractStateRecord(cid, username, state, handleContent, nowtime);
                 if (num == 0) {
                     throw new UpdateSqlException("在更新审核状态，更新上一条数据时出错");
                 }
@@ -331,7 +342,7 @@ public class ContractManageServiceImpl implements ContractManageService {
                 String auditStep = "通过单位管理员初审，等待评估中心审核";
                 String newState = "等待处理";
                 int num2 = 0;
-                num2 = contractManageMapper.insertNewContractStateRecord(oid, username, auditStep, nowtime, newState);
+                num2 = contractManageMapper.insertNewContractStateRecord(cid, username, auditStep, nowtime, newState);
 
                 if (num2 == 0) {
                     throw new InsertSqlException("审核通过时，在新增审核状态时，新增下一条数据时出错");
@@ -340,7 +351,7 @@ public class ContractManageServiceImpl implements ContractManageService {
                 //当把审核状态表更新完成后，更新合同主表表中这条数据的验收审核状态
                 int num3 = 0;
                 int auditStatus = 2;
-                num3 = contractManageMapper.updateContractStatus(auditStatus, oid);
+                num3 = contractManageMapper.updateContractStatus(auditStatus, cid);
 
                 if (num3 == 0) {
                     throw new UpdateStatusException("更新合同主表中审核状态出错");
@@ -354,7 +365,7 @@ public class ContractManageServiceImpl implements ContractManageService {
                 String handleContent = reason;
                 //根据数据的id 把处理人，审核状态，审核内容，处理时间更新
                 int num = 0;
-                num = contractManageMapper.updateContractStateRecord(oid, username, state, handleContent, nowtime);
+                num = contractManageMapper.updateContractStateRecord(cid, username, state, handleContent, nowtime);
                 System.out.println(num);
                 if (num == 0) {
                     throw new UpdateSqlException("审核未通过时，在更新审核状态，更新上一条数据时出错");
@@ -364,7 +375,7 @@ public class ContractManageServiceImpl implements ContractManageService {
                 String auditStep = "等待单位员工重新提交";
                 String newState = "等待处理";
                 int num2 = 0;
-                num2 = contractManageMapper.insertNewContractStateRecord(oid, username, auditStep, nowtime, newState);
+                num2 = contractManageMapper.insertNewContractStateRecord(cid, username, auditStep, nowtime, newState);
                 System.out.println(num2);
                 if (num2 == 0) {
                     throw new InsertSqlException("在新增审核状态时，新增下一条数据时出错");
@@ -373,7 +384,7 @@ public class ContractManageServiceImpl implements ContractManageService {
                 //当把审核状态表更新完成后，更新合同主表中这条数据的审核状态
                 int num3 = 0;
                 int auditStatus = 0;
-                num3 = contractManageMapper.updateContractStatus(auditStatus, oid);
+                num3 = contractManageMapper.updateContractStatus(auditStatus, cid);
                 System.out.println(num3);
                 if (num3 == 0) {
                     throw new UpdateStatusException("更新合同主表的审核状态字段时出错");
@@ -397,11 +408,11 @@ public class ContractManageServiceImpl implements ContractManageService {
      * @param response
      * @param type
      * @param reason
-     * @param oid
+     * @param cid
      * @return
      */
     @Override
-    public ResultMap contractShenHeByPingGuCenter(String token, HttpServletResponse response, Boolean type, String reason, Integer oid) {
+    public ResultMap contractShenHeByPingGuCenter(String token, HttpServletResponse response, Boolean type, String reason, Integer cid) {
         //       User user = new User();
 //        try {
 //            user = tokenService.compare(response, token);
@@ -426,7 +437,7 @@ public class ContractManageServiceImpl implements ContractManageService {
 
         String username = "评估中心";
         //根据合同主表的id 获取该公司的名字
-        String unitName = contractManageMapper.queryUnitNameByoid(oid);
+        String unitName = contractManageMapper.queryUnitNameBycid(cid);
         //获取当前系统时间
         String nowtime = new SimpleDateFormat("yyyy-MM-dd:HH:mm:ss").format(System.currentTimeMillis());
 
@@ -440,7 +451,7 @@ public class ContractManageServiceImpl implements ContractManageService {
                 String handleContent = "评估中心审核通过";
                 //根据数据的id 把处理人，审核状态，审核内容，处理时间更新
                 int num = 0;
-                num = contractManageMapper.updateContractStateRecord(oid, username, state, handleContent, nowtime);
+                num = contractManageMapper.updateContractStateRecord(cid, username, state, handleContent, nowtime);
                 if (num == 0) {
                     throw new UpdateSqlException("在更新审核状态，更新上一条数据时出错");
                 }
@@ -449,7 +460,7 @@ public class ContractManageServiceImpl implements ContractManageService {
                 String auditStep = "通过评估中心审核，等待法规科技处审核";
                 String newState = "等待处理";
                 int num2 = 0;
-                num2 = contractManageMapper.insertNewContractStateRecord(oid, username, auditStep, nowtime, newState);
+                num2 = contractManageMapper.insertNewContractStateRecord(cid, username, auditStep, nowtime, newState);
                 if (num2 == 0) {
                     throw new InsertSqlException("审核通过时，在新增审核状态时，新增下一条数据时出错");
                 }
@@ -457,7 +468,7 @@ public class ContractManageServiceImpl implements ContractManageService {
                 //当把审核状态表更新完成后，更新合同主表表中这条数据的验收审核状态
                 int num3 = 0;
                 int auditStatus = 3;
-                num3 = contractManageMapper.updateContractStatus(auditStatus, oid);
+                num3 = contractManageMapper.updateContractStatus(auditStatus, cid);
 
                 if (num3 == 0) {
                     throw new UpdateStatusException("更新合同主表中审核状态出错");
@@ -471,7 +482,7 @@ public class ContractManageServiceImpl implements ContractManageService {
                 String handleContent = reason;
                 //根据数据的id 把处理人，审核状态，审核内容，处理时间更新
                 int num = 0;
-                num = contractManageMapper.updateContractStateRecord(oid, username, state, handleContent, nowtime);
+                num = contractManageMapper.updateContractStateRecord(cid, username, state, handleContent, nowtime);
                 System.out.println(num);
                 if (num == 0) {
                     throw new UpdateSqlException("审核未通过时，在更新审核状态，更新上一条数据时出错");
@@ -481,7 +492,7 @@ public class ContractManageServiceImpl implements ContractManageService {
                 String auditStep = "等待单位员工重新提交";
                 String newState = "等待处理";
                 int num2 = 0;
-                num2 = contractManageMapper.insertNewContractStateRecord(oid, username, auditStep, nowtime, newState);
+                num2 = contractManageMapper.insertNewContractStateRecord(cid, username, auditStep, nowtime, newState);
                 System.out.println(num2);
                 if (num2 == 0) {
                     throw new InsertSqlException("在新增审核状态时，新增下一条数据时出错");
@@ -490,7 +501,7 @@ public class ContractManageServiceImpl implements ContractManageService {
                 //当把审核状态表更新完成后，更新合同主表中这条数据的审核状态
                 int num3 = 0;
                 int auditStatus = 0;
-                num3 = contractManageMapper.updateContractStatus(auditStatus, oid);
+                num3 = contractManageMapper.updateContractStatus(auditStatus, cid);
                 System.out.println(num3);
                 if (num3 == 0) {
                     throw new UpdateStatusException("更新合同主表的审核状态字段时出错");
@@ -515,11 +526,11 @@ public class ContractManageServiceImpl implements ContractManageService {
      * @param response
      * @param type
      * @param reason
-     * @param oid
+     * @param cid
      * @return
      */
     @Override
-    public ResultMap contractShenHeByFaGui(String token, HttpServletResponse response, Boolean type, String reason, Integer oid) {
+    public ResultMap contractShenHeByFaGui(String token, HttpServletResponse response, Boolean type, String reason, Integer cid) {
 //       User user = new User();
 //        try {
 //            user = tokenService.compare(response, token);
@@ -543,8 +554,8 @@ public class ContractManageServiceImpl implements ContractManageService {
 
 
         String username = "法规科技处";
-        //根据招标备案表的id 获取该公司的名字
-        String unitName = contractManageMapper.queryUnitNameByoid(oid);
+        //根据合同主表的id 获取该公司的名字
+        String unitName = contractManageMapper.queryUnitNameBycid(cid);
         //获取当前系统时间
         String nowtime = new SimpleDateFormat("yyyy-MM-dd:HH:mm:ss").format(System.currentTimeMillis());
 
@@ -554,23 +565,23 @@ public class ContractManageServiceImpl implements ContractManageService {
                 //此时为审核通过时
                 //审核通过时,先把上一条数据进行更新，再新增下一条数据
                 String state = "已处理";
-                String handleContent = "评估中心审核通过";
+                String handleContent = "法规科技处审核通过";
                 //根据数据的id 把处理人，审核状态，审核内容，处理时间更新
                 int num = 0;
-                num = contractManageMapper.updateContractStateRecord(oid, username, state, handleContent, nowtime);
+                num = contractManageMapper.updateContractStateRecord(cid, username, state, handleContent, nowtime);
 
                 if (num == 0) {
                     throw new UpdateSqlException("在更新审核状态，更新上一条数据时出错");
                 }
 
                 //评估中心是最后一步审核,所以审核记录不需要在新增了
-                //当把审核状态表更新完成后，更新招标备案表中这条数据的审核状态
+                //当把审核状态表更新完成后，更新合同主表中这条数据的审核状态
                 int num3 = 0;
                 int auditStatus = 4;
-                num3 = contractManageMapper.updateContractStatus(auditStatus, oid);
+                num3 = contractManageMapper.updateContractStatus(auditStatus, cid);
                 System.out.println(num3);
                 if (num3 == 0) {
-                    throw new UpdateStatusException("更新招标备案表中审核状态出错");
+                    throw new UpdateStatusException("更新合同主表中审核状态出错");
                 }
                 resultMap.success().message("通过评估中心审核");
 
@@ -581,7 +592,7 @@ public class ContractManageServiceImpl implements ContractManageService {
                 String handleContent = reason;
                 //根据数据的id 把处理人，审核状态，审核内容，处理时间更新
                 int num = 0;
-                num = contractManageMapper.updateContractStateRecord(oid, username, state, handleContent, nowtime);
+                num = contractManageMapper.updateContractStateRecord(cid, username, state, handleContent, nowtime);
                 System.out.println(num);
                 if (num == 0) {
                     throw new UpdateSqlException("审核未通过时，在更新审核状态，更新上一条数据时出错");
@@ -591,25 +602,25 @@ public class ContractManageServiceImpl implements ContractManageService {
                 String auditStep = "等待单位员工重新提交";
                 String newState = "等待处理";
                 int num2 = 0;
-                num2 = contractManageMapper.insertNewContractStateRecord(oid, username, auditStep, nowtime, newState);
+                num2 = contractManageMapper.insertNewContractStateRecord(cid, username, auditStep, nowtime, newState);
                 System.out.println(num2);
                 if (num2 == 0) {
                     throw new InsertSqlException("在新增审核状态时，新增下一条数据时出错");
                 }
 
-                //当把审核状态表更新完成后，更新招标备案表中这条数据的审核状态
+                //当把审核状态表更新完成后，更新合同主表中这条数据的审核状态
                 int num3 = 0;
                 int auditStatus = 0;
-                num3 = contractManageMapper.updateContractStatus(auditStatus, oid);
+                num3 = contractManageMapper.updateContractStatus(auditStatus, cid);
                 System.out.println(num3);
                 if (num3 == 0) {
-                    throw new UpdateStatusException("更新招标备案表的审核状态字段时出错");
+                    throw new UpdateStatusException("更新合同主表的审核状态字段时出错");
                 }
                 resultMap.fail().message("评估中心不通过[具体原因见审核记录],单位员工重新修改提交");
             }
         } catch (UpdateStatusException e) {
             e.printStackTrace();
-            log.info("更新招标备案表的审核状态字段时出错");
+            log.info("更新合同主表的审核状态字段时出错");
         } catch (UpdateSqlException e) {
             e.printStackTrace();
             log.info("");
@@ -667,16 +678,16 @@ public class ContractManageServiceImpl implements ContractManageService {
             throw new UpdateSqlException("在更新审核状态，更新上一条数据时出错");
         }
         //新增员工提交信息
-        String auditStep = "单位员工提交，等待单位管理员审核";
+        String auditStep = "单位员工修改后重新提交，等待单位管理员审核";
         String newState = "等待处理";
         int num1 = 0;
         num1 = contractManageMapper.insertNewContractStateRecord(contractManageDTO.getId(), username, auditStep, nowtime, newState);
-        //当把审核状态表更新完成后，更新招标备案表中这条数据的审核状态
+        //当把审核状态表更新完成后，更新合同主表中这条数据的审核状态
         int num3 = 0;
         int auditStatus = 1;
         num3 = contractManageMapper.updateContractStatus(auditStatus, contractManageDTO.getId());
         if (num3 == 0) {
-            throw new UpdateStatusException("更新招标备案表的审核状态字段时出错");
+            throw new UpdateStatusException("更新合同主表的审核状态字段时出错");
         }
         if (updateNum > 0) {
             resultMap.success().message("重新修改并提交成功");
