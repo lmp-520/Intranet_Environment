@@ -72,7 +72,7 @@ public class CodeController {
         //把验证码存到cookie中
         Cookie cookie = new Cookie("check",sb.toString());
         cookie.setPath("/");
-        cookie.setMaxAge(60);
+        cookie.setMaxAge(60*10);
         response.addCookie(cookie);
 
 

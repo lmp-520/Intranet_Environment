@@ -104,4 +104,7 @@ public interface SubjectAcceptMapper {
     //根据验收申请表id，找到该课题名称
     @Select("select topic_name from check_apply where id = #{id}")
     String querySubjectNameByCid(@Param("id") Integer id);
+
+    @Select("select upload_file_name from upload_file where id = #{id}")
+    String queryFileNameByFileId(@Param("id") Integer applicationUrlId);
 }

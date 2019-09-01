@@ -1,0 +1,10 @@
+package com.xdmd.IntranetEnvironment.homePage.service;
+
+import com.xdmd.IntranetEnvironment.common.ResultMap;
+
+import javax.servlet.http.HttpServletResponse;
+
+public interface ExtranetService {
+    //课题验收中的待审核的数量
+    ResultMap querySubjectTotal(String token, HttpServletResponse response);
+}

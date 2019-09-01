@@ -48,4 +48,6 @@ public interface ExtranetAcceptApplyService {
     ResultMap queryTopicName(String token, HttpServletResponse response) throws ParseException;
 
     ResultMap queryInformationByTopicNumber(String projectNumber);
+
+    ResultMap queryTopicNumberAndTopicName(String token, HttpServletResponse response) throws ParseException;
 }
