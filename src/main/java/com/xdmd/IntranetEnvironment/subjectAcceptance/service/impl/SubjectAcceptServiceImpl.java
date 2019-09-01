@@ -75,18 +75,39 @@ public class SubjectAcceptServiceImpl implements SubjectAcceptSerivce {
             //通过验收申请表id获取文件的地址
             String applicationFileUrl = subjectAcceptMapper.queryFileUrlByFileId(applicationUrlId);
             checkApply.setApplicationAcceptanceUrl(applicationFileUrl);
+            String applicationFileName = subjectAcceptMapper.queryFileNameByFileId(applicationUrlId);
+            checkApply.setApplicationAcceptanceUrlName(applicationFileName);
+
+            //获取专项审计报告id
+            Integer auditReportUrlId = checkApply.getAuditReportUrlId();
+            String auditReportUrl = subjectAcceptMapper.queryFileUrlByFileId(auditReportUrlId);
+            checkApply.setAuditReportUrl(auditReportUrl);
+            String auditReportFileName = subjectAcceptMapper.queryFileNameByFileId(auditReportUrlId);
+            checkApply.setAuditReportUrlName(auditReportFileName);
+
+            //获取初审报告id
+            Integer firstInspectionReportUrlId = checkApply.getFirstInspectionReportUrlId();
+            String firstInspectionReportUrl = subjectAcceptMapper.queryFileUrlByFileId(firstInspectionReportUrlId);
+            checkApply.setFirstInspectionReportUrl(firstInspectionReportUrl);
+            String firstInspectionReportFileName = subjectAcceptMapper.queryFileNameByFileId(firstInspectionReportUrlId);
+            checkApply.setFirstInspectionReportUrlName(firstInspectionReportFileName);
 
             //获取提交清单Id
             Integer submitUrlId = checkApply.getSubmitUrlId();
             //通过提交清单Id获取文件的地址
             String submitFileUrl = subjectAcceptMapper.queryFileUrlByFileId(submitUrlId);
             checkApply.setSubmitInventoryUrl(submitFileUrl);
+            String submitUrlName = subjectAcceptMapper.queryFileNameByFileId(submitUrlId);
+            checkApply.setSubmitInventoryUrlName(submitUrlName);
 
             //获取成果附件Id
             Integer achievementUrlId = checkApply.getAchievementUrlId();
             //通过成果附件Id获取文件的地址
             String achievementFileUrl = subjectAcceptMapper.queryFileUrlByFileId(achievementUrlId);
             checkApply.setAchievementsUrl(achievementFileUrl);
+            String achievementFileName = subjectAcceptMapper.queryFileNameByFileId(achievementUrlId);
+            checkApply.setAchievementsName(achievementFileName);
+
 
             //取出验收申请表中数据对应的id
             Integer id = checkApply.getId();
@@ -146,7 +167,6 @@ public class SubjectAcceptServiceImpl implements SubjectAcceptSerivce {
             jsonObject.remove("applicationUrlId");
             jsonObject.remove("createTime");
             jsonObject.remove("createAuthor");
-            jsonObject.remove("acceptancePhaseId");
 
             jsonObjectList.add(jsonObject);
         }

@@ -9,6 +9,7 @@ import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.service.impl.Extra
 import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.utils.IntegrationFile;
 import com.xdmd.IntranetEnvironment.user.exception.ClaimsNullException;
 import com.xdmd.IntranetEnvironment.user.exception.UserNameNotExistentException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,13 +27,13 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequestMapping("apply")
 public class ExtranetAcceptApplyController {
     @Autowired
     ExtranetAcceptApplyService extranetAcceptApplyService;
     ResultMap resultMap = new ResultMap();
-    private static Logger log = LoggerFactory.getLogger(ExtranetAcceptApplyController.class);
     @Autowired
     private ExtranetTokenService extranetTokenService;
 
@@ -513,6 +514,9 @@ public class ExtranetAcceptApplyController {
     @ResponseBody
     @PostMapping("queryTopicName")
     public ResultMap queryTopicName(@CookieValue(value = "token",required = false) String token, HttpServletResponse response){
+        if(StringUtils.isEmpty(token)){
+            return resultMap.fail().message("请先登录");
+        }
 
         try {
             resultMap = extranetAcceptApplyService.queryTopicName(token,response);
@@ -548,6 +552,28 @@ public class ExtranetAcceptApplyController {
         } catch (Exception e) {
             e.printStackTrace();
             log.error("ExtranetAcceptApplyController 中 queryInformationByTopicNumber 方法错误 "+e.getMessage());
+            return resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
+
+    //在公司新增验收申请时，显示课题名称与课题编号
+    @PostMapping("queryTopicNameAndNumber")
+    @ResponseBody
+    public  ResultMap queryTopicNumberAndTopicName(//@CookieValue(value = "token",required = false)String token,HttpServletResponse response
+    ){
+//        if(StringUtils.isEmpty(token)){
+//            return resultMap.fail().message("请先登录");
+//        }
+
+        String token = "aaa";
+        HttpServletResponse response = null;
+
+        try {
+            resultMap = extranetAcceptApplyService.queryTopicNumberAndTopicName(token,response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("ExtranetAcceptApplyController 中 queryTopicNumberAndTopicName 方法出错 -- "+e.getMessage());
             return resultMap.fail().message("系统异常");
         }
         return resultMap;

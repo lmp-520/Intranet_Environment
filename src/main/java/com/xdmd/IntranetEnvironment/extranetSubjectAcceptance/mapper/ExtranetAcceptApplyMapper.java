@@ -202,4 +202,8 @@ public interface ExtranetAcceptApplyMapper<T> extends MyBaseMapper<ExtranetCheck
     //根据验收报告的id，查询出验收报告中的课题负责人信息
     @Select("select * from acceptance_certificate_subject_people where acceptance_certificate_id = #{id}")
     List<AcceptanceCertificateSubjectPeople> queryAcceptanceCertificateSubjectPeople(@Param("id") Integer id);
+
+    //通过id，获取课题信息
+    @Select("select project_no,subject_name,contract_start_time,contract_end_time,subjece_leader,subject_leader_phone,email,commitment_Unit,commitment_unit_address from contract_manage where id =#{id}")
+    SubjectInformation querySubjectInformation(@Param("id") Integer resultId);
 }

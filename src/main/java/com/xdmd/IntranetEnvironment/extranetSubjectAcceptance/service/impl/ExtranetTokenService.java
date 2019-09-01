@@ -23,6 +23,7 @@ public class ExtranetTokenService {
      * @param token
      * @return
      */
+    //外网登陆时的token
     public JwtInformation compare(HttpServletResponse response, String token) throws Exception{
 
         //对token中的内容进行解析
@@ -60,7 +61,7 @@ public class ExtranetTokenService {
         String newToken = JwtUtil.geneJsonWebToken(jwtInformation);
 
         //把token存放到cookie中
-        Cookie cookie = new Cookie("IntranecToken", newToken);
+        Cookie cookie = new Cookie("token", newToken);
         cookie.setMaxAge(60 * 30);//三十分钟
         cookie.setPath("/");
         response.addCookie(cookie);
