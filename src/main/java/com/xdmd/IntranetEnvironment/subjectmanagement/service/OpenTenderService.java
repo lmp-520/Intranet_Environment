@@ -74,15 +74,19 @@ public interface OpenTenderService {
 
     /**
      * 招标附件上传
-     * @param oid 招标备案表id
-     * @param winningDocument 中标文件附件
-     * @param transactionAnnouncement 成交公告附件
-     * @param noticeTransaction 成交通知书附件
-     * @param responseFile 响应文件附件
+     * @param token
+     * @param response
+     * @param oid
+     * @param winningDocument
+     * @param transactionAnnouncement
+     * @param noticeTransaction
+     * @param responseFile
+     * @param otherAttachments
      * @return
      * @throws IOException
+     * @throws FileUploadException
      */
-    ResultMap tenderMultiUpload(String token, HttpServletResponse response, int oid, MultipartFile winningDocument, MultipartFile transactionAnnouncement, MultipartFile noticeTransaction, MultipartFile responseFile) throws IOException, FileUploadException;
+    ResultMap tenderMultiUpload(String token, HttpServletResponse response, int oid, MultipartFile winningDocument, MultipartFile transactionAnnouncement, MultipartFile noticeTransaction, MultipartFile responseFile, MultipartFile otherAttachments) throws IOException, FileUploadException;
 
 
 
@@ -111,28 +115,27 @@ public interface OpenTenderService {
      * 展示所有未通过单位管理员审批的
      * @return
      */
-    ResultMap showAllPassTenderReviewByUnitManager(int pageNum,int pageSize);
+    ResultMap showAllPassTenderReviewByUnitManager(String projectName, String subjectName, String subjectLeader, String leaderContact,int pageNum,int pageSize);
     /**
      * 展示所有已通过单位管理员审批的
      * @return
      */
-    ResultMap showAllNoPassTenderReviewByUnitManager(int pageNum,int pageSize);
+    ResultMap showAllNoPassTenderReviewByUnitManager(String projectName, String subjectName, String subjectLeader, String leaderContact,int pageNum,int pageSize);
 
     /**
      * 展示所有通过评估中心审批的
      * @return
      */
-    ResultMap showAllPassTenderReviewByPingGu(int pageNum,int pageSize);
+    ResultMap showAllPassTenderReviewByPingGu(String projectName, String subjectName, String subjectLeader, String leaderContact,int pageNum,int pageSize);
 
     /**
      * 展示所有未通过评估中心审批的
      * @return
      */
-    ResultMap showAllNoPassReviewTenderByPingGu(int pageNum, int pageSize);
+    ResultMap showAllNoPassReviewTenderByPingGu(String projectName, String subjectName, String subjectLeader, String leaderContact,int pageNum, int pageSize);
 
     /**
      * 不通过被退回时重新提交[修改]
-     *
      * @param token
      * @param response
      * @param projectNo
@@ -167,4 +170,12 @@ public interface OpenTenderService {
      * @return
      */
     ResultMap getfileInfo( int id);
+
+
+    /**
+     * 根据合同主表id查询审核记录
+     * @param oid
+     * @return
+     */
+    ResultMap getAllShenHeTableRecordInfoByContractId(int oid);
 }

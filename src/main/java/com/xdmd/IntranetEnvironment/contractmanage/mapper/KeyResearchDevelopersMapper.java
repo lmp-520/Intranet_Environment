@@ -33,4 +33,10 @@ public interface KeyResearchDevelopersMapper {
             "where krd.contract_id=cm.id and cm.id=#{cid}")
     List<KeyResearchDevelopersDTO> getDeveloperInfoById(@Param("cid") int cid);
 
+
+    /**
+     * 批量更新数据【有问题,不可用】
+     * @param keyResearchDevelopersDTOS
+     */
+    int batchUpdateKeyDev(@Param("smsConfigTemplateList") List<KeyResearchDevelopersDTO> keyResearchDevelopersDTOS);
 }

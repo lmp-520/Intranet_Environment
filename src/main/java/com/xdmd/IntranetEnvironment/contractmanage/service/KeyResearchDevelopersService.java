@@ -21,4 +21,11 @@ public interface KeyResearchDevelopersService {
      **/
     ResultMap getDeveloperInfoById(@Param("cid") int cid);
 
+
+    /**
+     * 更新主要研究人员【批量更新】
+     * @param keyResearchDevelopersDTOS
+     * @return
+     */
+    ResultMap batchUpdateKeyDev(List<KeyResearchDevelopersDTO> keyResearchDevelopersDTOS);
 }

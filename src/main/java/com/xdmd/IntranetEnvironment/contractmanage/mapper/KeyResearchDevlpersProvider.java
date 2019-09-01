@@ -1,7 +1,6 @@
 package com.xdmd.IntranetEnvironment.contractmanage.mapper;
 
 
-
 import com.xdmd.IntranetEnvironment.contractmanage.pojo.KeyResearchDevelopersDTO;
 
 import java.text.MessageFormat;
@@ -40,3 +39,4 @@ public class KeyResearchDevlpersProvider {
         return sb.toString();
     }
 }
+

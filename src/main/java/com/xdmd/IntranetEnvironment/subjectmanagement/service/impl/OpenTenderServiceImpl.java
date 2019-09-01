@@ -270,7 +270,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
      * @throws IOException
      */
     @Override
-    public ResultMap tenderMultiUpload(String token, HttpServletResponse response, int oid, MultipartFile winningDocument, MultipartFile transactionAnnouncement, MultipartFile noticeTransaction, MultipartFile responseFile) throws IOException, FileUploadException {
+    public ResultMap tenderMultiUpload(String token, HttpServletResponse response, int oid, MultipartFile winningDocument, MultipartFile transactionAnnouncement, MultipartFile noticeTransaction, MultipartFile responseFile,MultipartFile otherAttachments) throws IOException, FileUploadException {
 //      User user = new User();
 //        try {
 //            user = tokenService.compare(response, token);
@@ -368,11 +368,28 @@ public class OpenTenderServiceImpl implements OpenTenderService {
             //获取文件后缀名
             String responseFileSuffixName = responseFileName.substring(responseFileName.lastIndexOf(".") + 1);
             // 获取文件大小
-            File responseFileFile = new File(responseFileUrl);
-            String responseFileFileSize = String.valueOf(responseFileFile.length());
+            String responseFileFileSize = String.valueOf(new File(responseFileUrl).length());
             AnnexUpload responseFileAnnex = new AnnexUpload(0, responseFileUrl, responseFileName, "响应文件附件", responseFileSuffixName, responseFileFileSize, null, username);
             //把该文件上传到文件表中
             uploadFileMapper.insertUpload(responseFileAnnex);
+            /**
+             * 其他附件
+             */
+            //判断上传其他附件的后缀名是否正确
+            String otherAttachmentsName = otherAttachments.getOriginalFilename();
+            Boolean eBoolean = FileSuffixJudge.suffixJudge(otherAttachmentsName);
+            if (dBoolean == false) {
+                resultMap.fail().message("其他附件文件格式不正确,请上传正确的文件格式");
+            }
+            //获取响应文件附件的地址
+            String otherAttachmentsUrl = multiFileUploadUntil(responseFile, unitName, "其他附件", oid);
+            //获取文件后缀名
+            String otherAttachmentsSuffixName = responseFileName.substring(otherAttachmentsName.lastIndexOf(".") + 1);
+            // 获取文件大小
+            String otherAttachmentsFileSize = String.valueOf(new File(otherAttachmentsUrl).length());
+            AnnexUpload otherAttachmentsAnnex = new AnnexUpload(0, otherAttachmentsUrl, otherAttachmentsName, "其他附件", otherAttachmentsSuffixName, otherAttachmentsFileSize, null, username);
+            //把该文件上传到文件表中
+            uploadFileMapper.insertUpload(otherAttachmentsAnnex);
 
             /**
              * 把上传附件的id取出，存到招标备案表中
@@ -663,17 +680,15 @@ public class OpenTenderServiceImpl implements OpenTenderService {
         return resultMap;
     }
 
-
     /**
      * 展示所有未通过单位管理员审批的
-     *
      * @return
      */
     @Override
-    public ResultMap showAllNoPassTenderReviewByUnitManager(int pageNum, int pageSize) {
+    public ResultMap showAllNoPassTenderReviewByUnitManager(String projectName, String subjectName, String subjectLeader, String leaderContact, int pageNum, int pageSize) {
         try {
             PageHelper.startPage(pageNum, pageSize, true);
-            List<OpenTender> openTenderList = openTenderMapper.showAllNoPassTenderReviewByUnitManager();
+            List<Map> openTenderList = openTenderMapper.showAllNoPassTenderReviewByUnitManager(projectName, subjectName,subjectLeader,leaderContact);
             PageInfo pageInfo = new PageInfo(openTenderList);
             if (openTenderList.size() > 0) {
                 resultMap.success().message(pageInfo);
@@ -693,10 +708,10 @@ public class OpenTenderServiceImpl implements OpenTenderService {
      * @return
      */
     @Override
-    public ResultMap showAllPassTenderReviewByUnitManager(int pageNum, int pageSize) {
+    public ResultMap showAllPassTenderReviewByUnitManager(String projectName, String subjectName, String subjectLeader, String leaderContact,int pageNum, int pageSize) {
         try {
             PageHelper.startPage(pageNum, pageSize, true);
-            List<OpenTender> openTenderList = openTenderMapper.showAllPassTenderReviewByUnitManager();
+            List<Map> openTenderList = openTenderMapper.showAllPassTenderReviewByUnitManager(projectName, subjectName,subjectLeader,leaderContact);
             PageInfo pageInfo = new PageInfo(openTenderList);
             if (openTenderList.size() > 0) {
                 resultMap.success().message(pageInfo);
@@ -716,10 +731,10 @@ public class OpenTenderServiceImpl implements OpenTenderService {
      * @return
      */
     @Override
-    public ResultMap showAllPassTenderReviewByPingGu(int pageNum, int pageSize) {
+    public ResultMap showAllPassTenderReviewByPingGu(String projectName, String subjectName, String subjectLeader, String leaderContact,int pageNum, int pageSize) {
         try {
             PageHelper.startPage(pageNum, pageSize, true);
-            List<OpenTender> openTenderList = openTenderMapper.showAllPassTenderReviewByPingGu();
+            List<Map> openTenderList = openTenderMapper.showAllPassTenderReviewByPingGu(projectName, subjectName,subjectLeader,leaderContact);
             PageInfo pageInfo = new PageInfo(openTenderList);
             if (openTenderList.size() > 0) {
                 resultMap.success().message(pageInfo);
@@ -735,14 +750,13 @@ public class OpenTenderServiceImpl implements OpenTenderService {
 
     /**
      * 展示所有未通过评估中心审批的
-     *
      * @return
      */
     @Override
-    public ResultMap showAllNoPassReviewTenderByPingGu(int pageNum, int pageSize) {
+    public ResultMap showAllNoPassReviewTenderByPingGu(String projectName, String subjectName, String subjectLeader, String leaderContact,int pageNum, int pageSize) {
         try {
             PageHelper.startPage(pageNum, pageSize, true);
-            List<OpenTender> openTenderList = openTenderMapper.showAllNoPassTenderReviewByPingGu();
+            List<Map> openTenderList = openTenderMapper.showAllNoPassTenderReviewByPingGu(projectName, subjectName,subjectLeader,leaderContact);
             PageInfo pageInfo = new PageInfo(openTenderList);
             if (openTenderList.size() > 0) {
                 resultMap.success().message(pageInfo);
@@ -855,6 +869,28 @@ public class OpenTenderServiceImpl implements OpenTenderService {
             if (fileInfoMap.size() > 0) {
                 resultMap.success().message(fileInfoMap);
             } else if (fileInfoMap.size() == 0) {
+                resultMap.fail().message("没有找到");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
+
+
+    /**
+     * 根据合同主表id查询审核记录
+     * @param oid
+     * @return
+     */
+    @Override
+    public ResultMap getAllShenHeTableRecordInfoByContractId(int oid) {
+        try {
+            List<TenderContractShenheRecordDTO> shenHeInfo = openTenderMapper.getAllShenHeTableRecordInfoByContractId(oid);
+            if (shenHeInfo.size() > 0) {
+                resultMap.success().message(shenHeInfo);
+            } else if (shenHeInfo.size() == 0) {
                 resultMap.fail().message("没有找到");
             }
         } catch (Exception e) {
