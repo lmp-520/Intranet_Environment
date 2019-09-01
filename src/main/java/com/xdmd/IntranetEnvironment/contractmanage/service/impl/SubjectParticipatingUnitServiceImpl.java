@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * @author: Kong
  * @createDate: 2019/08/06
- * @description:
+ * @description: 课题承担单位、参加单位及课题负责人
  */
 @Service
 public class SubjectParticipatingUnitServiceImpl implements SubjectParticipatingUnitService {

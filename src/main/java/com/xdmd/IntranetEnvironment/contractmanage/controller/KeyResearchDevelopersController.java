@@ -48,4 +48,15 @@ public class KeyResearchDevelopersController {
         return resultMap=keyResearchDevelopersService.getDeveloperInfoById(cid);
     }
 
+
+    /**
+     * 更新主要研究人员【批量更新】
+     * @param keyResearchDevelopersDTOS
+     * @return
+     */
+    @ApiOperation("更新主要研究人员【批量更新】-【有问题,不可用】")
+    @PostMapping("batchUpdate")
+    public ResultMap batchUpdate(@RequestBody List<KeyResearchDevelopersDTO> keyResearchDevelopersDTOS) {
+        return resultMap=keyResearchDevelopersService.batchUpdateKeyDev(keyResearchDevelopersDTOS);
+    }
 }

@@ -50,8 +50,12 @@ public class FileDownLoadController {
             // TODO: handle exception
             e.printStackTrace();
         }finally {
-            if(buf!=null) buf.close();
-            if(out!=null) out.close();
+            if(buf!=null) {
+                buf.close();
+            };
+            if(out!=null) {
+                out.close();
+            };
         }
     }
 }

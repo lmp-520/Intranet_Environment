@@ -54,7 +54,28 @@ public class KeyResearchDevelopersServiceImpl implements KeyResearchDevelopersSe
             if(keyDevDTO.size()>0){
                 resultMap.success().message(keyDevDTO);
             }else if(keyDevDTO.size()==0){
-                resultMap.success().message("没有查到相关信息");
+                resultMap.fail().message("没有查到相关信息");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
+
+    /**
+     * 更新主要研究人员【批量更新】
+     * @param keyResearchDevelopersDTOS
+     * @return
+     */
+    @Override
+    public ResultMap batchUpdateKeyDev(List<KeyResearchDevelopersDTO> keyResearchDevelopersDTOS) {
+        try{
+            int updateNum= keyResearchDevelopersMapper.batchUpdateKeyDev(keyResearchDevelopersDTOS);
+            if(updateNum>0){
+                resultMap.success().message("成功新增"+updateNum+"条数据");
+            }else if(updateNum==0){
+                resultMap.fail().message("没有修改任何信息");
             }
         }catch (Exception e){
             e.printStackTrace();

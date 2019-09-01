@@ -144,20 +144,23 @@ public class OpenTenderController {
             @ApiImplicitParam(name = "transactionAnnouncement", value = "成交公告附件", dataType = "file", paramType = "form", allowMultiple = true),
             @ApiImplicitParam(name = "noticeTransaction", value = "成交通知书附件", dataType = "file", paramType = "form", allowMultiple = true),
             @ApiImplicitParam(name = "responseFile", value = "响应文件附件", dataType = "file", paramType = "form", allowMultiple = true),
+            @ApiImplicitParam(name = "otherAttachments", value = "其他附件", dataType = "file", paramType = "form", allowMultiple = true)
+
     })
     public ResultMap tenderFileUpload(//@CookieValue(value = "IntranecToken", required = false) String token, HttpServletResponse response,
                                       int oid,
                                       MultipartFile winningDocument,
                                       MultipartFile transactionAnnouncement,
                                       MultipartFile noticeTransaction,
-                                      MultipartFile responseFile) {
+                                      MultipartFile responseFile,
+                                      MultipartFile otherAttachments) {
         String token = "aaa";
         HttpServletResponse response = null;
         if (StringUtils.isEmpty(token)) {
             return resultMap.fail().message("请先登录");
         }
         try {
-            resultMap = openTenderService.tenderMultiUpload(token, response, oid, winningDocument, transactionAnnouncement, noticeTransaction, responseFile);
+            resultMap = openTenderService.tenderMultiUpload(token, response, oid, winningDocument, transactionAnnouncement, noticeTransaction, responseFile,otherAttachments);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -241,8 +244,16 @@ public class OpenTenderController {
      */
     @GetMapping(value = "showAllPassTenderReviewByUnitManager")
     @ApiOperation(value = "展示所有通过单位管理员审批的")
-    public ResultMap showAllPassTenderReviewByUnitManager(int pageNum, int pageSize) {
-        return resultMap = openTenderService.showAllPassTenderReviewByUnitManager(pageNum, pageSize);
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "projectName", value = "项目名称"),
+            @ApiImplicitParam(name = "subjectName", value = "课题名称"),
+            @ApiImplicitParam(name = "subjectLeader", value = "课题负责人"),
+            @ApiImplicitParam(name = "leaderContact", value = "课题负责人联系方式"),
+            @ApiImplicitParam(name = "pageNum", value = "当前页数", required = true),
+            @ApiImplicitParam(name = "pageSize", value = "每页显示条数", required = true)
+    })
+    public ResultMap showAllPassTenderReviewByUnitManager(String projectName, String subjectName, String subjectLeader, String leaderContact,int pageNum, int pageSize) {
+        return resultMap = openTenderService.showAllPassTenderReviewByUnitManager(projectName,subjectName,subjectLeader,leaderContact,pageNum, pageSize);
     }
 
     /**
@@ -252,8 +263,16 @@ public class OpenTenderController {
      */
     @GetMapping(value = "showAllNoPassTenderReviewByUnitManager")
     @ApiOperation(value = "展示所有未通过单位管理员审批的")
-    public ResultMap showAllNoPassTenderReviewByUnitManager(int pageNum, int pageSize) {
-        return resultMap = openTenderService.showAllNoPassTenderReviewByUnitManager(pageNum, pageSize);
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "projectName", value = "项目名称"),
+            @ApiImplicitParam(name = "subjectName", value = "课题名称"),
+            @ApiImplicitParam(name = "subjectLeader", value = "课题负责人"),
+            @ApiImplicitParam(name = "leaderContact", value = "课题负责人联系方式"),
+            @ApiImplicitParam(name = "pageNum", value = "当前页数", required = true),
+            @ApiImplicitParam(name = "pageSize", value = "每页显示条数", required = true)
+    })
+    public ResultMap showAllNoPassTenderReviewByUnitManager(String projectName, String subjectName, String subjectLeader, String leaderContact,int pageNum, int pageSize) {
+        return resultMap = openTenderService.showAllNoPassTenderReviewByUnitManager(projectName,subjectName,subjectLeader,leaderContact,pageNum, pageSize);
     }
 
     /**
@@ -263,8 +282,16 @@ public class OpenTenderController {
      */
     @GetMapping(value = "showAllPassTenderReviewByPingGu")
     @ApiOperation(value = "展示所有通过评估中心审批的")
-    public ResultMap showAllPassTenderReviewByPingGu(int pageNum, int pageSize) {
-        return resultMap = openTenderService.showAllPassTenderReviewByPingGu(pageNum, pageSize);
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "projectName", value = "项目名称"),
+            @ApiImplicitParam(name = "subjectName", value = "课题名称"),
+            @ApiImplicitParam(name = "subjectLeader", value = "课题负责人"),
+            @ApiImplicitParam(name = "leaderContact", value = "课题负责人联系方式"),
+            @ApiImplicitParam(name = "pageNum", value = "当前页数", required = true),
+            @ApiImplicitParam(name = "pageSize", value = "每页显示条数", required = true)
+    })
+    public ResultMap showAllPassTenderReviewByPingGu(String projectName, String subjectName, String subjectLeader, String leaderContact,int pageNum, int pageSize) {
+        return resultMap = openTenderService.showAllPassTenderReviewByPingGu(projectName,subjectName,subjectLeader,leaderContact,pageNum, pageSize);
     }
 
     /**
@@ -274,8 +301,16 @@ public class OpenTenderController {
      */
     @GetMapping(value = "showAllNoPassReviewTenderByPingGu")
     @ApiOperation(value = "展示所有未通过评估中心审批的")
-    public ResultMap showAllNoPassReviewTenderByPingGu(int pageNum, int pageSize) {
-        return resultMap = openTenderService.showAllNoPassReviewTenderByPingGu(pageNum, pageSize);
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "projectName", value = "项目名称"),
+            @ApiImplicitParam(name = "subjectName", value = "课题名称"),
+            @ApiImplicitParam(name = "subjectLeader", value = "课题负责人"),
+            @ApiImplicitParam(name = "leaderContact", value = "课题负责人联系方式"),
+            @ApiImplicitParam(name = "pageNum", value = "当前页数", required = true),
+            @ApiImplicitParam(name = "pageSize", value = "每页显示条数", required = true)
+    })
+    public ResultMap showAllNoPassReviewTenderByPingGu(String projectName, String subjectName, String subjectLeader, String leaderContact,int pageNum, int pageSize) {
+        return resultMap = openTenderService.showAllNoPassReviewTenderByPingGu(projectName,subjectName,subjectLeader,leaderContact,pageNum, pageSize);
     }
 
     /**
@@ -340,6 +375,17 @@ public class OpenTenderController {
     @ApiOperation(value = "根据招标备案表id获取文件路径和文件名【内外网】")
     public ResultMap getfileInfo(int id) {
         return  resultMap=openTenderService.getfileInfo(id);
+    }
+
+    /**
+     * 根据合同主表id查询审核记录
+     * @param oid
+     * @return
+     */
+    @GetMapping(value = "getAllShenHeTableRecordInfoByContractId")
+    @ApiOperation(value = "根据合同主表id查询审核记录【内网】")
+    public ResultMap getAllShenHeTableRecordInfoByContractId(int oid) {
+        return resultMap=openTenderService.getAllShenHeTableRecordInfoByContractId(oid);
     }
 }
 

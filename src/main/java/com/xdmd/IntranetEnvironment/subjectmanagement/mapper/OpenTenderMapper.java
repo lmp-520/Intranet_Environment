@@ -1,5 +1,6 @@
 package com.xdmd.IntranetEnvironment.subjectmanagement.mapper;
 
+import com.xdmd.IntranetEnvironment.common.TenderContractShenheRecordDTO;
 import com.xdmd.IntranetEnvironment.subjectmanagement.pojo.OpenTender;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
@@ -57,7 +58,7 @@ public interface OpenTenderMapper {
     int insertTender(OpenTender openTender);
 
     /**
-     * 获取最新的id【waiwang-课题编号】
+     * 获取最新的id【外网-课题编号】
      * @return
      */
     @Select(value = "SELECT id,project_no FROM open_tender ORDER BY id DESC LIMIT 1")
@@ -268,10 +269,47 @@ public interface OpenTenderMapper {
 
 
     /**
+     * 展示所有通过单位管理员审批的
+     * @return
+     */
+    @Select("<script>" +
+            "SELECT\n" +
+            "id,\n" +
+            "project_name as projectName,\n" +
+            "subject_name as subjectName,\n" +
+            "winning_amount as winningAmount,\n" +
+            "supporting_funds as supportingFunds,\n" +
+            "subject_leader as subjectLeader,\n" +
+            "leader_contact as leaderContact,\n" +
+            "operator,\n" +
+            "operator_contact as operatorContact,\n" +
+            "audit_status\t" +
+            "FROM\t" +
+            "open_tender\t" +
+            "<where>" +
+            "audit_status =2\t" +
+            "<if test ='null != projectName'>" +
+            "AND project_name like CONCAT('%',#{projectName},'%')\t" +
+            "</if>" +
+            "<if test ='null != subjectName'>" +
+            "AND subject_name like CONCAT('%',#{subjectName},'%')\t" +
+            "</if>" +
+            "<if test ='null != subjectLeader'>" +
+            "AND subject_leader like CONCAT('%',#{subjectLeader},'%')\t" +
+            "</if>" +
+            "<if test ='null != leaderContact'>" +
+            "AND leader_contact like CONCAT('%',#{leaderContact},'%')\t" +
+            "</if></where>" +
+            "ORDER BY id DESC"+
+            "</script>")
+    List<Map> showAllPassTenderReviewByUnitManager(String projectName, String subjectName, String subjectLeader, String leaderContact);
+
+    /**
      * 展示所有未通过单位管理员审批的
      * @return
      */
-    @Select("SELECT\n" +
+    @Select("<script>" +
+            "SELECT\n" +
             "id,\n" +
             "project_name as projectName,\n" +
             "subject_name as subjectName,\n" +
@@ -280,79 +318,99 @@ public interface OpenTenderMapper {
             "subject_leader as subjectLeader,\n" +
             "leader_contact as leaderContact,\n" +
             "operator,\n" +
-            "operator_contact as operatorContact\n" +
-            "audit_status \n" +
-            "FROM\n" +
-            "open_tender \n" +
-            "WHERE\n" +
-            "audit_status < 2 \n" +
-            "ORDER BY id DESC")
-    List<OpenTender> showAllPassTenderReviewByUnitManager();
-    /**
-     * 展示所有通过单位管理员审批的[即展示所有未通过评估中心审批的]
-     * @return
-     */
-    @Select("SELECT\n" +
-            "id,\n" +
-            "project_name as projectName,\n" +
-            "subject_name as subjectName,\n" +
-            "winning_amount as winningAmount,\n" +
-            "supporting_funds as supportingFunds,\n" +
-            "subject_leader as subjectLeader,\n" +
-            "leader_contact as leaderContact,\n" +
-            "operator,\n" +
-            "operator_contact as operatorContact\n" +
-            "audit_status \n" +
-            "FROM\n" +
-            "open_tender \n" +
-            "WHERE\n" +
-            "audit_status =2" +
-            "ORDER BY id DESC")
-    List<OpenTender> showAllNoPassTenderReviewByUnitManager();
+            "operator_contact as operatorContact,\n" +
+            "audit_status\t" +
+            "FROM\t" +
+            "open_tender\t" +
+            "<where>" +
+            "audit_status &lt;2\t" +
+            "<if test ='null != projectName'>" +
+            "AND project_name like CONCAT('%',#{projectName},'%')\t" +
+            "</if>" +
+            "<if test ='null != subjectName'>" +
+            "AND subject_name like CONCAT('%',#{subjectName},'%')\t" +
+            "</if>" +
+            "<if test ='null != subjectLeader'>" +
+            "AND subject_leader like CONCAT('%',#{subjectLeader},'%')\t" +
+            "</if>" +
+            "<if test ='null != leaderContact'>" +
+            "AND leader_contact like CONCAT('%',#{leaderContact},'%')\t" +
+            "</if></where>" +
+            "ORDER BY id DESC"+
+            "</script>")
+    List<Map> showAllNoPassTenderReviewByUnitManager(String projectName, String subjectName, String subjectLeader, String leaderContact);
 
     /**
      * 展示所有通过评估中心审批的
      * @return
      */
-    @Select("SELECT\n" +
-            "id,\n" +
-            "project_name as projectName,\n" +
-            "subject_name as subjectName,\n" +
-            "winning_amount as winningAmount,\n" +
-            "supporting_funds as supportingFunds,\n" +
-            "subject_leader as subjectLeader,\n" +
-            "leader_contact as leaderContact,\n" +
-            "operator,\n" +
-            "operator_contact as operatorContact\n" +
-            "audit_status \n" +
-            "FROM\n" +
-            "open_tender \n" +
-            "WHERE\n" +
-            "audit_status=3" +
-            "ORDER BY id DESC")
-    List<OpenTender> showAllPassTenderReviewByPingGu();
+  @Select("<script>" +
+          "SELECT\n" +
+          "id,\n" +
+          "project_name as projectName,\n" +
+          "subject_name as subjectName,\n" +
+          "winning_amount as winningAmount,\n" +
+          "supporting_funds as supportingFunds,\n" +
+          "subject_leader as subjectLeader,\n" +
+          "leader_contact as leaderContact,\n" +
+          "operator,\n" +
+          "operator_contact as operatorContact,\n" +
+          "audit_status\t" +
+          "FROM\t" +
+          "open_tender\t" +
+          "<where>" +
+          "audit_status =3\t" +
+          "<if test ='null != projectName'>" +
+          "AND project_name like CONCAT('%',#{projectName},'%')\t" +
+          "</if>" +
+          "<if test ='null != subjectName'>" +
+          "AND subject_name like CONCAT('%',#{subjectName},'%')\t" +
+          "</if>" +
+          "<if test ='null != subjectLeader'>" +
+          "AND subject_leader like CONCAT('%',#{subjectLeader},'%')\t" +
+          "</if>" +
+          "<if test ='null != leaderContact'>" +
+          "AND leader_contact like CONCAT('%',#{leaderContact},'%')\t" +
+          "</if></where>" +
+          "ORDER BY id DESC"+
+          "</script>")
+    List<Map> showAllPassTenderReviewByPingGu(String projectName, String subjectName, String subjectLeader, String leaderContact);
 
     /**
      * 展示所有未通过评估中心审批的
      * @return
      */
-    @Select("SELECT\n" +
-            "id,\n" +
-            "project_name as projectName,\n" +
-            "subject_name as subjectName,\n" +
-            "winning_amount as winningAmount,\n" +
-            "supporting_funds as supportingFunds,\n" +
-            "subject_leader as subjectLeader,\n" +
-            "leader_contact as leaderContact,\n" +
-            "operator,\n" +
-            "operator_contact as operatorContact\n" +
-            "audit_status\t" +
-            "FROM\n" +
-            "open_tender \n" +
-            "WHERE\n" +
-            "audit_status=2" +
-            "ORDER BY id DESC")
-    List<OpenTender> showAllNoPassTenderReviewByPingGu();
+ @Select("<script>" +
+         "SELECT\n" +
+         "id,\n" +
+         "project_name as projectName,\n" +
+         "subject_name as subjectName,\n" +
+         "winning_amount as winningAmount,\n" +
+         "supporting_funds as supportingFunds,\n" +
+         "subject_leader as subjectLeader,\n" +
+         "leader_contact as leaderContact,\n" +
+         "operator,\n" +
+         "operator_contact as operatorContact,\n" +
+         "audit_status\t" +
+         "FROM\t" +
+         "open_tender\t" +
+         "<where>" +
+         "audit_status =2\t" +
+         "<if test ='null != projectName'>" +
+         "AND project_name like CONCAT('%',#{projectName},'%')\t" +
+         "</if>" +
+         "<if test ='null != subjectName'>" +
+         "AND subject_name like CONCAT('%',#{subjectName},'%')\t" +
+         "</if>" +
+         "<if test ='null != subjectLeader'>" +
+         "AND subject_leader like CONCAT('%',#{subjectLeader},'%')\t" +
+         "</if>" +
+         "<if test ='null != leaderContact'>" +
+         "AND leader_contact like CONCAT('%',#{leaderContact},'%')\t" +
+         "</if></where>" +
+         "ORDER BY id DESC"+
+         "</script>")
+    List<Map> showAllNoPassTenderReviewByPingGu(String projectName, String subjectName, String subjectLeader, String leaderContact);
 
     /**
      * 根据招标备案表的id 获取该单位的名字
@@ -382,7 +440,16 @@ public interface OpenTenderMapper {
             "(select uf.id from open_tender ot,upload_file uf where uf.id=ot.announcement_transaction_announcement_id and ot.id=#{id),\n" +
             "(select uf.id from open_tender ot,upload_file uf where uf.id=ot.deal_notification_attachment_id and ot.id=#{id),\n" +
             "(select uf.id from open_tender ot,upload_file uf where uf.id=ot.response_file_attachment_id and ot.id=#{id)\n" +
-            ")")
+            ")\t" +
+            "GROUP BY uf.id")
     HashMap getfileInfo(@Param("id") int id);
+
+    /**
+     * 根据合同主表id查询审核记录
+     * @param oid
+     * @return
+     */
+    @Select("select * from tender_contract_shenhe_record where shenhe_table_id=oid")
+    List<TenderContractShenheRecordDTO> getAllShenHeTableRecordInfoByContractId(@Param("oid") int oid);
 }
 
