@@ -30,4 +30,11 @@ public interface SubjectParticipatingUnitService {
      * @return
      */
     List<SubjectParticipatingUnitDTO> getAllInfo();
+
+    /**
+     * 修改
+     * @param subjectParticipatingUnitDTO
+     * @return
+     */
+    int updateInfo(SubjectParticipatingUnitDTO subjectParticipatingUnitDTO);
 }

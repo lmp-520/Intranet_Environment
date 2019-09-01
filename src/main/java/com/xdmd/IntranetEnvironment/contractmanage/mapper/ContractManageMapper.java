@@ -338,10 +338,31 @@ public interface ContractManageMapper {
             "approval_status as approvalStatus\n" +
             "FROM\n" +
             "contract_manage\n" +
-            "WHERE\n" +
-            "approval_status = 2 \n" +
+            "<where>\n" +
+            "approval_status = 2\t" +
+            "<if test ='null != subjectCategory'>\n" +
+            "AND subject_category like CONCAT('%',#{subjectCategory},'%')\n" +
+            "</if>\n" +
+            "<if test ='null != subjectName'>\n" +
+            "AND subject_name like CONCAT('%',#{subjectName},'%')\n" +
+            "</if>\n" +
+            "<if test ='null != subjectContact'>\n" +
+            "AND subject_contact like CONCAT('%',#{subjectContact},'%')\n" +
+            "</if>\n" +
+            "<if test ='null != subjectContactPhone'>\n" +
+            "AND subject_contact_phone like CONCAT('%',#{subjectContactPhone},'%')\n" +
+            "</if>\n" +
+            "<if test ='null != commitmentUnit'>\n" +
+            "AND commitment_Unit like CONCAT('%',#{commitmentUnit},'%')\n" +
+            "</if>\n" +
+            "<if test ='null != subjectSupervisorDepartment'>\n" +
+            "AND subject_supervisor_department like CONCAT('%',#{subjectSupervisorDepartment},'%')\n" +
+            "</if>\n" +
+            "</where>\n" +
             "ORDER BY id DESC")
-    List<Map> showAllPassContractReviewByUnitManager();
+    List<Map> showAllPassContractReviewByUnitManager(@Param("subjectCategory") String subjectCategory,@Param("subjectName")String subjectName,
+                                                     @Param("subjectContact")String subjectContact,@Param("subjectContactPhone")String subjectContactPhone,@Param("commitmentUnit")String commitmentUnit,
+                                                     @Param("subjectSupervisorDepartment")String subjectSupervisorDepartment);
 
     /**
      * 展示所有未通过单位管理员审批的 【外网】
@@ -362,7 +383,9 @@ public interface ContractManageMapper {
             "WHERE\n" +
             "approval_status < 2 \n" +
             "ORDER BY id DESC")
-    List<Map> showAllNoPassContractReviewByUnitManager();
+    List<Map> showAllNoPassContractReviewByUnitManager(@Param("subjectCategory") String subjectCategory,@Param("subjectName")String subjectName,
+                                                       @Param("subjectContact")String subjectContact,@Param("subjectContactPhone")String subjectContactPhone,@Param("commitmentUnit")String commitmentUnit,
+                                                       @Param("subjectSupervisorDepartment")String subjectSupervisorDepartment);
 
     /**
      * 展示所有通过评估中心审批的 【内网】
@@ -383,7 +406,9 @@ public interface ContractManageMapper {
             "WHERE\n" +
             "approval_status=3\n" +
             "ORDER BY id DESC")
-    List<Map> showAllPassContractReviewByPingGu();
+    List<Map> showAllPassContractReviewByPingGu(@Param("subjectCategory") String subjectCategory,@Param("subjectName")String subjectName,
+                                                @Param("subjectContact")String subjectContact,@Param("subjectContactPhone")String subjectContactPhone,@Param("commitmentUnit")String commitmentUnit,
+                                                @Param("subjectSupervisorDepartment")String subjectSupervisorDepartment);
     /**
      * 展示所有未通过评估中心审批的 【内网】
      * @return
@@ -403,7 +428,9 @@ public interface ContractManageMapper {
             "WHERE\n" +
             "approval_status =2 \n" +
             "ORDER BY id DESC")
-    List<Map> showAllNoPassReviewContractByPingGu();
+    List<Map> showAllNoPassReviewContractByPingGu(@Param("subjectCategory") String subjectCategory,@Param("subjectName")String subjectName,
+                                                  @Param("subjectContact")String subjectContact,@Param("subjectContactPhone")String subjectContactPhone,@Param("commitmentUnit")String commitmentUnit,
+                                                  @Param("subjectSupervisorDepartment")String subjectSupervisorDepartment);
 
 
     /**
@@ -425,7 +452,9 @@ public interface ContractManageMapper {
             "WHERE\n" +
             "approval_status =4 \n" +
             "ORDER BY id DESC")
-    List<ContractManageDTO> showAllPassContractReviewByFaGui();
+    List<ContractManageDTO> showAllPassContractReviewByFaGui(@Param("subjectCategory") String subjectCategory,@Param("subjectName")String subjectName,
+                                                             @Param("subjectContact")String subjectContact,@Param("subjectContactPhone")String subjectContactPhone,@Param("commitmentUnit")String commitmentUnit,
+                                                             @Param("subjectSupervisorDepartment")String subjectSupervisorDepartment);
 
     /**
      * 展示所有未通过法规科技处审批的 【内网】
@@ -446,5 +475,7 @@ public interface ContractManageMapper {
             "WHERE\n" +
             "approval_status =3 \n" +
             "ORDER BY id DESC")
-    List<ContractManageDTO> showAllNoPassReviewContractByFaGui();
+    List<ContractManageDTO> showAllNoPassReviewContractByFaGui(@Param("subjectCategory") String subjectCategory,@Param("subjectName")String subjectName,
+                                                               @Param("subjectContact")String subjectContact,@Param("subjectContactPhone")String subjectContactPhone,@Param("commitmentUnit")String commitmentUnit,
+                                                               @Param("subjectSupervisorDepartment")String subjectSupervisorDepartment);
 }

@@ -2,7 +2,6 @@ package com.xdmd.IntranetEnvironment.contractmanage.service.impl;
 
 import com.xdmd.IntranetEnvironment.contractmanage.mapper.SubjectParticipatingUnitMapper;
 import com.xdmd.IntranetEnvironment.contractmanage.pojo.SubjectParticipatingUnitDTO;
-
 import com.xdmd.IntranetEnvironment.contractmanage.service.SubjectParticipatingUnitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,4 +45,10 @@ public class SubjectParticipatingUnitServiceImpl implements SubjectParticipating
     public List<SubjectParticipatingUnitDTO> getAllInfo() {
         return subjectParticipatingUnitMapper.getAllInfo();
     }
+
+    @Override
+    public int updateInfo(SubjectParticipatingUnitDTO subjectParticipatingUnitDTO) {
+        return subjectParticipatingUnitMapper.updateInfo(subjectParticipatingUnitDTO);
+    }
+
 }

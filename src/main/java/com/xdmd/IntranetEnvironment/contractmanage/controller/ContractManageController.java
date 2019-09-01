@@ -314,8 +314,8 @@ public class ContractManageController {
      */
     @GetMapping(value = "showAllPassContractReviewByUnitManager")
     @ApiOperation(value = "展示所有通过单位管理员审批的【外网】")
-    public ResultMap showAllPassContractReviewByUnitManager(int pageNum, int pageSize) {
-        return resultMap = contractManageService.showAllPassContractReviewByUnitManager(pageNum, pageSize);
+    public ResultMap showAllPassContractReviewByUnitManager(String subjectCategory,String subjectName, String subjectContact,String subjectContactPhone,String commitmentUnit, String subjectSupervisorDepartmentint, int pageNum, int pageSize) {
+        return resultMap = contractManageService.showAllPassContractReviewByUnitManager(subjectCategory,subjectName,subjectContact,subjectContactPhone,commitmentUnit,subjectSupervisorDepartmentint,pageNum,pageSize);
     }
 
     /**
@@ -325,8 +325,8 @@ public class ContractManageController {
      */
     @GetMapping(value = "showAllNoPassContractReviewByUnitManager")
     @ApiOperation(value = "展示所有未通过单位管理员审批的")
-    public ResultMap showAllNoPassContractReviewByUnitManager(int pageNum, int pageSize) {
-        return resultMap = contractManageService.showAllNoPassContractReviewByUnitManager(pageNum, pageSize);
+    public ResultMap showAllNoPassContractReviewByUnitManager(String subjectCategory,String subjectName, String subjectContact,String subjectContactPhone,String commitmentUnit, String subjectSupervisorDepartmentint, int pageNum, int pageSize) {
+        return resultMap = contractManageService.showAllNoPassContractReviewByUnitManager(subjectCategory,subjectName,subjectContact,subjectContactPhone,commitmentUnit,subjectSupervisorDepartmentint,pageNum,pageSize);
     }
 
     /**
@@ -336,8 +336,8 @@ public class ContractManageController {
      */
     @GetMapping(value = "showAllPassContractReviewByPingGu")
     @ApiOperation(value = "展示所有通过评估中心审批的【内网】")
-    public ResultMap showAllPassContractReviewByPingGu(int pageNum, int pageSize) {
-        return resultMap = contractManageService.showAllPassContractReviewByPingGu(pageNum, pageSize);
+    public ResultMap showAllPassContractReviewByPingGu(String subjectCategory,String subjectName, String subjectContact,String subjectContactPhone,String commitmentUnit, String subjectSupervisorDepartmentint, int pageNum, int pageSize) {
+        return resultMap = contractManageService.showAllPassContractReviewByPingGu(subjectCategory,subjectName,subjectContact,subjectContactPhone,commitmentUnit,subjectSupervisorDepartmentint,pageNum,pageSize);
     }
 
     /**
@@ -347,8 +347,8 @@ public class ContractManageController {
      */
     @GetMapping(value = "showAllNoPassReviewContractByPingGu")
     @ApiOperation(value = "展示所有未通过评估中心审批的【内网】")
-    public ResultMap showAllNoPassReviewContractByPingGu(int pageNum, int pageSize) {
-        return resultMap = contractManageService.showAllNoPassReviewContractByPingGu(pageNum, pageSize);
+    public ResultMap showAllNoPassReviewContractByPingGu(String subjectCategory,String subjectName, String subjectContact,String subjectContactPhone,String commitmentUnit, String subjectSupervisorDepartmentint, int pageNum, int pageSize) {
+        return resultMap = contractManageService.showAllNoPassReviewContractByPingGu(subjectCategory,subjectName,subjectContact,subjectContactPhone,commitmentUnit,subjectSupervisorDepartmentint,pageNum,pageSize);
     }
 
     /**
@@ -358,8 +358,8 @@ public class ContractManageController {
      */
     @GetMapping(value = "showAllNoPassReviewContractByFaGui")
     @ApiOperation(value = "展示所有未通过法规科技处审批的【内网】")
-    public ResultMap showAllNoPassReviewContractByFaGui(int pageNum, int pageSize) {
-        return resultMap = contractManageService.showAllNoPassReviewContractByFaGui(pageNum, pageSize);
+    public ResultMap showAllNoPassReviewContractByFaGui(String subjectCategory,String subjectName, String subjectContact,String subjectContactPhone,String commitmentUnit, String subjectSupervisorDepartmentint, int pageNum, int pageSize) {
+        return resultMap = contractManageService.showAllNoPassReviewContractByFaGui(subjectCategory,subjectName,subjectContact,subjectContactPhone,commitmentUnit,subjectSupervisorDepartmentint,pageNum,pageSize);
     }
 
     /**
@@ -369,8 +369,8 @@ public class ContractManageController {
      */
     @GetMapping(value = "showAllPassContractReviewByFaGui")
     @ApiOperation(value = "展示所有通过法规科技处审批的【内网】")
-    public ResultMap showAllPassContractReviewByFaGui(int pageNum, int pageSize) {
-        return resultMap = contractManageService.showAllPassContractReviewByFaGui(pageNum, pageSize);
+    public ResultMap showAllPassContractReviewByFaGui(String subjectCategory,String subjectName, String subjectContact,String subjectContactPhone,String commitmentUnit, String subjectSupervisorDepartmentint, int pageNum, int pageSize) {
+        return resultMap = contractManageService.showAllPassContractReviewByFaGui(subjectCategory,subjectName,subjectContact,subjectContactPhone,commitmentUnit,subjectSupervisorDepartmentint,pageNum,pageSize);
     }
 
     /**

@@ -4,6 +4,7 @@ import com.xdmd.IntranetEnvironment.contractmanage.pojo.SubjectParticipatingUnit
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -55,4 +56,27 @@ public interface SubjectParticipatingUnitMapper {
      **/
     @Select(value = "select * from subject_participating_unit")
     List<SubjectParticipatingUnitDTO> getAllInfo();
+
+
+    /**
+     * 审核不通过被退回修改
+     * @param subjectParticipatingUnitDTO
+     * @return
+     */
+    @Update("update subject_participating_unit SET\n" +
+            "bearing_units=#{bearingUnits},\n" +
+            "participating_units=#{participatingUnits},\n" +
+            "overseas_cooperation_units=#{overseasCooperationUnits},\n" +
+            "country=#{country},\n" +
+            "leader_name=#{leaderName},\n" +
+            "unit_name=#{unitName},\n" +
+            "gender=#{gender},\n" +
+            "age=#{age},\n" +
+            "professional_title=#{professionalTitle},\n" +
+            "professional=#{professional},\n" +
+            "work_task=#{workTask},\n" +
+            "working_time=#{workingTime},\n" +
+            "where\n" +
+            "contract_id=#{contractId}")
+    int updateInfo(SubjectParticipatingUnitDTO subjectParticipatingUnitDTO);
 }
