@@ -157,90 +157,88 @@ public interface ContractManageService {
 
     /**
      * 展示所有通过单位管理员审批的 【外网】
+     * @param subjectCategory
+     * @param subjectName
+     * @param subjectContact
+     * @param subjectContactPhone
+     * @param commitmentUnit
+     * @param subjectSupervisorDepartmentint
      * @param pageNum
      * @param pageSize
      * @return
      */
-    ResultMap showAllPassContractReviewByUnitManager(int pageNum, int pageSize);
+    ResultMap showAllPassContractReviewByUnitManager(String subjectCategory,String subjectName, String subjectContact,String subjectContactPhone,String commitmentUnit, String subjectSupervisorDepartmentint, int pageNum, int pageSize);
 
     /**
      * 展示所有未通过单位管理员审批的 【外网】
+     * @param subjectCategory
+     * @param subjectName
+     * @param subjectContact
+     * @param subjectContactPhone
+     * @param commitmentUnit
+     * @param subjectSupervisorDepartmentint
      * @param pageNum
      * @param pageSize
      * @return
      */
-    ResultMap showAllNoPassContractReviewByUnitManager(int pageNum, int pageSize);
+    ResultMap showAllNoPassContractReviewByUnitManager(String subjectCategory,String subjectName, String subjectContact,String subjectContactPhone,String commitmentUnit, String subjectSupervisorDepartmentint, int pageNum, int pageSize);
 
     /**
      * 展示所有通过评估中心审批的 【内网】
+     * @param subjectCategory
+     * @param subjectName
+     * @param subjectContact
+     * @param subjectContactPhone
+     * @param commitmentUnit
+     * @param subjectSupervisorDepartmentint
      * @param pageNum
      * @param pageSize
      * @return
      */
-    ResultMap showAllPassContractReviewByPingGu(int pageNum, int pageSize);
+   ResultMap showAllPassContractReviewByPingGu(String subjectCategory,String subjectName, String subjectContact,String subjectContactPhone,String commitmentUnit, String subjectSupervisorDepartmentint, int pageNum, int pageSize);
+
     /**
      * 展示所有未通过评估中心审批的 【内网】
+     * @param subjectCategory
+     * @param subjectName
+     * @param subjectContact
+     * @param subjectContactPhone
+     * @param commitmentUnit
+     * @param subjectSupervisorDepartmentint
      * @param pageNum
      * @param pageSize
      * @return
      */
-    ResultMap showAllNoPassReviewContractByPingGu(int pageNum, int pageSize);
+    ResultMap showAllNoPassReviewContractByPingGu(String subjectCategory,String subjectName, String subjectContact,String subjectContactPhone,String commitmentUnit, String subjectSupervisorDepartmentint, int pageNum, int pageSize);
 
 
     /**
      * 展示所有通过法规科技处审批的 【内网】
+     * @param subjectCategory
+     * @param subjectName
+     * @param subjectContact
+     * @param subjectContactPhone
+     * @param commitmentUnit
+     * @param subjectSupervisorDepartmentint
      * @param pageNum
      * @param pageSize
      * @return
      */
-    ResultMap showAllPassContractReviewByFaGui(int pageNum, int pageSize);
+    ResultMap showAllPassContractReviewByFaGui(String subjectCategory,String subjectName, String subjectContact,String subjectContactPhone,String commitmentUnit, String subjectSupervisorDepartmentint, int pageNum, int pageSize);
+
     /**
      * 展示所有未通过法规科技处审批的 【内网】
+     * @param subjectCategory
+     * @param subjectName
+     * @param subjectContact
+     * @param subjectContactPhone
+     * @param commitmentUnit
+     * @param subjectSupervisorDepartmentint
      * @param pageNum
      * @param pageSize
      * @return
      */
-    ResultMap showAllNoPassReviewContractByFaGui(int pageNum, int pageSize);
+    ResultMap showAllNoPassReviewContractByFaGui(String subjectCategory,String subjectName, String subjectContact,String subjectContactPhone,String commitmentUnit, String subjectSupervisorDepartmentint, int pageNum, int pageSize);
 
 }
-
-//备忘：合同表更新字段
-//@Param("subjectCategory") String subjectCategory,
-//@Param("projectNo") String projectNo,
-//@Param("subjectName") String subjectName,
-//@Param("contractStartTime") String contractStartTime,
-//@Param("contractEndTime") String contractEndTime,
-//@Param("subjeceLeader") String subjeceLeader,
-//@Param("subjectLeaderPhone") String subjectLeaderPhone,
-//@Param("subjectContact") String subjectContact,
-//@Param("subjectContactPhone") String subjectContactPhone,
-//@Param("commitmentUnit") String commitmentUnit,
-//@Param("commitmentUnitAddress") String commitmentUnitAddress,
-//@Param("commitmentUnitZip") String commitmentUnitZip,
-//@Param("subjectSupervisorDepartment") String subjectSupervisorDepartment,
-//@Param("openBank") String openBank,
-//@Param("openBankAccount") String openBankAccount,
-//@Param("email") String email,
-//@Param("guaranteedUnits") String guaranteedUnits,
-//@Param("guaranteedUnitContact") String guaranteedUnitContact,
-//@Param("guaranteedContactPhone") String guaranteedContactPhone,
-//@Param("commissioningUnit") String commissioningUnit,
-//@Param("legalRepresentativeEntrustingA") String legalRepresentativeEntrustingA,
-//@Param("commissionedUnitAddressA") String commissionedUnitAddressA,
-//@Param("commissionedUnitZipA") String commissionedUnitZipA,
-//@Param("responsibilityUnitB") String responsibilityUnitB,
-//@Param("responsibilityLegalRepresentativeB") String responsibilityLegalRepresentativeB,
-//@Param("commitUnitAddressB") String commitUnitAddressB,
-//@Param("commitUnitZipB") String commitUnitZipB,
-//@Param("commitUnitLeaderB") String commitUnitLeaderB,
-//@Param("commitunitLeadersPhoneB") String commitunitLeadersPhoneB,
-//@Param("commitmentUnitEmailB") String commitmentUnitEmailB,
-//@Param("guaranteedUnitC") String guaranteedUnitC,
-//@Param("guaranteedUnitLeaderC") String guaranteedUnitLeaderC,
-//@Param("guaranteedUnitAddressC") String guaranteedUnitAddressC,
-//@Param("guaranteedUnitZipC") String guaranteedUnitZipC,
-//@Param("subjectSigningDescription") String subjectSigningDescription,
-//@Param("subjectObjectivesResearch") String subjectObjectivesResearch,
-//@Param("subjectAcceptanceAssessment") String subjectAcceptanceAssessment
-
 

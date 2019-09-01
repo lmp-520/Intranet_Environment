@@ -57,6 +57,14 @@ public class SubjectParticipatingUnitController {
         return subjectParticipatingUnitService.getAllInfo();
     }
 
-
-
+    /**
+     * 审核不通过被退回修改
+     * @param subjectParticipatingUnitDTO
+     * @return
+     */
+    @ApiOperation(value = "审核不通过被退回修改")
+    @PostMapping(value = "updateSubjectParticipatingUnit")
+    public int updateInfo(SubjectParticipatingUnitDTO subjectParticipatingUnitDTO) {
+        return subjectParticipatingUnitService.updateInfo(subjectParticipatingUnitDTO);
+    }
 }

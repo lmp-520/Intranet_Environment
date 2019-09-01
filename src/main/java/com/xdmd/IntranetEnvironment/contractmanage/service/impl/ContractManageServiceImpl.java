@@ -705,10 +705,10 @@ public class ContractManageServiceImpl implements ContractManageService {
      * @return
      */
     @Override
-    public ResultMap showAllPassContractReviewByUnitManager(int pageNum, int pageSize) {
+    public ResultMap showAllPassContractReviewByUnitManager(String subjectCategory,String subjectName, String subjectContact,String subjectContactPhone,String commitmentUnit, String subjectSupervisorDepartmentint, int pageNum, int pageSize) {
         try {
             PageHelper.startPage(pageNum, pageSize, true);
-            List<Map> contractMap= contractManageMapper.showAllPassContractReviewByUnitManager();
+            List<Map> contractMap= contractManageMapper.showAllPassContractReviewByUnitManager(subjectCategory,subjectName,subjectContact,subjectContactPhone,commitmentUnit,subjectSupervisorDepartmentint);
             PageInfo pageInfo = new PageInfo(contractMap);
             if (contractMap.size() > 0) {
                 resultMap.success().message(pageInfo);
@@ -729,10 +729,10 @@ public class ContractManageServiceImpl implements ContractManageService {
      * @return
      */
     @Override
-    public ResultMap showAllNoPassContractReviewByUnitManager(int pageNum, int pageSize) {
+    public ResultMap showAllNoPassContractReviewByUnitManager(String subjectCategory,String subjectName, String subjectContact,String subjectContactPhone,String commitmentUnit, String subjectSupervisorDepartmentint, int pageNum, int pageSize) {
         try {
             PageHelper.startPage(pageNum, pageSize, true);
-            List<Map> contractMap= contractManageMapper.showAllNoPassContractReviewByUnitManager();
+            List<Map> contractMap= contractManageMapper.showAllNoPassContractReviewByUnitManager(subjectCategory,subjectName,subjectContact,subjectContactPhone,commitmentUnit,subjectSupervisorDepartmentint);
             PageInfo pageInfo = new PageInfo(contractMap);
             if (contractMap.size() > 0) {
                 resultMap.success().message(pageInfo);
@@ -747,41 +747,16 @@ public class ContractManageServiceImpl implements ContractManageService {
     }
 
     /**
-     * 展示所有通过评估中心审批的 【外网】
+     * 展示所有通过评估中心审批的 【内网】
      * @param pageNum
      * @param pageSize
      * @return
      */
     @Override
-    public ResultMap showAllPassContractReviewByPingGu(int pageNum, int pageSize) {
+    public ResultMap showAllPassContractReviewByPingGu(String subjectCategory,String subjectName, String subjectContact,String subjectContactPhone,String commitmentUnit, String subjectSupervisorDepartmentint, int pageNum, int pageSize) {
         try {
             PageHelper.startPage(pageNum, pageSize, true);
-            List<Map> contractMap= contractManageMapper.showAllPassContractReviewByPingGu();
-            PageInfo pageInfo = new PageInfo(contractMap);
-            if (contractMap.size() > 0) {
-                resultMap.success().message(pageInfo);
-            } else if (contractMap.size() == 0) {
-                resultMap.fail().message("没有找到数据");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            resultMap.fail().message("系统异常");
-        }
-        return resultMap;
-    }
-
-
-    /**
-     * 展示所有未通过评估中心审批的 【外网】
-     * @param pageNum
-     * @param pageSize
-     * @return
-     */
-    @Override
-    public ResultMap showAllNoPassReviewContractByPingGu(int pageNum, int pageSize) {
-        try {
-            PageHelper.startPage(pageNum, pageSize, true);
-            List<Map> contractMap= contractManageMapper.showAllNoPassReviewContractByPingGu();
+            List<Map> contractMap= contractManageMapper.showAllPassContractReviewByPingGu(subjectCategory,subjectName,subjectContact,subjectContactPhone,commitmentUnit,subjectSupervisorDepartmentint);
             PageInfo pageInfo = new PageInfo(contractMap);
             if (contractMap.size() > 0) {
                 resultMap.success().message(pageInfo);
@@ -797,16 +772,16 @@ public class ContractManageServiceImpl implements ContractManageService {
 
 
     /**
-     * 展示所有通过法规科技处审批的 【外网】
+     * 展示所有未通过评估中心审批的 【内网】
      * @param pageNum
      * @param pageSize
      * @return
      */
     @Override
-    public ResultMap showAllPassContractReviewByFaGui(int pageNum, int pageSize) {
+    public ResultMap showAllNoPassReviewContractByPingGu(String subjectCategory,String subjectName, String subjectContact,String subjectContactPhone,String commitmentUnit, String subjectSupervisorDepartmentint, int pageNum, int pageSize) {
         try {
             PageHelper.startPage(pageNum, pageSize, true);
-            List<ContractManageDTO> contractMap= contractManageMapper.showAllPassContractReviewByFaGui();
+            List<Map> contractMap= contractManageMapper.showAllNoPassReviewContractByPingGu(subjectCategory,subjectName,subjectContact,subjectContactPhone,commitmentUnit,subjectSupervisorDepartmentint);
             PageInfo pageInfo = new PageInfo(contractMap);
             if (contractMap.size() > 0) {
                 resultMap.success().message(pageInfo);
@@ -822,16 +797,41 @@ public class ContractManageServiceImpl implements ContractManageService {
 
 
     /**
-     * 展示所有未通过评估中心审批的 【外网】
+     * 展示所有通过法规科技处审批的 【内网】
      * @param pageNum
      * @param pageSize
      * @return
      */
     @Override
-    public ResultMap showAllNoPassReviewContractByFaGui(int pageNum, int pageSize) {
+    public ResultMap showAllPassContractReviewByFaGui(String subjectCategory,String subjectName, String subjectContact,String subjectContactPhone,String commitmentUnit, String subjectSupervisorDepartmentint, int pageNum, int pageSize) {
         try {
             PageHelper.startPage(pageNum, pageSize, true);
-            List<ContractManageDTO> contractMap= contractManageMapper.showAllNoPassReviewContractByFaGui();
+            List<ContractManageDTO> contractMap= contractManageMapper.showAllPassContractReviewByFaGui(subjectCategory,subjectName,subjectContact,subjectContactPhone,commitmentUnit,subjectSupervisorDepartmentint);
+            PageInfo pageInfo = new PageInfo(contractMap);
+            if (contractMap.size() > 0) {
+                resultMap.success().message(pageInfo);
+            } else if (contractMap.size() == 0) {
+                resultMap.fail().message("没有找到数据");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
+
+
+    /**
+     * 展示所有未通过法规科技处审批的 【内网】
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public ResultMap showAllNoPassReviewContractByFaGui(String subjectCategory,String subjectName, String subjectContact,String subjectContactPhone,String commitmentUnit, String subjectSupervisorDepartmentint, int pageNum, int pageSize) {
+        try {
+            PageHelper.startPage(pageNum, pageSize, true);
+            List<ContractManageDTO> contractMap= contractManageMapper.showAllNoPassReviewContractByFaGui(subjectCategory,subjectName,subjectContact,subjectContactPhone,commitmentUnit,subjectSupervisorDepartmentint);
             PageInfo pageInfo = new PageInfo(contractMap);
             if (contractMap.size() > 0) {
                 resultMap.success().message(pageInfo);

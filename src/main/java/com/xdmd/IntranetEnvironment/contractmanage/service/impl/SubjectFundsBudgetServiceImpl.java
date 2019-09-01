@@ -44,4 +44,15 @@ public  class SubjectFundsBudgetServiceImpl implements SubjectFundsBudgetService
     public List<SubjectFundsBudgetDTO> getAllInfo() {
         return subjectFundsBudgetMapper.getAllInfo();
     }
+
+
+    /**
+     * 修改
+     * @param subjectFundsBudgetDTO
+     * @return
+     */
+    @Override
+    public int UpdateSubjectFundsBudget(SubjectFundsBudgetDTO subjectFundsBudgetDTO) {
+        return subjectFundsBudgetMapper.UpdateSubjectFundsBudget(subjectFundsBudgetDTO);
+    }
 }

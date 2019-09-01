@@ -29,4 +29,11 @@ public interface SubjectFundsBudgetService {
      * @return
      */
     List<SubjectFundsBudgetDTO> getAllInfo();
+
+    /**
+     * 不通过被退回时重新提交[修改]
+     * @param subjectFundsBudgetDTO
+     * @return
+     */
+    int UpdateSubjectFundsBudget(SubjectFundsBudgetDTO subjectFundsBudgetDTO);
 }
