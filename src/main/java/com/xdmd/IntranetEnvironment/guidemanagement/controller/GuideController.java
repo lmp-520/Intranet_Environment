@@ -95,14 +95,11 @@ public class GuideController {
      * @param collectionId
      * @return
      */
-    @PostMapping(value = "insertUCid")
+    @PostMapping(value = "insertCidAndUid")
     @ApiOperation(value = "新增单位关联指南征集【备用】")
-    public ResultMap insert(int unitId, int collectionId){
-        return resultMap=guideService.insert(unitId,collectionId);
+    public ResultMap insertCidAndUid(int unitId, int collectionId){
+        return resultMap=guideService.insertCidAndUid(unitId,collectionId);
     }
-
-
-
 
     /**
      * 根据勾选的指南id更新相应指南申报选中状态
@@ -112,25 +109,9 @@ public class GuideController {
     @PostMapping(value = "updateIsSelectByIds")
     @ApiOperation(value = "根据勾选的指南id更新相应指南申报选中状态(注意:传的是指南申报id,不是汇总表id)")
     public ResultMap updateIsSelectByIds(@RequestBody List<Long> ids){
-        if(ids != null && !ids.equals("") && !ids.equals("null")){
-             resultMap=guideService.updateIsSelectByIds(ids);
-        }
+        resultMap=guideService.updateIsSelectByIds(ids);
         return resultMap;
     }
-
-    /**
-     * 新增汇总信息【单条插入】
-     * @param guideSummary
-     * @return
-
-    @ApiOperation(value = "新增汇总信息",notes = "【单条插入】")
-    @PostMapping(value = "insertSummary")
-    public ResultMap insertSummary(@RequestBody GuideSummary guideSummary){
-        return resultMap= guideService.insertSummary(guideSummary);
-    } */
-
-
-
 
     /**
      * 新增汇总信息实现【批量插入】

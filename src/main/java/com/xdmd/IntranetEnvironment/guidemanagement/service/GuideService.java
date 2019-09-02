@@ -47,16 +47,6 @@ public interface GuideService {
     ResultMap updateLimitTime(GuideCollectionLimitTime guideCollectionLimitTime);
 
 
-
-    /**
-     * 新增汇总信息【单条插入】
-     * @param guideSummary
-     * @return
-
-    ResultMap insertSummary(GuideSummary guideSummary); */
-
-
-
     /**
      * 新增汇总信息【批量插入】
      * @param guideSummary
@@ -89,7 +79,7 @@ public interface GuideService {
      * @param collectionId
      * @return
      */
-    ResultMap insert(int unitId, int collectionId);
+    ResultMap insertCidAndUid(int unitId, int collectionId);
 
 
     /**
@@ -98,6 +88,5 @@ public interface GuideService {
      * @return
      */
     ResultMap updateIsSelectByIds(List<Long> ids);
-
 }
 

@@ -118,7 +118,7 @@ public interface GuideMapper {
      * @return
      */
     @Insert(value = "INSERT INTO unit_guide_collection (unit_id,collection_id)VALUES(#{unitId},#{collectionId})")
-    int insert(int unitId, int collectionId);
+    int insertCidAndUid(int unitId, int collectionId);
 
 
     /**
@@ -128,8 +128,8 @@ public interface GuideMapper {
      */
     @Select(value ="<script>" +
             "update guide_collection set is_select=1 where id in " +
-            "<foreach\tcollection='list'\titem='gcId'\topen='(' separator=',' close=')'>" +
-            "#{gcId}\n" +
+            "<foreach\tcollection='list'\titem='gid'\topen='(' separator=',' close=')'>" +
+            "#{gid}\n" +
             "</foreach>\n" +
             "</script>")
     @Results(value = { @Result(column = "id", property = "id") })

@@ -1,6 +1,7 @@
 package com.xdmd.IntranetEnvironment.contractmanage.service.impl;
 
 
+import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.contractmanage.mapper.SubjectFundsBudgetMapper;
 import com.xdmd.IntranetEnvironment.contractmanage.pojo.SubjectFundsBudgetDTO;
 import com.xdmd.IntranetEnvironment.contractmanage.service.SubjectFundsBudgetService;
@@ -18,6 +19,7 @@ import java.util.List;
 public  class SubjectFundsBudgetServiceImpl implements SubjectFundsBudgetService {
     @Autowired
     SubjectFundsBudgetMapper subjectFundsBudgetMapper;
+    ResultMap resultMap=new ResultMap();
     /**
      * 新增
      * @param subjectFundsBudgetDTO
@@ -53,10 +55,20 @@ public  class SubjectFundsBudgetServiceImpl implements SubjectFundsBudgetService
      * @return
      */
     @Override
-    public int UpdateSubjectFundsBudget(SubjectFundsBudgetDTO subjectFundsBudgetDTO) {
-         int updateNum=subjectFundsBudgetMapper.UpdateSubjectFundsBudget(subjectFundsBudgetDTO);
-        System.out.println(updateNum);
-        return updateNum;
+    public ResultMap UpdateSubjectFundsBudget(SubjectFundsBudgetDTO subjectFundsBudgetDTO) {
+        try {
+            int updateNum=subjectFundsBudgetMapper.UpdateSubjectFundsBudget(subjectFundsBudgetDTO);
+            if(updateNum>0){
+                resultMap.success().message("更新成功");
+            }
+            else{
+                resultMap.fail().message("更新失败");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultMap.fail().message("系统异常");
+        }
+        return resultMap;
     }
   
 }

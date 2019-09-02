@@ -32,9 +32,9 @@ import java.util.Map;
 @Service
 public class GuideServiceImpl implements GuideService {
     private static final Logger log = LoggerFactory.getLogger(GuideServiceImpl.class);
+    ResultMap resultMap = new ResultMap();
     @Autowired
     GuideMapper guideMapper;
-    ResultMap resultMap = new ResultMap();
     @Autowired
     private ExtranetTokenService extranetTokenService;
 
@@ -119,11 +119,13 @@ public class GuideServiceImpl implements GuideService {
         }
         //Integer userid = jwtInformation.getUid();
         //String username = jwtInformation.getUsername();
-        //Integer unitid = jwtInformation.getCid();
+        Integer unitid = jwtInformation.getCid();
         String unitname = jwtInformation.getCompanyName();
         try{
             guideCollection.setFillUnit(unitname);
             int gmInfo=guideMapper.insertGuideInfo(guideCollection);
+            //提交指南申报的同时新增单位关联指南申报表
+            insertCidAndUid(unitid,guideCollection.getId());
             if(gmInfo>0){
                 resultMap.success().message("新增成功");
             }else if(gmInfo<0){
@@ -169,17 +171,6 @@ public class GuideServiceImpl implements GuideService {
         return resultMap.success().message("更新成功");
     }
 
-    /**
-     * 新增汇总信息实现【单条插入】
-     * @param guideSummary
-     * @return
-     *
-    @Override
-    public ResultMap insertSummary(GuideSummary guideSummary) {
-        int number = guideMapper.insertSummary(guideSummary);
-        return resultMap.success().message("汇总新增成功");
-    }
-*/
 
     /**
      * 新增汇总信息实现【批量插入】
@@ -235,7 +226,7 @@ public class GuideServiceImpl implements GuideService {
 
 
     /**
-     * 实现根据汇总标题id查询汇总信息
+     * 实现根据汇总标题查询汇总信息
      * @param guideSummaryTitle
      * @return
      */
@@ -311,9 +302,9 @@ public class GuideServiceImpl implements GuideService {
      * @return
      */
     @Override
-    public ResultMap insert(int unitId, int collectionId) {
+    public ResultMap insertCidAndUid(int unitId, int collectionId) {
         try{
-            int insertNo=guideMapper.insert(unitId,collectionId);
+            int insertNo=guideMapper.insertCidAndUid(unitId,collectionId);
             if(insertNo>0){
                 resultMap.success().message("新增成功");
             }else if(insertNo==0){
