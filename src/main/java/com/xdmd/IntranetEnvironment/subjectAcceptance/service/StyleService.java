@@ -9,4 +9,12 @@ public interface StyleService {
 
     ResultMap applicationSubmitList();
 
+    ResultMap finalAcceptanceMethod();
+
+
+    ResultMap queryAchievementShape();
+
+    ResultMap queryAchievementLevel();
+
+    ResultMap queryAuditStatus();
 }

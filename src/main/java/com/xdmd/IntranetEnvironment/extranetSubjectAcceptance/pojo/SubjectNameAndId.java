@@ -4,12 +4,12 @@ import lombok.Data;
 
 @Data
 public class SubjectNameAndId {
-    private Integer id;
-    private String subjectName;
+   private Integer id;
+   private String SubjectName;
 
     public SubjectNameAndId(Integer id, String subjectName) {
         this.id = id;
-        this.subjectName = subjectName;
+        SubjectName = subjectName;
     }
 
     public SubjectNameAndId() {

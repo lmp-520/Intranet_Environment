@@ -9,16 +9,16 @@ import java.math.BigDecimal;
 /**
  * @author: Kong
  * @createDate: 2019/8/4
- * @description: 课题经费预算【合同子表三】
+ * @description: 课题经费预算【合同子表四】
  */
 @Data
-@ApiModel(description = "课题经费预算【合同子表三】")
+@ApiModel("课题经费预算【合同子表四】")
 public class SubjectFundsBudgetDTO {
 
-    @ApiModelProperty(name="主键【注:系统默认生成,新增时不用填】",required = false,example ="1")
+    @ApiModelProperty(name="主键【注:系统默认生成,新增时不用填】",required = false)
     private Integer id;
 
-    @ApiModelProperty("合同主表id")
+    @ApiModelProperty("合同管理id")
     private Integer contractId;
 
     @ApiModelProperty("经费来源合计预算数")
@@ -33,8 +33,17 @@ public class SubjectFundsBudgetDTO {
     @ApiModelProperty("后年")
     private String afterYear;
 
-    @ApiModelProperty("备注")
-    private String note;
+    @ApiModelProperty("經費來源备注")
+    private String fundingSourcesNote;
+
+    @ApiModelProperty("當前年來源合計")
+    private BigDecimal currentYearSourceTotal;
+
+    @ApiModelProperty("明年來源合計")
+    private BigDecimal nextYearSourceTotal;
+
+    @ApiModelProperty("後年來源合計")
+    private BigDecimal afterYearSourceTotal;
 
     @ApiModelProperty("省环保科研课题经费预算数")
     private BigDecimal provincialBudget;
@@ -96,8 +105,23 @@ public class SubjectFundsBudgetDTO {
     @ApiModelProperty("其他来源预算备注")
     private String otherNoteBudget;
 
-    @ApiModelProperty("经费支出合计预算数")
+    @ApiModelProperty("省环保科研课题经费支出合计预算数")
     private BigDecimal expenditureBudget;
+
+    @ApiModelProperty("當前年支出合計")
+    private Integer currentYearExpenditureTotal;
+
+    @ApiModelProperty("明年支出合計")
+    private BigDecimal nextYearExpenditureTotal;
+
+    @ApiModelProperty("后年支出合計")
+    private BigDecimal afterYearExpenditureTotal;
+
+    @ApiModelProperty("自筹配套经费支出合計")
+    private BigDecimal selfTotalExpenditures;
+
+    @ApiModelProperty("经费支出合計備注")
+    private String totalExpendituresNote;
 
     @ApiModelProperty("设备费支出预算数")
     private BigDecimal equipmentBudget;
@@ -139,7 +163,7 @@ public class SubjectFundsBudgetDTO {
     private BigDecimal testBudget;
 
     @ApiModelProperty("测试化验加工费支出当前年预算")
-    private String testCurrentBudget;
+    private BigDecimal testCurrentBudget;
 
     @ApiModelProperty("测试化验加工费支出明年预算")
     private BigDecimal testNextBudget;
@@ -234,7 +258,7 @@ public class SubjectFundsBudgetDTO {
     @ApiModelProperty("日常水、电、气、暖消耗等支出明年预算")
     private BigDecimal dailyNextBudget;
 
-    @ApiModelProperty("日常水、电、气、暖消耗等支出后年预算")
+    @ApiModelProperty("\r\n日常水、电、气、暖消耗等支出后年预算")
     private BigDecimal dailyAfterBudget;
 
     @ApiModelProperty("日常水、电、气、暖消耗等支出自筹配套经费预算")

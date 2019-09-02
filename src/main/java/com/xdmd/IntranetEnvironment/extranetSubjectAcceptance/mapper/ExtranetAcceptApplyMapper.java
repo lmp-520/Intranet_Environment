@@ -140,11 +140,11 @@ public interface ExtranetAcceptApplyMapper<T> extends MyBaseMapper<ExtranetCheck
     List<Integer> queryAllEndContractId(@Param("nowTime") String nowTime,@Param("cname") String cname);
 
     //根据id获取合同的结束时间
-    @Select("select contract_end_time from contract_manage where id = #{id}")
+    @Select("select contract_end_time from contract_manage where id = #{id} and is_check_apply = 0")
     String queryEndTimeById(@Param("id") Integer id);
 
     //通过合同id，获取符合要求的课题名称
-    @Select("select subject_name from contract_manage where id = #{id}")
+    @Select("select subject_name from contract_manage where id = #{id} and is_check_apply =0")
     String querySubjectNameById(@Param("id") Integer resultId);
 
     //通过课题名称获取合同id
@@ -152,7 +152,7 @@ public interface ExtranetAcceptApplyMapper<T> extends MyBaseMapper<ExtranetCheck
     List<Integer> queryIdByProjectName(@Param("projectName") String projectName);
 
     //通过id获取课题编号
-    @Select("select project_no from contract_manage where id = #{resultId}")
+    @Select("select project_no from contract_manage where id = #{resultId} and is_check_apply = 0")
     String queryTopicNumberById(@Param("resultId") Integer resultId);
 
     //根据课题编号获取承担单位
@@ -178,4 +178,35 @@ public interface ExtranetAcceptApplyMapper<T> extends MyBaseMapper<ExtranetCheck
     //根据课题编号获取合同结束时间
     @Select("select contract_end_time from contract_manage where project_no = #{projectNumber}")
     String queryContractEndTime(@Param("projectNumber") String projectNumber);
+
+    //查询专家信息组意见信息  根据验收申请表的id查询
+    @Select("select * from expert_group_comments where ca_id = #{id}")
+    ExtranetExpertGroupComment queryExpertGroupComment(@Param("id") Integer id);
+
+    //根据验收专家组意见表的id，获取对应的专家组成员信息
+    @Select("select * from expert_group_comments_name where egc_id = #{egcId}")
+    List<ExtranetExpertGroupCommentsName> queryExpertGroupCommentsName(@Param("egcId") Integer egcId);
+
+    //根据验收申请表的id，查询最终验收报告主表信息
+    @Select("select * from acceptance_certificate where cid = #{id}")
+    AcceptanceCertificate queryAcceptanceCertificate(@Param("id") Integer id);
+
+    //根据最终验收报告的id，查询验收报告中的专利信息
+    @Select("select * from acceptance_certificate_patent where acceptance_certificate_id = #{id}")
+    List<AcceptanceCertificatePatent> queryAcceptanceCertificatePatentByCid(@Param("id") Integer id);
+
+    //根据最终验收报告的id，查询验收报告中的主要参与人员信息
+    @Select("select * from acceptance_certificate_principal_personnel where acceptance_certificate_id = #{id}")
+    List<AcceptanceCertificatePrincipalPersonnel> queryAcceptanceCertificatePersonnel(@Param("id") Integer id);
+
+    //根据验收报告的id，查询出验收报告中的课题负责人信息
+    @Select("select * from acceptance_certificate_subject_people where acceptance_certificate_id = #{id}")
+    List<AcceptanceCertificateSubjectPeople> queryAcceptanceCertificateSubjectPeople(@Param("id") Integer id);
+
+    //通过id，获取课题信息
+    @Select("select id,project_no,subject_name,contract_start_time,contract_end_time,subjece_leader,subject_leader_phone,email,commitment_Unit,commitment_unit_address from contract_manage where id =#{id} and is_check_apply = 0")
+    SubjectInformation querySubjectInformation(@Param("id") Integer resultId);
+
+    @Update("update contract_manage set is_check_apply = 1 where id = #{id}")
+    void updateContractManage(@Param("id") Integer contractId);
 }

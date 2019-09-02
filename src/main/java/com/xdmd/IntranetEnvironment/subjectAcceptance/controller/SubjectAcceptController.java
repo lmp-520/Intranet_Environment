@@ -21,12 +21,10 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 @RequestMapping("subjectAccept")
 public class SubjectAcceptController {
-
     @Autowired
     private SubjectAcceptSerivce subjectAcceptSerivce;
     ResultMap resultMap = new ResultMap();
     private static Logger log = LoggerFactory.getLogger(SubjectAcceptController.class);
-
 
     //课题验收的查询
     @ResponseBody
@@ -53,21 +51,18 @@ public class SubjectAcceptController {
     //课题验收中的审核
     @ResponseBody
     @PostMapping("examine")
-    public ResultMap SubjectAcceptState(@CookieValue(value = "IntranecToken") String token, HttpServletResponse response,
+    public ResultMap SubjectAcceptState(@CookieValue(value = "IntranecToken",required = false) String token, HttpServletResponse response,
                                         @RequestParam("type") Boolean type,//审核的状态.   true为审核通过  false为审核未通过
                                         @RequestParam(value = "reason", required = false) String reason,//审核未通过原因
                                         @RequestParam("id") Integer id,//验收申请数据的id
                                         @RequestParam("acceptanceFinalResultId") Integer acceptanceFinalResultId,//最终验收结果id
-                                        @RequestPart ExpertGroupComment expertGroupComment, //专家组意见表
+                                        @RequestPart(value = "expertGroupComment",required = false) ExpertGroupComment expertGroupComment, //专家组意见表
                                         @RequestPart(value = "expertGroupCommentsFile", required = false) MultipartFile expertGroupCommentsFile,  //专家意见表文件
                                         @RequestPart(value = "expertAcceptanceFormFile", required = false) MultipartFile expertAcceptanceFormFile) { //专家评议表文件
-//
-
         //首先判断token是否存在
         if (StringUtils.isEmpty(token)) {
             return resultMap.fail().message("请先登录");
         }
-
         try {
             resultMap = subjectAcceptSerivce.SubjectAcceptState(token, response, type, reason, id, expertGroupCommentsFile, expertAcceptanceFormFile, acceptanceFinalResultId,expertGroupComment);
         } catch (UpdateSqlException e) {
@@ -86,11 +81,10 @@ public class SubjectAcceptController {
         return resultMap;
     }
 
-
     //在审核时，如果是内网上传的专家组意见，则先上传专家组意见
     @PostMapping("ExpertGroup")
     @ResponseBody
-    public ResultMap SubjectAcceptStateExpertGroup(@CookieValue(value = "IntranecToken") String token, HttpServletResponse response,
+    public ResultMap SubjectAcceptStateExpertGroup(@CookieValue(value = "IntranecToken",required = false) String token, HttpServletResponse response,
                                                    @RequestParam("type") Boolean type,//审核的状态.   true为审核通过  false为审核未通过
                                                    @RequestParam("id") Integer id,//验收申请数据的id
                                                    @RequestBody ExpertGroupComment expertGroupComment) { //专家组意见表
@@ -113,19 +107,7 @@ public class SubjectAcceptController {
     }
 
     //课题验收中的保存
-    @ApiOperation(value = "课题验收中的保存")
-    @ApiImplicitParams(
-            {
-                    @ApiImplicitParam(name = "type",value = "审核的状态，true为审核通过，false未审核未通过"),
-                    @ApiImplicitParam(name = "reason",value = "审核未通过的原因"),
-                    @ApiImplicitParam(name = "id",value = "验收申请数据的id"),
-                    @ApiImplicitParam(name = "acceptanceFinalResultId",value = "最终验收结果的id"),
-                    @ApiImplicitParam(name = "expertGroupComment",value = "专家组意见表"),
-                    @ApiImplicitParam(name = "expertGroupCommentsFile",value = "专家意见表文件"),
-                    @ApiImplicitParam(name = "expertAcceptanceFormFile",value = "专家评议表文件")
-            }
-    )
-    public ResultMap SubjectAcceptSave(@CookieValue(value = "IntranecToken") String token, HttpServletResponse response,
+    public ResultMap SubjectAcceptSave(@CookieValue(value = "IntranecToken",required = false) String token, HttpServletResponse response,
                                        @RequestParam("type") Boolean type,//审核的状态.   true为审核通过  false为审核未通过
                                        @RequestParam(value = "reason", required = false) String reason,//审核未通过原因
                                        @RequestParam("id") Integer id,//验收申请数据的id

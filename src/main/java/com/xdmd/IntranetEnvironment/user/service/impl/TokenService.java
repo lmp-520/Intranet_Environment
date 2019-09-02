@@ -26,6 +26,7 @@ public class TokenService {
      * @param token
      * @return
      */
+    //内网登陆时的IntranecToken
     public  User compare(HttpServletResponse response, String token) throws Exception{
 
         //对token中的内容进行解析
@@ -37,12 +38,12 @@ public class TokenService {
         int newid = Integer.parseInt(id.toString());
         Object username = claims.get("username");
         String newUsername = String.valueOf(username);
-        String sqlUsername = null;
-        Integer newid2 = new Integer(newid);
-        sqlUsername = userMapper.queryUserNameById(newid2);
-        if (!newUsername.equals(sqlUsername)) {
-           throw  new UserNameNotExistentException("请先登录");
-        }
+//        String sqlUsername = null;
+//        Integer newid2 = new Integer(newid);
+//        sqlUsername = userMapper.queryUserNameById(newid2);
+//        if (!newUsername.equals(sqlUsername)) {
+//           throw  new UserNameNotExistentException("请先登录");
+//        }
 
         //对token进行刷新
         User user = new User();

@@ -75,18 +75,39 @@ public class SubjectAcceptServiceImpl implements SubjectAcceptSerivce {
             //通过验收申请表id获取文件的地址
             String applicationFileUrl = subjectAcceptMapper.queryFileUrlByFileId(applicationUrlId);
             checkApply.setApplicationAcceptanceUrl(applicationFileUrl);
+            String applicationFileName = subjectAcceptMapper.queryFileNameByFileId(applicationUrlId);
+            checkApply.setApplicationAcceptanceUrlName(applicationFileName);
+
+            //获取专项审计报告id
+            Integer auditReportUrlId = checkApply.getAuditReportUrlId();
+            String auditReportUrl = subjectAcceptMapper.queryFileUrlByFileId(auditReportUrlId);
+            checkApply.setAuditReportUrl(auditReportUrl);
+            String auditReportFileName = subjectAcceptMapper.queryFileNameByFileId(auditReportUrlId);
+            checkApply.setAuditReportUrlName(auditReportFileName);
+
+            //获取初审报告id
+            Integer firstInspectionReportUrlId = checkApply.getFirstInspectionReportUrlId();
+            String firstInspectionReportUrl = subjectAcceptMapper.queryFileUrlByFileId(firstInspectionReportUrlId);
+            checkApply.setFirstInspectionReportUrl(firstInspectionReportUrl);
+            String firstInspectionReportFileName = subjectAcceptMapper.queryFileNameByFileId(firstInspectionReportUrlId);
+            checkApply.setFirstInspectionReportUrlName(firstInspectionReportFileName);
 
             //获取提交清单Id
             Integer submitUrlId = checkApply.getSubmitUrlId();
             //通过提交清单Id获取文件的地址
             String submitFileUrl = subjectAcceptMapper.queryFileUrlByFileId(submitUrlId);
             checkApply.setSubmitInventoryUrl(submitFileUrl);
+            String submitUrlName = subjectAcceptMapper.queryFileNameByFileId(submitUrlId);
+            checkApply.setSubmitInventoryUrlName(submitUrlName);
 
             //获取成果附件Id
             Integer achievementUrlId = checkApply.getAchievementUrlId();
             //通过成果附件Id获取文件的地址
             String achievementFileUrl = subjectAcceptMapper.queryFileUrlByFileId(achievementUrlId);
             checkApply.setAchievementsUrl(achievementFileUrl);
+            String achievementFileName = subjectAcceptMapper.queryFileNameByFileId(achievementUrlId);
+            checkApply.setAchievementsName(achievementFileName);
+
 
             //取出验收申请表中数据对应的id
             Integer id = checkApply.getId();
@@ -146,7 +167,6 @@ public class SubjectAcceptServiceImpl implements SubjectAcceptSerivce {
             jsonObject.remove("applicationUrlId");
             jsonObject.remove("createTime");
             jsonObject.remove("createAuthor");
-            jsonObject.remove("acceptancePhaseId");
 
             jsonObjectList.add(jsonObject);
         }
@@ -179,9 +199,6 @@ public class SubjectAcceptServiceImpl implements SubjectAcceptSerivce {
         Integer uid = user.getId();
         String username = user.getUsername();
 
-//        String username = "王二麻子";
-//        Integer uid = 5;
-
         //判断是审核通过还是审核未通过
         if (type) {
             //如果审核通过，则意味着，专家的两个文件一定是有的，那么先判断这两个文件，是原先公司已经上传过的，还是内网上传的
@@ -198,7 +215,7 @@ public class SubjectAcceptServiceImpl implements SubjectAcceptSerivce {
 
                 //判断这两个上传的文件后缀名是否正确
                 String expertGroupCommentsFilename = expertGroupCommentsFile.getOriginalFilename();      //获取专家意见表文件名
-                List<String> expertGroupCommentsSuffixList = new ArrayList<String>(Arrays.asList(".doc", ".docx")); //定义专家组意见表允许上传的类型
+                List<String> expertGroupCommentsSuffixList = new ArrayList<String>(Arrays.asList(".doc", ".docx",".pdf")); //定义专家组意见表允许上传的类型
                 Boolean flag1 = FileSuffixJudgeUtil.SuffixJudge(expertGroupCommentsFilename, expertGroupCommentsSuffixList);  //判断专家组意见表后缀名是否有误
                 //获取专家评议表的文件名
                 String expertAcceptanceFormFilename = expertAcceptanceFormFile.getOriginalFilename();
@@ -510,7 +527,6 @@ public class SubjectAcceptServiceImpl implements SubjectAcceptSerivce {
                     e.printStackTrace();
                     throw new InsertSqlException("专家组意见主表进行新增时出错-- " + e.getMessage());
                 }
-
                 //遍历专家组意见表的专家姓名
                 List<ExpertGroupCommentsName> expertGroupCommentsNameList = expertGroupComment.getExpertGroupCommentsNameList();
 
@@ -524,10 +540,8 @@ public class SubjectAcceptServiceImpl implements SubjectAcceptSerivce {
                         throw new InsertSqlException("专家组意见表中的专家信息进行新增时 出现错误" + e.getMessage());
                     }
                 }
-
             }
         }
-
         return resultMap.success().message();
     }
 

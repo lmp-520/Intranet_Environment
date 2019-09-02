@@ -25,26 +25,27 @@ public class ContentIndicatorsController {
     ResultMap resultMap=new ResultMap();
     /**
      * 新增
-     * @param contentIndicatorsDTO
+     * @param contentIndicators
      * @return
      */
-    @ApiOperation(value = "添加",notes="新增计划内容信息")
-    @PostMapping(value = "addContentInfo")
-    public ResultMap insert(ContentIndicatorsDTO contentIndicatorsDTO) {
-        int ci=contentIndicatorsService.insert(contentIndicatorsDTO);
+    @ApiOperation(value = "新增计划内容信息")
+    @PostMapping(value = "insertCI")
+    public ResultMap insertCI(@RequestBody List<ContentIndicatorsDTO> contentIndicators) {
+        int ci=contentIndicatorsService.insertCI(contentIndicators);
         return ci>0?resultMap.success().message("新增成功"):resultMap.fail().message("新增失败");
 
     }
 
+
     /**
-     * 根据id单查
+     * 根据合同id查询
      * @param id
      * @return
      */
-    @ApiOperation(value = "获取计划内容信息",notes = "根据id查询")
+    @ApiOperation(value = "根据合同id查询获取计划内容信息")
     @GetMapping (value = "getIndicatorById")
     public ResultMap getIndicatorById(int id) {
-        ContentIndicatorsDTO indicatorsDTO=contentIndicatorsService.getIndicatorById(id);
+        List<ContentIndicatorsDTO> indicatorsDTO=contentIndicatorsService.getIndicatorById(id);
         return indicatorsDTO!=null?resultMap.success().message(indicatorsDTO):resultMap.fail().message("查询失败");
     }
 
@@ -52,7 +53,7 @@ public class ContentIndicatorsController {
      * 全部查询
      * @return
      */
-    @ApiOperation(value = "获取计划内容信息",notes = "查询全部")
+    @ApiOperation(value = "查询全部")
     @GetMapping (value = "getAllnfo")
     public ResultMap getAllnfo() {
         List<ContentIndicatorsDTO> dtoList=contentIndicatorsService.getAllInfo();

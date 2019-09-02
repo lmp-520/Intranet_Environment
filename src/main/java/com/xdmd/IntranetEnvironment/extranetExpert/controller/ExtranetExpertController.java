@@ -76,16 +76,48 @@ public class ExtranetExpertController {
 
         try {
             resultMap = extranetExpertService.login(loginName,password,response);
-            //创建shiro的令牌
-            Subject subject = SecurityUtils.getSubject();
-            //  在认证提交前准备token（令牌）
-            UsernamePasswordToken token = new UsernamePasswordToken(loginName, password);
-            //执行认证登陆
-            subject.login(token);
+//            //创建shiro的令牌
+//            Subject subject = SecurityUtils.getSubject();
+//            //  在认证提交前准备token（令牌）
+//            UsernamePasswordToken token = new UsernamePasswordToken(loginName, password);
+//            //执行认证登陆
+//            subject.login(token);
 
         } catch (Exception e) {
             e.printStackTrace();
             log.error("ExpertController中login方法错误 -- "+e.getMessage());
+            return resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
+
+    //当专家账号审核不通过时，可以通过uid获取个人信息
+    @PostMapping("queryOwnInformation")
+    @ResponseBody
+    public ResultMap queryOwnInformation(@RequestParam("uid")Integer uid){
+
+        try {
+            resultMap = extranetExpertService.queryOwnInformation(uid);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("ExtranetExpertController 中 queryOwnInformation 方法出错 --"+e.getMessage());
+            return resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
+
+    //对个人信息进行修改
+    @ResponseBody
+    @PostMapping("updateOwnInformation")
+    public ResultMap updateOwnInformation(@RequestPart("userInformation")UserInformation userInformation,
+                                          @RequestPart(value = "ExpertInformationFile",required = false)MultipartFile ExpertInformationFile,
+                                          @RequestPart(value = "oldExpertInformationFile",required = false)String oldExpertInformationFile){
+
+        try {
+            resultMap = extranetExpertService.updateOwnInformation(userInformation,ExpertInformationFile,oldExpertInformationFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("ExtranetExpertController 中 updateOwnInformation 方法 -- "+e.getMessage());
             return resultMap.fail().message("系统异常");
         }
         return resultMap;

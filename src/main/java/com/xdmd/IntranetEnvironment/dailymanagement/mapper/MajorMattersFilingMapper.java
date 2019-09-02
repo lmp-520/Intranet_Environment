@@ -27,20 +27,21 @@ public interface MajorMattersFilingMapper {
             "subject_name,\n" +
             "commitment_unit,\n" +
             "unit_head,\n" +
-            "unit_head_phone,\n" +
-            "adjust_type,\n" +
-            "adjustment_matters,\n" +
-            "specific_facts,\n" +
-            ")\t" +
+            "unit_head_phone," +
+            "project_no,\n" +
+            "adjust_type_id,\n" +
+            "adjustment_matters_id,\n" +
+            "specific_facts)\n" +
             "VALUES(\n" +
             "#{subjectName},\n" +
             "#{commitmentUnit},\n" +
             "#{unitHead},\n" +
-            "#{unitHeadPhone},\n" +
-            "#{adjustType},\n" +
-            "#{adjustmentMatters},\n" +
+            "#{unitHeadPhone}," +
+            "#{projectNo},\n" +
+            "#{adjustTypeId},\n" +
+            "#{adjustmentMattersId},\n" +
             "#{specificFacts})")
-    int insert(@Param("majorMattersFiling") MajorMattersFilingDTO majorMattersFiling);
+    int insert(MajorMattersFilingDTO majorMattersFiling);
     /**
      * [更新]重大事项附件id
      * @author Kong
@@ -74,51 +75,92 @@ public interface MajorMattersFilingMapper {
      * @author Kong
      * @date 2019/08/19
      **/
-    @Select("<SCRIPT>" +
+    @Select("<script>" +
             "SELECT\n" +
-            "mmf.subject_name,\n" +
-            "mmf.commitment_unit,\n" +
-            "adt.adjust_type,\n" +
-            "am.adjustment_matters,\n" +
-            "mmf.unit_head,\n" +
-            "mmf.unit_head_phone\n" +
+            "mmf.id," +
+            "mmf.subject_name as subjectName,\n" +
+            "mmf.commitment_unit as commitmentUnit,\n" +
+            "adt.adjust_type AS adjustType,\n" +
+            "am.adjustment_matters AS adjustmentMatters,\n" +
+            "mmf.unit_head AS unitHead,\n" +
+            "mmf.shenhe_status\n" +
             "FROM \n" +
-            "major_matters_filing mmf,adjust_type adt,adjustment_matters am\n" +
-            "WHERE\n" +
-            "mmf.adjust_type_id=adt.id and mmf.adjustment_matters_id=am.id\n" +
+            "major_matters_filing as mmf,adjust_type as adt,adjustment_matters as am\n" +
+            "where\n" +
+            "mmf.adjust_type_id=adt.id and mmf.adjustment_matters_id=am.id and adt.id=am.adjust_type_id\t" +
             "<if test ='null != subjectName'>\n" +
-            "AND mmf.subject_name like CONCAT('%',#{subjectName},'%')\n" +
+            "AND mmf.subject_name like CONCAT('%',#{subjectName},'%')"+
             "</if>\n" +
             "<if test ='null != commitmentUnit'>\n" +
-            "AND mmf.commitment_unit like CONCAT('%',#{commitmentUnit},'%')\n" +
+            "AND mmf.commitment_unit like CONCAT('%',#{commitmentUnit},'%')" +
             "</if>\n" +
-            "<if test ='null != adjustTypId'>\n" +
-            "AND mmf.adjust_type_id =#{adjustTypId}\n" +
+            "<if test ='null != adjustTypeId'>\n" +
+            "AND mmf.adjust_type_id = #{adjustTypeId}" +
             "</if>\n" +
-            "<if test ='null != adjustmentMattersId'>\n" +
-            "AND mmf.adjustment_matters_id like CONCAT('%',#{adjustmentMattersId},'%')\n" +
-            "</if>\n" +
-            "LIMIT #{offset}, #{pageSize}" +
-            "</script>")
-    List<Map> pageList(String subjectName, String commitmentUnit, int adjustTypId, int adjustmentMattersId, int offset, int pagesize);
+            "<if test ='null != adjustmentMattersId'>" +
+            "AND mmf.adjustment_matters_id = #{adjustmentMattersId}" +
+            "</if></script>")
+    List<Map> getAllMajorInfo(@Param("subjectName") String subjectName, @Param("commitmentUnit")String commitmentUnit,
+                              @Param("adjustTypeId") Integer adjustTypeId, @Param("adjustmentMattersId") Integer adjustmentMattersId);
+
+
 
     /**
-     * [查詢] 分頁查詢 count【内网】
+     * [查詢] 根据单位id分頁筛选查詢【waiwang】
      * @author Kong
      * @date 2019/08/19
      **/
-    int pageListCount(@Param("offset") int offset,
-                      @Param("pagesize") int pagesize);
+    @Select("<script>" +
+            "SELECT\n" +
+            "mmf.id," +
+            "mmf.subject_name as subjectName,\n" +
+            "mmf.commitment_unit as commitmentUnit,\n" +
+            "adt.adjust_type AS adjustType,\n" +
+            "am.adjustment_matters AS adjustmentMatters,\n" +
+            "mmf.unit_head AS unitHead,\n" +
+            "mmf.shenhe_status as shenheStatus\t" +
+            "FROM\n" +
+            "major_matters_filing as mmf,adjust_type as adt,adjustment_matters as am,unit_major um\n" +
+            "where\n" +
+            "mmf.adjust_type_id=adt.id and mmf.adjustment_matters_id=am.id and adt.id=am.adjust_type_id and mmf.id=major_id and um.unit_id=#{uid}\n" +
+            "<if test ='null != subjectName'>\n" +
+            "AND mmf.subject_name like CONCAT('%',#{subjectName},'%')"+
+            "</if>\n" +
+            "<if test ='null != commitmentUnit'>\n" +
+            "AND mmf.commitment_unit like CONCAT('%',#{commitmentUnit},'%')" +
+            "</if>\n" +
+            "<if test ='null != adjustTypeId'>\n" +
+            "AND mmf.adjust_type_id =#{adjustTypeId}" +
+            "</if>\n" +
+            "<if test ='null != adjustmentMattersId'>" +
+            "AND mmf.adjustment_matters_id =#{adjustmentMattersId}" +
+            "</if></script>")
+    List<Map> getAllMajorInfoByUid(@Param("uid") int uid, @Param("subjectName") String subjectName, @Param("commitmentUnit")String commitmentUnit,
+                                     @Param("adjustTypeId") Integer adjustTypeId, @Param("adjustmentMattersId") Integer adjustmentMattersId);
+
+
+    /**
+     * 更新重大事项的审核状态【内网】
+     * @param id
+     * @return
+     */
+    @Update("update major_matters_filing set shenhe_status=1 where shenhe_status=0 and id=#{id}")
+    int updateMajorStatus(@Param("id") int id);
+
+
+
 
     /**
      * 查询所有调整类型
      * @return
      */
+    @Select("select * from adjust_type")
     List<AdjustTypeDTO>  getAllAdjustType();
 
     /**
-     * 查询所有调整类型
+     * 查询所有调整事項
      * @return
      */
+    @Select("select * from adjustment_matters")
     List<AdjustmentMattersDTO>  getAllAdjustmentMatters();
 }

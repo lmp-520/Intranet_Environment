@@ -1,9 +1,15 @@
 package com.xdmd.IntranetEnvironment.contractmanage.service;
 
+import com.xdmd.IntranetEnvironment.common.FileUploadException;
+import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.contractmanage.pojo.ContractManageDTO;
+import com.xdmd.IntranetEnvironment.subjectmanagement.exception.InsertSqlException;
+import com.xdmd.IntranetEnvironment.subjectmanagement.exception.UpdateSqlException;
+import com.xdmd.IntranetEnvironment.subjectmanagement.exception.UpdateStatusException;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +21,6 @@ import java.util.Map;
  */
 public interface ContractManageService {
 
-
     /**
      * 获取最新的id用于保持最新课题编号
      * @return
@@ -24,10 +29,13 @@ public interface ContractManageService {
 
     /**
      * [新增合同主表]
+     *
+     * @param token
+     * @param response
      * @param contractManageDTO
      * @return
      */
-    int insert(ContractManageDTO contractManageDTO);
+    ResultMap insert(String token, HttpServletResponse response, ContractManageDTO contractManageDTO);
 
     /**
      * [查詢合同主表] 根据合同主表id查询
@@ -36,11 +44,53 @@ public interface ContractManageService {
      */
     ContractManageDTO getManageInfoById(int id);
 
+
+    /**
+     * 合同附件上传
+     * @param file
+     * @return
+     */
+
+    String ContractFileUpload(MultipartFile file) throws IOException;
+
+
+
+    /**
+     *中期检查附件上传
+     * @param token
+     * @param response
+     * @param midCheckAnnex
+     * @param expertAssessmentAnnex
+     * @param subjectSuggestAnnex
+     * @return
+     * @throws IOException
+     * @throws FileUploadException
+     */
+    ResultMap midCheckFileUpload(String token, HttpServletResponse response,MultipartFile midCheckAnnex, MultipartFile expertAssessmentAnnex, MultipartFile subjectSuggestAnnex) throws IOException, FileUploadException;
+
+    /**
+     * [查詢] 根據单位id查詢本单位合同
+     * @param uid
+     * @return
+     */
+    List<Map> getManageInfoByUid(int uid,String subjectCategory,String subjectName,
+                                 String subjectContact,String subjectContactPhone,String commitmentUnit,
+                                 String subjectSupervisorDepartment);
+
+
     /**
      * [查詢合同主表] 查詢主表全部
      * @return
      */
-    List<ContractManageDTO> getAllInfo();
+    ResultMap getAllInfo(String subjectCategory, String subjectName, String subjectContact, String subjectContactPhone, String commitmentUnit, String subjectSupervisorDepartment, int pageNum, int pageSize);
+
+
+
+
+
+
+
+    ///////////////////////////以下是中期检查///////////////////////////////////
 
     /**
      * 根据勾选的合同主表id修改相应的中期检查记录【内网中检】
@@ -81,14 +131,129 @@ public interface ContractManageService {
      */
     int updateContractAnnexIdByCid(int contractAnnexId, int cid);
 
+
+    ///////////////////////////以下是合同审批///////////////////////////////////
+
     /**
-     * 中期文件上传
-     * @param file
+     * 单位管理员审核
+     * @param token
+     * @param response
+     * @param type 审核状态
+     * @param reason 审核不通过原因
+     * @param cid 审核表id
+     * @return
+     */
+    ResultMap contractShenHeByUnitManager(String token, HttpServletResponse response, Boolean type, String reason, Integer cid) throws UpdateSqlException, InsertSqlException;
+
+    /**
+     * 评估中心审核
+     * @param type
+     * @param reason
      * @param cid
      * @return
      */
-    String midFileUpload(MultipartFile file, String fileType, int cid) throws IOException;
+    ResultMap contractShenHeByPingGuCenter(String token, HttpServletResponse response,Boolean type, String reason, Integer cid);
+
+    /**
+     * 法规科技处审核
+     * @param type
+     * @param reason
+     * @param cid
+     * @return
+     */
+    ResultMap contractShenHeByFaGui(String token, HttpServletResponse response,Boolean type, String reason, Integer cid);
+
+    /**
+     * 不通过被退回时重新提交[修改]
+     * @param contractManageDTO
+     * @return
+     */
+    ResultMap updateContractStatusByReturnCommit(String token, HttpServletResponse response,ContractManageDTO contractManageDTO) throws UpdateSqlException, UpdateStatusException, UpdateStatusException;
+
+    /**
+     * 展示所有通过单位管理员审批的 【外网】
+     * @param subjectCategory
+     * @param subjectName
+     * @param subjectContact
+     * @param subjectContactPhone
+     * @param commitmentUnit
+     * @param subjectSupervisorDepartmentint
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    ResultMap showAllPassContractReviewByUnitManager(String subjectCategory,String subjectName, String subjectContact,String subjectContactPhone,String commitmentUnit, String subjectSupervisorDepartmentint, int pageNum, int pageSize);
+
+    /**
+     * 展示所有未通过单位管理员审批的 【外网】
+     * @param subjectCategory
+     * @param subjectName
+     * @param subjectContact
+     * @param subjectContactPhone
+     * @param commitmentUnit
+     * @param subjectSupervisorDepartmentint
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    ResultMap showAllNoPassContractReviewByUnitManager(String subjectCategory,String subjectName, String subjectContact,String subjectContactPhone,String commitmentUnit, String subjectSupervisorDepartmentint, int pageNum, int pageSize);
+
+    /**
+     * 展示所有通过评估中心审批的 【内网】
+     * @param subjectCategory
+     * @param subjectName
+     * @param subjectContact
+     * @param subjectContactPhone
+     * @param commitmentUnit
+     * @param subjectSupervisorDepartmentint
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+   ResultMap showAllPassContractReviewByPingGu(String subjectCategory,String subjectName, String subjectContact,String subjectContactPhone,String commitmentUnit, String subjectSupervisorDepartmentint, int pageNum, int pageSize);
+
+    /**
+     * 展示所有未通过评估中心审批的 【内网】
+     * @param subjectCategory
+     * @param subjectName
+     * @param subjectContact
+     * @param subjectContactPhone
+     * @param commitmentUnit
+     * @param subjectSupervisorDepartmentint
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    ResultMap showAllNoPassReviewContractByPingGu(String subjectCategory,String subjectName, String subjectContact,String subjectContactPhone,String commitmentUnit, String subjectSupervisorDepartmentint, int pageNum, int pageSize);
+
+
+    /**
+     * 展示所有通过法规科技处审批的 【内网】
+     * @param subjectCategory
+     * @param subjectName
+     * @param subjectContact
+     * @param subjectContactPhone
+     * @param commitmentUnit
+     * @param subjectSupervisorDepartmentint
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    ResultMap showAllPassContractReviewByFaGui(String subjectCategory,String subjectName, String subjectContact,String subjectContactPhone,String commitmentUnit, String subjectSupervisorDepartmentint, int pageNum, int pageSize);
+
+    /**
+     * 展示所有未通过法规科技处审批的 【内网】
+     * @param subjectCategory
+     * @param subjectName
+     * @param subjectContact
+     * @param subjectContactPhone
+     * @param commitmentUnit
+     * @param subjectSupervisorDepartmentint
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    ResultMap showAllNoPassReviewContractByFaGui(String subjectCategory,String subjectName, String subjectContact,String subjectContactPhone,String commitmentUnit, String subjectSupervisorDepartmentint, int pageNum, int pageSize);
+
 }
-
-
 

@@ -29,4 +29,5 @@ public interface SubjectFundsBudgetService {
      * @return
      */
     List<SubjectFundsBudgetDTO> getAllInfo();
+
 }

@@ -12,7 +12,7 @@ import lombok.Data;
  */
 @Data
 @AllArgsConstructor
-@ApiModel(description = "合同管理主表")
+@ApiModel("合同管理主表")
 public class ContractManageDTO {
     @ApiModelProperty(name="主键【注:系统默认生成,新增时不用填】",required = false)
     private Integer id;
@@ -128,8 +128,9 @@ public class ContractManageDTO {
     @ApiModelProperty("课题验收内容和考核指标")
     private String subjectAcceptanceAssessment;
 
-    @ApiModelProperty("其他条款")
-    private String otherTerms;
+    @ApiModelProperty("其他条件")
+    private String otherConditions;
+
 
     @ApiModelProperty("合同审批状态【0-单位员工待提交 1-单位管理员待审批 2-评估中心员工待审批 3-法规科技处待审批 4-法规科技处已审批】")
     private Integer approvalStatus;

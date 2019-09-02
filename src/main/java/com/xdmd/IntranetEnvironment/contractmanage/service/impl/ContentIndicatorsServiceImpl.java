@@ -18,23 +18,24 @@ import java.util.List;
 public class ContentIndicatorsServiceImpl implements ContentIndicatorsService {
     @Autowired
     ContentIndicatorsMapper contentIndicatorsMapper;
+
     /**
      * 新增
-     * @param contentIndicatorsDTO
+     * @param contentIndicators
      * @return
      */
     @Override
-    public int insert(ContentIndicatorsDTO contentIndicatorsDTO) {
-        return contentIndicatorsMapper.insert(contentIndicatorsDTO);
+    public int insertCI(List<ContentIndicatorsDTO> contentIndicators) {
+        return contentIndicatorsMapper.insertCI(contentIndicators);
     }
 
     /**
-     * 根据id单查
+     * [查詢] 根據合同管理id查詢
      * @param id
      * @return
      */
     @Override
-    public ContentIndicatorsDTO getIndicatorById(int id) {
+    public List<ContentIndicatorsDTO> getIndicatorById(int id) {
         return contentIndicatorsMapper.getIndicatorById(id);
     }
 

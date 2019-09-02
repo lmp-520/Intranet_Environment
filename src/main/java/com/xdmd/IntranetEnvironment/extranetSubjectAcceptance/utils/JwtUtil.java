@@ -10,7 +10,7 @@ import java.util.Date;
 public class JwtUtil {
     public static final String SUBJECT = "onehee";
 
-    public static final long EXPIRE = 1000*60*30;  //过期时间，毫秒，一周
+    public static final long EXPIRE = 1000*60*30;  //过期时间，毫秒，三十分钟
 
     //秘钥
     public static final  String APPSECRET = "onehee666";

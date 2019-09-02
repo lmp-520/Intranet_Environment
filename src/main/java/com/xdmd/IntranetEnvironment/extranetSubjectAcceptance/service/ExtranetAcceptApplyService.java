@@ -15,7 +15,6 @@ public interface ExtranetAcceptApplyService {
     //验收申请表的查询
    // ResultMap queryAcceptApply() throws StringToDateException;
     //企业填写验收申请表
-    ResultMap AddAcceptApply(ExtranetCheckApply extranetCheckApply, MultipartFile submitInventoryFile, MultipartFile applicationAcceptanceFile, MultipartFile achievementsFile, String createname) throws MysqlErrorException;
 
     //企业修改验收申请表
     ResultMap updateAcceptApply(ExtranetCheckApply extranetCheckApply, MultipartFile submitInventoryFile, MultipartFile applicationAcceptanceFile, MultipartFile achievementsFile, String createname) throws MysqlErrorException;
@@ -48,4 +47,8 @@ public interface ExtranetAcceptApplyService {
     ResultMap queryTopicName(String token, HttpServletResponse response) throws ParseException;
 
     ResultMap queryInformationByTopicNumber(String projectNumber);
+
+    ResultMap queryTopicNumberAndTopicName(String token, HttpServletResponse response) throws ParseException;
+
+    ResultMap AddAcceptApply(ExtranetCheckApply extranetCheckApply, MultipartFile submitInventoryFile, MultipartFile applicationAcceptanceFile, MultipartFile achievementsFile, String uname, Integer contractId) throws MysqlErrorException;
 }

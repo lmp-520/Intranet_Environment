@@ -36,10 +36,10 @@ public interface AcceptApplyMapper {
     String queryAcceptancePhaseNameByApId(@Param("acceptancePhaseId") Integer acceptancePhaseId);
 
     //获取验收申请表的总数
-    int queryAllAccpetApply(@Param("topicName") String topicName, @Param("subjectUndertakingUnit") String subjectUndertakingUnit, @Param("unitNature") Integer unitNature, @Param("projectLeader") String projectLeader);
+    int queryAllAccpetApply(@Param("topicName") String topicName, @Param("subjectUndertakingUnit") String subjectUndertakingUnit, @Param("unitNature") Integer unitNature, @Param("projectLeader") String projectLeader,@Param("state") Integer state);
 
     //获取验收申请表的集合
-    List<CheckApply> acceptApplyQuery(@Param("newpage") int newpage, @Param("total") Integer total, @Param("topicName") String topicName, @Param("subjectUndertakingUnit") String subjectUndertakingUnit, @Param("unitNature") Integer unitNature, @Param("projectLeader") String projectLeader);
+    List<CheckApply> acceptApplyQuery(@Param("newpage") int newpage, @Param("total") Integer total, @Param("topicName") String topicName, @Param("subjectUndertakingUnit") String subjectUndertakingUnit, @Param("unitNature") Integer unitNature, @Param("projectLeader") String projectLeader,@Param("state")Integer state);
 
     //根据文件的id获取文件的真实姓名
     @Select("SELECT upload_file_name FROM upload_file where id = #{fileId}")
@@ -68,4 +68,8 @@ public interface AcceptApplyMapper {
     //获取最终验收报告中的课题负责人
     @Select("select * from acceptance_certificate_subject_people where acceptance_certificate_id = #{id}")
     List<AcceptanceCertificateSubjectPeople> queryAcceptanceCertificateSubjectPeople(@Param("id") Integer id);
+
+    //根据验收申请表的id，获取验收申请表的信息
+    @Select("select * from check_apply where id = #{cid}")
+    CheckApply queryCheckApply(@Param("cid") String cid);
 }

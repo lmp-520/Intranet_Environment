@@ -38,7 +38,7 @@ public class AchievementController {
         if (page <= 0 || total <= 0) {
             return resultMap.fail().message("请返回正确的页数或每页显示条数");
         }
-        resultMap = achievementService.queryAchivement(topicName,companyName,page,total);   //成果的查询，可以查询所有已经加入成果库的信息
+        resultMap = achievementService.queryAchivement(topicName, companyName, page, total);   //成果的查询，可以查询所有已经加入成果库的信息
         return resultMap;
     }
 
@@ -51,34 +51,33 @@ public class AchievementController {
                                          @RequestParam("total") Integer total) {
 
         try {
-            resultMap = achievementService.queryAddAchivement(topicName,companyName,page,total);    //此时查询的是，通过验收与结题的 待加入成果库的内容信息
+            resultMap = achievementService.queryAddAchivement(topicName, companyName, page, total);    //此时查询的是，通过验收与结题的 待加入成果库的内容信息
         } catch (Exception e) {
             e.printStackTrace();
-            log.error("achievementController 中 addAchievementQuery 方法出错 -- "+e.getMessage());
+            log.error("achievementController 中 addAchievementQuery 方法出错 -- " + e.getMessage());
             return resultMap.fail().message("系统异常");
         }
         return resultMap;
     }
 
-
     //成果新增的保存
     @PostMapping("addAchievementSave")
     @ResponseBody
-    public ResultMap AddAchievementSave(@CookieValue(value = "IntranecToken") String token, HttpServletResponse response,
+    public ResultMap AddAchievementSave(@CookieValue(value = "IntranecToken",required = false) String token, HttpServletResponse response,
                                         @RequestParam("cid") String cid, //验收申请表的id
-                                        @RequestPart("achievementFileUrl")MultipartFile achievementFileUrl, //成果附件地址
+                                        @RequestPart("achievementFileUrl") MultipartFile achievementFileUrl, //成果附件地址
                                         @RequestPart OutcomeInformationAll outcomeInformationAll    //成果信息
-                                        ){
-        if(StringUtils.isEmpty(token)){
+    ) {
+        if (StringUtils.isEmpty(token)) {
             return resultMap.fail().message("请先登录");
         }
 
         //成果新增的保存
         try {
-            resultMap = achievementService.AddAchievementSave(token,response,cid,achievementFileUrl,outcomeInformationAll);
+            resultMap = achievementService.AddAchievementSave(token, response, cid, achievementFileUrl, outcomeInformationAll);
         } catch (Exception e) {
             e.printStackTrace();
-            log.error("AchievementController 中 AddAchievementSave 方法错误 -- "+e.getMessage());
+            log.error("AchievementController 中 AddAchievementSave 方法错误 -- " + e.getMessage());
             return resultMap.fail().message("系统异常");
         }
         return resultMap;
@@ -87,23 +86,38 @@ public class AchievementController {
     //成果新增的提交
     @PostMapping("AddAchievement")
     @ResponseBody
-    public ResultMap AddAchievement(@CookieValue(value = "IntranecToken") String token, HttpServletResponse response,
+    public ResultMap AddAchievement(@CookieValue(value = "IntranecToken",required = false) String token, HttpServletResponse response,
                                     @RequestParam("cid") String cid, //验收申请表的id
-                                    @RequestPart("achievementFileUrl")MultipartFile achievementFileUrl, //成果附件地址
-                                    @RequestPart OutcomeInformationAll outcomeInformationAll   ){ //成果信息
-        if(StringUtils.isEmpty(token)){
+                                    @RequestPart("achievementFileUrl") MultipartFile achievementFile, //成果附件地址
+                                    @RequestPart OutcomeInformationAll outcomeInformationAll) { //成果信息
+
+        if (StringUtils.isEmpty(token)) {
             return resultMap.fail().message("请先登录");
         }
 
         try {
-            resultMap = achievementService.AddAchievement(token,response,cid,achievementFileUrl,outcomeInformationAll);
+            resultMap = achievementService.AddAchievement(token, response, cid, achievementFile, outcomeInformationAll);
         } catch (Exception e) {
             e.printStackTrace();
-            log.error("AchievementController 中 AddAchievement 方法错误 -- "+e.getMessage());
+            log.error("AchievementController 中 AddAchievement 方法错误 -- " + e.getMessage());
             return resultMap.fail().message("系统异常");
         }
         return resultMap;
     }
 
+    //成果新增时，查询验收申请的所有信息
+    @PostMapping("queryAllCheckApply")
+    @ResponseBody
+    public ResultMap queryAllCheckApply(@RequestParam("cid") String cid) {
+
+        try {
+            resultMap = achievementService.queryAllCheckApply(cid);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("AchievementController 中 queryAllCheckApply 发生错误 " + e.getMessage());
+            return resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
 }
 

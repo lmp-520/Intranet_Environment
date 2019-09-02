@@ -9,17 +9,14 @@ import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.service.impl.Extra
 import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.utils.IntegrationFile;
 import com.xdmd.IntranetEnvironment.user.exception.ClaimsNullException;
 import com.xdmd.IntranetEnvironment.user.exception.UserNameNotExistentException;
-
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.text.SimpleDateFormat;
@@ -28,22 +25,21 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequestMapping("apply")
 public class ExtranetAcceptApplyController {
-
     @Autowired
     ExtranetAcceptApplyService extranetAcceptApplyService;
     ResultMap resultMap = new ResultMap();
-    private static Logger log = LoggerFactory.getLogger(ExtranetAcceptApplyController.class);
     @Autowired
     private ExtranetTokenService extranetTokenService;
-
 
     //员工填写验收申请表
     @ResponseBody
     @PostMapping("addAcceptApply")
-    public ResultMap AddAcceptApply(@CookieValue(value = "token") String token, HttpServletResponse response,
+    public ResultMap AddAcceptApply(@CookieValue(value = "token",required = false) String token, HttpServletResponse response,
+                                    @RequestParam(value = "contractId") Integer contractId,  //合同id
                                     @RequestPart("submitInventoryFile") MultipartFile submitInventoryFile,     //提交清单文件
                                     @RequestPart("applicationAcceptanceFile") MultipartFile applicationAcceptanceFile,     //验收申请表文件
                                     @RequestPart("achievementsFile") MultipartFile achievementsFile,   //成果附件文件
@@ -172,7 +168,7 @@ public class ExtranetAcceptApplyController {
 
 
         try {
-            resultMap = extranetAcceptApplyService.AddAcceptApply(extranetCheckApply, submitInventoryFile, applicationAcceptanceFile, achievementsFile, uname);
+            resultMap = extranetAcceptApplyService.AddAcceptApply(extranetCheckApply, submitInventoryFile, applicationAcceptanceFile, achievementsFile, uname,contractId);
 
             /**
              * 再新增一个验收申请与公司的关联表
@@ -184,7 +180,17 @@ public class ExtranetAcceptApplyController {
         return resultMap.success().message("新增成功");
     }
 
-//    //验收申请表的查询
+
+    /**
+     * 验收申请表的查询
+     * @param token
+     * @param response
+     * @param topicName
+     * @param topicNumber
+     * @param page
+     * @param total
+     * @return
+     */
 //    @PostMapping("queryAcceptApply")
 //    @ResponseBody
 //    public ResultMap queryAcceptApply(@RequestParam(value = "subjectName", required = false) String subjectName,
@@ -318,7 +324,7 @@ public class ExtranetAcceptApplyController {
     //公司管理员进行验收审核查询     其中查询的是，正在审核过程中的内容
     @PostMapping("checkApplyStateQuery")
     @ResponseBody
-    public ResultMap query(@CookieValue(value = "token")String token, HttpServletResponse response,
+    public ResultMap query(@CookieValue(value = "token",required = false)String token, HttpServletResponse response,
                              @RequestParam(value = "topicName",required = false)String topicName,//课题名称
                              @RequestParam(value = "topicNumber",required = false) String topicNumber,   //课题编号
                              @RequestParam("Page")Integer page,     //页数
@@ -340,7 +346,7 @@ public class ExtranetAcceptApplyController {
     //管理员进行审核
     @ResponseBody
     @PostMapping("examine")
-    public ResultMap examine(@CookieValue(value = "token")String token,HttpServletResponse response,
+    public ResultMap examine(@CookieValue(value = "token",required = false)String token,HttpServletResponse response,
                              @RequestParam("type") Boolean type,//审核的状态.   true为审核通过  false为审核未通过
                              @RequestParam(value = "reason", required = false) String reason,//审核未通过原因
                              @RequestParam("id") Integer id){   //验收申请表的id
@@ -362,7 +368,7 @@ public class ExtranetAcceptApplyController {
     //查询最后的验收情况   只有结题 不通过验收 与通过验收这三种
     @ResponseBody
     @PostMapping("queryResult")
-    public ResultMap queryResult(@CookieValue(value = "token")String token, HttpServletResponse response,
+    public ResultMap queryResult(@CookieValue(value = "token",required = false)String token, HttpServletResponse response,
                                  @RequestParam(value = "topicName",required = false)String topicName,//课题名称
                                  @RequestParam(value = "topicNumber",required = false) String topicNumber,   //课题编号
                                  @RequestParam("Page")Integer page,     //页数
@@ -385,7 +391,7 @@ public class ExtranetAcceptApplyController {
     //提交最终验收报告
     @PostMapping("submitLastReport")
     @ResponseBody
-    public ResultMap submitLastReport(@CookieValue(value = "token")String token,HttpServletResponse response,
+    public ResultMap submitLastReport(@CookieValue(value = "token",required = false)String token,HttpServletResponse response,
                                       @RequestParam("caId") Integer caId, //验收申请表的id
                                       @RequestPart(value = "lastReport",required = true) MultipartFile lastReport,
                                       @RequestPart AcceptanceCertificate acceptanceCertificate
@@ -407,12 +413,11 @@ public class ExtranetAcceptApplyController {
     @PostMapping("submitExpertGroup")
     @ResponseBody
     //上传专家组意见信息 与专家组意见文件与专家组评议表文件
-    public ResultMap submitExpertGroup(@CookieValue(value = "token")String token, HttpServletResponse response,
+    public ResultMap submitExpertGroup(@CookieValue(value = "token",required = false)String token, HttpServletResponse response,
                                        @RequestParam("caId") Integer caId, //验收申请表的id
                                        @RequestPart ExtranetExpertGroupComment extranetExpertGroupComment, //专家组意见表
                                        @RequestPart(value = "expertGroupCommentsFile", required = false) MultipartFile expertGroupCommentsFile,  //专家意见表文件
                                        @RequestPart(value = "expertAcceptanceFormFile", required = false) MultipartFile expertAcceptanceFormFile) { //专家评议表文件
-
         if(StringUtils.isEmpty(token)){
             return resultMap.fail().message("系统异常");
         }
@@ -430,7 +435,7 @@ public class ExtranetAcceptApplyController {
     //在提交验收申请后，在被审核之前，进行的修改
     @ResponseBody
     @PostMapping("modify")
-    public ResultMap modifyApply(@CookieValue(value = "token") String token, HttpServletResponse response,
+    public ResultMap modifyApply(@CookieValue(value = "token",required = false) String token, HttpServletResponse response,
                                  @RequestPart(value = "oldSubmitInventoryFileUrl",required = false) String oldSubmitInventoryFileUrl,//旧的提交清单文件
                                  @RequestPart(value = "oldApplicationAcceptanceFileUrl",required = false) String oldApplicationAcceptanceFileUrl,//旧的验收申请文件
                                  @RequestPart(value = "oldAchievementsFileUrl",required = false)String oldAchievementsFileUrl,//旧的成果附件文件
@@ -459,11 +464,10 @@ public class ExtranetAcceptApplyController {
         return resultMap;
     }
 
-
     //对专家组信息，专家组文件，专家组评议表文件进行修改上传
     @ResponseBody
     @PostMapping("ExpertGroupModify")
-    public ResultMap expertGroupModify(@CookieValue(value = "token") String token, HttpServletResponse response,
+    public ResultMap expertGroupModify(@CookieValue(value = "token",required = false) String token, HttpServletResponse response,
                                        @RequestParam("caId") Integer caId, //验收申请表的id
                                        @RequestPart ExtranetExpertGroupComment extranetExpertGroupComment, //专家组意见表
                                        @RequestPart(value = "oldExpertGroupFileUrl",required = false)String oldExpertGroupFileUrl,//旧的专家组文件
@@ -473,7 +477,6 @@ public class ExtranetAcceptApplyController {
         if(StringUtils.isEmpty(token)){
             return resultMap.fail().message("请先登录");
         }
-
         try {
             resultMap = extranetAcceptApplyService.expertGroupModify(token,response,extranetExpertGroupComment,caId,oldExpertGroupFileUrl,oldExpertAcceptanceFormFile,expertGroupFile,expertAcceptanceFormFile);
         } catch (Exception e) {
@@ -482,13 +485,12 @@ public class ExtranetAcceptApplyController {
             return resultMap.fail().message("系统异常");
         }
         return resultMap;
-
     }
 
     //对最终证书文件 与信息 修改
     @ResponseBody
     @PostMapping("lastReportModify")
-    public ResultMap lastReportModify(@CookieValue(value = "token")String token,HttpServletResponse response,
+    public ResultMap lastReportModify(@CookieValue(value = "token",required = false)String token,HttpServletResponse response,
                                       @RequestParam("caId") Integer caId, //验收申请表的id
                                       @RequestPart(value = "lastReportFile",required = false) MultipartFile lastReportFile,  //最终验收报告文件
                                       @RequestPart(value = "oldLastReportFileUrl",required = false)String oldLastReportFileUrl,    //旧的最终验收报告文件
@@ -507,11 +509,13 @@ public class ExtranetAcceptApplyController {
         return resultMap;
     }
 
-
     //外网在做课题申请时，先查询可添加的课题名称
     @ResponseBody
     @PostMapping("queryTopicName")
-    public ResultMap queryTopicName(@CookieValue(value = "token") String token, HttpServletResponse response){
+    public ResultMap queryTopicName(@CookieValue(value = "token",required = false) String token, HttpServletResponse response){
+        if(StringUtils.isEmpty(token)){
+            return resultMap.fail().message("请先登录");
+        }
 
         try {
             resultMap = extranetAcceptApplyService.queryTopicName(token,response);
@@ -547,6 +551,25 @@ public class ExtranetAcceptApplyController {
         } catch (Exception e) {
             e.printStackTrace();
             log.error("ExtranetAcceptApplyController 中 queryInformationByTopicNumber 方法错误 "+e.getMessage());
+            return resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
+
+    //在公司新增验收申请时，显示课题名称与课题编号
+    @PostMapping("queryTopicNameAndNumber")
+    @ResponseBody
+    public  ResultMap queryTopicNumberAndTopicName(@CookieValue(value = "token",required = false)String token,HttpServletResponse response
+    ){
+        if(StringUtils.isEmpty(token)){
+            return resultMap.fail().message("请先登录");
+        }
+
+        try {
+            resultMap = extranetAcceptApplyService.queryTopicNumberAndTopicName(token,response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("ExtranetAcceptApplyController 中 queryTopicNumberAndTopicName 方法出错 -- "+e.getMessage());
             return resultMap.fail().message("系统异常");
         }
         return resultMap;

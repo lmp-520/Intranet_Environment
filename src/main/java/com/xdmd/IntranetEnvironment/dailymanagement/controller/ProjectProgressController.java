@@ -1,25 +1,17 @@
 package com.xdmd.IntranetEnvironment.dailymanagement.controller;
 
 
-import com.xdmd.IntranetEnvironment.common.AnnexUpload;
-import com.xdmd.IntranetEnvironment.common.FileSuffixJudge;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
-import com.xdmd.IntranetEnvironment.contractmanage.mapper.UploadMapper;
-import com.xdmd.IntranetEnvironment.contractmanage.pojo.ContractManageDTO;
 import com.xdmd.IntranetEnvironment.dailymanagement.pojo.*;
 import com.xdmd.IntranetEnvironment.dailymanagement.service.ProjectProgressService;
-import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.UploadFile;
+import com.xdmd.IntranetEnvironment.common.UploadFileMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -34,8 +26,7 @@ public class ProjectProgressController {
     @Autowired
     ProjectProgressService projectProgressService;
     @Autowired
-    UploadMapper uploadMapper;
-    AnnexUpload annexUpload;
+    UploadFileMapper uploadFileMapper;
     ResultMap resultMap=new ResultMap();
 
     /**
@@ -45,7 +36,7 @@ public class ProjectProgressController {
      */
     @ApiOperation(value = "新增课题进展主体")
     @PostMapping("insertProgress")
-    public ResultMap insert(ProjectProgressDTO progressDTO) {
+    public ResultMap insert(@RequestBody ProjectProgressDTO progressDTO) {
        return resultMap=projectProgressService.insert(progressDTO);
     }
 
@@ -69,13 +60,15 @@ public class ProjectProgressController {
      */
     @ApiOperation(value = "根據参数查詢课题进展主体")
     @ApiImplicitParams({
-            @ApiImplicitParam(name="subjectName",value = "课题名称",dataType = "string"),
-            @ApiImplicitParam(name="bearerUnit",value = "承担单位",dataType = "string"),
-            @ApiImplicitParam(name="progress",value = "课题进展类型【45-超前 46-正常 47-滞后】",dataType = "int"),
+            @ApiImplicitParam(name="subjectName",value = "课题名称",paramType = "string"),
+            @ApiImplicitParam(name="bearerUnit",value = "承担单位",paramType = "string"),
+            @ApiImplicitParam(name="progress",value = "课题进展类型【45-超前 46-正常 47-滞后】",paramType = "int"),
+            @ApiImplicitParam(name="pageNum",value = "当前页数",required = true),
+            @ApiImplicitParam(name="pageSize",value = "每页显示多少条数",required = true)
     })
     @GetMapping("getInfoByParam")
-    public ResultMap getInfoByParam(String subjectName,String bearerUnit,Integer progress) {
-        return  resultMap=projectProgressService.getInfoByParam(subjectName,bearerUnit,progress);
+    public ResultMap getInfoByParam(String subjectName,String bearerUnit,Integer progress,int pageNum,int pageSize) {
+        return  resultMap=projectProgressService.getInfoByParam(subjectName,bearerUnit,progress,pageNum,pageSize);
     }
 
 
@@ -191,71 +184,5 @@ public class ProjectProgressController {
     public ResultMap updateSubjectProgressByPid(int openReportAnnexId, int subjectProgressAnnexId, int fundProgressAnnexId, int expertSuggestAnnexId, int pid){
         return  resultMap=projectProgressService.updateSubjectProgressByPid(openReportAnnexId,subjectProgressAnnexId,fundProgressAnnexId,expertSuggestAnnexId,pid);
     }
-
-
-    @PostMapping("subjectfileupload")
-    @ApiOperation(value = "课题进展情况附件上传")
-    public String fileUpload(@RequestParam("fileName") MultipartFile file) throws IOException {
-        //判断文件是否为空
-        if (file.isEmpty()) {
-            return "上传文件不可为空";
-        }
-
-
-        // 获取文件名拼接当前系统时间作为新文件名
-        String nowtime =  new SimpleDateFormat("yyyyMMddHHmmss").format(System.currentTimeMillis());
-        StringBuilder pinjiefileName=new StringBuilder(nowtime).append(file.getOriginalFilename());
-        String fileName =pinjiefileName.toString();
-
-        //获取课题名称
-        ContractManageDTO contractManageDTO=new ContractManageDTO();
-        String ketiName=contractManageDTO.getSubjectName();
-        //获取文件上传绝对路径
-        String FilePath = "D:/xdmd/environment/" +ketiName+ "/课题进展情况附件/";
-        StringBuilder initPath = new StringBuilder(FilePath);
-        String filePath=initPath.append(fileName).toString();
-        System.out.println("文件路径-->"+filePath);
-        File dest = new File(filePath);
-
-        //获取文件类型
-        String contentType = file.getContentType();
-        //获取文件后缀名
-        String suffixName = fileName.substring(fileName.lastIndexOf(".") + 1);
-        //判断上传文件类型是否符合要求
-        Boolean typeIsOK= FileSuffixJudge.suffixJudge(file.getOriginalFilename());
-        if (typeIsOK==false){
-            return "上传的文件类型不符合要求";
-        }
-        //判断文件父目录是否存在
-        if (!dest.getParentFile().exists()) {
-            dest.getParentFile().mkdirs();
-        }
-        try {
-            //保存文件
-            file.transferTo(dest);
-            // 获取文件大小
-            File file1 = new File(filePath);
-            String fileSize = String.valueOf(file1.length());
-            System.out.println(fileName+"的文件大小-->"+fileSize);
-            //封装到uploadfile
-            annexUpload.setUploadFilePath(String.valueOf(dest));
-            annexUpload.setFileSize(fileSize);
-            annexUpload.setUploadFileName(fileName);
-            annexUpload.setUploadFileType(contentType);
-            annexUpload.setUploadSuffixName(suffixName);
-            annexUpload.setCreateAuthor("创建者");
-            //文件信息保存到数据库
-            uploadMapper.insertUpload(annexUpload);
-            return "上传成功";
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "上传失败";
-    }
-
-
-
-
-
 
 }

@@ -1,10 +1,10 @@
 #端口号
 server:
-  port: 8087
+  port: 8088
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/hbkj?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://localhost:3306/newenvironment2?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true
     username: root
     password: 123456
     # 解决post请求乱码
@@ -13,13 +13,17 @@ spring:
       charset: utf-8
       force: true
       enabled: true
-    servlet:
-      multipart:
-        max-file-size: 100MB
-        max-request-size: 1000MB
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 1000MB
   devtools:
     restart:
       enabled: true  #开启热部署
+
+  #允许调用静态资源文件
+  resources:
+    add-mappings: true
 #  jpa:
 #    hibernate:
 #      ddl-auto: validate
@@ -30,10 +34,10 @@ mybatis:
     map-underscore-to-camel-case: true   #开启驼峰转换
   mapper-locations: classpath:mappers/*.xml
 
-#logging:
-#  level:
-#    root: INFO
-#    org.springframework.web: ERROR
-##    root: INFO
-##    org.springframework.web: EDBUG
-#  file: D:\\xdmd_hbkj\\hbkj.log
+logging:
+  level:
+    root: info
+    com.bestvike: debug
+    org.springframework.security: warn
+
+  file: D:\\xdmd_hbkj\\hbkj.log

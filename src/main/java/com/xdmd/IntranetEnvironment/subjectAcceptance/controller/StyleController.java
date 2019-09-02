@@ -39,5 +39,36 @@ public class StyleController {
         return resultMap;
     }
 
+    //专家组意见中的最终验收结果
+    @PostMapping("finalAcceptanceMethod")
+    @ResponseBody
+    public ResultMap finalAcceptanceMethod(){
+        resultMap = styleService.finalAcceptanceMethod();
+        return resultMap;
+    }
+
+    //成果形式
+    @PostMapping("queryAchievementShape")
+    @ResponseBody
+    public ResultMap queryAchievementShape(){
+        resultMap = styleService.queryAchievementShape();
+        return resultMap;
+    }
+
+    //成果水平
+    @PostMapping("queryAchievementLevel")
+    @ResponseBody
+    public ResultMap queryAchievementLevel(){
+        resultMap = styleService.queryAchievementLevel();
+        return resultMap;
+    }
+
+    //审核状态
+    @PostMapping("auditStatus")
+    @ResponseBody
+    public ResultMap queryAuditStatus(){
+        resultMap = styleService.queryAuditStatus();
+        return resultMap;
+    }
 
 }

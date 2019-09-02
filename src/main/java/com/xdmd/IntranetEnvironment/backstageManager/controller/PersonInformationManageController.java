@@ -49,7 +49,7 @@ public class PersonInformationManageController {
     //给单位用户分配子账号
     @ResponseBody
     @PostMapping("addSubaccount")
-    public ResultMap addSubaccount(@CookieValue("token") String token, HttpServletResponse response,
+    public ResultMap addSubaccount(@CookieValue(value = "token",required = false) String token, HttpServletResponse response,
                                    @Valid @RequestPart UserInformation userInformation, BindingResult result,
                                    @RequestPart("idCardFile") MultipartFile idCardFile) {    //身份证扫描件
         if (StringUtils.isEmpty(token)) {
@@ -77,7 +77,7 @@ public class PersonInformationManageController {
     //查询本单位的所有账号
     @ResponseBody
     @PostMapping("queryStaff")
-    public ResultMap queryCompanyStaff(@CookieValue("token") String token, HttpServletResponse response){
+    public ResultMap queryCompanyStaff(@CookieValue(value = "token",required = false) String token, HttpServletResponse response){
         if(StringUtils.isEmpty(token)){
             return resultMap.fail().message("请先登录");
         }
@@ -95,7 +95,7 @@ public class PersonInformationManageController {
     //改变改账号的状态  如果原本启用，点击后变为停用，若原本停用，点击后则启用
     @ResponseBody
     @PostMapping("changeState")
-    public ResultMap changeState(@CookieValue("token") String token, HttpServletResponse response,
+    public ResultMap changeState(@CookieValue(value = "token",required = false) String token, HttpServletResponse response,
                                  @RequestParam("uid") Integer uid,      //员工的id
                                  @RequestParam("type") Boolean type){    //类型  true 启用  false 停用
         if (StringUtils.isEmpty(token)){
@@ -115,13 +115,10 @@ public class PersonInformationManageController {
     //对员工进行修改
     @ResponseBody
     @PostMapping("modifyStaff")
-    public ResultMap modify(//@CookieValue("token") String token, HttpServletResponse response,
+    public ResultMap modify(@CookieValue(value = "token",required = false) String token, HttpServletResponse response,
                             @RequestPart(value = "oldFileUrl",required = false) String oldFileUrl,     //旧的身份证文件地址
                             @Valid @RequestPart Subaccount subaccount, BindingResult result,
                             @RequestPart(value = "idCardFile",required = false) MultipartFile idCardFile){   //新的身份证文件
-        String token = "aaa";
-        HttpServletResponse response = null;
-
         if(StringUtils.isEmpty(token)){
             return resultMap.fail().message("请先登录");
         }

@@ -11,4 +11,6 @@ public interface CompanyServiceTwo {
     ResultMap register(UserInformation userInformation, MultipartFile businessFile, MultipartFile legalCardIdFile, MultipartFile contactCardFile);
 
     ResultMap login(String loginName, String password, HttpServletResponse response);
+
+    ResultMap ExtranetLogin(String loginName, String password, HttpServletResponse response);
 }

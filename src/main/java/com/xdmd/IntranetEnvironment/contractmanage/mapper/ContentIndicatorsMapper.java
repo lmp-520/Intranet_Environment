@@ -20,8 +20,14 @@ public interface ContentIndicatorsMapper {
      * @author Kong
      * @date 2019/08/06
      **/
-    @Insert(value = "insert into content_indicators VALUES(DEFAULT,#{contractId},#{time},#{programContentAssessmentIndicators})")
-    int insert(ContentIndicatorsDTO contentIndicatorsDTO);
+    @Insert("<script>" +
+            "INSERT INTO  content_indicators\n" +
+            "VALUES\t" +
+            "<foreach collection=\"list\" item=\"item\" separator=\",\">" +
+            "(DEFAULT,#{item.contractId},#{item.time},#{item.programContentAssessmentIndicators})" +
+            "</foreach></script>")
+    int insertCI(List<ContentIndicatorsDTO> contentIndicators);
+
 
     /**
      * [查詢] 根據合同管理id查詢
@@ -29,7 +35,7 @@ public interface ContentIndicatorsMapper {
      * @date 2019/08/06
      **/
     @Select(value = "select ci.* from content_indicators as ci,contract_manage as cm where ci.contract_id=cm.id and cm.id=#{id}")
-    ContentIndicatorsDTO getIndicatorById(@Param("id") int id);
+    List<ContentIndicatorsDTO> getIndicatorById(@Param("id") int id);
 
     /**
      * [查詢] 查詢全部计划内容

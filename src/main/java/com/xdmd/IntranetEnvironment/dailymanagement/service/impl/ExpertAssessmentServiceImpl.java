@@ -1,5 +1,7 @@
 package com.xdmd.IntranetEnvironment.dailymanagement.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.dailymanagement.mapper.ExpertAssessmentMapper;
 import com.xdmd.IntranetEnvironment.dailymanagement.pojo.ExpertAssessmentDTO;
@@ -68,17 +70,19 @@ public class ExpertAssessmentServiceImpl implements ExpertAssessmentService {
      * @return
      */
     @Override
-    public ResultMap getAllEA() {
+    public ResultMap getAllEA(int pageNum,int pageSize) {
         try{
+            PageHelper.startPage(pageNum,pageSize,true);
             List<ExpertAssessmentDTO> eaList=expertAssessmentMapper.getAllEA();
+            PageInfo pageInfo=new PageInfo(eaList);
             if(eaList.size()>0){
-                resultMap.success().message(eaList);
+                resultMap.success().message(pageInfo);
             }else if(eaList.size()==0){
-                resultMap.success().message("没有查到相关信息");
+                resultMap.fail().message("没有查到相关信息");
             }
         }catch (Exception e){
             e.printStackTrace();
-            resultMap.success().message("系统异常");
+            resultMap.fail().message("系统异常");
         }
         return resultMap;
     }

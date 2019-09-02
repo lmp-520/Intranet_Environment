@@ -7,6 +7,7 @@ import com.xdmd.IntranetEnvironment.contractmanage.service.SubjectFundsBudgetSer
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,8 +17,9 @@ import java.util.List;
  * @createDate: 2019/08/06
  * @description: 课题经费预算接口
  */
-@Api(tags = "课题经费预算【合同子表三】")
+@Api(tags = "课题经费预算【合同子表四】")
 @RestController
+@Controller
 @RequestMapping(value = "environment/contract/subjectfundbudget")
 public class SubjectFundsBudgetController {
     @Autowired
@@ -30,17 +32,17 @@ public class SubjectFundsBudgetController {
      */
     @ApiOperation(value = "新增课题预算信息")
     @PostMapping(value = "insertInfo")
-    public ResultMap insert(SubjectFundsBudgetDTO subjectFundsBudgetDTO) {
+    public ResultMap insert(@RequestBody SubjectFundsBudgetDTO subjectFundsBudgetDTO) {
         int sfb=subjectFundsBudgetService.insert(subjectFundsBudgetDTO);
         return sfb>0?resultMap.success().message("新增成功"):resultMap.fail().message("新增失败");
 
     }
     /**
-     * [查詢] 根據主鍵 id 查詢
+     * [查詢] 根據合同 id 查詢
      * @param id
      * @return
      */
-    @ApiOperation(value = "根据id单查课题预算信息")
+    @ApiOperation(value = "根據合同id查詢课题预算信息")
     @GetMapping(value = "getInfoById")
     public ResultMap getInfoById(@RequestParam("id") int id) {
         SubjectFundsBudgetDTO sfbDTO= subjectFundsBudgetService.getBudgetInfoById(id);
@@ -58,5 +60,18 @@ public class SubjectFundsBudgetController {
         List<SubjectFundsBudgetDTO>  sfbList=subjectFundsBudgetService.getAllInfo();
         return sfbList!=null?resultMap.success().message(sfbList):resultMap.fail().message("查询失败");
 
+    }
+
+
+
+    /**
+     * 修改
+     * @param subjectFundsBudgetDTO
+     * @return
+     */
+    @ApiOperation(value = "不通过被退回时重新提交[修改]")
+    @PostMapping(value = "UpdateSubjectFundsBudget")
+    public int UpdateSubjectFundsBudget(SubjectFundsBudgetDTO subjectFundsBudgetDTO) {
+        return subjectFundsBudgetService.UpdateSubjectFundsBudget(subjectFundsBudgetDTO);
     }
 }

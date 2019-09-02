@@ -10,7 +10,7 @@ import lombok.Data;
  * @description: 重大事项
  */
 @Data
-@ApiModel("major_matters_filing")
+@ApiModel("重大事项")
 public class MajorMattersFilingDTO {
 
     @ApiModelProperty("主键")
@@ -28,26 +28,33 @@ public class MajorMattersFilingDTO {
     @ApiModelProperty("单位负责人电话")
     private String unitHeadPhone;
 
+    @ApiModelProperty("課題編號")
+    private String projectNo;
+
     @ApiModelProperty("调整类型")
     private Integer adjustTypeId;
 
     @ApiModelProperty("调整事项")
-    private Integer adjustmentMattersId;
+    private String adjustmentMattersId;
 
     @ApiModelProperty("具体情况说明")
     private String specificFacts;
 
-    @ApiModelProperty("变更申请表附件")
-    private Integer changeApplicationAttachment;
+    @ApiModelProperty("变更申请表附件id")
+    private Integer changeApplicationAttachmentId;
 
-    @ApiModelProperty("专家论证意见附件")
-    private Integer expertArgumentationAttachment;
+    @ApiModelProperty("专家论证意见附件id")
+    private Integer expertArgumentationAttachmentId;
 
-    @ApiModelProperty("备案申请表附件")
-    private Integer filingApplicationAttachment;
+    @ApiModelProperty("备案申请表附件id")
+    private Integer filingApplicationAttachmentId;
 
-    @ApiModelProperty("批准文件附件")
-    private Integer approvalDocumentsAttachment;
+    @ApiModelProperty("批准文件附件id")
+    private Integer approvalDocumentsAttachmentId;
+
+    @ApiModelProperty("审批状态【0-未审批 1-已审批】")
+    private Integer shenheStatus;
+
 
     public MajorMattersFilingDTO() {
     }

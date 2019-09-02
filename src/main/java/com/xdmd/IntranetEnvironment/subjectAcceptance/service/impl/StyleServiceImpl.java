@@ -7,7 +7,6 @@ import com.xdmd.IntranetEnvironment.subjectAcceptance.service.StyleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -34,6 +33,33 @@ public class StyleServiceImpl implements StyleService {
     @Override
     public ResultMap applicationSubmitList() {
         List<Dictionary> dictionaryList = styleMapper.applicationSubmitList();
+        return resultMap.success().message(dictionaryList);
+    }
+
+    //专家组意见中的最终验收结果
+    @Override
+    public ResultMap finalAcceptanceMethod() {
+        List<Dictionary> dictionaryList = styleMapper.finalAcceptanceMethod();
+        return resultMap.success().message(dictionaryList);
+    }
+
+    //成果形式
+    @Override
+    public ResultMap queryAchievementShape() {
+        List<Dictionary> dictionaryList = styleMapper.queryAchievementShape();
+        return resultMap.success().message(dictionaryList);
+    }
+
+    //成果水平
+    @Override
+    public ResultMap queryAchievementLevel() {
+        List<Dictionary> dictionaryList = styleMapper.queryAchievementLevel();
+        return resultMap.success().message(dictionaryList);
+    }
+
+    @Override
+    public ResultMap queryAuditStatus() {
+        List<Dictionary> dictionaryList = styleMapper.queryAuditStatus();
         return resultMap.success().message(dictionaryList);
     }
 }

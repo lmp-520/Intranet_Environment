@@ -1,6 +1,8 @@
 package com.xdmd.IntranetEnvironment.dailymanagement.service.impl;
 
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.dailymanagement.mapper.ProjectProgressMapper;
 import com.xdmd.IntranetEnvironment.dailymanagement.pojo.*;
@@ -31,13 +33,13 @@ public class ProjectProgressServiceImpl implements ProjectProgressService {
         try{
             int insertNo=projectProgressMapper.insert(progressDTO);
             if(insertNo>0){
-                resultMap.success().message("新增成功");
+                resultMap.success().message(progressDTO.getId());
             }else if(insertNo==0){
-                resultMap.success().message("新增失败");
+                resultMap.fail().message("新增失败");
             }
         }catch (Exception e){
             e.printStackTrace();
-            resultMap.success().message("系统异常");
+            resultMap.fail().message("系统异常");
         }
         return resultMap;
 
@@ -55,11 +57,11 @@ public class ProjectProgressServiceImpl implements ProjectProgressService {
             if(progressDTO!=null){
                 resultMap.success().message(progressDTO);
             }else if(progressDTO==null){
-                resultMap.success().message("没有查到相关信息");
+                resultMap.fail().message("没有查到相关信息");
             }
         }catch (Exception e){
             e.printStackTrace();
-            resultMap.success().message("系统异常");
+            resultMap.fail().message("系统异常");
         }
         return resultMap;
 
@@ -73,17 +75,19 @@ public class ProjectProgressServiceImpl implements ProjectProgressService {
      * @return
      */
     @Override
-    public ResultMap getInfoByParam(String subjectName, String bearerUnit, Integer progress) {
+    public ResultMap getInfoByParam(String subjectName, String bearerUnit, Integer progress,int pageNum,int pageSize) {
         try{
+            PageHelper.startPage(pageNum,pageSize,true);
             List<ProjectProgressDTO> progressDTOList=projectProgressMapper.getInfoByParam(subjectName,bearerUnit,progress);
+            PageInfo pageInfo=new PageInfo(progressDTOList);
             if(progressDTOList.size()>0){
-                resultMap.success().message(progressDTOList);
+                resultMap.success().message(pageInfo);
             }else if(progressDTOList.size()==0){
-                resultMap.success().message("没有查到相关信息");
+                resultMap.fail().message("没有查到相关信息");
             }
         }catch (Exception e){
             e.printStackTrace();
-            resultMap.success().message("系统异常");
+            resultMap.fail().message("系统异常");
         }
         return resultMap;
     }
@@ -100,11 +104,11 @@ public class ProjectProgressServiceImpl implements ProjectProgressService {
             if(insertNo>0){
                 resultMap.success().message("成功新增"+insertNo+"条数据");
             }else if(insertNo==0){
-                resultMap.success().message("新增失败");
+                resultMap.fail().message("新增失败");
             }
         }catch (Exception e){
             e.printStackTrace();
-            resultMap.success().message("系统异常");
+            resultMap.fail().message("系统异常");
         }
         return resultMap;
     }
@@ -121,11 +125,11 @@ public class ProjectProgressServiceImpl implements ProjectProgressService {
             if(crdt!=null){
                 resultMap.success().message(crdt);
             }else if(crdt==null){
-                resultMap.success().message("没有查到相关信息");
+                resultMap.fail().message("没有查到相关信息");
             }
         }catch (Exception e){
             e.printStackTrace();
-            resultMap.success().message("系统异常");
+            resultMap.fail().message("系统异常");
         }
         return resultMap;
     }
@@ -142,11 +146,11 @@ public class ProjectProgressServiceImpl implements ProjectProgressService {
             if(insertNo>0){
                 resultMap.success().message("成功新增"+insertNo+"条数据");
             }else if(insertNo==0){
-                resultMap.success().message("新增失败");
+                resultMap.fail().message("新增失败");
             }
         }catch (Exception e){
             e.printStackTrace();
-            resultMap.success().message("系统异常");
+            resultMap.fail().message("系统异常");
         }
         return resultMap;
     }
@@ -162,11 +166,11 @@ public class ProjectProgressServiceImpl implements ProjectProgressService {
             if(cp!=null){
                 resultMap.success().message(cp);
             }else if(cp==null){
-                resultMap.success().message("没有查到相关信息");
+                resultMap.fail().message("没有查到相关信息");
             }
         }catch (Exception e){
             e.printStackTrace();
-            resultMap.success().message("系统异常");
+            resultMap.fail().message("系统异常");
         }
         return resultMap;
     }
@@ -183,11 +187,11 @@ public class ProjectProgressServiceImpl implements ProjectProgressService {
             if(insertNo>0){
                 resultMap.success().message("成功新增"+insertNo+"条数据");
             }else if(insertNo==0){
-                resultMap.success().message("新增失败");
+                resultMap.fail().message("新增失败");
             }
         }catch (Exception e){
             e.printStackTrace();
-            resultMap.success().message("系统异常");
+            resultMap.fail().message("系统异常");
         }
         return resultMap;
     }

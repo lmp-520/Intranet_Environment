@@ -1,14 +1,23 @@
 package com.xdmd.IntranetEnvironment.contractmanage.controller;
 
 
+import com.xdmd.IntranetEnvironment.common.FileUploadException;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.contractmanage.pojo.ContractManageDTO;
 import com.xdmd.IntranetEnvironment.contractmanage.service.ContractManageService;
+import com.xdmd.IntranetEnvironment.subjectmanagement.exception.InsertSqlException;
+import com.xdmd.IntranetEnvironment.subjectmanagement.exception.UpdateSqlException;
+import com.xdmd.IntranetEnvironment.subjectmanagement.exception.UpdateStatusException;
 import io.swagger.annotations.*;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -17,10 +26,11 @@ import java.util.Map;
  * @createDate: 2019/8/4
  * @description: 合同管理接口
  */
-@Api(tags = "合同管理【合同主表】")
+@Api(tags = "合同管理接口【合同主表】")
 @RestController
 @RequestMapping(value = "environment/contract")
 public class ContractManageController {
+    private static final Logger log = LoggerFactory.getLogger(ContractManageController.class);
     @Autowired
     ContractManageService contractManageService;
     ResultMap resultMap = new ResultMap();
@@ -34,9 +44,14 @@ public class ContractManageController {
      */
     @ApiOperation(value = "新增合同信息【外网提交】")
     @PostMapping(value = "addContractInfo")
-    public ResultMap insertContractInfo(ContractManageDTO contractManageDTO) {
-        int cm = contractManageService.insert(contractManageDTO);
-        return cm > 0 ? resultMap.success().message("新增成功") : resultMap.fail().message("新增失败");
+    public ResultMap insertContractInfo(//@CookieValue(value = "IntranecToken", required = false) String token, HttpServletResponse response,
+                                        @RequestBody ContractManageDTO contractManageDTO) {
+        String token = "aaa";
+        HttpServletResponse response = null;
+        if (StringUtils.isEmpty(token)) {
+            return resultMap.fail().message("请先登录");
+        }
+        return resultMap = contractManageService.insert(token, response, contractManageDTO);
     }
 
     /**
@@ -45,11 +60,35 @@ public class ContractManageController {
      * @param id
      * @return
      */
-    @ApiOperation(value = "根据合同id查询【内网查看】")
+    @ApiOperation(value = "根据合同id查询【内外网查看】")
     @GetMapping(value = "getManageInfoById")
     public ResultMap getManageInfoById(int id) {
         ContractManageDTO cmDTO = contractManageService.getManageInfoById(id);
         return cmDTO != null ? resultMap.success().message(cmDTO) : resultMap.fail().message("查询失败");
+    }
+
+
+    /**
+     * 根据单位id查询本单位的合同
+     *
+     * @param uid
+     * @return
+     */
+    @ApiOperation(value = "根据单位id查询本单位的合同【外网查看】")
+    @GetMapping(value = "getManageInfoByUid")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "uid", value = "单位id", required = true),
+            @ApiImplicitParam(name = "subjectCategory", value = "课题类别"),
+            @ApiImplicitParam(name = "subjectName", value = "课题名称"),
+            @ApiImplicitParam(name = "subjectContact", value = "课题联系人"),
+            @ApiImplicitParam(name = "subjectContactPhone", value = "课题联系人电话或手机"),
+            @ApiImplicitParam(name = "commitmentUnit", value = "承担单位"),
+            @ApiImplicitParam(name = "subjectSupervisorDepartment", value = "课题主管部门")
+    })
+    public ResultMap getManageInfoByUid(int uid, String subjectCategory, String subjectName, String subjectContact, String subjectContactPhone, String commitmentUnit,
+                                        String subjectSupervisorDepartment) {
+        List<Map> cmMapByUid = contractManageService.getManageInfoByUid(uid, subjectCategory, subjectName, subjectContact, subjectContactPhone, commitmentUnit, subjectSupervisorDepartment);
+        return cmMapByUid != null ? resultMap.success().message(cmMapByUid) : resultMap.fail().message("查询失败");
     }
 
     /**
@@ -57,11 +96,26 @@ public class ContractManageController {
      *
      * @return
      */
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "subjectCategory", value = "课题类别"),
+            @ApiImplicitParam(name = "subjectName", value = "课题名称"),
+            @ApiImplicitParam(name = "subjectContact", value = "课题联系人"),
+            @ApiImplicitParam(name = "subjectContactPhone", value = "课题联系人电话或手机"),
+            @ApiImplicitParam(name = "commitmentUnit", value = "承担单位"),
+            @ApiImplicitParam(name = "subjectSupervisorDepartment", value = "课题主管部门"),
+            @ApiImplicitParam(name = "pageNum", value = "当前页数", required = true),
+            @ApiImplicitParam(name = "pageSize", value = "每页显示条数", required = true)
+    })
     @ApiOperation(value = "查询合同主表信息")
     @GetMapping(value = "getAllInfo")
-    public List<ContractManageDTO> getAllInfo() {
-        return contractManageService.getAllInfo();
+    public ResultMap getAllInfo(String subjectCategory, String subjectName, String subjectContact, String subjectContactPhone, String commitmentUnit,
+                                String subjectSupervisorDepartment, int pageNum, int pageSize) {
+        return resultMap = contractManageService.getAllInfo(subjectCategory, subjectName, subjectContact, subjectContactPhone, commitmentUnit, subjectSupervisorDepartment, pageNum, pageSize);
     }
+
+
+    ///////////////////////////以下是中期检查///////////////////////////////////
+
 
     /**
      * 根据勾选的合同主表id修改相应的中期检查状态【内网中检】
@@ -71,8 +125,9 @@ public class ContractManageController {
      */
     @ApiOperation(value = "根据勾选的合同主表id修改相应的中期检查记录【内网中检】")
     @PostMapping(value = "updateContractByIds")
-    public int updateContractByIds(@RequestParam("mid") @ApiParam("中检id") int mid, @RequestBody @ApiParam("合同id集合") List<Long> ids) {
-        return contractManageService.updateContractByIds(mid, ids);
+    public ResultMap updateContractByIds(@RequestParam("mid") @ApiParam("中检id") int mid, @RequestBody @ApiParam("合同id集合") List<Long> ids) {
+        int no = contractManageService.updateContractByIds(mid, ids);
+        return no > 0 ? resultMap.success() : resultMap.fail();
     }
 
     /**
@@ -80,10 +135,11 @@ public class ContractManageController {
      *
      * @return
      */
-    @ApiOperation(value = "根据中期检查记录查詢相应合同主表")
+    @ApiOperation(value = "根据中期检查记录查詢相应合同主表【内网中检】")
     @GetMapping(value = "getInfoByMidRecord")
-    public List<Map> getInfoByMidRecord(@RequestParam("mId") int mId) {
-        return contractManageService.getInfoByMidRecord(mId);
+    public ResultMap getInfoByMidRecord(@RequestParam("mId") int mId) {
+        List<Map> mapList = contractManageService.getInfoByMidRecord(mId);
+        return mapList.size() > 0 ? resultMap.success() : resultMap.fail();
     }
 
 
@@ -99,8 +155,9 @@ public class ContractManageController {
             @ApiImplicitParam(name = "Mid", value = "中检记录id", dataType = "Long"),
     })
     @GetMapping(value = "getContractByUid")
-    public List<Map> getContractByUid(@RequestParam("Uid") int Uid, @RequestParam("Mid") int Mid) {
-        return contractManageService.getContractByUid(Uid, Mid);
+    public ResultMap getContractByUid(@RequestParam("Uid") int Uid, @RequestParam("Mid") int Mid) {
+        List<Map> maps = contractManageService.getContractByUid(Uid, Mid);
+        return maps.size() > 0 ? resultMap.success() : resultMap.fail();
     }
 
     /**
@@ -113,14 +170,15 @@ public class ContractManageController {
      */
     @ApiOperation(value = "根据合同id更新相应的附件id【外网中检】")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "midCheckAnnexId", value = "中期检查附件id", paramType = "int"),
-            @ApiImplicitParam(name = "expertAssessmentAnnexId", value = "专家评估附件id", paramType = "int"),
-            @ApiImplicitParam(name = "subjectSuggestAnnexId", value = "课题意见附件id", paramType = "int"),
-            @ApiImplicitParam(name = "cid", value = "合同id", paramType = "int"),
+            @ApiImplicitParam(name = "midCheckAnnexId", value = "中期检查附件id"),
+            @ApiImplicitParam(name = "expertAssessmentAnnexId", value = "专家评估附件id"),
+            @ApiImplicitParam(name = "subjectSuggestAnnexId", value = "课题意见附件id"),
+            @ApiImplicitParam(name = "cid", value = "合同id"),
     })
     @PostMapping(value = "updateContractByCid")
-    public int updateContractByCid(int midCheckAnnexId, int expertAssessmentAnnexId, int subjectSuggestAnnexId, int cid) {
-        return contractManageService.updateContractByCid(midCheckAnnexId, expertAssessmentAnnexId, subjectSuggestAnnexId, cid);
+    public ResultMap updateContractByCid(int midCheckAnnexId, int expertAssessmentAnnexId, int subjectSuggestAnnexId, int cid) {
+        int num = contractManageService.updateContractByCid(midCheckAnnexId, expertAssessmentAnnexId, subjectSuggestAnnexId, cid);
+        return num > 0 ? resultMap.success() : resultMap.fail();
     }
 
     /**
@@ -140,20 +198,258 @@ public class ContractManageController {
         return contractManageService.updateContractAnnexIdByCid(contractAnnexId, cid);
     }
 
-    @PostMapping("midFileUpload")
-    @ApiOperation(value = "中期检查附件上传")
+
+    /**
+     * 合同附件上传【外网】
+     *
+     * @param file
+     * @return
+     */
+    @PostMapping("contractFileUpload")
+    @ApiOperation(value = "合同附件上传")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "fileType", value = "附件类型",paramType="form"),
-            @ApiImplicitParam(name = "cid", value = "合同id", paramType = "form"),
+            @ApiImplicitParam(name = "cid", value = "合同id"),
     })
-    public String midFileUpload(@RequestParam("file") @ApiParam("附件") MultipartFile file,@RequestParam("fileType") @ApiParam("文件类型")String fileType,@RequestParam("cid") @ApiParam("合同id") int cid){
-        String OK=null;
+    public String ContractFileUpload(MultipartFile file) {
+        String OK = null;
         try {
-               OK=contractManageService.midFileUpload(file,fileType,cid);
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
-            return OK;
+            OK = contractManageService.ContractFileUpload(file);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return OK;
     }
+
+
+
+    /**
+     * 中期检查附件上传【外网】
+     *
+     * @param midCheckAnnex         中期检查附件
+     * @param expertAssessmentAnnex 专家评估附件
+     * @param subjectSuggestAnnex    课题建议附件
+     * @return
+     */
+    @PostMapping(value = "MidCheckFileUpload", headers = "content-type=multipart/form-data")
+    @ApiOperation(value = "中期检查附件上传【外网】")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "cid", value = "合同主表id", required = true),
+            @ApiImplicitParam(name = "midCheckAnnex", value = "中期检查附件", dataType = "file", paramType = "form", allowMultiple = true),
+            @ApiImplicitParam(name = "expertAssessmentAnnex", value = "专家评估附件", dataType = "file", paramType = "form", allowMultiple = true),
+            @ApiImplicitParam(name = "subjectSuggestAnnex", value = "课题建议附件", dataType = "file", paramType = "form", allowMultiple = true)
+
+    })
+    public ResultMap tenderFileUpload(//@CookieValue(value = "IntranecToken", required = false) String token, HttpServletResponse response,
+                                      MultipartFile midCheckAnnex,
+                                      MultipartFile expertAssessmentAnnex,
+                                      MultipartFile subjectSuggestAnnex) {
+        String token = "aaa";
+        HttpServletResponse response = null;
+        if (StringUtils.isEmpty(token)) {
+            return resultMap.fail().message("请先登录");
+        }
+        try {
+            resultMap = contractManageService.midCheckFileUpload(token, response,midCheckAnnex, expertAssessmentAnnex, subjectSuggestAnnex);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            log.error("OpenTenderController 中 tenderFileUpload 方法 -- " + e.getMessage());
+            return resultMap.fail().message("系统异常");
+        } catch (FileUploadException e) {
+            e.printStackTrace();
+            log.error("OpenTenderController 中 tenderFileUpload 方法 -- " + e.getMessage());
+            return resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    /**
+     * 单位管理员审核【外网】
+     *
+     * @param type   审核状态
+     * @param reason 审核不通过原因
+     * @param cid    审核表id
+     * @return
+     */
+    @PostMapping(value = "contractShenHeByUnitManager")
+    @ApiOperation(value = "单位管理员审核【外网】")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "type", value = "审核状态", required = true),
+            @ApiImplicitParam(name = "reason", value = "审核不通过原因", required = false),
+            @ApiImplicitParam(name = "cid", value = "审核表id", required = true),
+    })
+    public ResultMap contractShenHeByUnitManager(//@CookieValue(value = "IntranecToken", required = false) String token, HttpServletResponse response,
+                                               Boolean type, String reason, Integer cid) {
+        String token = "aaa";
+        HttpServletResponse response = null;
+        if (StringUtils.isEmpty(token)) {
+            resultMap.fail().message("请先登录");
+        }
+        try {
+            resultMap = contractManageService.contractShenHeByUnitManager(token, response, type, reason, cid);
+        } catch (UpdateSqlException e) {
+            e.printStackTrace();
+            log.error("OpenContractController 中 ContractFileUpload 方法 -- " + e.getMessage());
+            resultMap.fail().message("系统异常");
+        } catch (InsertSqlException e) {
+            e.printStackTrace();
+            log.error("OpenContractController 中 ContractFileUpload 方法 -- " + e.getMessage());
+            resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
+
+    /**
+     * 评估中心审核【内网】
+     *
+     * @param type   审核状态
+     * @param reason 审核不通过原因
+     * @param cid    审核表id
+     * @return
+     */
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "type", value = "审核状态", required = true),
+            @ApiImplicitParam(name = "reason", value = "审核不通过原因", required = false),
+            @ApiImplicitParam(name = "cid", value = "审核表id", required = true),
+    })
+    @PostMapping(value = "contractShenHeByPingGuCenter")
+    @ApiOperation(value = "评估中心审核【内网")
+    public ResultMap contractShenHeByPingGuCenter(//@CookieValue(value = "IntranecToken", required = false) String token, HttpServletResponse response,
+                                                Boolean type, String reason, Integer cid) {
+        String token = "aaa";
+        HttpServletResponse response = null;
+        if (StringUtils.isEmpty(token)) {
+            return resultMap.fail().message("请先登录");
+        }
+        resultMap = contractManageService.contractShenHeByPingGuCenter(token, response, type, reason, cid);
+        return resultMap;
+    }
+    /**
+     * 法规科技处审核【内网】
+     *
+     * @param type   审核状态
+     * @param reason 审核不通过原因
+     * @param cid    审核表id
+     * @return
+     */
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "type", value = "审核状态", required = true),
+            @ApiImplicitParam(name = "reason", value = "审核不通过原因", required = false),
+            @ApiImplicitParam(name = "cid", value = "审核表id", required = true),
+    })
+    @PostMapping(value = "contractShenHeByFaGui")
+    @ApiOperation(value = "法规科技处审核【内网")
+    public ResultMap contractShenHeByFaGui(//@CookieValue(value = "IntranecToken", required = false) String token, HttpServletResponse response,
+                                                  Boolean type, String reason, Integer cid) {
+        String token = "aaa";
+        HttpServletResponse response = null;
+        if (StringUtils.isEmpty(token)) {
+            return resultMap.fail().message("请先登录");
+        }
+        resultMap = contractManageService.contractShenHeByFaGui(token, response, type, reason, cid);
+        return resultMap;
+    }
+
+
+    /**
+     * 展示所有通过单位管理员审批的 【外网】
+     * @return
+     */
+    @GetMapping(value = "showAllPassContractReviewByUnitManager")
+    @ApiOperation(value = "展示所有通过单位管理员审批的【外网】")
+    public ResultMap showAllPassContractReviewByUnitManager(String subjectCategory,String subjectName, String subjectContact,String subjectContactPhone,String commitmentUnit, String subjectSupervisorDepartmentint, int pageNum, int pageSize) {
+        return resultMap = contractManageService.showAllPassContractReviewByUnitManager(subjectCategory,subjectName,subjectContact,subjectContactPhone,commitmentUnit,subjectSupervisorDepartmentint,pageNum,pageSize);
+    }
+
+    /**
+     * 展示所有未通过单位管理员审批的【外网】
+     *
+     * @return
+     */
+    @GetMapping(value = "showAllNoPassContractReviewByUnitManager")
+    @ApiOperation(value = "展示所有未通过单位管理员审批的")
+    public ResultMap showAllNoPassContractReviewByUnitManager(String subjectCategory,String subjectName, String subjectContact,String subjectContactPhone,String commitmentUnit, String subjectSupervisorDepartmentint, int pageNum, int pageSize) {
+        return resultMap = contractManageService.showAllNoPassContractReviewByUnitManager(subjectCategory,subjectName,subjectContact,subjectContactPhone,commitmentUnit,subjectSupervisorDepartmentint,pageNum,pageSize);
+    }
+
+    /**
+     * 展示所有通过评估中心审批的【内网】
+     *
+     * @return
+     */
+    @GetMapping(value = "showAllPassContractReviewByPingGu")
+    @ApiOperation(value = "展示所有通过评估中心审批的【内网】")
+    public ResultMap showAllPassContractReviewByPingGu(String subjectCategory,String subjectName, String subjectContact,String subjectContactPhone,String commitmentUnit, String subjectSupervisorDepartmentint, int pageNum, int pageSize) {
+        return resultMap = contractManageService.showAllPassContractReviewByPingGu(subjectCategory,subjectName,subjectContact,subjectContactPhone,commitmentUnit,subjectSupervisorDepartmentint,pageNum,pageSize);
+    }
+
+    /**
+     * 展示所有未通过评估中心审批的【内网】
+     *
+     * @return
+     */
+    @GetMapping(value = "showAllNoPassReviewContractByPingGu")
+    @ApiOperation(value = "展示所有未通过评估中心审批的【内网】")
+    public ResultMap showAllNoPassReviewContractByPingGu(String subjectCategory,String subjectName, String subjectContact,String subjectContactPhone,String commitmentUnit, String subjectSupervisorDepartmentint, int pageNum, int pageSize) {
+        return resultMap = contractManageService.showAllNoPassReviewContractByPingGu(subjectCategory,subjectName,subjectContact,subjectContactPhone,commitmentUnit,subjectSupervisorDepartmentint,pageNum,pageSize);
+    }
+
+    /**
+     * 展示所有未通过法规科技处审批的【内网】
+     *
+     * @return
+     */
+    @GetMapping(value = "showAllNoPassReviewContractByFaGui")
+    @ApiOperation(value = "展示所有未通过法规科技处审批的【内网】")
+    public ResultMap showAllNoPassReviewContractByFaGui(String subjectCategory,String subjectName, String subjectContact,String subjectContactPhone,String commitmentUnit, String subjectSupervisorDepartmentint, int pageNum, int pageSize) {
+        return resultMap = contractManageService.showAllNoPassReviewContractByFaGui(subjectCategory,subjectName,subjectContact,subjectContactPhone,commitmentUnit,subjectSupervisorDepartmentint,pageNum,pageSize);
+    }
+
+    /**
+     * 展示所有通过法规科技处审批的【内网】
+     *
+     * @return
+     */
+    @GetMapping(value = "showAllPassContractReviewByFaGui")
+    @ApiOperation(value = "展示所有通过法规科技处审批的【内网】")
+    public ResultMap showAllPassContractReviewByFaGui(String subjectCategory,String subjectName, String subjectContact,String subjectContactPhone,String commitmentUnit, String subjectSupervisorDepartmentint, int pageNum, int pageSize) {
+        return resultMap = contractManageService.showAllPassContractReviewByFaGui(subjectCategory,subjectName,subjectContact,subjectContactPhone,commitmentUnit,subjectSupervisorDepartmentint,pageNum,pageSize);
+    }
+
+    /**
+     * 不通过被退回时重新提交[即修改]【外网】
+     * @param contractManageDTO
+     * @return
+     * @throws UpdateStatusException
+     * @throws UpdateSqlException
+     */
+   @PostMapping(value = "updateContractStatusByReturnCommit")
+   @ApiOperation(value = "不通过被退回时重新提交[即修改]【外网】")
+    public ResultMap updateContractStatusByReturnCommit(//@CookieValue(value = "IntranecToken", required = false) String token, HttpServletResponse response,
+                                                        @RequestBody ContractManageDTO contractManageDTO) throws UpdateStatusException, UpdateSqlException {
+
+        String token = "aaa";
+        HttpServletResponse response = null;
+        if (StringUtils.isEmpty(token)) {
+            return resultMap.fail().message("请先登录");
+        }
+        return resultMap = contractManageService.updateContractStatusByReturnCommit(token, response,contractManageDTO);
+    }
+
+
+
+
+
+
 }
