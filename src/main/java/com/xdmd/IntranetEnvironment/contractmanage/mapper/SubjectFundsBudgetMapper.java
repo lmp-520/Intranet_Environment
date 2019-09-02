@@ -122,8 +122,7 @@ public interface SubjectFundsBudgetMapper {
      * @return
      */
     @Select(value = "select * from subject_funds_budget")
-    List<SubjectFundsBudgetDTO> getAllInfo();
-
+    List<SubjectFundsBudgetDTO> getAllInfo()
 
     /**
      * 不通过被退回时重新提交[修改]
@@ -216,5 +215,5 @@ public interface SubjectFundsBudgetMapper {
             "WHERE\n" +
             "contract_id=#{contractId}\n")
     int UpdateSubjectFundsBudget(SubjectFundsBudgetDTO subjectFundsBudgetDTO);
-
+  
 }

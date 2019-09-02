@@ -7,7 +7,6 @@ import com.xdmd.IntranetEnvironment.subjectAcceptance.service.StyleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -58,4 +57,9 @@ public class StyleServiceImpl implements StyleService {
         return resultMap.success().message(dictionaryList);
     }
 
+    @Override
+    public ResultMap queryAuditStatus() {
+        List<Dictionary> dictionaryList = styleMapper.queryAuditStatus();
+        return resultMap.success().message(dictionaryList);
+    }
 }

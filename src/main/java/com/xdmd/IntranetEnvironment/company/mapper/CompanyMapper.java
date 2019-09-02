@@ -72,4 +72,7 @@ public interface CompanyMapper {
     //新增账号与角色之间的关系
     @Insert("insert into shiro_user_role (uid,rid) values(#{uid},1)")
     void addUserRole(@Param("uid") Integer uid);
+
+    @Select("select uid,real_name,login_name,identity,is_delete,is_first,is_state from shiro_user_information where login_name = #{loginName}")
+    UserInformation queryUserInformation(@Param("loginName") String loginName);
 }

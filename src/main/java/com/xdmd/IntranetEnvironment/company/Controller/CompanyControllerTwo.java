@@ -4,6 +4,7 @@ import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.company.Pojo.CreditCodeRegex;
 import com.xdmd.IntranetEnvironment.company.Pojo.UserInformation;
 import com.xdmd.IntranetEnvironment.company.Service.CompanyServiceTwo;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,6 +94,27 @@ public class CompanyControllerTwo {
         } catch (Exception e) {
             e.printStackTrace();
             log.error("CompanyController 中 login 方法错误 -- "+e.getMessage());
+            return resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
+
+    //外网登陆
+    @ResponseBody
+    @PostMapping("extranetLogin")
+    public ResultMap ExtranetLogin(@RequestParam("loginName")String loginName,  //登陆名
+                                   @RequestParam("password")String password,    //密码
+                                   @CookieValue("check") String check,
+                                   @RequestParam("code") String code,   //验证码
+                                   HttpServletResponse response){
+        if(check.equalsIgnoreCase(code)){
+            return resultMap.fail().message("验证码输入不正确，请重新输入");
+        }
+        try {
+            resultMap = companyServiceTwo.ExtranetLogin(loginName,password,response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("CompanyController 中 extranetLogin 方法 -- "+e.getMessage());
             return resultMap.fail().message("系统异常");
         }
         return resultMap;

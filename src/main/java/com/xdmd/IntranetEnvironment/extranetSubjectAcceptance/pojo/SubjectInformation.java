@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class SubjectInformation {
+    private Integer id; //合同id
     private String projectNo;   //课题编号1
     private String subjectName;     //课题名称1
     private String subjeceLeader;   //课题负责人1
@@ -15,7 +16,8 @@ public class SubjectInformation {
     private String contractEndTime;    //合同结束时间1
     private String commitmentUnit;  //承担单位名称1
 
-    public SubjectInformation(String projectNo, String subjectName, String subjeceLeader, Integer unitNature, String subjectLeaderPhone, String email, String commitmentUnitAddress, String contractStartTime, String contractEndTime, String commitmentUnit) {
+    public SubjectInformation(Integer id, String projectNo, String subjectName, String subjeceLeader, Integer unitNature, String subjectLeaderPhone, String email, String commitmentUnitAddress, String contractStartTime, String contractEndTime, String commitmentUnit) {
+        this.id = id;
         this.projectNo = projectNo;
         this.subjectName = subjectName;
         this.subjeceLeader = subjeceLeader;
