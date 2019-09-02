@@ -7,6 +7,7 @@ import com.xdmd.IntranetEnvironment.contractmanage.service.SubjectFundsBudgetSer
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.List;
  */
 @Api(tags = "课题经费预算【合同子表四】")
 @RestController
+@Controller
 @RequestMapping(value = "environment/contract/subjectfundbudget")
 public class SubjectFundsBudgetController {
     @Autowired
@@ -61,14 +63,4 @@ public class SubjectFundsBudgetController {
     }
 
 
-    /**
-     * 修改
-     * @param subjectFundsBudgetDTO
-     * @return
-     */
-    @ApiOperation(value = "不通过被退回时重新提交[修改]")
-    @PostMapping(value = "UpdateSubjectFundsBudget")
-    public int UpdateSubjectFundsBudget(SubjectFundsBudgetDTO subjectFundsBudgetDTO) {
-        return subjectFundsBudgetService.UpdateSubjectFundsBudget(subjectFundsBudgetDTO);
-    }
 }

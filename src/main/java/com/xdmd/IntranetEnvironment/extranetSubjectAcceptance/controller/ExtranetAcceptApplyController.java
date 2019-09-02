@@ -11,8 +11,6 @@ import com.xdmd.IntranetEnvironment.user.exception.ClaimsNullException;
 import com.xdmd.IntranetEnvironment.user.exception.UserNameNotExistentException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -41,6 +39,7 @@ public class ExtranetAcceptApplyController {
     @ResponseBody
     @PostMapping("addAcceptApply")
     public ResultMap AddAcceptApply(@CookieValue(value = "token",required = false) String token, HttpServletResponse response,
+                                    @RequestParam(value = "contractId") Integer contractId,  //合同id
                                     @RequestPart("submitInventoryFile") MultipartFile submitInventoryFile,     //提交清单文件
                                     @RequestPart("applicationAcceptanceFile") MultipartFile applicationAcceptanceFile,     //验收申请表文件
                                     @RequestPart("achievementsFile") MultipartFile achievementsFile,   //成果附件文件
@@ -169,7 +168,7 @@ public class ExtranetAcceptApplyController {
 
 
         try {
-            resultMap = extranetAcceptApplyService.AddAcceptApply(extranetCheckApply, submitInventoryFile, applicationAcceptanceFile, achievementsFile, uname);
+            resultMap = extranetAcceptApplyService.AddAcceptApply(extranetCheckApply, submitInventoryFile, applicationAcceptanceFile, achievementsFile, uname,contractId);
 
             /**
              * 再新增一个验收申请与公司的关联表
@@ -560,14 +559,11 @@ public class ExtranetAcceptApplyController {
     //在公司新增验收申请时，显示课题名称与课题编号
     @PostMapping("queryTopicNameAndNumber")
     @ResponseBody
-    public  ResultMap queryTopicNumberAndTopicName(//@CookieValue(value = "token",required = false)String token,HttpServletResponse response
+    public  ResultMap queryTopicNumberAndTopicName(@CookieValue(value = "token",required = false)String token,HttpServletResponse response
     ){
-//        if(StringUtils.isEmpty(token)){
-//            return resultMap.fail().message("请先登录");
-//        }
-
-        String token = "aaa";
-        HttpServletResponse response = null;
+        if(StringUtils.isEmpty(token)){
+            return resultMap.fail().message("请先登录");
+        }
 
         try {
             resultMap = extranetAcceptApplyService.queryTopicNumberAndTopicName(token,response);

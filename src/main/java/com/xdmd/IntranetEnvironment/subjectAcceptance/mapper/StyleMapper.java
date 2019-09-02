@@ -29,4 +29,6 @@ public interface StyleMapper {
     @Select("SELECT id,content FROM dictionary where classification_id =5 and state = 1")
     List<Dictionary> queryAchievementLevel();
 
+    @Select("SELECT ap_id as id,ap_name as content from acceptance_phase")
+    List<Dictionary> queryAuditStatus();
 }

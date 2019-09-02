@@ -15,4 +15,6 @@ public interface StyleService {
     ResultMap queryAchievementShape();
 
     ResultMap queryAchievementLevel();
+
+    ResultMap queryAuditStatus();
 }

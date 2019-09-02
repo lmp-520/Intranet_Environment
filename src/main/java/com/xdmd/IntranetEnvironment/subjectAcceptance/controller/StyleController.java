@@ -63,4 +63,12 @@ public class StyleController {
         return resultMap;
     }
 
+    //审核状态
+    @PostMapping("auditStatus")
+    @ResponseBody
+    public ResultMap queryAuditStatus(){
+        resultMap = styleService.queryAuditStatus();
+        return resultMap;
+    }
+
 }
