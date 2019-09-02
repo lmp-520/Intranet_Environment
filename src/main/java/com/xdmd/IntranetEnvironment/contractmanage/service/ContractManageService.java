@@ -1,5 +1,6 @@
 package com.xdmd.IntranetEnvironment.contractmanage.service;
 
+import com.xdmd.IntranetEnvironment.common.FileUploadException;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.contractmanage.pojo.ContractManageDTO;
 import com.xdmd.IntranetEnvironment.subjectmanagement.exception.InsertSqlException;
@@ -47,11 +48,25 @@ public interface ContractManageService {
     /**
      * 合同附件上传
      * @param file
-     * @param cid
      * @return
      */
 
-    String ContractFileUpload(MultipartFile file, int cid) throws IOException;
+    String ContractFileUpload(MultipartFile file) throws IOException;
+
+
+
+    /**
+     *中期检查附件上传
+     * @param token
+     * @param response
+     * @param midCheckAnnex
+     * @param expertAssessmentAnnex
+     * @param subjectSuggestAnnex
+     * @return
+     * @throws IOException
+     * @throws FileUploadException
+     */
+    ResultMap midCheckFileUpload(String token, HttpServletResponse response,MultipartFile midCheckAnnex, MultipartFile expertAssessmentAnnex, MultipartFile subjectSuggestAnnex) throws IOException, FileUploadException;
 
     /**
      * [查詢] 根據单位id查詢本单位合同

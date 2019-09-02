@@ -3,14 +3,21 @@ package com.xdmd.IntranetEnvironment.guidemanagement.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
+import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.JwtInformation;
+import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.service.impl.ExtranetTokenService;
 import com.xdmd.IntranetEnvironment.guidemanagement.mapper.GuideMapper;
 import com.xdmd.IntranetEnvironment.guidemanagement.pojo.GuideCollection;
 import com.xdmd.IntranetEnvironment.guidemanagement.pojo.GuideCollectionLimitTime;
 import com.xdmd.IntranetEnvironment.guidemanagement.pojo.GuideSummary;
 import com.xdmd.IntranetEnvironment.guidemanagement.service.GuideService;
+import com.xdmd.IntranetEnvironment.user.exception.ClaimsNullException;
+import com.xdmd.IntranetEnvironment.user.exception.UserNameNotExistentException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -24,9 +31,12 @@ import java.util.Map;
  */
 @Service
 public class GuideServiceImpl implements GuideService {
+    private static final Logger log = LoggerFactory.getLogger(GuideServiceImpl.class);
     @Autowired
     GuideMapper guideMapper;
     ResultMap resultMap = new ResultMap();
+    @Autowired
+    private ExtranetTokenService extranetTokenService;
 
     /**
      * 实现分页查询指南申报
@@ -89,8 +99,30 @@ public class GuideServiceImpl implements GuideService {
      * @return
      */
     @Override
-    public ResultMap insertGuideInfo(GuideCollection guideCollection) {
+    public ResultMap insertGuideInfo(String token, HttpServletResponse response,GuideCollection guideCollection) {
+        JwtInformation jwtInformation = new JwtInformation();
+        try {
+            jwtInformation = extranetTokenService.compare(response, token);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (UserNameNotExistentException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (ClaimsNullException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("MenuServiceImpl 中 TokenService 出现问题");
+            return resultMap.message("系统异常");
+        }
+        //Integer userid = jwtInformation.getUid();
+        //String username = jwtInformation.getUsername();
+        //Integer unitid = jwtInformation.getCid();
+        String unitname = jwtInformation.getCompanyName();
         try{
+            guideCollection.setFillUnit(unitname);
             int gmInfo=guideMapper.insertGuideInfo(guideCollection);
             if(gmInfo>0){
                 resultMap.success().message("新增成功");
@@ -141,13 +173,13 @@ public class GuideServiceImpl implements GuideService {
      * 新增汇总信息实现【单条插入】
      * @param guideSummary
      * @return
-     *  */
+     *
     @Override
     public ResultMap insertSummary(GuideSummary guideSummary) {
         int number = guideMapper.insertSummary(guideSummary);
         return resultMap.success().message("汇总新增成功");
     }
-
+*/
 
     /**
      * 新增汇总信息实现【批量插入】
@@ -201,8 +233,9 @@ public class GuideServiceImpl implements GuideService {
         return resultMap;
     }
 
+
     /**
-     * 实现根据汇总标题查询汇总信息
+     * 实现根据汇总标题id查询汇总信息
      * @param guideSummaryTitle
      * @return
      */
@@ -222,17 +255,42 @@ public class GuideServiceImpl implements GuideService {
         return resultMap;
     }
 
+
+
+
+
     /**
-     * 实现根据单位id查询单位指南申报
+     * 实现根据单位id查询单位指南申报【外网】
      *
-     * @param Uid
+     * @param uid
      * @return
      */
     @Override
-    public ResultMap getCollectionByUid(String guideName, Integer domain, Integer category, String fillUnit, String fillContacts, String contactPhone,int Uid,int pageNum,int pageSize) {
+    public ResultMap getUnitCollection(String token, HttpServletResponse response, String guideName, Integer domain, Integer category, String fillUnit, String fillContacts, String contactPhone, int uid, int pageNum, int pageSize) {
+        JwtInformation jwtInformation = new JwtInformation();
+        try {
+            jwtInformation = extranetTokenService.compare(response, token);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (UserNameNotExistentException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (ClaimsNullException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("MenuServiceImpl 中 TokenService 出现问题");
+            return resultMap.message("系统异常");
+        }
+        //Integer userid = jwtInformation.getUid();
+        //String username = jwtInformation.getUsername();
+        Integer unitid = jwtInformation.getCid();
+        String unitname = jwtInformation.getCompanyName();
         try{
             PageHelper.startPage(pageNum,pageSize,true);
-            List<GuideCollection> mapList=guideMapper.getCollectionByUid(guideName,domain,category,fillUnit,fillContacts,contactPhone,Uid);
+            List<Map> mapList=guideMapper.getUnitCollection(guideName,domain,category,fillUnit,fillContacts,contactPhone,unitid);
             PageInfo pageInfo=new PageInfo(mapList);
             if(mapList.size()>0){
                 resultMap.success().message(pageInfo);
@@ -274,9 +332,9 @@ public class GuideServiceImpl implements GuideService {
      * @return
      */
     @Override
-    public ResultMap getCollectionByIds(List<Long> ids) {
+    public ResultMap updateIsSelectByIds(List<Long> ids) {
         try{
-            List<Map> guideMap=guideMapper.getCollectionByIds(ids);
+            List<Integer> guideMap=guideMapper.updateIsSelectByIds(ids);
             if(!guideMap.isEmpty()){
                 resultMap.success().message(guideMap);
             }else if(guideMap.size()==0){
@@ -287,5 +345,6 @@ public class GuideServiceImpl implements GuideService {
         }
         return resultMap;
     }
+
 }
 

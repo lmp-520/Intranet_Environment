@@ -6,6 +6,7 @@ import com.xdmd.IntranetEnvironment.guidemanagement.pojo.GuideCollectionLimitTim
 import com.xdmd.IntranetEnvironment.guidemanagement.pojo.GuideSummary;
 import org.apache.ibatis.annotations.Param;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 
@@ -36,7 +37,7 @@ public interface GuideService {
      * @param guideCollection
      * @return
      */
-    ResultMap insertGuideInfo(GuideCollection guideCollection);
+    ResultMap insertGuideInfo(String token, HttpServletResponse response,GuideCollection guideCollection);
 
     /**
      * 更新时间
@@ -45,12 +46,17 @@ public interface GuideService {
      */
     ResultMap updateLimitTime(GuideCollectionLimitTime guideCollectionLimitTime);
 
+
+
     /**
      * 新增汇总信息【单条插入】
      * @param guideSummary
      * @return
-     */
-    ResultMap insertSummary(GuideSummary guideSummary);
+
+    ResultMap insertSummary(GuideSummary guideSummary); */
+
+
+
     /**
      * 新增汇总信息【批量插入】
      * @param guideSummary
@@ -64,30 +70,34 @@ public interface GuideService {
      */
     ResultMap getSummaryByParam(String guideSummaryTitle, String fillUnit, Integer domain, Integer category, String projectTime, String researchContentTechnology, @Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
     /**
-     * 根据汇总标题查询出汇总指南
+     * 根据汇总标题id查询出汇总指南
      * @return
      */
-    ResultMap getSummaryByGuideSummaryTitle(@Param("guideSummaryTitle") String guideSummaryTitle);
+    ResultMap getSummaryByGuideSummaryTitle(@Param("guideSummaryTitle")String guideSummaryTitle);
+
 
     /**
      * 根據单位id查詢相应单位的指南申报
-     * @param Uid
+     * @param uid
      * @return
      */
-    ResultMap getCollectionByUid(String guideName, Integer domain, Integer category, String fillUnit, String fillContacts, String contactPhone, int Uid, int pageNum, int pageSize);
+    ResultMap getUnitCollection(String token, HttpServletResponse response, String guideName, Integer domain, Integer category, String fillUnit, String fillContacts, String contactPhone, int uid, int pageNum, int pageSize);
 
     /**
-     * [新增]单位关联指南征集【暂不做】
+     * [新增]单位关联指南征集
      * @param unitId
      * @param collectionId
      * @return
      */
     ResultMap insert(int unitId, int collectionId);
+
+
     /**
      * 根据勾选的指南id获取选相应指南申报信息
      * @param
      * @return
      */
-    ResultMap getCollectionByIds(List<Long> ids);
+    ResultMap updateIsSelectByIds(List<Long> ids);
+
 }
 

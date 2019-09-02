@@ -63,4 +63,15 @@ public class SubjectFundsBudgetController {
     }
 
 
+
+    /**
+     * 修改
+     * @param subjectFundsBudgetDTO
+     * @return
+     */
+    @ApiOperation(value = "不通过被退回时重新提交[修改]")
+    @PostMapping(value = "UpdateSubjectFundsBudget")
+    public int UpdateSubjectFundsBudget(SubjectFundsBudgetDTO subjectFundsBudgetDTO) {
+        return subjectFundsBudgetService.UpdateSubjectFundsBudget(subjectFundsBudgetDTO);
+    }
 }

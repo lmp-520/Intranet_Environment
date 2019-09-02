@@ -218,7 +218,7 @@ public interface ContractManageMapper {
             "expert_assessment_annex_id = #{expertAssessmentAnnexId},\n" +
             "subject_suggest_annex_id = #{subjectSuggestAnnexId} \n" +
             "WHERE id = #{cid}")
-    int updateContractByCid(int midCheckAnnexId, int expertAssessmentAnnexId, int subjectSuggestAnnexId, int cid);
+    int updateMidCheckAnnextByCid(int midCheckAnnexId, int expertAssessmentAnnexId, int subjectSuggestAnnexId, int cid);
 
 
     /**

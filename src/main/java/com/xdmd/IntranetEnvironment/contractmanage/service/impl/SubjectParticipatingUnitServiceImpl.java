@@ -46,9 +46,15 @@ public class SubjectParticipatingUnitServiceImpl implements SubjectParticipating
         return subjectParticipatingUnitMapper.getAllInfo();
     }
 
+
+    /**
+     * 修改
+     * @param subjectParticipatingUnitDTO
+     * @return
+     */
     @Override
     public int updateInfo(SubjectParticipatingUnitDTO subjectParticipatingUnitDTO) {
-        return subjectParticipatingUnitMapper.updateInfo(subjectParticipatingUnitDTO);
+        int updateNo=subjectParticipatingUnitMapper.updateInfo(subjectParticipatingUnitDTO);
+        return updateNo;
     }
-
 }

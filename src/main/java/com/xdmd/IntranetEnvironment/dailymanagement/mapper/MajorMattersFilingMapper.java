@@ -36,7 +36,7 @@ public interface MajorMattersFilingMapper {
             "#{subjectName},\n" +
             "#{commitmentUnit},\n" +
             "#{unitHead},\n" +
-            "#{unitHeadPhone}" +
+            "#{unitHeadPhone}," +
             "#{projectNo},\n" +
             "#{adjustTypeId},\n" +
             "#{adjustmentMattersId},\n" +
