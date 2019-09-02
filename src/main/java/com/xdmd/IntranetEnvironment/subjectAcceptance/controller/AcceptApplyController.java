@@ -37,6 +37,7 @@ public class AcceptApplyController {
                                       @RequestParam(value = "subjectUndertakingUnit",required = false) String subjectUndertakingUnit,//承担单位
                                       @RequestParam(value = "unitNature",required = false) Integer unitNature,//单位性质
                                       @RequestParam(value = "projectLeader",required = false)String projectLeader,//课题负责人
+                                      @RequestParam(value = "state",required = false) Integer state,//状态
                                       @RequestParam("Page") Integer page,
                                       @RequestParam("total") Integer total){
 
@@ -44,7 +45,7 @@ public class AcceptApplyController {
             return resultMap.fail().message("请返回正确的页数或每页显示条数");
         }
         try {
-            resultMap = acceptApplySerivce.acceptApplyQuery(topicName,subjectUndertakingUnit,unitNature,projectLeader,page,total);
+            resultMap = acceptApplySerivce.acceptApplyQuery(topicName,subjectUndertakingUnit,unitNature,projectLeader,page,total,state);
         } catch (Exception e) {
             e.printStackTrace();
             log.error("AcceptApplyController 中 accpetApplyQuery 方法 错误");

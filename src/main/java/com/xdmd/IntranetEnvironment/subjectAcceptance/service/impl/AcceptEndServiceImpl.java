@@ -264,27 +264,43 @@ public class AcceptEndServiceImpl implements AcceptEndService {
             //根据各个文件的id，获取各个文件的地址
             String achievementUrl = acceptEndMapper.queryFileUrlByFileId(checkApply.getAchievementUrlId());            //获取成果附件地址
             checkApply.setAchievementsUrl(achievementUrl);
+            String achievementFileName = acceptEndMapper.queryFileNameByFileId(checkApply.getAchievementUrlId());
+            checkApply.setAchievementsName(achievementFileName);
 
             String submitUrl = acceptEndMapper.queryFileUrlByFileId(checkApply.getSubmitUrlId());                      //获取提交清单文件
             checkApply.setSubmitInventoryUrl(submitUrl);
+            String submitUrlFileName = acceptEndMapper.queryFileNameByFileId(checkApply.getSubmitUrlId());
+            checkApply.setSubmitInventoryUrlName(submitUrlFileName);
 
             String auditReportUrl = acceptEndMapper.queryFileUrlByFileId(checkApply.getAuditReportUrlId());            //获取审计报告文件
             checkApply.setAuditReportUrl(auditReportUrl);
+            String auditReportFileName = acceptEndMapper.queryFileNameByFileId(checkApply.getAuditReportUrlId());
+            checkApply.setAuditReportUrlName(auditReportFileName);
 
             String firstInspectionReportUrl = acceptEndMapper.queryFileUrlByFileId(checkApply.getFirstInspectionReportUrlId());     //获取初审报告文件
             checkApply.setFirstInspectionReportUrl(firstInspectionReportUrl);
+            String firstInspectionReportFileName = acceptEndMapper.queryFileNameByFileId(checkApply.getFirstInspectionReportUrlId());
+            checkApply.setFirstInspectionReportUrlName(firstInspectionReportFileName);
 
             String expertGroupCommentsUrl = acceptEndMapper.queryFileUrlByFileId(checkApply.getExpertGroupCommentsUrlId());         //获取专家组意见文件
             checkApply.setExpertGroupCommentsUrl(expertGroupCommentsUrl);
+            String expertGroupCommentFileName = acceptEndMapper.queryFileNameByFileId(checkApply.getExpertGroupCommentsUrlId());
+            checkApply.setExpertGroupCommentsUrlName(expertGroupCommentFileName);
 
             String expertAcceptanceFormUrl = acceptEndMapper.queryFileUrlByFileId(checkApply.getExpertAcceptanceFormId());  //获取专家组评议表文件
             checkApply.setExpertAcceptanceFormUrl(expertAcceptanceFormUrl);
+            String expertAcceptanceFormFileName = acceptEndMapper.queryFileNameByFileId(checkApply.getExpertAcceptanceFormId());
+            checkApply.setExpertAcceptanceFormUrlName(expertAcceptanceFormFileName);
 
             String applicationUrl = acceptEndMapper.queryFileUrlByFileId(checkApply.getApplicationUrlId());         //验收申请表文件
             checkApply.setApplicationAcceptanceUrl(applicationUrl);
+            String applicationFileName = acceptEndMapper.queryFileNameByFileId(checkApply.getApplicationUrlId());
+            checkApply.setApplicationAcceptanceUrlName(applicationFileName);
 
             String acceptanceCertificateUrl = acceptEndMapper.queryFileUrlByFileId(checkApply.getAcceptanceCertificateId());    //最终证书文件
             checkApply.setAcceptanceCertificateUrl(acceptanceCertificateUrl);
+            String acceptanceCertificateFileName = acceptEndMapper.queryFileNameByFileId(checkApply.getAcceptanceCertificateId());
+            checkApply.setAcceptanceCertificateUrlName(acceptanceCertificateFileName);
 
             AcceptanceCertificate acceptanceCertificate  = new AcceptanceCertificate();
             //获取验收证书主表
@@ -292,15 +308,15 @@ public class AcceptEndServiceImpl implements AcceptEndService {
 
             List<AcceptanceCertificatePatent> acceptanceCertificatePatentList = new ArrayList<AcceptanceCertificatePatent>();
             //获取验收证书专利表
-            acceptanceCertificatePatentList = acceptEndMapper.queryAcceptanceCertificatePatent(checkApply.getId());
+            acceptanceCertificatePatentList = acceptEndMapper.queryAcceptanceCertificatePatent(acceptanceCertificate.getId());
 
             List<AcceptanceCertificatePrincipalPersonnel> acceptanceCertificatePrincipalPersonnelList = new ArrayList<AcceptanceCertificatePrincipalPersonnel>();
             //获取验收证书主要成员
-            acceptanceCertificatePrincipalPersonnelList = acceptEndMapper.queryAcceptanceCertificatePrincipalPersonnel(checkApply.getId());
+            acceptanceCertificatePrincipalPersonnelList = acceptEndMapper.queryAcceptanceCertificatePrincipalPersonnel(acceptanceCertificate.getId());
 
             List<AcceptanceCertificateSubjectPeople> acceptanceCertificateSubjectPeopleList = new ArrayList<AcceptanceCertificateSubjectPeople>();
             //获取验收证书课题负责人
-            acceptanceCertificateSubjectPeopleList = acceptEndMapper.queryAcceptanceCertificateSubjectPeople(checkApply.getId());
+            acceptanceCertificateSubjectPeopleList = acceptEndMapper.queryAcceptanceCertificateSubjectPeople(acceptanceCertificate.getId());
 
             //查询专家组意见信息
             ExpertGroupComment expertGroupComment = acceptEndMapper.queryExpertGroupComment(checkApply.getId());

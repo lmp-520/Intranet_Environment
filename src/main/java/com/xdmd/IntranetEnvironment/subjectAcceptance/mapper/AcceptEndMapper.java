@@ -104,4 +104,8 @@ public interface AcceptEndMapper {
     //根据验收专家组意见表的id，获取对应的专家组成员信息
     @Select("select * from expert_group_comments_name where egc_id = #{egcId}")
     List<ExpertGroupCommentsName> queryExpertGroupCommentsName(@Param("egcId") Integer egcId);
+
+    @Select("select upload_file_name from  upload_file where id = #{id}")
+    String queryFileNameByFileId(@Param("id") Integer achievementUrlId);
+
 }

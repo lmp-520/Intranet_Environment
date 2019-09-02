@@ -24,7 +24,6 @@ public class menuController {
         if(StringUtils.isEmpty(token)){
             return resultMap.fail().message("请先登录");
         }
-
         resultMap = menuService.queryMenu(token,response);
         return resultMap;
     }

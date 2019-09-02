@@ -140,11 +140,11 @@ public interface ExtranetAcceptApplyMapper<T> extends MyBaseMapper<ExtranetCheck
     List<Integer> queryAllEndContractId(@Param("nowTime") String nowTime,@Param("cname") String cname);
 
     //根据id获取合同的结束时间
-    @Select("select contract_end_time from contract_manage where id = #{id}")
+    @Select("select contract_end_time from contract_manage where id = #{id} and is_check_apply = 0")
     String queryEndTimeById(@Param("id") Integer id);
 
     //通过合同id，获取符合要求的课题名称
-    @Select("select subject_name from contract_manage where id = #{id}")
+    @Select("select subject_name from contract_manage where id = #{id} and is_check_apply =0")
     String querySubjectNameById(@Param("id") Integer resultId);
 
     //通过课题名称获取合同id
@@ -152,7 +152,7 @@ public interface ExtranetAcceptApplyMapper<T> extends MyBaseMapper<ExtranetCheck
     List<Integer> queryIdByProjectName(@Param("projectName") String projectName);
 
     //通过id获取课题编号
-    @Select("select project_no from contract_manage where id = #{resultId}")
+    @Select("select project_no from contract_manage where id = #{resultId} and is_check_apply = 0")
     String queryTopicNumberById(@Param("resultId") Integer resultId);
 
     //根据课题编号获取承担单位
@@ -204,6 +204,9 @@ public interface ExtranetAcceptApplyMapper<T> extends MyBaseMapper<ExtranetCheck
     List<AcceptanceCertificateSubjectPeople> queryAcceptanceCertificateSubjectPeople(@Param("id") Integer id);
 
     //通过id，获取课题信息
-    @Select("select project_no,subject_name,contract_start_time,contract_end_time,subjece_leader,subject_leader_phone,email,commitment_Unit,commitment_unit_address from contract_manage where id =#{id}")
+    @Select("select id,project_no,subject_name,contract_start_time,contract_end_time,subjece_leader,subject_leader_phone,email,commitment_Unit,commitment_unit_address from contract_manage where id =#{id} and is_check_apply = 0")
     SubjectInformation querySubjectInformation(@Param("id") Integer resultId);
+
+    @Update("update contract_manage set is_check_apply = 1 where id = #{id}")
+    void updateContractManage(@Param("id") Integer contractId);
 }

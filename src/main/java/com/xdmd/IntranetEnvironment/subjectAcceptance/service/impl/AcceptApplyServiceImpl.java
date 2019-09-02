@@ -29,7 +29,7 @@ public class AcceptApplyServiceImpl implements AcceptApplySerivce {
 
     //查询企业提交的验收申请
     @Override
-    public ResultMap acceptApplyQuery(String topicName, String subjectUndertakingUnit, Integer unitNature, String projectLeader, Integer page, Integer total) {
+    public ResultMap acceptApplyQuery(String topicName, String subjectUndertakingUnit, Integer unitNature, String projectLeader, Integer page, Integer total,Integer state) {
         int newpage = 0;
         if (page == 1) {
             newpage = page - 1;
@@ -39,13 +39,13 @@ public class AcceptApplyServiceImpl implements AcceptApplySerivce {
 
         //获取验收申请表的总数
         int alltotal = 0;
-        alltotal = acceptApplyMapper.queryAllAccpetApply(topicName, subjectUndertakingUnit, unitNature, projectLeader);
+        alltotal = acceptApplyMapper.queryAllAccpetApply(topicName, subjectUndertakingUnit, unitNature, projectLeader,state);
         if (alltotal == 0) {
             return resultMap.fail().message();
         }
 
         //获取验收申请表的集合
-        List<CheckApply> checkApplyList = acceptApplyMapper.acceptApplyQuery(newpage, total, topicName, subjectUndertakingUnit, unitNature, projectLeader);
+        List<CheckApply> checkApplyList = acceptApplyMapper.acceptApplyQuery(newpage, total, topicName, subjectUndertakingUnit, unitNature, projectLeader,state);
 
         List<JSONObject> jsonObjectList = new ArrayList<>();
         //通过查询出来的文件id 获取文件的地址
@@ -188,4 +188,5 @@ public class AcceptApplyServiceImpl implements AcceptApplySerivce {
 
         return resultMap.success().message(pageBean);
     }
+
 }

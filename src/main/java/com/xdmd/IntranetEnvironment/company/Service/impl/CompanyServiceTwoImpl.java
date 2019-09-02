@@ -304,4 +304,54 @@ public class CompanyServiceTwoImpl implements CompanyServiceTwo {
         }
 
     }
+
+    //外网的的登陆
+    @Override
+    public ResultMap ExtranetLogin(String loginName, String password, HttpServletResponse response) {
+        //首先判断登陆名是否存在
+        Integer uid = null;
+        uid = companyMapper.queryLoginNameByExist(loginName);
+        if(uid == null){
+            return resultMap.fail().message("登陆名不存在");
+        }
+
+        //根据登陆名判断密码是否正确
+        String newPassword = MD5Utils.md5(password);    //首先对密码进行加密
+        String sqlPassword = companyMapper.querySqlPasswordByLoginName(loginName);//取出数据库中登陆名对应的密码
+        if(newPassword.equals(sqlPassword)){
+            return resultMap.fail().message("密码错误");
+        }
+
+        //判断身份
+        String identity = companyMapper.queryIdentity(uid);//根据登陆名获取身份
+        if(identity.equals("3")|| identity.equals("4")|| identity.equals("5")){
+            return resultMap.fail().message("内网账号不允许在外网登陆");
+        }
+
+        //此时为登陆成功，获取所有的用户数据
+        UserInformation userInformation = companyMapper.queryUserInformation(loginName);
+
+        LoginReturnContent loginReturnContent = new LoginReturnContent();
+        loginReturnContent.setRealName(userInformation.getRealName());
+        loginReturnContent.setIdentity(Integer.valueOf(userInformation.getIdentity()));
+        loginReturnContent.setUid(userInformation.getUid());
+        JSONObject parseObject = JSON.parseObject(loginReturnContent.toString());
+
+        //判断该账号是否是第一次登陆
+        String isFirst = userInformation.getIsFirst();
+        if(isFirst.equals("0")){
+            //第一次登陆
+            parseObject.put("isFirst",0);
+        }else {
+            //多次登陆
+            parseObject.put("isFirst",1);
+        }
+
+
+
+
+        return resultMap;
+
+
+    }
 }
