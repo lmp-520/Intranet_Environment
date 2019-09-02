@@ -63,7 +63,7 @@ public interface SubjectParticipatingUnitMapper {
      * @param subjectParticipatingUnitDTO
      * @return
      */
-    @Update("update subject_participating_unit SET\n" +
+    @Update(value = "update subject_participating_unit SET\n" +
             "bearing_units=#{bearingUnits},\n" +
             "participating_units=#{participatingUnits},\n" +
             "overseas_cooperation_units=#{overseasCooperationUnits},\n" +
@@ -75,7 +75,7 @@ public interface SubjectParticipatingUnitMapper {
             "professional_title=#{professionalTitle},\n" +
             "professional=#{professional},\n" +
             "work_task=#{workTask},\n" +
-            "working_time=#{workingTime},\n" +
+            "working_time=#{workingTime}\n" +
             "where\n" +
             "contract_id=#{contractId}")
     int updateInfo(SubjectParticipatingUnitDTO subjectParticipatingUnitDTO);

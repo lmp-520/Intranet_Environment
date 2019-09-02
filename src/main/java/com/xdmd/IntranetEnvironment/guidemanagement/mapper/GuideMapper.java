@@ -59,9 +59,8 @@ public interface GuideMapper {
     int insertGuideInfo(GuideCollection guideCollection);
 
     /**
-     * 根据单位id查询单位指南申报【外网】
-     * 注意:传的是单位id，不是指南申报id
-     * @param Uid
+     * 查询单位指南申报【外网】
+     * @param uid
      * @return
      */
     @Select(value = "<script>" +
@@ -82,7 +81,7 @@ public interface GuideMapper {
             "demonstration_point,\n" +
             "province_domain_mechanism,\n" +
             "contact_phone,\n" +
-            "declaration_status\t\n" +
+            "is_select\t" +
             "FROM\n" +
             "\tguide_collection gc,\n" +
             "\tdictionary d,\n" +
@@ -92,7 +91,7 @@ public interface GuideMapper {
             "\tgc.id = ugc.collection_id \n" +
             "\tAND gc.category = d.id \n" +
             "\tAND gc.domain = dic.id \n" +
-            "\tAND ugc.unit_id =#{Uid} \n" +
+            "\tAND ugc.unit_id =#{uid} \n" +
             "<if test ='null != guideName'>\n" +
             "gc.guide_name like CONCAT('%',#{guideName},'%')\n" +
             "</if>\n" +
@@ -112,10 +111,10 @@ public interface GuideMapper {
             "</where>" +
             "order by gc.id desc" +
             "</script>")
-    List<GuideCollection> getCollectionByUid(String guideName, Integer domain, Integer category, String fillUnit, String fillContacts, String contactPhone, int Uid);
+    List<Map> getUnitCollection(String guideName, Integer domain, Integer category, String fillUnit, String fillContacts, String contactPhone, int uid);
 
     /**
-     * [新增]单位关联指南征集【思路不清晰，暂不做】
+     * [新增]单位关联指南征集
      * @return
      */
     @Insert(value = "INSERT INTO unit_guide_collection (unit_id,collection_id)VALUES(#{unitId},#{collectionId})")
@@ -126,7 +125,7 @@ public interface GuideMapper {
      * 根据勾选的指南id更新相应指南的选中状态(没有用到)--汇总2
      * @param ids
      * @return
-    */
+     */
     @Select(value ="<script>" +
             "update guide_collection set is_select=1 where id in " +
             "<foreach\tcollection='list'\titem='gcId'\topen='(' separator=',' close=')'>" +
@@ -134,7 +133,9 @@ public interface GuideMapper {
             "</foreach>\n" +
             "</script>")
     @Results(value = { @Result(column = "id", property = "id") })
-    List<Map> getCollectionByIds(List<Long> ids);
+    List<Integer> updateIsSelectByIds(List<Long> ids);
+
+
     /**
      * 分页查询指南申报(内网)--汇总1
      * @param guideName
@@ -164,7 +165,7 @@ public interface GuideMapper {
             "demonstration_point,\n" +
             "province_domain_mechanism,\n" +
             "contact_phone,\n" +
-            "declaration_status\t" +
+            "is_select\t" +
             "FROM\n" +
             "\tguide_collection gc\t\n" +
             "\tINNER JOIN dictionary d ON gc.category = d.id\n" +
@@ -214,7 +215,7 @@ public interface GuideMapper {
      * 新增汇总信息【单条插入-暂未用到】(内网)--汇总3
      * @param guideSummary
      * @return
-     */
+
     @Insert(value = "INSERT INTO guide_summary\n" +
             "VALUES(\n" +
             "DEFAULT,\n" +
@@ -244,7 +245,7 @@ public interface GuideMapper {
             "#{creator},\n" +
             "DEFAULt)")
     int insertSummary(GuideSummary guideSummary);
-
+*/
 
 
     /**
@@ -287,7 +288,7 @@ public interface GuideMapper {
             "<if test ='null != researchContentTechnology'>\n" +
             "AND research_content_technology like CONCAT('%',#{researchContentTechnology},'%')\n" +
             "</if></where>\n" +
-            "GROUP BY gs.guide_summary_title,gs.ownership_domain,gs.project_time,gs.creator" +
+            "GROUP BY gs.guide_summary_title,gs.ownership_domain,gs.project_time,gs.creator\t" +
             "</script>")
     List<Map> getSummaryByParam(@Param("guideSummaryTitle") String guideSummaryTitle, @Param("fillUnit") String fillUnit, @Param("domain") Integer domain, @Param("category") Integer category, @Param("projectTime") String projectTime, @Param("researchContentTechnology") String researchContentTechnology);
 
@@ -295,9 +296,7 @@ public interface GuideMapper {
      * 根据汇总标题查询汇总指南--汇总5
      * @return
      */
-    @Select(value = "<script>" +
-            "SELECT\t" +
-            "gs.id," +
+    @Select(value = "SELECT\t" +
             "gs.guide_name,\n" +
             "dic.content as domain,\n" +
             "d.content as category,\n" +
@@ -324,9 +323,7 @@ public interface GuideMapper {
             "FROM\n" +
             "guide_summary gs,dictionary dic,dictionary d\n" +
             "where gs.domain = dic.id and gs.category=d.id\n" +
-            "<if test ='null != guideSummaryTitle'>\n" +
-            "AND gs.guide_summary_title like CONCAT('%',#{guideSummaryTitle},'%')\n" +
-            "</if></script>")
-    List<Map> getSummaryByGuideSummaryTitle(@Param("guideSummaryTitle") String guideSummaryTitle);
+            "AND gs.guide_summary_title = #{guideSummaryTitle})\n")
+    List<Map> getSummaryByGuideSummaryTitle(@Param("guideSummaryTitle")String guideSummaryTitle);
 
 }

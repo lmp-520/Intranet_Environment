@@ -76,7 +76,6 @@ public interface OpenTenderService {
      * 招标附件上传
      * @param token
      * @param response
-     * @param oid
      * @param winningDocument
      * @param transactionAnnouncement
      * @param noticeTransaction
@@ -86,7 +85,7 @@ public interface OpenTenderService {
      * @throws IOException
      * @throws FileUploadException
      */
-    ResultMap tenderMultiUpload(String token, HttpServletResponse response, int oid, MultipartFile winningDocument, MultipartFile transactionAnnouncement, MultipartFile noticeTransaction, MultipartFile responseFile, MultipartFile otherAttachments) throws IOException, FileUploadException;
+    ResultMap tenderMultiUpload(String token, HttpServletResponse response,MultipartFile winningDocument, MultipartFile transactionAnnouncement, MultipartFile noticeTransaction, MultipartFile responseFile, MultipartFile otherAttachments) throws IOException, FileUploadException;
 
 
 

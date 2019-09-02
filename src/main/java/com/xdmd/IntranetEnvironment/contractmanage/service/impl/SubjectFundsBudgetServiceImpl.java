@@ -53,6 +53,8 @@ public  class SubjectFundsBudgetServiceImpl implements SubjectFundsBudgetService
      */
     @Override
     public int UpdateSubjectFundsBudget(SubjectFundsBudgetDTO subjectFundsBudgetDTO) {
-        return subjectFundsBudgetMapper.UpdateSubjectFundsBudget(subjectFundsBudgetDTO);
+         int updateNum=subjectFundsBudgetMapper.UpdateSubjectFundsBudget(subjectFundsBudgetDTO);
+        System.out.println(updateNum);
+        return updateNum;
     }
 }

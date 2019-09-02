@@ -71,4 +71,5 @@ public class SubjectFundsBudgetController {
     public int UpdateSubjectFundsBudget(SubjectFundsBudgetDTO subjectFundsBudgetDTO) {
         return subjectFundsBudgetService.UpdateSubjectFundsBudget(subjectFundsBudgetDTO);
     }
+
 }

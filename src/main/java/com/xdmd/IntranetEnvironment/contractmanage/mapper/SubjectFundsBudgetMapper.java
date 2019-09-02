@@ -143,7 +143,7 @@ public interface SubjectFundsBudgetMapper {
             "provincial_current_budget=#{provincialCurrentBudget},\n" +
             "provincial_next_budget=#{provincialNextBudget},\n" +
             "provincial_after_budget=#{provincialAfterBudget},\n" +
-            "provincial_note_budget=#{},\n" +
+            " provincial_note_budget=#{ provincialNoteBudget },\n" +
             "department_budget=#{departmentBudget},\n" +
             "department_current_budget=#{departmentCurrentBudget},\n" +
             "department_next_budget=#{departmentNextBudget},\n" +
@@ -173,7 +173,7 @@ public interface SubjectFundsBudgetMapper {
             "equipment_note_budget=#{equipmentNoteBudget},\n" +
             "material_budget=#{materialBudget},\n" +
             "material_current_budget=#{materialCurrentBudget},\n" +
-            "material_next_budget=#{materialNextBudget},\n" +
+            "material_next_budget=#{materialNextBudget}, \n" +
             "material_after_budget=#{materialAfterBudget},\n" +
             "material_supporting_budget=#{materialSupportingBudget},\n" +
             "material_note_budget=#{materialNoteBudget},\n" +
@@ -214,6 +214,7 @@ public interface SubjectFundsBudgetMapper {
             "daily_supporting_budget=#{dailySupportingBudget},\n" +
             "daily_note_budget=#{dailyNoteBudget}\n" +
             "WHERE\n" +
-            "contract_id=#{contractId}")
+            "contract_id=#{contractId}\n")
     int UpdateSubjectFundsBudget(SubjectFundsBudgetDTO subjectFundsBudgetDTO);
+
 }

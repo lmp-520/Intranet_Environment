@@ -1,6 +1,7 @@
 package com.xdmd.IntranetEnvironment.contractmanage.controller;
 
 
+import com.xdmd.IntranetEnvironment.common.FileUploadException;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.contractmanage.pojo.ContractManageDTO;
 import com.xdmd.IntranetEnvironment.contractmanage.service.ContractManageService;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -201,7 +203,6 @@ public class ContractManageController {
      * 合同附件上传【外网】
      *
      * @param file
-     * @param cid
      * @return
      */
     @PostMapping("contractFileUpload")
@@ -209,15 +210,68 @@ public class ContractManageController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "cid", value = "合同id"),
     })
-    public String ContractFileUpload(MultipartFile file, int cid) {
+    public String ContractFileUpload(MultipartFile file) {
         String OK = null;
         try {
-            OK = contractManageService.ContractFileUpload(file, cid);
+            OK = contractManageService.ContractFileUpload(file);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return OK;
     }
+
+
+
+    /**
+     * 中期检查附件上传【外网】
+     *
+     * @param midCheckAnnex         中期检查附件
+     * @param expertAssessmentAnnex 专家评估附件
+     * @param subjectSuggestAnnex    课题建议附件
+     * @return
+     */
+    @PostMapping(value = "MidCheckFileUpload", headers = "content-type=multipart/form-data")
+    @ApiOperation(value = "中期检查附件上传【外网】")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "cid", value = "合同主表id", required = true),
+            @ApiImplicitParam(name = "midCheckAnnex", value = "中期检查附件", dataType = "file", paramType = "form", allowMultiple = true),
+            @ApiImplicitParam(name = "expertAssessmentAnnex", value = "专家评估附件", dataType = "file", paramType = "form", allowMultiple = true),
+            @ApiImplicitParam(name = "subjectSuggestAnnex", value = "课题建议附件", dataType = "file", paramType = "form", allowMultiple = true)
+
+    })
+    public ResultMap tenderFileUpload(//@CookieValue(value = "IntranecToken", required = false) String token, HttpServletResponse response,
+                                      MultipartFile midCheckAnnex,
+                                      MultipartFile expertAssessmentAnnex,
+                                      MultipartFile subjectSuggestAnnex) {
+        String token = "aaa";
+        HttpServletResponse response = null;
+        if (StringUtils.isEmpty(token)) {
+            return resultMap.fail().message("请先登录");
+        }
+        try {
+            resultMap = contractManageService.midCheckFileUpload(token, response,midCheckAnnex, expertAssessmentAnnex, subjectSuggestAnnex);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            log.error("OpenTenderController 中 tenderFileUpload 方法 -- " + e.getMessage());
+            return resultMap.fail().message("系统异常");
+        } catch (FileUploadException e) {
+            e.printStackTrace();
+            log.error("OpenTenderController 中 tenderFileUpload 方法 -- " + e.getMessage());
+            return resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
+
+
+
+
+
+
+
+
+
+
 
 
     /**

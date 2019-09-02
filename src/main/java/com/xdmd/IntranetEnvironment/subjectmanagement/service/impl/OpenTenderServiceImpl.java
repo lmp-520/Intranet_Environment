@@ -260,8 +260,6 @@ public class OpenTenderServiceImpl implements OpenTenderService {
 
     /**
      * 招标附件上传
-     *
-     * @param oid                     招标备案表id
      * @param winningDocument         中标文件附件
      * @param transactionAnnouncement 成交公告附件
      * @param noticeTransaction       成交通知书附件
@@ -270,7 +268,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
      * @throws IOException
      */
     @Override
-    public ResultMap tenderMultiUpload(String token, HttpServletResponse response, int oid, MultipartFile winningDocument, MultipartFile transactionAnnouncement, MultipartFile noticeTransaction, MultipartFile responseFile,MultipartFile otherAttachments) throws IOException, FileUploadException {
+    public ResultMap tenderMultiUpload(String token, HttpServletResponse response,MultipartFile winningDocument, MultipartFile transactionAnnouncement, MultipartFile noticeTransaction, MultipartFile responseFile, MultipartFile otherAttachments) throws IOException, FileUploadException {
 //      User user = new User();
 //        try {
 //            user = tokenService.compare(response, token);
@@ -292,10 +290,13 @@ public class OpenTenderServiceImpl implements OpenTenderService {
 //        Integer uid = user.getId();
 //        String username = user.getUsername();
 
-
         String username = "测试人员";
+        //获取招标备案表的id
+        OpenTender openTender=new OpenTender();
+        int oid=openTender.getId();
         //根据招标备案表的id 获取该公司的名字
         String unitName = openTenderMapper.queryUnitNameByoid(oid);
+
         try {
             /**
              * 中标文件附件
@@ -307,7 +308,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
                 resultMap.fail().message("中标文件附件的文件格式不正确,请上传正确的文件格式");
             }
             //获取中标文件附件的地址
-            String winningDocumentUrl = multiFileUploadUntil(winningDocument, unitName, "中标文件附件", oid);
+            String winningDocumentUrl = fileUploadUntil(winningDocument, unitName, "中标文件附件", oid);
             //获取文件后缀名
             String winningDocumentSuffixName = winningDocumentName.substring(winningDocumentName.lastIndexOf(".") + 1);
             // 获取文件大小
@@ -326,7 +327,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
                 resultMap.fail().message("成交公告附件的文件格式不正确,请上传正确的文件格式");
             }
             //获取成交公告附件的地址
-            String transactionAnnouncementUrl = multiFileUploadUntil(transactionAnnouncement, unitName, "成交公告附件", oid);
+            String transactionAnnouncementUrl = fileUploadUntil(transactionAnnouncement, unitName, "成交公告附件", oid);
             //获取文件后缀名
             String transactionAnnouncementSuffixName = transactionAnnouncementName.substring(winningDocumentName.lastIndexOf(".") + 1);
             // 获取文件大小
@@ -345,7 +346,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
                 resultMap.fail().message("成交通知书附件的文件格式不正确,请上传正确的文件格式");
             }
             //获取成交通知书附件的地址
-            String noticeTransactionUrl = multiFileUploadUntil(noticeTransaction, unitName, "成交通知书附件", oid);
+            String noticeTransactionUrl = fileUploadUntil(noticeTransaction, unitName, "成交通知书附件", oid);
             //获取文件后缀名
             String noticeTransactionSuffixName = noticeTransactionName.substring(noticeTransactionName.lastIndexOf(".") + 1);
             // 获取文件大小
@@ -364,7 +365,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
                 resultMap.fail().message("成交通知书附件的文件格式不正确,请上传正确的文件格式");
             }
             //获取响应文件附件的地址
-            String responseFileUrl = multiFileUploadUntil(responseFile, unitName, "响应文件附件", oid);
+            String responseFileUrl = fileUploadUntil(responseFile, unitName, "响应文件附件", oid);
             //获取文件后缀名
             String responseFileSuffixName = responseFileName.substring(responseFileName.lastIndexOf(".") + 1);
             // 获取文件大小
@@ -382,7 +383,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
                 resultMap.fail().message("其他附件文件格式不正确,请上传正确的文件格式");
             }
             //获取响应文件附件的地址
-            String otherAttachmentsUrl = multiFileUploadUntil(responseFile, unitName, "其他附件", oid);
+            String otherAttachmentsUrl = fileUploadUntil(responseFile, unitName, "其他附件", oid);
             //获取文件后缀名
             String otherAttachmentsSuffixName = responseFileName.substring(otherAttachmentsName.lastIndexOf(".") + 1);
             // 获取文件大小
@@ -416,7 +417,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
      * @return
      * @throws IOException
      */
-    public String multiFileUploadUntil(MultipartFile file, String unitName, String fileType, int oid) throws IOException, FileUploadException {
+    public String fileUploadUntil(MultipartFile file, String unitName, String fileType, int oid) throws IOException, FileUploadException {
 
         //判断文件是否为空
         if (file.isEmpty()) {

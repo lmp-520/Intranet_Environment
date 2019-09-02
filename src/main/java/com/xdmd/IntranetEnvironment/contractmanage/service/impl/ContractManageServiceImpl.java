@@ -3,16 +3,14 @@ package com.xdmd.IntranetEnvironment.contractmanage.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.xdmd.IntranetEnvironment.common.AnnexUpload;
-import com.xdmd.IntranetEnvironment.common.FileSuffixJudge;
-import com.xdmd.IntranetEnvironment.common.ResultMap;
-import com.xdmd.IntranetEnvironment.common.UploadFileMapper;
+import com.xdmd.IntranetEnvironment.common.*;
 import com.xdmd.IntranetEnvironment.contractmanage.mapper.ContractManageMapper;
 import com.xdmd.IntranetEnvironment.contractmanage.pojo.ContractManageDTO;
 import com.xdmd.IntranetEnvironment.contractmanage.service.ContractManageService;
 import com.xdmd.IntranetEnvironment.subjectmanagement.exception.InsertSqlException;
 import com.xdmd.IntranetEnvironment.subjectmanagement.exception.UpdateSqlException;
 import com.xdmd.IntranetEnvironment.subjectmanagement.exception.UpdateStatusException;
+import com.xdmd.IntranetEnvironment.subjectmanagement.service.impl.OpenTenderServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -202,7 +200,7 @@ public class ContractManageServiceImpl implements ContractManageService {
      */
     @Override
     public int updateContractByCid(int midCheckAnnexId, int expertAssessmentAnnexId, int subjectSuggestAnnexId, int cid) {
-        int num = contractManageMapper.updateContractByCid(midCheckAnnexId, expertAssessmentAnnexId, subjectSuggestAnnexId, cid);
+        int num = contractManageMapper.updateMidCheckAnnextByCid(midCheckAnnexId, expertAssessmentAnnexId, subjectSuggestAnnexId, cid);
         return num;
     }
 
@@ -227,7 +225,9 @@ public class ContractManageServiceImpl implements ContractManageService {
      * @throws IOException
      */
     @Override
-    public String ContractFileUpload(MultipartFile file, int cid) throws IOException {
+    public String ContractFileUpload(MultipartFile file) throws IOException {
+        ContractManageDTO contractManageDTO=new ContractManageDTO();
+        int cid=contractManageDTO.getId();
         //判断文件是否为空
         if (file.isEmpty()) {
             return "上传文件不可为空";
@@ -278,8 +278,123 @@ public class ContractManageServiceImpl implements ContractManageService {
         return "上传失败";
     }
 
+    /**
+     * 中期检查附件上传
+     * @param token
+     * @param response
+     * @param midCheckAnnex
+     * @param expertAssessmentAnnex
+     * @param subjectSuggestAnnex
+     * @return
+     * @throws IOException
+     * @throws FileUploadException
+     */
+    @Override
+    public ResultMap midCheckFileUpload(String token, HttpServletResponse response,MultipartFile midCheckAnnex, MultipartFile expertAssessmentAnnex, MultipartFile subjectSuggestAnnex) throws IOException, FileUploadException {
+//      User user = new User();
+//        try {
+//            user = tokenService.compare(response, token);
+//        } catch (NullPointerException e) {
+//            e.printStackTrace();
+//            return resultMap.fail().message("请先登录");
+//        } catch (UserNameNotExistentException e) {
+//            e.printStackTrace();
+//            return resultMap.fail().message("请先登录");
+//        } catch (ClaimsNullException e){
+//            e.printStackTrace();
+//            return resultMap.fail().message("请先登录");
+//        }catch (Exception e) {
+//            e.printStackTrace();
+//            log.error("MenuServiceImpl 中 TokenService 出现问题");
+//            return resultMap.message("系统异常");
+//        }
+//        //当前登录者
+//        Integer uid = user.getId();
+//        String username = user.getUsername();
 
 
+        String username = "测试人员";
+        //根据招标备案表的id 获取该公司的名字
+        ContractManageDTO contractManageDTO=new ContractManageDTO();
+        int cid=contractManageDTO.getId();
+        String unitName = contractManageMapper.queryUnitNameBycid(cid);
+        OpenTenderServiceImpl openTenderServiceImpl=new OpenTenderServiceImpl();
+        try {
+            /**
+             * 中期检查附件
+             */
+            //判断上传中标文件附件的后缀名是否正确
+            String midCheckAnnexName = midCheckAnnex.getOriginalFilename();
+            Boolean aBoolean = FileSuffixJudge.suffixJudge(midCheckAnnexName);
+            if (aBoolean == false) {
+                resultMap.fail().message("中期检查附件的文件格式不正确,请上传正确的文件格式");
+            }
+            //获取中标文件附件的地址
+            String midCheckAnnexUrl = openTenderServiceImpl.fileUploadUntil(midCheckAnnex, unitName, "中期检查附件", cid);
+            //获取文件后缀名
+            String midCheckAnnexSuffixName = midCheckAnnexName.substring(midCheckAnnexName.lastIndexOf(".") + 1);
+            // 获取文件大小
+            File midCheckAnnexFile = new File(midCheckAnnexUrl);
+            String winningDocumentFileSize = String.valueOf(midCheckAnnexFile.length());
+            AnnexUpload midCheckFileAnnex = new AnnexUpload(0, midCheckAnnexUrl,midCheckAnnexName, "中标文件附件", midCheckAnnexSuffixName, winningDocumentFileSize, null, username);
+            //把该文件上传到文件表中
+            uploadFileMapper.insertUpload(midCheckFileAnnex);
+            /**
+             * 专家评估附件
+             */
+            //判断上传成交公告附件的后缀名是否正确
+            String expertAssessmentAnnexName = expertAssessmentAnnex.getOriginalFilename();
+            Boolean bBoolean = FileSuffixJudge.suffixJudge(expertAssessmentAnnexName);
+            if (bBoolean == false) {
+                resultMap.fail().message("专家评估附件的文件格式不正确,请上传正确的文件格式");
+            }
+            //获取成交公告附件的地址
+            String expertAssessmentAnnexUrl = openTenderServiceImpl.fileUploadUntil(expertAssessmentAnnex, unitName, "专家评估附件", cid);
+            //获取文件后缀名
+            String expertAssessmentAnnexSuffixName = expertAssessmentAnnexName.substring(expertAssessmentAnnexName.lastIndexOf(".") + 1);
+            // 获取文件大小
+            File expertAssessmentAnnexFile = new File(expertAssessmentAnnexUrl);
+            String expertAssessmentAnnexFileSize = String.valueOf(expertAssessmentAnnexFile.length());
+            AnnexUpload expertAssessmentFileAnnex = new AnnexUpload(0, expertAssessmentAnnexUrl, expertAssessmentAnnexName, "专家评估附件", expertAssessmentAnnexSuffixName, expertAssessmentAnnexFileSize, null, username);
+            //把该文件上传到文件表中
+            uploadFileMapper.insertUpload(expertAssessmentFileAnnex);
+            /**
+             * 课题建议附件
+             */
+            //判断上传成交通知书附件的后缀名是否正确
+            String subjectSuggestAnnexName = subjectSuggestAnnex.getOriginalFilename();
+            Boolean cBoolean = FileSuffixJudge.suffixJudge(subjectSuggestAnnexName);
+            if (cBoolean == false) {
+                resultMap.fail().message("成交通知书附件的文件格式不正确,请上传正确的文件格式");
+            }
+            //获取成交通知书附件的地址
+            String subjectSuggestAnnexUrl = openTenderServiceImpl.fileUploadUntil(subjectSuggestAnnex, unitName, "课题建议附件", cid);
+            //获取文件后缀名
+            String subjectSuggestAnnexSuffixName = subjectSuggestAnnexName.substring(subjectSuggestAnnexName.lastIndexOf(".") + 1);
+            // 获取文件大小 
+            File subjectSuggestAnnexFile = new File(subjectSuggestAnnexUrl);
+            String subjectSuggestAnnexFileSize = String.valueOf(subjectSuggestAnnexFile.length());
+            AnnexUpload subjectSuggestFileAnnex = new AnnexUpload(0, subjectSuggestAnnexUrl, subjectSuggestAnnexName, "课题建议附件", subjectSuggestAnnexSuffixName, subjectSuggestAnnexFileSize, null, username);
+            //把该文件上传到文件表中
+            uploadFileMapper.insertUpload(subjectSuggestFileAnnex);
+
+            /**
+             * 把上传附件的id取出，存到招标备案表中
+             */
+            contractManageMapper.updateMidCheckAnnextByCid(midCheckFileAnnex.getId(),expertAssessmentFileAnnex.getId(),subjectSuggestFileAnnex.getId(),cid);
+            return resultMap.success().message("多个附件上传成功");
+        } catch (IOException e) {
+            e.printStackTrace();
+            log.error("附件上传出错:" + e.getMessage());
+            throw new FileUploadException("附件上传失败");
+        } catch (FileUploadException e) {
+            e.printStackTrace();
+            resultMap.success().message("附件上传失败");
+    }
+        return resultMap;
+}
+    
+    
 
     /**
      * 单位管理员审核

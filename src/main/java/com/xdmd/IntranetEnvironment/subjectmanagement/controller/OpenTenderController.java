@@ -148,7 +148,6 @@ public class OpenTenderController {
 
     })
     public ResultMap tenderFileUpload(//@CookieValue(value = "IntranecToken", required = false) String token, HttpServletResponse response,
-                                      int oid,
                                       MultipartFile winningDocument,
                                       MultipartFile transactionAnnouncement,
                                       MultipartFile noticeTransaction,
@@ -160,7 +159,7 @@ public class OpenTenderController {
             return resultMap.fail().message("请先登录");
         }
         try {
-            resultMap = openTenderService.tenderMultiUpload(token, response, oid, winningDocument, transactionAnnouncement, noticeTransaction, responseFile,otherAttachments);
+            resultMap = openTenderService.tenderMultiUpload(token, response,winningDocument, transactionAnnouncement, noticeTransaction, responseFile,otherAttachments);
 
         } catch (IOException e) {
             e.printStackTrace();

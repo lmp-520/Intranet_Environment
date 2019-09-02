@@ -7,9 +7,12 @@ import com.xdmd.IntranetEnvironment.guidemanagement.pojo.GuideCollectionLimitTim
 import com.xdmd.IntranetEnvironment.guidemanagement.pojo.GuideSummary;
 import com.xdmd.IntranetEnvironment.guidemanagement.service.GuideService;
 import io.swagger.annotations.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -21,14 +24,16 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/environment/guide/")
 public class GuideController {
+    private static final Logger log = LoggerFactory.getLogger(GuideController.class);
     @Autowired
     GuideService guideService;
     ResultMap resultMap=new ResultMap();
 
     @ApiOperation(value = "新增指南申报信息")
     @PostMapping(value = "insertGuideInfo")
-    public ResultMap insertGuideInfo(@RequestBody GuideCollection guideCollection){
-        return resultMap=guideService.insertGuideInfo(guideCollection);
+    public ResultMap insertGuideInfo(@CookieValue(value = "token",required = false) String token, HttpServletResponse response,
+                                     @RequestBody GuideCollection guideCollection){
+        return resultMap=guideService.insertGuideInfo(token,response,guideCollection);
     }
 
     @ApiOperation(value = "分页查询指南申报信息【内网】" )
@@ -61,25 +66,27 @@ public class GuideController {
     }
 
     /**
-     * 根据单位id查询
-     * @param Uid
+     * 根据单位id展示相应单位指南
      * @return
      */
-    @ApiOperation(value = "根据单位id展示相应单位指南(注意:传的是单位id,不是指南申报id)")
+    @ApiOperation(value = "根据单位id展示相应单位指南")
     @ApiImplicitParams({
+            @ApiImplicitParam(name="uid",value = "单位id",dataType = "int",required = false),
             @ApiImplicitParam(name="guideName",value = "指南建议申报名称",dataType = "string"),
             @ApiImplicitParam(name="domain",value = "所属领域",dataType = "int"),
             @ApiImplicitParam(name="category",value = "所属类别",dataType = "int"),
             @ApiImplicitParam(name="fillContacts",value = "填报联系人",dataType = "string"),
             @ApiImplicitParam(name="fillUnit",value = "填报单位",dataType = "string"),
             @ApiImplicitParam(name="contactPhone",value = "填报联系人电话（手机）",dataType = "string"),
-            @ApiImplicitParam(name="Uid",value = "单位id",dataType = "int",required = true),
             @ApiImplicitParam(name="pageNum",value = "当前页数",dataType = "int",required = true),
             @ApiImplicitParam(name="pageSize",value = "每页显示条数",dataType = "int",required = true)
     })
-    @GetMapping(value = "getCollectionByUid")
-    public  ResultMap getCollectionByUid(String guideName,Integer domain,Integer category,String fillUnit,String fillContacts,String contactPhone,int Uid,int pageNum,int pageSize) {
-        return  resultMap=guideService.getCollectionByUid(guideName,domain,category,fillUnit,fillContacts,contactPhone,Uid,pageNum,pageSize);
+    @GetMapping(value = "getUnitCollection")
+    public  ResultMap getUnitCollection(//@CookieValue(value = "token",required = false) String token, HttpServletResponse response,
+                                         String guideName, Integer domain, Integer category, String fillUnit, String fillContacts, String contactPhone, int uid, int pageNum, int pageSize) {
+        String token="aaa";
+        HttpServletResponse response = null;
+        return  resultMap=guideService.getUnitCollection(token,response,guideName,domain,category,fillUnit,fillContacts,contactPhone,uid,pageNum,pageSize);
     }
 
     /**
@@ -94,16 +101,19 @@ public class GuideController {
         return resultMap=guideService.insert(unitId,collectionId);
     }
 
+
+
+
     /**
      * 根据勾选的指南id更新相应指南申报选中状态
      * @param ids
      * @return
      */
-    @PostMapping(value = "getCollectionByIds")
+    @PostMapping(value = "updateIsSelectByIds")
     @ApiOperation(value = "根据勾选的指南id更新相应指南申报选中状态(注意:传的是指南申报id,不是汇总表id)")
-    public ResultMap getCollectionByIds(@ApiParam("指南id集合") @RequestBody List<Long> ids){
+    public ResultMap updateIsSelectByIds(@RequestBody List<Long> ids){
         if(ids != null && !ids.equals("") && !ids.equals("null")){
-             resultMap=guideService.getCollectionByIds(ids);
+             resultMap=guideService.updateIsSelectByIds(ids);
         }
         return resultMap;
     }
@@ -112,12 +122,15 @@ public class GuideController {
      * 新增汇总信息【单条插入】
      * @param guideSummary
      * @return
-     */
+
     @ApiOperation(value = "新增汇总信息",notes = "【单条插入】")
     @PostMapping(value = "insertSummary")
     public ResultMap insertSummary(@RequestBody GuideSummary guideSummary){
         return resultMap= guideService.insertSummary(guideSummary);
-    }
+    } */
+
+
+
 
     /**
      * 新增汇总信息实现【批量插入】
@@ -166,11 +179,10 @@ public class GuideController {
      * @param guideSummaryTitle
      * @return
      */
-    @GetMapping(value = "getSummaryByTitle")
+    @GetMapping(value = "getSummaryByGid")
     @ApiOperation(value = "实现根据汇总标题查询汇总信息【内网】")
-    @ApiImplicitParam(name="guideSummaryTitle",value = "汇总标题",dataType = "string")
-    public ResultMap getSummaryByGuideSummaryTitle(@RequestParam("guideSummaryTitle") String guideSummaryTitle){
+    @ApiImplicitParam(name="guideSummaryTitle",value = "汇总标题")
+    public ResultMap getSummaryByGuideSummaryTitle(String guideSummaryTitle) {
         return resultMap=guideService.getSummaryByGuideSummaryTitle(guideSummaryTitle);
-
     }
 }
