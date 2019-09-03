@@ -207,4 +207,10 @@ public interface ProjectProgressMapper {
     int updateSubjectProgressByPid(int openReportAnnexId, int subjectProgressAnnexId, int fundProgressAnnexId, int expertSuggestAnnexId, int pid);
 
 
+    /**
+     * 根据课题进展id获取单位名称
+     * @param pid
+     * @return
+     */
+    String queryUnitNameBypid(int pid);
 }

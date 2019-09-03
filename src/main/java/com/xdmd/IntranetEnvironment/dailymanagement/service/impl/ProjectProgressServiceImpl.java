@@ -3,13 +3,20 @@ package com.xdmd.IntranetEnvironment.dailymanagement.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.xdmd.IntranetEnvironment.common.ResultMap;
+import com.xdmd.IntranetEnvironment.common.*;
 import com.xdmd.IntranetEnvironment.dailymanagement.mapper.ProjectProgressMapper;
 import com.xdmd.IntranetEnvironment.dailymanagement.pojo.*;
 import com.xdmd.IntranetEnvironment.dailymanagement.service.ProjectProgressService;
+import com.xdmd.IntranetEnvironment.subjectmanagement.service.impl.OpenTenderServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -19,9 +26,12 @@ import java.util.List;
  */
 @Service
 public class ProjectProgressServiceImpl implements ProjectProgressService {
+    private static final Logger log = LoggerFactory.getLogger(ProjectProgressServiceImpl.class);
+    ResultMap resultMap=new ResultMap();
     @Autowired
     ProjectProgressMapper projectProgressMapper;
-    ResultMap resultMap=new ResultMap();
+    @Autowired
+    UploadFileMapper uploadFileMapper;
 
     /**
      * [新增] 课题进展主体
@@ -280,6 +290,142 @@ public class ProjectProgressServiceImpl implements ProjectProgressService {
         }catch (Exception e){
             e.printStackTrace();
             resultMap.success().message("系统异常");
+        }
+        return resultMap;
+    }
+
+
+    /**
+     * 课题进展附件上传---[缺少更新附件]
+     * @param token
+     * @param response
+     * @param openReportAnnex     开题报告附件
+     * @param expertSuggestAnnex 专家意见附件
+     * @param subjectProgressAnnex 课题进展附件
+     * @param fundProgressAnnex   进度经费使用情况附件
+     * @return
+     */
+    @Override
+    public ResultMap ProgressMultiUpload(String token, HttpServletResponse response, MultipartFile openReportAnnex, MultipartFile expertSuggestAnnex, MultipartFile subjectProgressAnnex, MultipartFile fundProgressAnnex) throws FileUploadException {
+        //      User user = new User();
+//        try {
+//            user = tokenService.compare(response, token);
+//        } catch (NullPointerException e) {
+//            e.printStackTrace();
+//            return resultMap.fail().message("请先登录");
+//        } catch (UserNameNotExistentException e) {
+//            e.printStackTrace();
+//            return resultMap.fail().message("请先登录");
+//        } catch (ClaimsNullException e){
+//            e.printStackTrace();
+//            return resultMap.fail().message("请先登录");
+//        }catch (Exception e) {
+//            e.printStackTrace();
+//            log.error("MenuServiceImpl 中 TokenService 出现问题");
+//            return resultMap.message("系统异常");
+//        }
+//        //当前登录者
+//        Integer uid = user.getId();
+//        String username = user.getUsername();
+
+
+        String username = "当前登录者";
+        //根据课题进展表的id 获取该公司的名字
+        ProjectProgressDTO projectProgressDTO=new ProjectProgressDTO();
+        int pid=projectProgressDTO.getId();
+        String unitName = projectProgressMapper.queryUnitNameBypid(pid);
+        OpenTenderServiceImpl openTenderServiceImpl=new OpenTenderServiceImpl();
+        try {
+            /**
+             * 开题报告附件
+             */
+            //判断上传中标文件附件的后缀名是否正确
+            String openReportAnnexName = openReportAnnex.getOriginalFilename();
+            Boolean aBoolean = FileSuffixJudge.suffixJudge(openReportAnnexName);
+            if (aBoolean == false) {
+                resultMap.fail().message("开题报告附件的文件格式不正确,请上传正确的文件格式");
+            }
+            //获取开题报告附件的地址
+            String openReportAnnexUrl = openTenderServiceImpl.fileUploadUntil(openReportAnnex, unitName, "开题报告附件", pid);
+            //获取文件后缀名
+            String openReportAnnexSuffixName = openReportAnnexName.substring(openReportAnnexName.lastIndexOf(".") + 1);
+            // 获取文件大小
+            File openReportAnnexFile = new File(openReportAnnexUrl);
+            String openReportAnnexFileSize = String.valueOf(openReportAnnexFile.length());
+            AnnexUpload openReportAnnexData = new AnnexUpload(0, openReportAnnexUrl,openReportAnnexName, "开题报告附件", openReportAnnexSuffixName, openReportAnnexFileSize, null, username);
+            //把该文件上传到文件表中
+            uploadFileMapper.insertUpload(openReportAnnexData);
+            /**
+             * 专家意见附件
+             */
+            //判断上传专家意见附件的后缀名是否正确
+            String expertSuggestAnnexName = expertSuggestAnnex.getOriginalFilename();
+            Boolean bBoolean = FileSuffixJudge.suffixJudge(expertSuggestAnnexName);
+            if (bBoolean == false) {
+                resultMap.fail().message("专家意见附件附件的文件格式不正确,请上传正确的文件格式");
+            }
+            //获取专家意见附件的地址
+            String expertSuggestAnnexUrl = openTenderServiceImpl.fileUploadUntil(expertSuggestAnnex, unitName, "专家论证意见附件", pid);
+            //获取文件后缀名
+            String expertSuggestAnnexSuffixName = expertSuggestAnnexName.substring(expertSuggestAnnexName.lastIndexOf(".") + 1);
+            // 获取文件大小
+            File expertSuggestAnnexFile = new File(expertSuggestAnnexUrl);
+            String expertSuggestAnnexFileSize = String.valueOf(expertSuggestAnnexFile.length());
+            AnnexUpload expertSuggestAnnexData = new AnnexUpload(0, expertSuggestAnnexUrl, expertSuggestAnnexName, "专家论证意见附件", expertSuggestAnnexSuffixName, expertSuggestAnnexFileSize, null, username);
+            //把该文件上传到文件表中
+            uploadFileMapper.insertUpload(expertSuggestAnnexData);
+            /**
+             * 课题进展附件
+             */
+            //判断上传课题进展附件的后缀名是否正确
+            String subjectProgressAnnexName = subjectProgressAnnex.getOriginalFilename();
+            Boolean cBoolean = FileSuffixJudge.suffixJudge(subjectProgressAnnexName);
+            if (cBoolean == false) {
+                resultMap.fail().message("课题进展附件的文件格式不正确,请上传正确的文件格式");
+            }
+            //获取课题进展附件的地址
+            String subjectProgressAnnexUrl = openTenderServiceImpl.fileUploadUntil(subjectProgressAnnex, unitName, "课题进展附件", pid);
+            //获取文件后缀名
+            String subjectProgressAnnexSuffixName = subjectProgressAnnexName.substring(subjectProgressAnnexName.lastIndexOf(".") + 1);
+            // 获取文件大小
+            File subjectProgressAnnexFile = new File(subjectProgressAnnexUrl);
+            String subjectProgressAnnexFileSize = String.valueOf(subjectProgressAnnexFile.length());
+            AnnexUpload subjectProgressAnnexData = new AnnexUpload(0, subjectProgressAnnexUrl, subjectProgressAnnexName, "课题进展附件", subjectProgressAnnexSuffixName, subjectProgressAnnexFileSize, null, username);
+            //把该文件上传到文件表中
+            uploadFileMapper.insertUpload(subjectProgressAnnexData);
+
+            /**
+             * 进度经费使用情况附件
+             */
+            //判断上传进度经费使用情况附件的后缀名是否正确
+            String fundProgressAnnexName = fundProgressAnnex.getOriginalFilename();
+            Boolean dBoolean = FileSuffixJudge.suffixJudge(fundProgressAnnexName);
+            if (cBoolean == false) {
+                resultMap.fail().message("进度经费使用情况附件的文件格式不正确,请上传正确的文件格式");
+            }
+            //获取进度经费使用情况附件的地址
+            String fundProgressAnnexUrl = openTenderServiceImpl.fileUploadUntil(fundProgressAnnex, unitName, "进度经费使用情况附件", pid);
+            //获取文件后缀名
+            String fundProgressAnnexSuffixName = fundProgressAnnexName.substring(fundProgressAnnexName.lastIndexOf(".") + 1);
+            // 获取文件大小
+            File fundProgressAnnexFile = new File(fundProgressAnnexUrl);
+            String fundProgressAnnexFileSize = String.valueOf(fundProgressAnnexFile.length());
+            AnnexUpload fundProgressAnnexData = new AnnexUpload(0, fundProgressAnnexUrl, fundProgressAnnexName, "进度经费使用情况附件", fundProgressAnnexSuffixName, fundProgressAnnexFileSize, null, username);
+            //把该文件上传到文件表中
+            uploadFileMapper.insertUpload(fundProgressAnnexData);
+
+            /**
+             * 把上传附件的id取出，存到招标备案表中
+             */
+            projectProgressMapper.updateSubjectProgressByPid(openReportAnnexData.getId(),subjectProgressAnnexData.getId(),fundProgressAnnexData.getId(),expertSuggestAnnexData.getId(),pid);
+            return resultMap.success().message("多个附件上传成功");
+        } catch (IOException e) {
+            e.printStackTrace();
+            log.error("附件上传出错:" + e.getMessage());
+            throw new FileUploadException("附件上传失败");
+        } catch (FileUploadException e) {
+            e.printStackTrace();
+            resultMap.success().message("附件上传失败");
         }
         return resultMap;
     }

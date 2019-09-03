@@ -18,10 +18,11 @@ import java.util.Map;
 @Repository
 public interface GuideMapper {
     /**
-     * 新增指南申报建议(waiwang)
+     * 新增指南申报建议
      * @param guideCollection
      * @return
      */
+    @Options(useGeneratedKeys = true,keyProperty = "id",keyColumn = "id")
         @Insert(value = "insert into guide_collection(\n" +
                 "guide_name,\n" +
                 "category,\n" +
@@ -64,7 +65,8 @@ public interface GuideMapper {
      * @return
      */
     @Select(value = "<script>" +
-            "SELECT\n" +
+            "SELECT\t" +
+            "gc.id," +
             "guide_name,\n" +
             "dic.content as domain,\n" +
             "d.content as category,\n" +
@@ -122,7 +124,7 @@ public interface GuideMapper {
 
 
     /**
-     * 根据勾选的指南id更新相应指南的选中状态(没有用到)--汇总2
+     * 根据勾选的指南id更新相应指南的选中状态--汇总2
      * @param ids
      * @return
      */
@@ -211,42 +213,6 @@ public interface GuideMapper {
     int updateLimitTime(GuideCollectionLimitTime guideCollectionLimitTime);
 
 
-    /**
-     * 新增汇总信息【单条插入-暂未用到】(内网)--汇总3
-     * @param guideSummary
-     * @return
-
-    @Insert(value = "INSERT INTO guide_summary\n" +
-            "VALUES(\n" +
-            "DEFAULT,\n" +
-            "#{guideSummaryTitle},\n" +
-            "#{guideName},\n" +
-            "#{domain},\n" +
-            "#{category},\n" +
-            "#{unitCategory},\n" +
-            "#{fillUnit},\n" +
-            "#{fillContacts},\n" +
-            "#{researchPeriod},\n" +
-            "#{reasonBasis},\n" +
-            "#{researchContentTechnology},\n" +
-            "#{expectedTargetOutcome},\n" +
-            "#{standardsSpecificationsRegulatory},\n" +
-            "#{researchFund},\n" +
-            "#{demonstrationScale},\n" +
-            "#{demonstrationPoint},\n" +
-            "#{provinceDomainMechanism},\n" +
-            "#{contactPhone},\n" +
-            "#{projectTime},\n" +
-            "#{note},\n" +
-            "#{checkBackResult},\n" +
-            "#{checkBackNote},\n" +
-            "#{ownershipCategory},\n" +
-            "#{ownershipDomain},\n" +
-            "#{creator},\n" +
-            "DEFAULt)")
-    int insertSummary(GuideSummary guideSummary);
-*/
-
 
     /**
      * 新增汇总信息【批量插入】
@@ -323,7 +289,7 @@ public interface GuideMapper {
             "FROM\n" +
             "guide_summary gs,dictionary dic,dictionary d\n" +
             "where gs.domain = dic.id and gs.category=d.id\n" +
-            "AND gs.guide_summary_title = #{guideSummaryTitle})\n")
+            "AND gs.guide_summary_title = #{guideSummaryTitle}")
     List<Map> getSummaryByGuideSummaryTitle(@Param("guideSummaryTitle")String guideSummaryTitle);
 
 }

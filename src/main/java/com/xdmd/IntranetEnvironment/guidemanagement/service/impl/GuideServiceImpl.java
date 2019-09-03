@@ -53,7 +53,7 @@ public class GuideServiceImpl implements GuideService {
      */
     @Override
     public ResultMap getCollectionByParam(String guideName, Integer domain, Integer category, String fillUnit, String fillContacts, String contactPhone, int pageNum, int pageSize) {
-        try{
+         try{
             PageHelper.startPage(pageNum,pageSize,true);
             List<Map> guideCollectionList = guideMapper.getCollectionByParam(guideName, domain, category, fillUnit, fillContacts, contactPhone);
             PageInfo pageInfo=new PageInfo(guideCollectionList);
@@ -119,13 +119,13 @@ public class GuideServiceImpl implements GuideService {
         }
         //Integer userid = jwtInformation.getUid();
         //String username = jwtInformation.getUsername();
-        Integer unitid = jwtInformation.getCid();
-        String unitname = jwtInformation.getCompanyName();
+        Integer cid = jwtInformation.getCid();
+        String cname = jwtInformation.getCompanyName();
         try{
-            guideCollection.setFillUnit(unitname);
+            guideCollection.setFillUnit(cname);
             int gmInfo=guideMapper.insertGuideInfo(guideCollection);
             //提交指南申报的同时新增单位关联指南申报表
-            insertCidAndUid(unitid,guideCollection.getId());
+            insertCidAndUid(cid,guideCollection.getId());
             if(gmInfo>0){
                 resultMap.success().message("新增成功");
             }else if(gmInfo<0){
@@ -180,6 +180,9 @@ public class GuideServiceImpl implements GuideService {
     @Override
     public ResultMap batchInsertSummary(List<GuideSummary> guideSummary) {
         try{
+            //获取当前时间戳
+            String nowtime = new SimpleDateFormat("yyyyMMddHHmmss").format(System.currentTimeMillis());
+
             int manyInfo=guideMapper.batchInsertSummary(guideSummary);
             if(manyInfo>0){
                 resultMap.success().message("操作成功,共批量新增"+manyInfo+"条");
@@ -277,8 +280,9 @@ public class GuideServiceImpl implements GuideService {
         }
         //Integer userid = jwtInformation.getUid();
         //String username = jwtInformation.getUsername();
+        //获取单位id
         Integer unitid = jwtInformation.getCid();
-        String unitname = jwtInformation.getCompanyName();
+        System.out.println(unitid);
         try{
             PageHelper.startPage(pageNum,pageSize,true);
             List<Map> mapList=guideMapper.getUnitCollection(guideName,domain,category,fillUnit,fillContacts,contactPhone,unitid);
@@ -308,7 +312,7 @@ public class GuideServiceImpl implements GuideService {
             if(insertNo>0){
                 resultMap.success().message("新增成功");
             }else if(insertNo==0){
-                resultMap.success().message("新增失败");
+                resultMap.fail().message("新增失败");
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -318,7 +322,7 @@ public class GuideServiceImpl implements GuideService {
     }
 
     /**
-     * 根据勾选的指南id更新相应指南申报选中状态 【没用到】
+     * 根据勾选的指南id更新相应指南申报选中状态【内网】
      * @param ids
      * @return
      */
@@ -329,7 +333,7 @@ public class GuideServiceImpl implements GuideService {
             if(!guideMap.isEmpty()){
                 resultMap.success().message(guideMap);
             }else if(guideMap.size()==0){
-                resultMap.success().message("没有查到相关信息");
+                resultMap.fail().message("没有查到相关信息");
             }
         }catch (Exception e){
             resultMap.success().message("系统异常");

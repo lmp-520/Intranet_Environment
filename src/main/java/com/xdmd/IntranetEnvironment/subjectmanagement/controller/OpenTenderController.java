@@ -128,8 +128,6 @@ public class OpenTenderController {
 
     /**
      * 招标附件上传
-     *
-     * @param oid                     招标备案表id
      * @param winningDocument         中标文件附件
      * @param transactionAnnouncement 成交公告附件
      * @param noticeTransaction       成交通知书附件

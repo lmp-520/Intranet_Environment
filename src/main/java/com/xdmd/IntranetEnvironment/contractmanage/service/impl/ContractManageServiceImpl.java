@@ -7,10 +7,14 @@ import com.xdmd.IntranetEnvironment.common.*;
 import com.xdmd.IntranetEnvironment.contractmanage.mapper.ContractManageMapper;
 import com.xdmd.IntranetEnvironment.contractmanage.pojo.ContractManageDTO;
 import com.xdmd.IntranetEnvironment.contractmanage.service.ContractManageService;
+import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.JwtInformation;
+import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.service.impl.ExtranetTokenService;
 import com.xdmd.IntranetEnvironment.subjectmanagement.exception.InsertSqlException;
 import com.xdmd.IntranetEnvironment.subjectmanagement.exception.UpdateSqlException;
 import com.xdmd.IntranetEnvironment.subjectmanagement.exception.UpdateStatusException;
 import com.xdmd.IntranetEnvironment.subjectmanagement.service.impl.OpenTenderServiceImpl;
+import com.xdmd.IntranetEnvironment.user.exception.ClaimsNullException;
+import com.xdmd.IntranetEnvironment.user.exception.UserNameNotExistentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +40,8 @@ public class ContractManageServiceImpl implements ContractManageService {
     ContractManageMapper contractManageMapper;
     @Autowired
     UploadFileMapper uploadFileMapper;
+    @Autowired
+    ExtranetTokenService extranetTokenService;
     ResultMap resultMap = new ResultMap();
 
     @Override
@@ -953,6 +959,52 @@ public class ContractManageServiceImpl implements ContractManageService {
             } else if (contractMap.size() == 0) {
                 resultMap.fail().message("没有找到数据");
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
+
+
+    /**
+     * 在提交合同时回显关联的部分招标信息
+     * @param token
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public ResultMap queryAllEndTenderInfo(String token, HttpServletResponse response) throws Exception {
+        //解析token中的数据
+        JwtInformation jwtInformation = new JwtInformation();
+        try {
+            jwtInformation = extranetTokenService.compare(response, token);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (UserNameNotExistentException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (ClaimsNullException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("MenuServiceImpl 中 TokenService 出现问题");
+            return resultMap.message("系统异常");
+        }
+        //根据登陆信息获取单位id
+        Integer unitid = jwtInformation.getCid();
+        try {
+            //获取该公司所有审核通过的招标id
+            List<Map> queryAllEndTenderInfo = contractManageMapper.queryAllEndTenderInfo(unitid);
+            if(queryAllEndTenderInfo.size()>0){
+                resultMap.success().message(queryAllEndTenderInfo);
+            }else {
+                resultMap.fail().message("没有查到信息");
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
             resultMap.fail().message("系统异常");

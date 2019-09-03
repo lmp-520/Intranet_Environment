@@ -1,6 +1,7 @@
 package com.xdmd.IntranetEnvironment.dailymanagement.controller;
 
 
+import com.xdmd.IntranetEnvironment.common.FileUploadException;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.dailymanagement.pojo.MajorMattersFilingDTO;
 import com.xdmd.IntranetEnvironment.dailymanagement.service.MajorMattersFilingService;
@@ -8,17 +9,24 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * 重大事项
  */
 @Api(tags = "重大事项管理")
 @RestController
-@RequestMapping("enviroment/daily/major")
+@RequestMapping("enviroment/daily/majormatter")
 public class MajorMattersFilingController {
+private static final Logger log = LoggerFactory.getLogger(MajorMattersFilingController.class);
     @Autowired
     MajorMattersFilingService majorMattersFilingService;
     ResultMap resultMap=new ResultMap();
@@ -28,7 +36,7 @@ public class MajorMattersFilingController {
      * @param majorMattersFiling
      * @return
      */
-    @ApiOperation("新增重大事项变更【waiwang】")
+    @ApiOperation("新增重大事项变更【外网】")
     @PostMapping("insertMajor")
     public ResultMap insert(@RequestBody MajorMattersFilingDTO majorMattersFiling){
         return  resultMap= majorMattersFilingService.insert(majorMattersFiling);
@@ -38,10 +46,10 @@ public class MajorMattersFilingController {
      * [更新]重大事项附件id
      * @return
      */
-    @ApiOperation("更新重大事项附件【waiwang】")
-    @PostMapping("updateAnnexId")
-    public ResultMap updateAnnexId(int changeApplicationAttachmentId,int expertArgumentationAttachmentId,int filingApplicationAttachmentId,int approvalDocumentsAttachmentId,int id){
-        return  resultMap= majorMattersFilingService.updateAnnexId(changeApplicationAttachmentId,expertArgumentationAttachmentId, filingApplicationAttachmentId, approvalDocumentsAttachmentId, id);
+    @ApiOperation("更新重大事项附件【外网】")
+    @PostMapping("updateMajorAnnexId")
+    public ResultMap updateMajorAnnexId(int changeApplicationAttachmentId,int expertArgumentationAttachmentId,int filingApplicationAttachmentId,int approvalDocumentsAttachmentId,int id){
+        return  resultMap= majorMattersFilingService.updateMajorAnnexId(changeApplicationAttachmentId,expertArgumentationAttachmentId, filingApplicationAttachmentId, approvalDocumentsAttachmentId, id);
     }
 
     /**
@@ -129,19 +137,49 @@ public class MajorMattersFilingController {
        return  resultMap= majorMattersFilingService.AdjustmentMatters();
    }
 
-    @PostMapping("MajorFileUpload")
-    @ApiOperation(value = "重大事项变更附件上传")
+
+
+    /**
+     *重大事项的附件上传
+     * @param changeApplicationAttachment 变更申请表附件
+     * @param expertArgumentationAttachment 专家论证意见附件
+     * @param filingApplicationAttachment 备案申请表附件
+     * @param approvalDocumentsAttachment 批准文件附件
+     * @return
+     * @throws IOException
+     * @throws FileUploadException
+     */
+    @PostMapping(value = "MidCheckFileUpload", headers = "content-type=multipart/form-data")
+    @ApiOperation(value = "中期检查附件上传【外网】")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "fileType", value = "附件类型"),
-            @ApiImplicitParam(name = "mid", value = "招标id"),
+            @ApiImplicitParam(name = "changeApplicationAttachment", value = "变更申请表附件", dataType = "file", paramType = "form", allowMultiple = true),
+            @ApiImplicitParam(name = "expertArgumentationAttachment", value = "专家论证意见附件", dataType = "file", paramType = "form", allowMultiple = true),
+            @ApiImplicitParam(name = "filingApplicationAttachment", value = "备案申请表附件", dataType = "file", paramType = "form", allowMultiple = true),
+            @ApiImplicitParam(name = "filingApplicationAttachment", value = "批准文件附件", dataType = "file", paramType = "form", allowMultiple = true)
+
     })
-    public String midFileUpload(@RequestParam("file") MultipartFile file, @RequestParam("fileType") String fileType, @RequestParam("mid") int mid) {
-        String OK = null;
-        try {
-            OK = majorMattersFilingService.MultipartFileUpload(file, fileType, mid);
-        } catch (Exception e) {
-            e.printStackTrace();
+    public ResultMap majorFileUpload(//@CookieValue(value = "IntranecToken", required = false) String token, HttpServletResponse response,
+                                      MultipartFile changeApplicationAttachment,
+                                      MultipartFile expertArgumentationAttachment,
+                                      MultipartFile filingApplicationAttachment,
+                                      MultipartFile approvalDocumentsAttachment) {
+        String token = "aaa";
+        HttpServletResponse response = null;
+        if (StringUtils.isEmpty(token)) {
+            return resultMap.fail().message("请先登录");
         }
-        return OK;
+        try {
+            resultMap = majorMattersFilingService.majorFileUpload(token,response,changeApplicationAttachment,expertArgumentationAttachment,filingApplicationAttachment,approvalDocumentsAttachment);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            log.error("OpenTenderController 中 tenderFileUpload 方法 -- " + e.getMessage());
+            return resultMap.fail().message("系统异常");
+        } catch (FileUploadException e) {
+            e.printStackTrace();
+            log.error("OpenTenderController 中 tenderFileUpload 方法 -- " + e.getMessage());
+            return resultMap.fail().message("系统异常");
+        }
+        return resultMap;
     }
 }

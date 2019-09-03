@@ -66,9 +66,6 @@ public class GuideCollection {
     @ApiModelProperty("联系电话(手机)")
     private String contactPhone;
 
-    @ApiModelProperty(value = "申报状态（0 未审核 1 审核通过 2 审核未通过）【注:系统默认生成,新增时不用填】",required = false)
-    private Integer declarationStatus;
-
     @ApiModelProperty(value ="是否选中（0-未选中；1-已选中）【注:系统默认生成,新增时不用填】",required = false)
     private Integer isSelect;
 
