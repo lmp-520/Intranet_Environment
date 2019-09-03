@@ -136,7 +136,7 @@ public interface ExtranetAcceptApplyMapper<T> extends MyBaseMapper<ExtranetCheck
     void deleteAcceptanceCertificateSubjectPeople(@Param("caId") Integer caId);
 
     //获取所有已经结束的合同id
-    @Select("SELECT id FROM contract_manage where #{nowTime} >contract_end_time and commitment_Unit = #{cname}")
+    @Select("SELECT id FROM contract_manage where #{nowTime} >contract_end_time and commitment_Unit = #{cname} and is_check_apply = 0")
     List<Integer> queryAllEndContractId(@Param("nowTime") String nowTime,@Param("cname") String cname);
 
     //根据id获取合同的结束时间
@@ -209,4 +209,10 @@ public interface ExtranetAcceptApplyMapper<T> extends MyBaseMapper<ExtranetCheck
 
     @Update("update contract_manage set is_check_apply = 1 where id = #{id}")
     void updateContractManage(@Param("id") Integer contractId);
+
+//    @Select("SELECT count(id) FROM contract_manage where #{nowTime} >contract_end_time and commitment_Unit = #{cname} and is_check_apply = 0")
+//    Integer queryAllTotal(@Param("cname") String cname, @Param("nowTime") String nowTime);
+
+    @Select("SELECT id,project_no,subject_name,contract_start_time,contract_end_time,subjece_leader,subject_leader_phone,email,commitment_Unit,commitment_unit_address FROM contract_manage where #{nowTime} >contract_end_time and commitment_Unit = #{cname} and is_check_apply = 0")
+    List<SubjectInformation> queryCompanyContractManage(@Param("cname") String cname, @Param("nowTime") String nowTime);
 }

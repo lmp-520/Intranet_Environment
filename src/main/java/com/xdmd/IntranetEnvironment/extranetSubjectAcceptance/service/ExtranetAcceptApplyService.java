@@ -48,7 +48,7 @@ public interface ExtranetAcceptApplyService {
 
     ResultMap queryInformationByTopicNumber(String projectNumber);
 
-    ResultMap queryTopicNumberAndTopicName(String token, HttpServletResponse response) throws ParseException;
-
     ResultMap AddAcceptApply(ExtranetCheckApply extranetCheckApply, MultipartFile submitInventoryFile, MultipartFile applicationAcceptanceFile, MultipartFile achievementsFile, String uname, Integer contractId) throws MysqlErrorException;
+
+    ResultMap queryTopicNumberAndTopicName(String token, HttpServletResponse response, Integer page, Integer total) throws ParseException;
 }

@@ -39,7 +39,7 @@ public class ExtranetAcceptApplyController {
     @ResponseBody
     @PostMapping("addAcceptApply")
     public ResultMap AddAcceptApply(@CookieValue(value = "token",required = false) String token, HttpServletResponse response,
-                                    @RequestParam(value = "contractId") Integer contractId,  //合同id
+                                    @RequestParam("contractId") Integer contractId,  //合同id
                                     @RequestPart("submitInventoryFile") MultipartFile submitInventoryFile,     //提交清单文件
                                     @RequestPart("applicationAcceptanceFile") MultipartFile applicationAcceptanceFile,     //验收申请表文件
                                     @RequestPart("achievementsFile") MultipartFile achievementsFile,   //成果附件文件
@@ -559,14 +559,15 @@ public class ExtranetAcceptApplyController {
     //在公司新增验收申请时，显示课题名称与课题编号
     @PostMapping("queryTopicNameAndNumber")
     @ResponseBody
-    public  ResultMap queryTopicNumberAndTopicName(@CookieValue(value = "token",required = false)String token,HttpServletResponse response
-    ){
+    public  ResultMap queryTopicNumberAndTopicName(@CookieValue(value = "token",required = false)String token,HttpServletResponse response,
+                                                   @RequestParam("Page") Integer page,      //页数
+                                                   @RequestParam("total") Integer total     ){  //每页显示条数
         if(StringUtils.isEmpty(token)){
             return resultMap.fail().message("请先登录");
         }
 
         try {
-            resultMap = extranetAcceptApplyService.queryTopicNumberAndTopicName(token,response);
+            resultMap = extranetAcceptApplyService.queryTopicNumberAndTopicName(token,response,page,total);
         } catch (Exception e) {
             e.printStackTrace();
             log.error("ExtranetAcceptApplyController 中 queryTopicNumberAndTopicName 方法出错 -- "+e.getMessage());

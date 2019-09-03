@@ -3,6 +3,7 @@ package com.xdmd.IntranetEnvironment.homePage.service.impl;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.JwtInformation;
 import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.service.impl.ExtranetTokenService;
+import com.xdmd.IntranetEnvironment.homePage.mapper.ExtranetMapper;
 import com.xdmd.IntranetEnvironment.homePage.service.ExtranetService;
 import com.xdmd.IntranetEnvironment.user.exception.ClaimsNullException;
 import com.xdmd.IntranetEnvironment.user.exception.UserNameNotExistentException;
@@ -18,6 +19,8 @@ public class ExtranetServiceImpl implements ExtranetService {
     @Autowired
     private ExtranetTokenService extranetTokenService;
     ResultMap resultMap = new ResultMap();
+    @Autowired
+    private ExtranetMapper extranetMapper;
 
     @Override
     public ResultMap querySubjectTotal(String token, HttpServletResponse response) {
@@ -44,8 +47,15 @@ public class ExtranetServiceImpl implements ExtranetService {
         Integer cid = jwtInformation.getCid();
         String cname = jwtInformation.getCompanyName();
 
-        //根据公司查询，待审核的内容
-        return resultMap;
+        //根据公司查询，该企业待处理的信息
+        Integer extranetTotal = extranetMapper.queryExtranetTotal(cid);
+        return resultMap.success().message(extranetTotal);
 
+    }
+
+    @Override
+    public ResultMap queryExpertTotal() {
+        Integer expertTotal = extranetMapper.queryExpertTotal();
+        return resultMap.success().message(expertTotal);
     }
 }

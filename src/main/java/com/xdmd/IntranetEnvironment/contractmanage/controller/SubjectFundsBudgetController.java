@@ -71,7 +71,7 @@ public class SubjectFundsBudgetController {
      */
     @ApiOperation(value = "不通过被退回时重新提交[修改]")
     @PostMapping(value = "UpdateSubjectFundsBudget")
-    public int UpdateSubjectFundsBudget(SubjectFundsBudgetDTO subjectFundsBudgetDTO) {
+    public ResultMap UpdateSubjectFundsBudget(SubjectFundsBudgetDTO subjectFundsBudgetDTO) {
         return subjectFundsBudgetService.UpdateSubjectFundsBudget(subjectFundsBudgetDTO);
     }
 }

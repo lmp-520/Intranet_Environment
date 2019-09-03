@@ -58,9 +58,10 @@ public interface AcceptStateMapper {
     @Update("update check_apply set audit_report_url_id = #{fid} where id = #{cid}")
     void updateCheckApplyFileId(@Param("cid") Integer cid, @Param("fid") Integer fid);
 
-
     //把新增初审报告文件的id取出，存在check_apply中
     @Update("update check_apply set first_inspection_report_url_id = #{fid} where id = #{cid}")
     void updateCheckApplyFirstInspectionFileId(@Param("cid") Integer cid, @Param("fid") Integer fid);
 
+    @Select("select upload_file_name from upload_file where id = #{id}")
+    String queryFileNameByFileId(@Param("id") Integer applicationUrlId);
 }
