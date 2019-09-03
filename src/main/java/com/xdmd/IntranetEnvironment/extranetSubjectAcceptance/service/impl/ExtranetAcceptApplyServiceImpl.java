@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.security.auth.Subject;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.text.ParseException;
@@ -39,7 +40,7 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
 
     //企业填写验收申请表
     @Transactional(rollbackFor = Exception.class)
-    public ResultMap AddAcceptApply(ExtranetCheckApply extranetCheckApply, MultipartFile submitInventoryFile, MultipartFile applicationAcceptanceFile, MultipartFile achievementsFile, String createname,Integer contractId) throws MysqlErrorException {
+    public ResultMap AddAcceptApply(ExtranetCheckApply extranetCheckApply, MultipartFile submitInventoryFile, MultipartFile applicationAcceptanceFile, MultipartFile achievementsFile, String createname, Integer contractId) throws MysqlErrorException {
         //新增验收申请表
         acceptApplyMapper.addAcceptApply(extranetCheckApply);
 
@@ -288,7 +289,7 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
                 acceptanceCertificatePatentList = null;
             }
             //根据最终验收报告的id，查询验收报告中的主要参与人员信息
-            List<AcceptanceCertificatePrincipalPersonnel>  acceptanceCertificatePrincipalPersonnelList = null;
+            List<AcceptanceCertificatePrincipalPersonnel> acceptanceCertificatePrincipalPersonnelList = null;
             try {
                 acceptanceCertificatePrincipalPersonnelList = acceptApplyMapper.queryAcceptanceCertificatePersonnel(acceptanceCertificate.getId());
                 acceptanceCertificate.setAcceptanceCertificatePrincipalPersonnelList(acceptanceCertificatePrincipalPersonnelList);//把查询出来的主要参与人员信息插入到最终验收报告中
@@ -525,7 +526,7 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
                 acceptanceCertificatePatentList = null;
             }
             //根据最终验收报告的id，查询验收报告中的主要参与人员信息
-            List<AcceptanceCertificatePrincipalPersonnel>  acceptanceCertificatePrincipalPersonnelList = null;
+            List<AcceptanceCertificatePrincipalPersonnel> acceptanceCertificatePrincipalPersonnelList = null;
             try {
                 acceptanceCertificatePrincipalPersonnelList = acceptApplyMapper.queryAcceptanceCertificatePersonnel(acceptanceCertificate.getId());
                 acceptanceCertificate.setAcceptanceCertificatePrincipalPersonnelList(acceptanceCertificatePrincipalPersonnelList);//把查询出来的主要参与人员信息插入到最终验收报告中
@@ -777,7 +778,7 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
         }
 
         //更新验收申请的状态表
-        acceptApplyMapper.updateAcceptancePhaseById(caId,5);
+        acceptApplyMapper.updateAcceptancePhaseById(caId, 5);
 
         //首先更新上一条表的状态
         String state = "已处理";
@@ -1111,7 +1112,7 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
         String nowTime = sdf.format(date);
 
         //首先获取该公司所有已经结束的合同id
-        List<Integer> ids = acceptApplyMapper.queryAllEndContractId(nowTime,cname);
+        List<Integer> ids = acceptApplyMapper.queryAllEndContractId(nowTime, cname);
 
         //存放符合条件的id集合
         List<Integer> resultIds = new ArrayList<>();
@@ -1126,7 +1127,7 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
             cal.add(Calendar.MONTH, 3);  //对月份加3
             String dateOver = sdf.format(cal.getTime());
 
-            if(sdf.parse(dateOver).getTime()>sdf.parse(nowTime).getTime()){
+            if (sdf.parse(dateOver).getTime() > sdf.parse(nowTime).getTime()) {
                 //此时该合同符合要求
                 resultIds.add(id);
             }
@@ -1169,7 +1170,7 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
             cal.add(Calendar.MONTH, 3);  //对月份加3
             String dateOver = sdf.format(cal.getTime());
 
-            if(sdf.parse(dateOver).getTime()>sdf.parse(nowTime).getTime()){
+            if (sdf.parse(dateOver).getTime() > sdf.parse(nowTime).getTime()) {
                 //此时该合同符合要求
                 resultIds.add(id);
             }
@@ -1201,19 +1202,19 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
         String contractEndTime = acceptApplyMapper.queryContractEndTime(projectNumber);
 
         HashMap<String, Object> result = new HashMap<>();
-        result.put("subjectUndertakingUnit",companyName);
-        result.put("unitNature",unitNature);
-        result.put("projectLeader",projectLeader);
-        result.put("projectLeaderPhone",projectLeaderPhone);
-        result.put("agreementStartTime",contractStartTime);
-        result.put("agreementEndTime",contractEndTime);
+        result.put("subjectUndertakingUnit", companyName);
+        result.put("unitNature", unitNature);
+        result.put("projectLeader", projectLeader);
+        result.put("projectLeaderPhone", projectLeaderPhone);
+        result.put("agreementStartTime", contractStartTime);
+        result.put("agreementEndTime", contractEndTime);
 
         return resultMap.success().message(result);
     }
 
     //在公司新增验收申请时，显示课题名称与课题编号
     @Override
-    public ResultMap queryTopicNumberAndTopicName(String token, HttpServletResponse response) throws ParseException {
+    public ResultMap queryTopicNumberAndTopicName(String token, HttpServletResponse response, Integer page, Integer total) throws ParseException {
         //解析token中的数据
         JwtInformation jwtInformation = new JwtInformation();
         try {
@@ -1243,15 +1244,12 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String nowTime = sdf.format(date);
 
-        //首先获取该公司所有已经结束的合同id
-        List<Integer> ids = acceptApplyMapper.queryAllEndContractId(nowTime,cname);
+        List<SubjectInformation> subjectInformationList = acceptApplyMapper.queryCompanyContractManage(cname, nowTime);
+        List<Integer> resultIds = new ArrayList<Integer>();
 
-        //存放符合条件的id集合
-        List<Integer> resultIds = new ArrayList<>();
-
-        for (Integer id : ids) {
-            //根据id获取合同的结束时间
-            String contractEndTime = acceptApplyMapper.queryEndTimeById(id);
+        //遍历该公司下的，已经结束的合同
+        for (SubjectInformation subjectInformation : subjectInformationList) {
+            String contractEndTime = subjectInformation.getContractEndTime();
             //把日期字符串进行Date
             Date sqlTimeParse = sdf.parse(contractEndTime);
             Calendar cal = Calendar.getInstance();
@@ -1259,23 +1257,94 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
             cal.add(Calendar.MONTH, 3);  //对月份加3
             String dateOver = sdf.format(cal.getTime());
 
-            if(sdf.parse(dateOver).getTime()>sdf.parse(nowTime).getTime()){
+            if (sdf.parse(dateOver).getTime() > sdf.parse(nowTime).getTime()) {
                 //此时该合同符合要求
-                resultIds.add(id);
+                resultIds.add(subjectInformation.getId());
             }
         }
-        List<SubjectInformation> subjectNameAndIdList = new ArrayList<>();
 
-        //遍历符合要求的id，获取课题名称
-        for (Integer resultId : resultIds) {
+        Integer allTotal = resultIds.size();
+
+        Integer newPage = (page - 1) * total;
+
+        List<SubjectInformation> subjectInformationList1 = new ArrayList<SubjectInformation>();
+        int num = total;
+        if(total>allTotal){
+            num = allTotal;
+        }else {
+            num = newPage+num;
+            if(num>allTotal){
+                num = allTotal;
+            }
+        }
+
+        for (int i = newPage; i < num; i++) {
+            Integer rid = resultIds.get(i);
             //通过id，获取课题信息
-            SubjectInformation subjectInformation  = acceptApplyMapper.querySubjectInformation(resultId);
+            SubjectInformation subjectInformation = acceptApplyMapper.querySubjectInformation(rid);
             //从单位名称查询单位性质
             Integer unitNature = acceptApplyMapper.queryUnitNatureByCompanyName(subjectInformation.getCommitmentUnit());
             subjectInformation.setUnitNature(unitNature);
-            subjectNameAndIdList.add(subjectInformation);
+            subjectInformationList1.add(subjectInformation);
         }
 
-        return resultMap.success().message(subjectNameAndIdList);
+        PageBean pageBean = new PageBean();
+        pageBean.setCount(allTotal);
+        pageBean.setData(subjectInformationList1);
+
+
+        return resultMap.success().message(pageBean);
+
+
+//        //获取当前时间
+//        Date date = new Date();
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//        String nowTime = sdf.format(date);
+//
+//        //获取符合条件的的合同信息条数
+//        Integer total = acceptApplyMapper.queryAllTotal(cname, nowTime);
+//
+//        //首先获取该公司所有已经结束的合同id
+//        List<Integer> ids = acceptApplyMapper.queryAllEndContractId(nowTime, cname);
+//
+//        //存放符合条件的id集合
+//        List<Integer> resultIds = new ArrayList<>();
+//
+//        for (Integer id : ids) {
+//            //根据id获取合同的结束时间
+//            String contractEndTime = acceptApplyMapper.queryEndTimeById(id);
+//            //把日期字符串进行Date
+//            Date sqlTimeParse = sdf.parse(contractEndTime);
+//            Calendar cal = Calendar.getInstance();
+//            cal.setTime(sqlTimeParse);
+//            cal.add(Calendar.MONTH, 3);  //对月份加3
+//            String dateOver = sdf.format(cal.getTime());
+//
+//            if (sdf.parse(dateOver).getTime() > sdf.parse(nowTime).getTime()) {
+//                //此时该合同符合要求
+//                resultIds.add(id);
+//            }
+//        }
+//
+//        Integer allTotal = resultIds.size();
+//        Integer newPage = (page - 1) * total;
+//
+//
+//        //获取该页的id集合
+//
+//
+//        List<SubjectInformation> subjectNameAndIdList = new ArrayList<>();
+//
+//        //遍历符合要求的id，获取课题名称
+//        for (Integer resultId : resultIds) {
+//            //通过id，获取课题信息
+//            SubjectInformation subjectInformation = acceptApplyMapper.querySubjectInformation(resultId, newPage, total);
+//            //从单位名称查询单位性质
+//            Integer unitNature = acceptApplyMapper.queryUnitNatureByCompanyName(subjectInformation.getCommitmentUnit());
+//            subjectInformation.setUnitNature(unitNature);
+//            subjectNameAndIdList.add(subjectInformation);
+//        }
+//
+//        return resultMap.success().message(subjectNameAndIdList);
     }
 }
