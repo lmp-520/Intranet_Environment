@@ -183,6 +183,9 @@ public class GuideServiceImpl implements GuideService {
             //获取当前时间戳
             String nowtime = new SimpleDateFormat("yyyyMMddHHmmss").format(System.currentTimeMillis());
 
+            for (GuideSummary summary : guideSummary) {
+               summary.setCreateTime(nowtime);
+            }
             int manyInfo=guideMapper.batchInsertSummary(guideSummary);
             if(manyInfo>0){
                 resultMap.success().message("操作成功,共批量新增"+manyInfo+"条");
@@ -229,14 +232,14 @@ public class GuideServiceImpl implements GuideService {
 
 
     /**
-     * 实现根据汇总标题查询汇总信息
-     * @param guideSummaryTitle
+     * 实现根据汇总创建时间查询汇总详情信息
+     * @param createTime
      * @return
      */
     @Override
-    public ResultMap getSummaryByGuideSummaryTitle(String guideSummaryTitle) {
+    public ResultMap getSummaryByCreateTime(String createTime) {
         try{
-            List<Map> gsList = guideMapper.getSummaryByGuideSummaryTitle(guideSummaryTitle);
+            List<Map> gsList = guideMapper.getSummaryByCreateTime(createTime);
             if(gsList.size()>0){
                 resultMap.success().message(gsList);
             }else if(gsList.size()==0){
@@ -329,6 +332,7 @@ public class GuideServiceImpl implements GuideService {
     @Override
     public ResultMap updateIsSelectByIds(List<Long> ids) {
         try{
+            ids.forEach(id-> System.out.println(id));
             List<Integer> guideMap=guideMapper.updateIsSelectByIds(ids);
             if(!guideMap.isEmpty()){
                 resultMap.success().message(guideMap);

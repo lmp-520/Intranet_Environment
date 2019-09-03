@@ -33,7 +33,7 @@ public class GuideCollectionProvider {
                         "#'{'list[{0}].researchFund},#'{'list[{0}].demonstrationScale},#'{'list[{0}].demonstrationPoint}," +
                         "#'{'list[{0}].provinceDomainMechanism},#'{'list[{0}].contactPhone},#'{'list[{0}].projectTime}," +
                         "#'{'list[{0}].note},#'{'list[{0}].checkBackResult},#'{'list[{0}].checkBackNote}," +
-                        "#'{'list[{0}].ownershipCategory},#'{'list[{0}].ownershipDomain},#'{'list[{0}].creator},DEFAULT)"
+                        "#'{'list[{0}].ownershipCategory},#'{'list[{0}].ownershipDomain},#'{'list[{0}].creator},#'{'list[{0}].createTime})"
         );
 
         for (int i = 0; i < summaryList.size(); i++) {

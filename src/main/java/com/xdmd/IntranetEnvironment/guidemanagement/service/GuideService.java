@@ -60,10 +60,10 @@ public interface GuideService {
      */
     ResultMap getSummaryByParam(String guideSummaryTitle, String fillUnit, Integer domain, Integer category, String projectTime, String researchContentTechnology, @Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
     /**
-     * 根据汇总标题id查询出汇总指南
+     * 根据汇总创建时间查询出汇总指南
      * @return
      */
-    ResultMap getSummaryByGuideSummaryTitle(@Param("guideSummaryTitle")String guideSummaryTitle);
+    ResultMap getSummaryByCreateTime(@Param("createTime")String createTime);
 
 
     /**
