@@ -255,5 +255,13 @@ public interface ContractManageService {
      */
     ResultMap showAllNoPassReviewContractByFaGui(String subjectCategory,String subjectName, String subjectContact,String subjectContactPhone,String commitmentUnit, String subjectSupervisorDepartmentint, int pageNum, int pageSize);
 
+    /**
+     * 在提交合同时回显关联的部分招标信息
+     * @param token
+     * @param response
+     * @return
+     * @throws Exception
+     */
+     ResultMap queryAllEndTenderInfo(String token, HttpServletResponse response) throws Exception;
 }
 

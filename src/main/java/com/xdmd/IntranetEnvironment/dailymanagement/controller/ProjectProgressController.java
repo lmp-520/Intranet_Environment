@@ -1,17 +1,23 @@
 package com.xdmd.IntranetEnvironment.dailymanagement.controller;
 
 
+import com.xdmd.IntranetEnvironment.common.FileUploadException;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
+import com.xdmd.IntranetEnvironment.common.UploadFileMapper;
 import com.xdmd.IntranetEnvironment.dailymanagement.pojo.*;
 import com.xdmd.IntranetEnvironment.dailymanagement.service.ProjectProgressService;
-import com.xdmd.IntranetEnvironment.common.UploadFileMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -23,6 +29,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/environment/progress")
 public class ProjectProgressController {
+    private static final Logger log = LoggerFactory.getLogger(ProjectProgressController.class);
     @Autowired
     ProjectProgressService projectProgressService;
     @Autowired
@@ -183,6 +190,38 @@ public class ProjectProgressController {
     })
     public ResultMap updateSubjectProgressByPid(int openReportAnnexId, int subjectProgressAnnexId, int fundProgressAnnexId, int expertSuggestAnnexId, int pid){
         return  resultMap=projectProgressService.updateSubjectProgressByPid(openReportAnnexId,subjectProgressAnnexId,fundProgressAnnexId,expertSuggestAnnexId,pid);
+    }
+
+
+    /**
+     * 课题进展附件上传
+     * @param openReportAnnex     开题报告附件
+     * @param expertSuggestAnnex 专家意见附件
+     * @param subjectProgressAnnex 课题进展附件
+     * @param fundProgressAnnex   进度经费使用情况附件
+     * @return
+     */
+    @PostMapping(value = "ProgressMultiUpload", headers = "content-type=multipart/form-data")
+    @ApiOperation(value = "课题进展附件上传【外网】")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "openReportAnnex", value = "开题报告附件", dataType = "file", paramType = "form", allowMultiple = true),
+            @ApiImplicitParam(name = "expertSuggestAnnex", value = "专家意见附件", dataType = "file", paramType = "form", allowMultiple = true),
+            @ApiImplicitParam(name = "subjectProgressAnnex", value = "课题进展附件", dataType = "file", paramType = "form", allowMultiple = true),
+            @ApiImplicitParam(name = "fundProgressAnnex", value = "进度经费使用情况附件", dataType = "file", paramType = "form", allowMultiple = true),
+
+    })
+    public ResultMap ProgressMultiUpload(//@CookieValue(value = "IntranecToken", required = false) String token, HttpServletResponse response,
+                                      MultipartFile openReportAnnex,
+                                      MultipartFile expertSuggestAnnex,
+                                      MultipartFile subjectProgressAnnex,
+                                      MultipartFile fundProgressAnnex) throws FileUploadException {
+        String token = "aaa";
+        HttpServletResponse response = null;
+        if (StringUtils.isEmpty(token)) {
+            return resultMap.fail().message("请先登录");
+        }
+        resultMap = projectProgressService.ProgressMultiUpload(token, response,openReportAnnex, expertSuggestAnnex, subjectProgressAnnex, fundProgressAnnex);
+        return resultMap;
     }
 
 }

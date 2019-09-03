@@ -1,10 +1,13 @@
 package com.xdmd.IntranetEnvironment.dailymanagement.service;
 
 
+import com.xdmd.IntranetEnvironment.common.FileUploadException;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.dailymanagement.pojo.*;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 public interface ProjectProgressService {
@@ -98,4 +101,18 @@ public interface ProjectProgressService {
      * @return
      */
     ResultMap updateSubjectProgressByPid(int openReportAnnexId, int subjectProgressAnnexId, int fundProgressAnnexId, int expertSuggestAnnexId, int pid);
+
+
+
+    /**
+     * 课题进展附件上传
+     * @param openReportAnnex     开题报告附件
+     * @param expertSuggestAnnex 专家意见附件
+     * @param subjectProgressAnnex 课题进展附件
+     * @param fundProgressAnnex   进度经费使用情况附件
+     * @return
+     */
+    ResultMap ProgressMultiUpload(String token, HttpServletResponse response, MultipartFile openReportAnnex, MultipartFile expertSuggestAnnex, MultipartFile subjectProgressAnnex, MultipartFile fundProgressAnnex) throws FileUploadException;
+
+
 }

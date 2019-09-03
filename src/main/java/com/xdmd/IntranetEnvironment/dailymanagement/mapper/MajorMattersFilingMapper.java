@@ -53,7 +53,7 @@ public interface MajorMattersFilingMapper {
             "filing_application_attachment_id = #{filingApplicationAttachmentId} \n" +
             "approval_documents_attachment_id = #{approvalDocumentsAttachmentId} \n" +
             "WHERE id=#{id}")
-    int updateAnnexId(int changeApplicationAttachmentId, int expertArgumentationAttachmentId, int filingApplicationAttachmentId, int approvalDocumentsAttachmentId, int id);
+    int updateMajorAnnexId(int changeApplicationAttachmentId, int expertArgumentationAttachmentId, int filingApplicationAttachmentId, int approvalDocumentsAttachmentId, int id);
 
     /**
      * [查詢] 根據主鍵 id 查詢
@@ -106,7 +106,7 @@ public interface MajorMattersFilingMapper {
 
 
     /**
-     * [查詢] 根据单位id分頁筛选查詢【waiwang】
+     * [查詢] 根据单位id分頁筛选查詢【外网】
      * @author Kong
      * @date 2019/08/19
      **/
@@ -163,4 +163,12 @@ public interface MajorMattersFilingMapper {
      */
     @Select("select * from adjustment_matters")
     List<AdjustmentMattersDTO>  getAllAdjustmentMatters();
+
+
+    /**
+     *
+     * @param majorid
+     * @return
+     */
+    String queryUnitNameBymajorid(int majorid);
 }

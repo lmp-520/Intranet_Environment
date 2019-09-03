@@ -478,4 +478,25 @@ public interface ContractManageMapper {
     List<ContractManageDTO> showAllNoPassReviewContractByFaGui(@Param("subjectCategory") String subjectCategory,@Param("subjectName")String subjectName,
                                                                @Param("subjectContact")String subjectContact,@Param("subjectContactPhone")String subjectContactPhone,@Param("commitmentUnit")String commitmentUnit,
                                                                @Param("subjectSupervisorDepartment")String subjectSupervisorDepartment);
+
+
+
+
+    /**
+     * 回显该单位所有最终审核通过的招标信息
+     * @return
+     */
+    @Select("SELECT\n" +
+            "ot.id,\n" +
+            "ot.subject_name as subjectName,\n" +
+            "ot.project_no as projectNo,\n" +
+            "ot.subject_leader as subjectLeader,\n" +
+            "ot.leader_contact as leaderContact,\n" +
+            "ot.audit_status\n" +
+            "FROM\n" +
+            "open_tender ot,unit_tender ut\n" +
+            "where ot.id=ut.tender_id and ot.audit_status =3 and ut.unit_id=#{unitId} \n" +
+            "ORDER BY ot.id DESC\n")
+    List<Map> queryAllEndTenderInfo(@Param("unitId")int unitId);
+
 }

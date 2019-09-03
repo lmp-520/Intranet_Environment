@@ -4,7 +4,6 @@ import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.company.Pojo.CreditCodeRegex;
 import com.xdmd.IntranetEnvironment.company.Pojo.UserInformation;
 import com.xdmd.IntranetEnvironment.company.Service.CompanyServiceTwo;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

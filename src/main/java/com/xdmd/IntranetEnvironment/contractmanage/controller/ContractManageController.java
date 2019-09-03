@@ -253,24 +253,15 @@ public class ContractManageController {
 
         } catch (IOException e) {
             e.printStackTrace();
-            log.error("OpenTenderController 中 tenderFileUpload 方法 -- " + e.getMessage());
+            log.error("ContractManageController 中 MidCheckFileUpload 方法 -- " + e.getMessage());
             return resultMap.fail().message("系统异常");
         } catch (FileUploadException e) {
             e.printStackTrace();
-            log.error("OpenTenderController 中 tenderFileUpload 方法 -- " + e.getMessage());
+            log.error("ContractManageController 中 MidCheckFileUpload 方法 -- " + e.getMessage());
             return resultMap.fail().message("系统异常");
         }
         return resultMap;
     }
-
-
-
-
-
-
-
-
-
 
 
 
@@ -300,11 +291,11 @@ public class ContractManageController {
             resultMap = contractManageService.contractShenHeByUnitManager(token, response, type, reason, cid);
         } catch (UpdateSqlException e) {
             e.printStackTrace();
-            log.error("OpenContractController 中 ContractFileUpload 方法 -- " + e.getMessage());
+            log.error("ContractManageController 中 contractShenHeByUnitManager 方法 -- " + e.getMessage());
             resultMap.fail().message("系统异常");
         } catch (InsertSqlException e) {
             e.printStackTrace();
-            log.error("OpenContractController 中 ContractFileUpload 方法 -- " + e.getMessage());
+            log.error("ContractManageController 中 contractShenHeByUnitManager 方法 -- " + e.getMessage());
             resultMap.fail().message("系统异常");
         }
         return resultMap;
@@ -448,7 +439,21 @@ public class ContractManageController {
     }
 
 
+    /**
+     * 在提交合同时回显关联的部分招标信息
+     * @return
+     * @throws Exception
+     */
 
+    public ResultMap queryAllEndTenderInfo(//@CookieValue(value = "token",required = false) String token, HttpServletResponse response
+                                        ) throws Exception {
+        String token = "aaa";
+        HttpServletResponse response = null;
+        if (StringUtils.isEmpty(token)) {
+            return resultMap.fail().message("请先登录");
+        }
+        return resultMap = contractManageService.queryAllEndTenderInfo(token, response);
+    }
 
 
 

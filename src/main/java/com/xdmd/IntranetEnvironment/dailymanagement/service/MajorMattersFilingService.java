@@ -1,11 +1,13 @@
 package com.xdmd.IntranetEnvironment.dailymanagement.service;
 
 
+import com.xdmd.IntranetEnvironment.common.FileUploadException;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.dailymanagement.pojo.MajorMattersFilingDTO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -23,7 +25,7 @@ public interface MajorMattersFilingService {
      * [更新]重大事项附件id
      * @return
      */
-    ResultMap updateAnnexId(int changeApplicationAttachmentId, int expertArgumentationAttachmentId, int filingApplicationAttachmentId, int approvalDocumentsAttachmentId, int id);
+    ResultMap updateMajorAnnexId(int changeApplicationAttachmentId, int expertArgumentationAttachmentId, int filingApplicationAttachmentId, int approvalDocumentsAttachmentId, int id);
 
     /**
      * [查詢] 根據主鍵 id 查詢
@@ -54,13 +56,18 @@ public interface MajorMattersFilingService {
     ResultMap updateMajorStatus(int id);
 
     /**
-     * 重大事项变更附件上传
-     * @param file
-     * @param fileType
-     * @param mid
+     *重大事项的附件上传
+     * @param token
+     * @param response
+     * @param changeApplicationAttachment
+     * @param expertArgumentationAttachment
+     * @param filingApplicationAttachment
+     * @param approvalDocumentsAttachment
      * @return
+     * @throws IOException
+     * @throws FileUploadException
      */
-    String MultipartFileUpload(MultipartFile file, String fileType, int mid)throws IOException;
+    ResultMap majorFileUpload(String token, HttpServletResponse response, MultipartFile changeApplicationAttachment, MultipartFile expertArgumentationAttachment, MultipartFile filingApplicationAttachment,MultipartFile approvalDocumentsAttachment) throws IOException, FileUploadException;
 
 
     /**
