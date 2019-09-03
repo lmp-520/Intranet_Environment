@@ -86,18 +86,6 @@ public class GuideController {
         return  resultMap=guideService.getUnitCollection(token,response,guideName,domain,category,fillUnit,fillContacts,contactPhone,0,pageNum,pageSize);
     }
 
-    /**
-     * [新增]单位关联指南征集【内网】
-     * @param unitId
-     * @param collectionId
-     * @return
-
-    @PostMapping(value = "insertCidAndUid")
-    @ApiOperation(value = "新增单位关联指南征集")
-    public ResultMap insertCidAndUid(int unitId, int collectionId){
-        return resultMap=guideService.insertCidAndUid(unitId,collectionId);
-    }
-     */
 
     /**
      * 根据勾选的指南id更新相应指南申报选中状态
@@ -154,14 +142,14 @@ public class GuideController {
     }
 
     /**
-     * 实现根据汇总标题查询汇总信息【内网】
-     * @param guideSummaryTitle
+     * 根据汇总创建时间查询汇总信息【内网】
+     * @param createTime
      * @return
      */
-    @PostMapping(value = "getSummaryByTitle")
-    @ApiOperation(value = "实现根据汇总标题查询汇总信息【内网】")
-    @ApiImplicitParam(name="guideSummaryTitle",value = "汇总标题")
-    public ResultMap getSummaryByGuideSummaryTitle(String guideSummaryTitle) {
-        return resultMap=guideService.getSummaryByGuideSummaryTitle(guideSummaryTitle);
+    @PostMapping(value = "getSummaryByCreateTime")
+    @ApiOperation(value = "根据汇总创建时间查询汇总信息【内网】")
+    @ApiImplicitParam(name="createTime",value = "创建时间")
+    public ResultMap getSummaryByCreateTime(String createTime) {
+        return resultMap=guideService.getSummaryByCreateTime(createTime);
     }
 }

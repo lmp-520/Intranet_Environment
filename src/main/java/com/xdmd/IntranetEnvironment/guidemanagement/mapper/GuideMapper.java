@@ -231,13 +231,14 @@ public interface GuideMapper {
             "gs.guide_summary_title as guideSummaryTitle,\t" +
             "d.content as ownershipDomain,\t" +
             "gs.project_time as projectTime,\t" +
-            "gs.creator\t" +
+            "gs.creator," +
+            "gs.create_time as createTime" +
             "FROM\t" +
             "guide_summary gs,dictionary d\t" +
             "<where>" +
-            "gs.ownership_domain=d.id" +
-            "<if test ='null != guideSummaryTitle'>\t" +
-            "and guide_summary_title like CONCAT('%',#{guideSummaryTitle},'%')\t" +
+            "gs.ownership_domain=d.id\t" +
+            "<if test ='null != guideSummaryTitle'>" +
+            "AND guide_summary_title like CONCAT('%',#{guideSummaryTitle},'%')\t" +
             "</if>\t" +
             "<if test ='null != fillUnit'>\t" +
             "AND fill_unit like CONCAT('%',#{fillUnit},'%')\t" +
@@ -253,13 +254,13 @@ public interface GuideMapper {
             "</if>\n" +
             "<if test ='null != researchContentTechnology'>\n" +
             "AND research_content_technology like CONCAT('%',#{researchContentTechnology},'%')\n" +
-            "</if></where>\n" +
+            "</if></where>\t" +
             "GROUP BY gs.guide_summary_title,gs.ownership_domain,gs.project_time,gs.creator\t" +
             "</script>")
     List<Map> getSummaryByParam(@Param("guideSummaryTitle") String guideSummaryTitle, @Param("fillUnit") String fillUnit, @Param("domain") Integer domain, @Param("category") Integer category, @Param("projectTime") String projectTime, @Param("researchContentTechnology") String researchContentTechnology);
 
     /**
-     * 根据汇总标题查询汇总指南--汇总5
+     * 根据汇总创建时间查询指南汇总详情--汇总5
      * @return
      */
     @Select(value = "SELECT\t" +
@@ -289,7 +290,7 @@ public interface GuideMapper {
             "FROM\n" +
             "guide_summary gs,dictionary dic,dictionary d\n" +
             "where gs.domain = dic.id and gs.category=d.id\n" +
-            "AND gs.guide_summary_title = #{guideSummaryTitle}")
-    List<Map> getSummaryByGuideSummaryTitle(@Param("guideSummaryTitle")String guideSummaryTitle);
+            "AND gs.create_time = #{createTime}")
+    List<Map> getSummaryByCreateTime(@Param("createTime")String createTime);
 
 }

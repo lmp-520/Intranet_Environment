@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  * @author: Kong
@@ -91,9 +90,8 @@ public class GuideSummary {
     private String creator;
 
     @ApiModelProperty("创建时间【注:系统默认生成,新增时不用填】")
-    private Date createTime;
+    private String createTime;
 
     public GuideSummary() {
     }
-    
 }
