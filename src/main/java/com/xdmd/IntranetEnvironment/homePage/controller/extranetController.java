@@ -38,4 +38,5 @@ public class extranetController {
         }
         return resultMap;
     }
+
 }

@@ -191,18 +191,24 @@ public class AcceptStateServiceImpl implements AcceptStateService {
             //通过验收申请表id获取文件的地址
             String applicationFileUrl = acceptStateMapper.queryFileUrlByFileId(applicationUrlId);
             checkApply.setApplicationAcceptanceUrl(applicationFileUrl);
+            String applicationUrlName = acceptStateMapper.queryFileNameByFileId(applicationUrlId);
+            checkApply.setApplicationAcceptanceUrlName(applicationUrlName);
 
             //获取提交清单Id
             Integer submitUrlId = checkApply.getSubmitUrlId();
             //通过提交清单Id获取文件的地址
             String submitFileUrl = acceptStateMapper.queryFileUrlByFileId(submitUrlId);
             checkApply.setSubmitInventoryUrl(submitFileUrl);
+            String submitInventoryUrlName = acceptStateMapper.queryFileNameByFileId(submitUrlId);
+            checkApply.setSubmitInventoryUrlName(submitInventoryUrlName);
 
             //获取成果附件Id
             Integer achievementUrlId = checkApply.getAchievementUrlId();
             //通过成果附件Id获取文件的地址
             String achievementFileUrl = acceptStateMapper.queryFileUrlByFileId(achievementUrlId);
             checkApply.setAchievementsUrl(achievementFileUrl);
+            String achievementName = acceptStateMapper.queryFileNameByFileId(achievementUrlId);
+            checkApply.setAchievementsName(achievementName);
 
             //取出验收申请表中数据对应的id
             Integer id = checkApply.getId();
