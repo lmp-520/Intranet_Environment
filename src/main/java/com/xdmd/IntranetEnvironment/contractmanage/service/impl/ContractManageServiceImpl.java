@@ -84,7 +84,8 @@ public class ContractManageServiceImpl implements ContractManageService {
             String username = "单位员工";
             //执行新增操作
             int insertNo = contractManageMapper.insert(contractManageDTO);
-            System.out.println(insertNo);
+            //单位关联合同主表
+           // insertCidAndUid(0,0);
             //获取当前系统时间
             String nowtime = new SimpleDateFormat("yyyy-MM-dd:HH:mm:ss").format(System.currentTimeMillis());
             //新增员工提交信息
@@ -231,9 +232,7 @@ public class ContractManageServiceImpl implements ContractManageService {
      * @throws IOException
      */
     @Override
-    public String ContractFileUpload(MultipartFile file) throws IOException {
-        ContractManageDTO contractManageDTO=new ContractManageDTO();
-        int cid=contractManageDTO.getId();
+    public String ContractFileUpload(MultipartFile file,int cid) throws IOException {
         //判断文件是否为空
         if (file.isEmpty()) {
             return "上传文件不可为空";
@@ -245,12 +244,9 @@ public class ContractManageServiceImpl implements ContractManageService {
 
         //根据合同主表的id 获取该公司的名字
         String unitName = contractManageMapper.queryUnitNameBycid(cid);
-        //获取课题名称
-        String ketiName = getManageInfoById(cid).getSubjectName();
-
 
         //获取文件上传绝对路径
-        String path = "D:/xdmd/environment/" + unitName + "/" + ketiName + "/" + "合同附件" + "/";
+        String path = "D:/xdmd/environment/" + unitName + "/" + "合同附件" + "/";
         StringBuilder initPath = new StringBuilder(path);
         String filePath = initPath.append(fileName).toString();
         File dest = new File(filePath);
@@ -336,7 +332,7 @@ public class ContractManageServiceImpl implements ContractManageService {
                 resultMap.fail().message("中期检查附件的文件格式不正确,请上传正确的文件格式");
             }
             //获取中标文件附件的地址
-            String midCheckAnnexUrl = openTenderServiceImpl.fileUploadUntil(midCheckAnnex, unitName, "中期检查附件", cid);
+            String midCheckAnnexUrl = openTenderServiceImpl.fileUploadUntil(midCheckAnnex, unitName, "中期检查附件");
             //获取文件后缀名
             String midCheckAnnexSuffixName = midCheckAnnexName.substring(midCheckAnnexName.lastIndexOf(".") + 1);
             // 获取文件大小
@@ -355,7 +351,7 @@ public class ContractManageServiceImpl implements ContractManageService {
                 resultMap.fail().message("专家评估附件的文件格式不正确,请上传正确的文件格式");
             }
             //获取成交公告附件的地址
-            String expertAssessmentAnnexUrl = openTenderServiceImpl.fileUploadUntil(expertAssessmentAnnex, unitName, "专家评估附件", cid);
+            String expertAssessmentAnnexUrl = openTenderServiceImpl.fileUploadUntil(expertAssessmentAnnex, unitName, "专家评估附件");
             //获取文件后缀名
             String expertAssessmentAnnexSuffixName = expertAssessmentAnnexName.substring(expertAssessmentAnnexName.lastIndexOf(".") + 1);
             // 获取文件大小
@@ -374,7 +370,7 @@ public class ContractManageServiceImpl implements ContractManageService {
                 resultMap.fail().message("成交通知书附件的文件格式不正确,请上传正确的文件格式");
             }
             //获取成交通知书附件的地址
-            String subjectSuggestAnnexUrl = openTenderServiceImpl.fileUploadUntil(subjectSuggestAnnex, unitName, "课题建议附件", cid);
+            String subjectSuggestAnnexUrl = openTenderServiceImpl.fileUploadUntil(subjectSuggestAnnex, unitName, "课题建议附件");
             //获取文件后缀名
             String subjectSuggestAnnexSuffixName = subjectSuggestAnnexName.substring(subjectSuggestAnnexName.lastIndexOf(".") + 1);
             // 获取文件大小 
@@ -1008,6 +1004,29 @@ public class ContractManageServiceImpl implements ContractManageService {
         } catch (Exception e) {
             e.printStackTrace();
             resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
+
+
+    /**
+     * 单位关联合同主表
+     * @param unitId
+     * @param contractId
+     * @return
+     */
+    @Override
+    public ResultMap insertCidAndUid(int unitId, int contractId) {
+        try{
+            int insertNo=contractManageMapper.insertCidAndUid(unitId,contractId);
+            if(insertNo>0){
+                resultMap.success().message("新增成功");
+            }else if(insertNo==0){
+                resultMap.fail().message("新增失败");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            resultMap.success().message("系统异常");
         }
         return resultMap;
     }

@@ -60,7 +60,7 @@ public interface GuideMapper {
     int insertGuideInfo(GuideCollection guideCollection);
 
     /**
-     * 查询单位指南申报【外网】
+     * 查询本单位指南申报【外网】
      * @param uid
      * @return
      */
@@ -128,14 +128,14 @@ public interface GuideMapper {
      * @param ids
      * @return
      */
-    @Select(value ="<script>" +
+    @Update(value ="<script>" +
             "update guide_collection set is_select=1 where id in " +
-            "<foreach\tcollection='list'\titem='gid'\topen='(' separator=',' close=')'>" +
-            "#{gid}\n" +
+            "<foreach collection='ids' item='id' open='(' separator=',' close=')'>" +
+            "#{id}\n" +
             "</foreach>\n" +
             "</script>")
-    @Results(value = { @Result(column = "id", property = "id") })
-    List<Integer> updateIsSelectByIds(List<Long> ids);
+    @Results(value = {@Result(column = "id", property = "id") })
+    int updateIsSelectByIds(@Param("ids") List<Long> ids);
 
 
     /**
@@ -227,15 +227,15 @@ public interface GuideMapper {
      * @return
      */
     @Select(value = "<script>" +
-            "SELECT\t" +
-            "gs.guide_summary_title as guideSummaryTitle,\t" +
-            "d.content as ownershipDomain,\t" +
-            "gs.project_time as projectTime,\t" +
-            "gs.creator," +
-            "gs.create_time as createTime" +
-            "FROM\t" +
-            "guide_summary gs,dictionary d\t" +
-            "<where>" +
+            "SELECT\n" +
+            "gs.guide_summary_title as guideSummaryTitle,\n" +
+            "d.content as ownershipDomain,\n" +
+            "gs.project_time as projectTime,\n" +
+            "gs.creator,\n" +
+            "gs.create_time as createTime\n" +
+            "FROM\n" +
+            "guide_summary gs,dictionary d\n" +
+            "<where>\n" +
             "gs.ownership_domain=d.id\t" +
             "<if test ='null != guideSummaryTitle'>" +
             "AND guide_summary_title like CONCAT('%',#{guideSummaryTitle},'%')\t" +
@@ -255,7 +255,8 @@ public interface GuideMapper {
             "<if test ='null != researchContentTechnology'>\n" +
             "AND research_content_technology like CONCAT('%',#{researchContentTechnology},'%')\n" +
             "</if></where>\t" +
-            "GROUP BY gs.guide_summary_title,gs.ownership_domain,gs.project_time,gs.creator\t" +
+            "GROUP by gs.guide_summary_title,gs.ownership_domain,gs.project_time,gs.creator,gs.create_time\t" +
+            "ORDER BY gs.create_time DESC" +
             "</script>")
     List<Map> getSummaryByParam(@Param("guideSummaryTitle") String guideSummaryTitle, @Param("fillUnit") String fillUnit, @Param("domain") Integer domain, @Param("category") Integer category, @Param("projectTime") String projectTime, @Param("researchContentTechnology") String researchContentTechnology);
 

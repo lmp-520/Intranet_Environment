@@ -3,12 +3,17 @@ package com.xdmd.IntranetEnvironment.subjectmanagement.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xdmd.IntranetEnvironment.common.*;
+import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.JwtInformation;
+import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.service.impl.ExtranetTokenService;
 import com.xdmd.IntranetEnvironment.subjectmanagement.exception.InsertSqlException;
 import com.xdmd.IntranetEnvironment.subjectmanagement.exception.UpdateSqlException;
 import com.xdmd.IntranetEnvironment.subjectmanagement.exception.UpdateStatusException;
 import com.xdmd.IntranetEnvironment.subjectmanagement.mapper.OpenTenderMapper;
 import com.xdmd.IntranetEnvironment.subjectmanagement.pojo.OpenTender;
 import com.xdmd.IntranetEnvironment.subjectmanagement.service.OpenTenderService;
+import com.xdmd.IntranetEnvironment.user.exception.ClaimsNullException;
+import com.xdmd.IntranetEnvironment.user.exception.UserNameNotExistentException;
+import com.xdmd.IntranetEnvironment.user.pojo.User;
 import com.xdmd.IntranetEnvironment.user.service.impl.TokenService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +27,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,7 +43,9 @@ public class OpenTenderServiceImpl implements OpenTenderService {
     @Autowired
     UploadFileMapper uploadFileMapper;
     @Autowired
-    TokenService tokenService;
+    ExtranetTokenService extranetTokenService;//外网
+    @Autowired
+    TokenService tokenService;//内网
 
 
     /**
@@ -58,37 +64,40 @@ public class OpenTenderServiceImpl implements OpenTenderService {
      */
     @Override
     public ResultMap insertTender(String token, HttpServletResponse response, OpenTender openTender) {
+        JwtInformation jwtInformation = new JwtInformation();
         try {
-//      User user = new User();
-//        try {
-//            user = tokenService.compare(response, token);
-//        } catch (NullPointerException e) {
-//            e.printStackTrace();
-//            return resultMap.fail().message("请先登录");
-//        } catch (UserNameNotExistentException e) {
-//            e.printStackTrace();
-//            return resultMap.fail().message("请先登录");
-//        } catch (ClaimsNullException e){
-//            e.printStackTrace();
-//            return resultMap.fail().message("请先登录");
-//        }catch (Exception e) {
-//            e.printStackTrace();
-//            log.error("MenuServiceImpl 中 TokenService 出现问题");
-//            return resultMap.message("系统异常");
-//        }
-//        //当前登录者
-//        Integer uid = user.getId();
-//        String username = user.getUsername();
+            jwtInformation = extranetTokenService.compare(response, token);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (UserNameNotExistentException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (ClaimsNullException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("MenuServiceImpl 中 TokenService 出现问题");
+            return resultMap.message("系统异常");
+        }
+        //Integer userid = jwtInformation.getUid();
+        String username = jwtInformation.getUsername();
+        Integer cid = jwtInformation.getCid();
+        //String cname = jwtInformation.getCompanyName();
 
-            String username = "单位员工";
+        try {
             //获取课题编号
             openTender.setProjectNo(setProjectNo());
             //执行新增操作
             int insertNo = openTenderMapper.insertTender(openTender);
+            //单位关联招标备案
+            insertTidAndUid(cid, openTender.getId());
             //获取当前系统时间
             String nowtime = new SimpleDateFormat("yyyy-MM-dd:HH:mm:ss").format(System.currentTimeMillis());
             //新增员工提交信息
-            String auditStep = "单位员工提交，等待单位管理员审核";
+           // String auditStep = "单位员工提交，等待单位管理员审核";
+            String auditStep = "单位员工提交，等待评估中心审核";
             String newState = "等待处理";
             int num = 0;
             num = openTenderMapper.insertNewOpenTenderStateRecord(openTender.getId(), username, auditStep, nowtime, newState);
@@ -96,7 +105,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
                 throw new InsertSqlException("审核通过时，在新增审核状态时，新增数据时出错");
             }
             if (insertNo > 0) {
-                resultMap.success().message("成功新增" + insertNo + "条数据");
+                resultMap.success().message(openTender.getId());
             } else if (insertNo == 0) {
                 resultMap.success().message("新增失败");
             }
@@ -110,7 +119,6 @@ public class OpenTenderServiceImpl implements OpenTenderService {
     /**
      * 根據单位id查詢相应单位的招标公告
      *
-     * @param uid
      * @param projectName
      * @param subjectName
      * @param subjectLeader
@@ -118,10 +126,43 @@ public class OpenTenderServiceImpl implements OpenTenderService {
      * @return
      */
     @Override
-    public ResultMap getTenderByUid(int uid, String projectName, String subjectName, String subjectLeader, String leaderContact, int pagenNum, int pageSize) {
+    public ResultMap getTenderByUid(String token, HttpServletResponse response,String projectName, String subjectName, String subjectLeader, String leaderContact, int pageNum, int pageSize) {
+        JwtInformation jwtInformation = new JwtInformation();
         try {
-            PageHelper.startPage(pagenNum, pageSize, true);
-            List<Map> getTenderByUidMap = openTenderMapper.getTenderByUid(uid, projectName, subjectName, subjectLeader, leaderContact);
+            jwtInformation = extranetTokenService.compare(response, token);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (UserNameNotExistentException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (ClaimsNullException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("MenuServiceImpl 中 TokenService 出现问题");
+            return resultMap.message("系统异常");
+        }
+        /**
+         * 用户id
+         */
+        //Integer userid = jwtInformation.getUid();
+        /**
+         * 用户名
+         */
+        //String username = jwtInformation.getUsername();
+        /**
+         * 单位id
+         */
+        Integer cid = jwtInformation.getCid();
+        /**
+         * 单位名称
+         */
+        //String cname = jwtInformation.getCompanyName();
+        try {
+            PageHelper.startPage(pageNum, pageSize, true);
+            List<Map> getTenderByUidMap = openTenderMapper.getTenderByUid(cid, projectName, subjectName, subjectLeader, leaderContact);
             PageInfo pageInfo = new PageInfo(getTenderByUidMap);
             if (getTenderByUidMap != null) {
                 resultMap.success().message(pageInfo);
@@ -136,7 +177,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
     }
 
     /**
-     * 根據id获取招标公告详情
+     * 根據id获取招标备案详情【内外网】
      *
      * @param id
      * @return
@@ -220,33 +261,6 @@ public class OpenTenderServiceImpl implements OpenTenderService {
         return resultMap;
     }
 
-
-    /**
-     * 根据招标备案id更新相应的附件id【外网上传附件】
-     *
-     * @param winningFileAttachmentId
-     * @param announcementTransactionAnnouncementId
-     * @param dealNotificationAttachmentId
-     * @param responseFileAttachmentId
-     * @param oid
-     * @return
-     */
-    @Override
-    public ResultMap updateTenderByoid(int winningFileAttachmentId, int announcementTransactionAnnouncementId, int dealNotificationAttachmentId, int responseFileAttachmentId, int oid) {
-        try {
-            int updateNo = openTenderMapper.updateAnnexByoid(winningFileAttachmentId, announcementTransactionAnnouncementId, dealNotificationAttachmentId, responseFileAttachmentId, oid);
-            if (updateNo > 0) {
-                resultMap.success().message("成功更新" + updateNo + "条数据");
-            } else if (updateNo < 0) {
-                resultMap.success().message("没有查到相关信息");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            resultMap.fail().message("系统异常");
-        }
-        return resultMap;
-    }
-
     /**
      * 获取最新id
      *
@@ -260,43 +274,42 @@ public class OpenTenderServiceImpl implements OpenTenderService {
 
     /**
      * 招标附件上传
+     * @param oid                      招标主表id
      * @param winningDocument         中标文件附件
      * @param transactionAnnouncement 成交公告附件
      * @param noticeTransaction       成交通知书附件
      * @param responseFile            响应文件附件
+     * @param otherAttachments        其他附件
      * @return
      * @throws IOException
      */
     @Override
-    public ResultMap tenderMultiUpload(String token, HttpServletResponse response,MultipartFile winningDocument, MultipartFile transactionAnnouncement, MultipartFile noticeTransaction, MultipartFile responseFile, MultipartFile otherAttachments) throws IOException, FileUploadException {
-//      User user = new User();
-//        try {
-//            user = tokenService.compare(response, token);
-//        } catch (NullPointerException e) {
-//            e.printStackTrace();
-//            return resultMap.fail().message("请先登录");
-//        } catch (UserNameNotExistentException e) {
-//            e.printStackTrace();
-//            return resultMap.fail().message("请先登录");
-//        } catch (ClaimsNullException e){
-//            e.printStackTrace();
-//            return resultMap.fail().message("请先登录");
-//        }catch (Exception e) {
-//            e.printStackTrace();
-//            log.error("MenuServiceImpl 中 TokenService 出现问题");
-//            return resultMap.message("系统异常");
-//        }
-//        //当前登录者
-//        Integer uid = user.getId();
-//        String username = user.getUsername();
+    public ResultMap tenderMultiUpload(String token, HttpServletResponse response,int oid, MultipartFile winningDocument, MultipartFile transactionAnnouncement, MultipartFile noticeTransaction, MultipartFile responseFile, MultipartFile otherAttachments) throws IOException, FileUploadException {
+       JwtInformation jwtInformation = new JwtInformation();
+       try {
+           jwtInformation = extranetTokenService.compare(response, token);
+       } catch (NullPointerException e) {
+           e.printStackTrace();
+           return resultMap.fail().message("请先登录");
+       } catch (UserNameNotExistentException e) {
+           e.printStackTrace();
+           return resultMap.fail().message("请先登录");
+       } catch (ClaimsNullException e) {
+           e.printStackTrace();
+           return resultMap.fail().message("请先登录");
+       } catch (Exception e) {
+           e.printStackTrace();
+           log.error("MenuServiceImpl 中 TokenService 出现问题");
+           return resultMap.message("系统异常");
+       }
+       //Integer userid = jwtInformation.getUid();
+       String username = jwtInformation.getUsername();
 
-        String username = "测试人员";
-        //获取招标备案表的id
-        OpenTender openTender=new OpenTender();
-        int oid=openTender.getId();
+       //Integer cid = jwtInformation.getCid();
+       //String cname = jwtInformation.getCompanyName();
+
         //根据招标备案表的id 获取该公司的名字
         String unitName = openTenderMapper.queryUnitNameByoid(oid);
-
         try {
             /**
              * 中标文件附件
@@ -308,15 +321,15 @@ public class OpenTenderServiceImpl implements OpenTenderService {
                 resultMap.fail().message("中标文件附件的文件格式不正确,请上传正确的文件格式");
             }
             //获取中标文件附件的地址
-            String winningDocumentUrl = fileUploadUntil(winningDocument, unitName, "中标文件附件", oid);
+            String winningDocumentUrl = fileUploadUntil(winningDocument, unitName, "中标文件附件");
             //获取文件后缀名
             String winningDocumentSuffixName = winningDocumentName.substring(winningDocumentName.lastIndexOf(".") + 1);
             // 获取文件大小
             File winningDocumentFile = new File(winningDocumentUrl);
             String winningDocumentFileSize = String.valueOf(winningDocumentFile.length());
-            AnnexUpload winningDocumentAnnex = new AnnexUpload(0, winningDocumentUrl, winningDocumentName, "中标文件附件", winningDocumentSuffixName, winningDocumentFileSize, null, username);
+            AnnexUpload winningDocumentData = new AnnexUpload(0, winningDocumentUrl, winningDocumentName, "中标文件附件", winningDocumentSuffixName, winningDocumentFileSize, null, username);
             //把该文件上传到文件表中
-            uploadFileMapper.insertUpload(winningDocumentAnnex);
+            uploadFileMapper.insertUpload(winningDocumentData);
             /**
              * 成交公告附件
              */
@@ -327,15 +340,15 @@ public class OpenTenderServiceImpl implements OpenTenderService {
                 resultMap.fail().message("成交公告附件的文件格式不正确,请上传正确的文件格式");
             }
             //获取成交公告附件的地址
-            String transactionAnnouncementUrl = fileUploadUntil(transactionAnnouncement, unitName, "成交公告附件", oid);
+            String transactionAnnouncementUrl = fileUploadUntil(transactionAnnouncement, unitName, "成交公告附件");
             //获取文件后缀名
             String transactionAnnouncementSuffixName = transactionAnnouncementName.substring(winningDocumentName.lastIndexOf(".") + 1);
             // 获取文件大小
             File transactionAnnouncementFile = new File(transactionAnnouncementUrl);
             String transactionAnnouncementFileSize = String.valueOf(winningDocumentFile.length());
-            AnnexUpload transactionAnnouncementAnnex = new AnnexUpload(0, transactionAnnouncementUrl, transactionAnnouncementName, "成交公告附件", transactionAnnouncementSuffixName, transactionAnnouncementFileSize, null, username);
+            AnnexUpload transactionAnnouncementData = new AnnexUpload(0, transactionAnnouncementUrl, transactionAnnouncementName, "成交公告附件", transactionAnnouncementSuffixName, transactionAnnouncementFileSize, null, username);
             //把该文件上传到文件表中
-            uploadFileMapper.insertUpload(transactionAnnouncementAnnex);
+            uploadFileMapper.insertUpload(transactionAnnouncementData);
             /**
              * 成交通知书附件
              */
@@ -346,15 +359,15 @@ public class OpenTenderServiceImpl implements OpenTenderService {
                 resultMap.fail().message("成交通知书附件的文件格式不正确,请上传正确的文件格式");
             }
             //获取成交通知书附件的地址
-            String noticeTransactionUrl = fileUploadUntil(noticeTransaction, unitName, "成交通知书附件", oid);
+            String noticeTransactionUrl = fileUploadUntil(noticeTransaction, unitName, "成交通知书附件");
             //获取文件后缀名
             String noticeTransactionSuffixName = noticeTransactionName.substring(noticeTransactionName.lastIndexOf(".") + 1);
             // 获取文件大小
             File noticeTransactionFile = new File(noticeTransactionUrl);
             String noticeTransactionFileSize = String.valueOf(noticeTransactionFile.length());
-            AnnexUpload noticeTransactionAnnex = new AnnexUpload(0, noticeTransactionUrl, noticeTransactionName, "成交公告附件", noticeTransactionSuffixName, noticeTransactionFileSize, null, username);
+            AnnexUpload noticeTransactionData = new AnnexUpload(0, noticeTransactionUrl, noticeTransactionName, "成交公告附件", noticeTransactionSuffixName, noticeTransactionFileSize, null, username);
             //把该文件上传到文件表中
-            uploadFileMapper.insertUpload(noticeTransactionAnnex);
+            uploadFileMapper.insertUpload(noticeTransactionData);
             /**
              * 响应文件附件
              */
@@ -365,37 +378,37 @@ public class OpenTenderServiceImpl implements OpenTenderService {
                 resultMap.fail().message("成交通知书附件的文件格式不正确,请上传正确的文件格式");
             }
             //获取响应文件附件的地址
-            String responseFileUrl = fileUploadUntil(responseFile, unitName, "响应文件附件", oid);
+            String responseFileUrl = fileUploadUntil(responseFile, unitName, "响应文件附件");
             //获取文件后缀名
             String responseFileSuffixName = responseFileName.substring(responseFileName.lastIndexOf(".") + 1);
             // 获取文件大小
             String responseFileFileSize = String.valueOf(new File(responseFileUrl).length());
-            AnnexUpload responseFileAnnex = new AnnexUpload(0, responseFileUrl, responseFileName, "响应文件附件", responseFileSuffixName, responseFileFileSize, null, username);
+            AnnexUpload responseFileAttachmentData = new AnnexUpload(0, responseFileUrl, responseFileName, "响应文件附件", responseFileSuffixName, responseFileFileSize, null, username);
             //把该文件上传到文件表中
-            uploadFileMapper.insertUpload(responseFileAnnex);
+            uploadFileMapper.insertUpload(responseFileAttachmentData);
             /**
              * 其他附件
              */
             //判断上传其他附件的后缀名是否正确
             String otherAttachmentsName = otherAttachments.getOriginalFilename();
             Boolean eBoolean = FileSuffixJudge.suffixJudge(otherAttachmentsName);
-            if (dBoolean == false) {
+            if (eBoolean == false) {
                 resultMap.fail().message("其他附件文件格式不正确,请上传正确的文件格式");
             }
-            //获取响应文件附件的地址
-            String otherAttachmentsUrl = fileUploadUntil(responseFile, unitName, "其他附件", oid);
+            //获取其他附件的地址
+            String otherAttachmentsUrl = fileUploadUntil(otherAttachments, unitName, "其他附件");
             //获取文件后缀名
             String otherAttachmentsSuffixName = responseFileName.substring(otherAttachmentsName.lastIndexOf(".") + 1);
             // 获取文件大小
             String otherAttachmentsFileSize = String.valueOf(new File(otherAttachmentsUrl).length());
-            AnnexUpload otherAttachmentsAnnex = new AnnexUpload(0, otherAttachmentsUrl, otherAttachmentsName, "其他附件", otherAttachmentsSuffixName, otherAttachmentsFileSize, null, username);
+            AnnexUpload otherAttachmentsData = new AnnexUpload(0, otherAttachmentsUrl, otherAttachmentsName, "其他附件", otherAttachmentsSuffixName, otherAttachmentsFileSize, null, username);
             //把该文件上传到文件表中
-            uploadFileMapper.insertUpload(otherAttachmentsAnnex);
+            uploadFileMapper.insertUpload(otherAttachmentsData);
 
             /**
              * 把上传附件的id取出，存到招标备案表中
              */
-            openTenderMapper.updateAnnexByoid(winningDocumentAnnex.getId(), transactionAnnouncementAnnex.getId(), noticeTransactionAnnex.getId(), responseFileAnnex.getId(), oid);
+            openTenderMapper.updateAnnexByoid(winningDocumentData.getId(), transactionAnnouncementData.getId(), noticeTransactionData.getId(), responseFileAttachmentData.getId(),otherAttachmentsData.getId(), oid);
             return resultMap.success().message("多个附件上传成功");
         } catch (IOException e) {
             e.printStackTrace();
@@ -403,7 +416,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
             throw new FileUploadException("附件上传失败");
         } catch (FileUploadException e) {
             e.printStackTrace();
-            resultMap.success().message("附件上传失败");
+            resultMap.fail().message("附件上传失败");
         }
         return resultMap;
     }
@@ -417,7 +430,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
      * @return
      * @throws IOException
      */
-    public String fileUploadUntil(MultipartFile file, String unitName, String fileType, int oid) throws IOException, FileUploadException {
+    public String fileUploadUntil(MultipartFile file, String unitName, String fileType) throws IOException, FileUploadException {
 
         //判断文件是否为空
         if (file.isEmpty()) {
@@ -429,10 +442,10 @@ public class OpenTenderServiceImpl implements OpenTenderService {
         String fileName = pinjiefileName.toString();
 
         //获取招标课题名稱
-        Object ketiName = openTenderMapper.getTenderById(oid).get("subjectName");
+        //Object ketiName = openTenderMapper.getTenderById(oid).get("subjectName");
         //获取文件上传绝对路径
-        String FilePath = "D:/xdmd/environment/" + unitName + "/" + ketiName + "/" + fileType + "/";
-        StringBuilder initPath = new StringBuilder(FilePath);
+        String path = "D:/xdmd/environment/" + unitName + "/"+ fileType + "/";
+        StringBuilder initPath = new StringBuilder(path);
         String filePath = initPath.append(fileName).toString();
         File dest = new File(filePath);
 
@@ -451,6 +464,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
             throw new FileUploadException("文件上传失败");
         }
     }
+
 
 
     /**
@@ -582,29 +596,27 @@ public class OpenTenderServiceImpl implements OpenTenderService {
      */
     @Override
     public ResultMap tenderShenHeByPingGuCenter(String token, HttpServletResponse response, Boolean type, String reason, Integer oid) {
-//       User user = new User();
-//        try {
-//            user = tokenService.compare(response, token);
-//        } catch (NullPointerException e) {
-//            e.printStackTrace();
-//            return resultMap.fail().message("请先登录");
-//        } catch (UserNameNotExistentException e) {
-//            e.printStackTrace();
-//            return resultMap.fail().message("请先登录");
-//        } catch (ClaimsNullException e){
-//            e.printStackTrace();
-//            return resultMap.fail().message("请先登录");
-//        }catch (Exception e) {
-//            e.printStackTrace();
-//            log.error("MenuServiceImpl 中 TokenService 出现问题");
-//            return resultMap.message("系统异常");
-//        }
-//        //当前登录者
-//        Integer uid = user.getId();
-//        String username = user.getUsername();
+      User user = new User();
+       try {
+           user = tokenService.compare(response, token);
+       } catch (NullPointerException e) {
+           e.printStackTrace();
+           return resultMap.fail().message("请先登录");
+       } catch (UserNameNotExistentException e) {
+           e.printStackTrace();
+           return resultMap.fail().message("请先登录");
+       } catch (ClaimsNullException e){
+           e.printStackTrace();
+           return resultMap.fail().message("请先登录");
+       }catch (Exception e) {
+           e.printStackTrace();
+           log.error("MenuServiceImpl 中 TokenService 出现问题");
+           return resultMap.message("系统异常");
+       }
+       //当前登录者信息
+      // Integer uid = user.getId();
+       String username = user.getUsername();
 
-
-        String username = "评估中心";
         //根据招标备案表的id 获取该公司的名字
         String unitName = openTenderMapper.queryUnitNameByoid(oid);
         //获取当前系统时间
@@ -620,7 +632,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
                 //根据数据的id 把处理人，审核状态，审核内容，处理时间更新
                 int num = 0;
                 num = openTenderMapper.updateOpenTenderStateRecord(oid, username, state, handleContent, nowtime);
-                System.out.println(num);
+                //System.out.println(num);
                 if (num == 0) {
                     throw new UpdateSqlException("在更新审核状态，更新上一条数据时出错");
                 }
@@ -630,7 +642,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
                 int num3 = 0;
                 int auditStatus = 3;
                 num3 = openTenderMapper.updateTenderStatus(auditStatus, oid);
-                System.out.println(num3);
+                //System.out.println(num3);
                 if (num3 == 0) {
                     throw new UpdateStatusException("更新招标备案表中审核状态出错");
                 }
@@ -683,13 +695,14 @@ public class OpenTenderServiceImpl implements OpenTenderService {
 
     /**
      * 展示所有未通过单位管理员审批的
+     *
      * @return
      */
     @Override
     public ResultMap showAllNoPassTenderReviewByUnitManager(String projectName, String subjectName, String subjectLeader, String leaderContact, int pageNum, int pageSize) {
         try {
             PageHelper.startPage(pageNum, pageSize, true);
-            List<Map> openTenderList = openTenderMapper.showAllNoPassTenderReviewByUnitManager(projectName, subjectName,subjectLeader,leaderContact);
+            List<Map> openTenderList = openTenderMapper.showAllNoPassTenderReviewByUnitManager(projectName, subjectName, subjectLeader, leaderContact);
             PageInfo pageInfo = new PageInfo(openTenderList);
             if (openTenderList.size() > 0) {
                 resultMap.success().message(pageInfo);
@@ -709,10 +722,10 @@ public class OpenTenderServiceImpl implements OpenTenderService {
      * @return
      */
     @Override
-    public ResultMap showAllPassTenderReviewByUnitManager(String projectName, String subjectName, String subjectLeader, String leaderContact,int pageNum, int pageSize) {
+    public ResultMap showAllPassTenderReviewByUnitManager(String projectName, String subjectName, String subjectLeader, String leaderContact, int pageNum, int pageSize) {
         try {
             PageHelper.startPage(pageNum, pageSize, true);
-            List<Map> openTenderList = openTenderMapper.showAllPassTenderReviewByUnitManager(projectName, subjectName,subjectLeader,leaderContact);
+            List<Map> openTenderList = openTenderMapper.showAllPassTenderReviewByUnitManager(projectName, subjectName, subjectLeader, leaderContact);
             PageInfo pageInfo = new PageInfo(openTenderList);
             if (openTenderList.size() > 0) {
                 resultMap.success().message(pageInfo);
@@ -732,10 +745,10 @@ public class OpenTenderServiceImpl implements OpenTenderService {
      * @return
      */
     @Override
-    public ResultMap showAllPassTenderReviewByPingGu(String projectName, String subjectName, String subjectLeader, String leaderContact,int pageNum, int pageSize) {
+    public ResultMap showAllPassTenderReviewByPingGu(String projectName, String subjectName, String subjectLeader, String leaderContact, int pageNum, int pageSize) {
         try {
             PageHelper.startPage(pageNum, pageSize, true);
-            List<Map> openTenderList = openTenderMapper.showAllPassTenderReviewByPingGu(projectName, subjectName,subjectLeader,leaderContact);
+            List<Map> openTenderList = openTenderMapper.showAllPassTenderReviewByPingGu(projectName, subjectName, subjectLeader, leaderContact);
             PageInfo pageInfo = new PageInfo(openTenderList);
             if (openTenderList.size() > 0) {
                 resultMap.success().message(pageInfo);
@@ -751,13 +764,14 @@ public class OpenTenderServiceImpl implements OpenTenderService {
 
     /**
      * 展示所有未通过评估中心审批的
+     *
      * @return
      */
     @Override
-    public ResultMap showAllNoPassReviewTenderByPingGu(String projectName, String subjectName, String subjectLeader, String leaderContact,int pageNum, int pageSize) {
+    public ResultMap showAllNoPassReviewTenderByPingGu(String projectName, String subjectName, String subjectLeader, String leaderContact, int pageNum, int pageSize) {
         try {
             PageHelper.startPage(pageNum, pageSize, true);
-            List<Map> openTenderList = openTenderMapper.showAllNoPassTenderReviewByPingGu(projectName, subjectName,subjectLeader,leaderContact);
+            List<Map> openTenderList = openTenderMapper.showAllNoPassTenderReviewByPingGu(projectName, subjectName, subjectLeader, leaderContact);
             PageInfo pageInfo = new PageInfo(openTenderList);
             if (openTenderList.size() > 0) {
                 resultMap.success().message(pageInfo);
@@ -774,6 +788,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
 
     /**
      * 不通过被退回时重新提交[即修改]【外网】
+     *
      * @param token
      * @param response
      * @param projectNo
@@ -825,7 +840,8 @@ public class OpenTenderServiceImpl implements OpenTenderService {
             String nowtime = new SimpleDateFormat("yyyy-MM-dd:HH:mm:ss").format(System.currentTimeMillis());
             //审核不通过重新修改数据提交时,先把上一条数据进行更新，再新增下一条数据
             String state = "等待处理";
-            String handleContent = "等待单位管理员审核";
+            //String handleContent = "等待单位管理员审核";
+            String handleContent = "等待评估中心审核";
             //根据数据的id 把处理人，审核状态，审核内容，处理时间更新
             int num0 = 0;
             num0 = openTenderMapper.updateOpenTenderStateRecord(oid, username, state, handleContent, nowtime);
@@ -833,7 +849,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
                 throw new UpdateSqlException("在更新审核状态，更新上一条数据时出错");
             }
             //新增员工提交信息
-            String auditStep = "单位员工提交，等待单位管理员审核";
+            String auditStep = "单位员工提交，等待评估中心审核";
             String newState = "等待处理";
             int num1 = 0;
             num1 = openTenderMapper.insertNewOpenTenderStateRecord(oid, username, auditStep, nowtime, newState);
@@ -866,7 +882,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
     @Override
     public ResultMap getfileInfo(int id) {
         try {
-            HashMap fileInfoMap = openTenderMapper.getfileInfo(id);
+            List<Map> fileInfoMap = openTenderMapper.getfileInfo(id);
             if (fileInfoMap.size() > 0) {
                 resultMap.success().message(fileInfoMap);
             } else if (fileInfoMap.size() == 0) {
@@ -882,6 +898,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
 
     /**
      * 根据合同主表id查询审核记录
+     *
      * @param oid
      * @return
      */
@@ -897,6 +914,29 @@ public class OpenTenderServiceImpl implements OpenTenderService {
         } catch (Exception e) {
             e.printStackTrace();
             resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
+
+
+    /**
+     * 单位关联招标备案
+     * @param unitId
+     * @param tenderId
+     * @return
+     */
+    @Override
+    public ResultMap insertTidAndUid(int unitId, int tenderId) {
+        try{
+            int insertNo=openTenderMapper.insertTidAndUid(unitId,tenderId);
+            if(insertNo>0){
+                resultMap.success().message("新增成功");
+            }else if(insertNo==0){
+                resultMap.fail().message("新增失败");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            resultMap.success().message("系统异常");
         }
         return resultMap;
     }

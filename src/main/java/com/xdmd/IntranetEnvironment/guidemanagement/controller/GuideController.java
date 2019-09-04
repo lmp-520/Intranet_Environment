@@ -95,8 +95,7 @@ public class GuideController {
     @PostMapping(value = "updateIsSelectByIds")
     @ApiOperation(value = "根据勾选的指南id更新相应指南申报选中状态(注意:传的是指南申报id,不是汇总表id)")
     public ResultMap updateIsSelectByIds(@RequestBody List<Long> ids){
-        resultMap=guideService.updateIsSelectByIds(ids);
-        return resultMap;
+        return resultMap=guideService.updateIsSelectByIds(ids);
     }
 
     /**

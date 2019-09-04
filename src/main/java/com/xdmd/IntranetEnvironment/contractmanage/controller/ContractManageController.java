@@ -210,10 +210,10 @@ public class ContractManageController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "cid", value = "合同id"),
     })
-    public String ContractFileUpload(MultipartFile file) {
+    public String ContractFileUpload(MultipartFile file,int cid) {
         String OK = null;
         try {
-            OK = contractManageService.ContractFileUpload(file);
+            OK = contractManageService.ContractFileUpload(file,cid);
         } catch (Exception e) {
             e.printStackTrace();
         }
