@@ -204,8 +204,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
      * @param
      */
     public String setProjectNo() {
-        getNewData();
-        String subString = new String(openTenderMapper.getNewData().getProjectNo());
+        String subString = new String(openTenderMapper.getNewData());
         /**
          * 分离出数字并转换成int类型
          */
@@ -267,7 +266,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
      * @return
      */
     @Override
-    public OpenTender getNewData() {
+    public String getNewData() {
         return openTenderMapper.getNewData();
     }
 

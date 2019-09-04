@@ -60,8 +60,8 @@ public interface OpenTenderMapper {
      * 获取最新的id【外网-课题编号】
      * @return
      */
-    @Select(value = "SELECT id,project_no FROM open_tender ORDER BY id DESC LIMIT 1")
-    OpenTender getNewData();
+    @Select(value = "SELECT project_no FROM open_tender ORDER BY id DESC LIMIT 1")
+    String  getNewData();
 
 
 

@@ -98,7 +98,7 @@ public class ContractManageServiceImpl implements ContractManageService {
                 throw new InsertSqlException("审核通过时，在新增审核状态时，新增数据时出错");
             }
             if (insertNo > 0) {
-                resultMap.success().message("成功新增" + insertNo + "条数据");
+                resultMap.success().message(contractManageDTO.getId());
             } else if (insertNo == 0) {
                 resultMap.success().message("新增失败");
             }
@@ -146,6 +146,7 @@ public class ContractManageServiceImpl implements ContractManageService {
     @Override
     public ResultMap getAllInfo(String subjectCategory, String subjectName, String subjectContact, String subjectContactPhone, String commitmentUnit, String subjectSupervisorDepartment, int pageNum, int pageSize) {
         try {
+
             PageHelper.startPage(pageNum, pageSize, true);
             List<Map> contractMap = contractManageMapper.getAllInfo(subjectCategory, subjectName, subjectContact, subjectContactPhone, commitmentUnit, subjectSupervisorDepartment);
             PageInfo pageInfo = new PageInfo(contractMap);

@@ -68,7 +68,7 @@ public interface OpenTenderService {
     /**
      * 获取最新招标信息
      */
-    OpenTender getNewData();
+    String getNewData();
 
     /**
      * 招标附件上传
