@@ -346,7 +346,7 @@ public class ProjectProgressServiceImpl implements ProjectProgressService {
                 resultMap.fail().message("开题报告附件的文件格式不正确,请上传正确的文件格式");
             }
             //获取开题报告附件的地址
-            String openReportAnnexUrl = openTenderServiceImpl.fileUploadUntil(openReportAnnex, unitName, "开题报告附件", pid);
+            String openReportAnnexUrl = openTenderServiceImpl.fileUploadUntil(openReportAnnex, unitName, "开题报告附件");
             //获取文件后缀名
             String openReportAnnexSuffixName = openReportAnnexName.substring(openReportAnnexName.lastIndexOf(".") + 1);
             // 获取文件大小
@@ -365,7 +365,7 @@ public class ProjectProgressServiceImpl implements ProjectProgressService {
                 resultMap.fail().message("专家意见附件附件的文件格式不正确,请上传正确的文件格式");
             }
             //获取专家意见附件的地址
-            String expertSuggestAnnexUrl = openTenderServiceImpl.fileUploadUntil(expertSuggestAnnex, unitName, "专家论证意见附件", pid);
+            String expertSuggestAnnexUrl = openTenderServiceImpl.fileUploadUntil(expertSuggestAnnex, unitName, "专家论证意见附件");
             //获取文件后缀名
             String expertSuggestAnnexSuffixName = expertSuggestAnnexName.substring(expertSuggestAnnexName.lastIndexOf(".") + 1);
             // 获取文件大小
@@ -384,7 +384,7 @@ public class ProjectProgressServiceImpl implements ProjectProgressService {
                 resultMap.fail().message("课题进展附件的文件格式不正确,请上传正确的文件格式");
             }
             //获取课题进展附件的地址
-            String subjectProgressAnnexUrl = openTenderServiceImpl.fileUploadUntil(subjectProgressAnnex, unitName, "课题进展附件", pid);
+            String subjectProgressAnnexUrl = openTenderServiceImpl.fileUploadUntil(subjectProgressAnnex, unitName, "课题进展附件");
             //获取文件后缀名
             String subjectProgressAnnexSuffixName = subjectProgressAnnexName.substring(subjectProgressAnnexName.lastIndexOf(".") + 1);
             // 获取文件大小
@@ -404,7 +404,7 @@ public class ProjectProgressServiceImpl implements ProjectProgressService {
                 resultMap.fail().message("进度经费使用情况附件的文件格式不正确,请上传正确的文件格式");
             }
             //获取进度经费使用情况附件的地址
-            String fundProgressAnnexUrl = openTenderServiceImpl.fileUploadUntil(fundProgressAnnex, unitName, "进度经费使用情况附件", pid);
+            String fundProgressAnnexUrl = openTenderServiceImpl.fileUploadUntil(fundProgressAnnex, unitName, "进度经费使用情况附件");
             //获取文件后缀名
             String fundProgressAnnexSuffixName = fundProgressAnnexName.substring(fundProgressAnnexName.lastIndexOf(".") + 1);
             // 获取文件大小

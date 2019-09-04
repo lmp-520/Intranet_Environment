@@ -23,7 +23,7 @@ public interface ContractManageMapper {
     ContractManageDTO getNewData();
 
     /**
-     * [新增]合同
+     * [新增]合同主表
      * @param contractManageDTO
      * @return
      */
@@ -67,7 +67,7 @@ public interface ContractManageMapper {
             "#{guaranteedUnitZipC},\n" +
             "#{subjectSigningDescription},\n" +
             "#{subjectObjectivesResearch},\n" +
-            "#{subjectAcceptanceAssessment},\n" +
+            "#{subjectAcceptanceAssessment},0,\n" +
             "DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT)")
     int insert(ContractManageDTO contractManageDTO);
 
@@ -499,4 +499,13 @@ public interface ContractManageMapper {
             "ORDER BY ot.id DESC\n")
     List<Map> queryAllEndTenderInfo(@Param("unitId")int unitId);
 
+
+    /**
+     * 单位关联合同主表
+     * @param unitId
+     * @param contractId
+     * @return
+     */
+    @Insert(value = "INSERT INTO unit_contract (unit_id,contract_id)VALUES(#{unitId},#{contractId})")
+    int insertCidAndUid(int unitId, int contractId);
 }

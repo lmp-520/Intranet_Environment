@@ -29,14 +29,13 @@ public interface OpenTenderService {
 
     /**
      * 根據单位id查詢筛选本单位招标公告
-     * @param uid
      * @param projectName
      * @param subjectName
      * @param subjectLeader
      * @param leaderContact
      * @return
      */
-    ResultMap getTenderByUid(int uid, String projectName, String subjectName, String subjectLeader, String leaderContact,int pagenNum,int pageSize);
+    ResultMap getTenderByUid(String token, HttpServletResponse response,String projectName, String subjectName, String subjectLeader, String leaderContact,int pageNum,int pageSize);
 
     /**
      * 根據id查詢筛选招标公告详情
@@ -63,9 +62,8 @@ public interface OpenTenderService {
      * @param dealNotificationAttachmentId
      * @param oid
      * @return
-     */
     ResultMap updateTenderByoid(int winningFileAttachmentId, int announcementTransactionAnnouncementId, int dealNotificationAttachmentId,int responseFileAttachmentId, int oid);
-
+     */
 
     /**
      * 获取最新招标信息
@@ -76,6 +74,7 @@ public interface OpenTenderService {
      * 招标附件上传
      * @param token
      * @param response
+     * @param oid
      * @param winningDocument
      * @param transactionAnnouncement
      * @param noticeTransaction
@@ -85,7 +84,7 @@ public interface OpenTenderService {
      * @throws IOException
      * @throws FileUploadException
      */
-    ResultMap tenderMultiUpload(String token, HttpServletResponse response,MultipartFile winningDocument, MultipartFile transactionAnnouncement, MultipartFile noticeTransaction, MultipartFile responseFile, MultipartFile otherAttachments) throws IOException, FileUploadException;
+    ResultMap tenderMultiUpload(String token, HttpServletResponse response,int oid,MultipartFile winningDocument, MultipartFile transactionAnnouncement, MultipartFile noticeTransaction, MultipartFile responseFile, MultipartFile otherAttachments) throws IOException, FileUploadException;
 
 
 
@@ -177,4 +176,12 @@ public interface OpenTenderService {
      * @return
      */
     ResultMap getAllShenHeTableRecordInfoByContractId(int oid);
+
+    /**
+     * 单位关联招标备案
+     * @param unitId
+     * @param tenderId
+     * @return
+     */
+    ResultMap insertTidAndUid(int unitId, int tenderId);
 }

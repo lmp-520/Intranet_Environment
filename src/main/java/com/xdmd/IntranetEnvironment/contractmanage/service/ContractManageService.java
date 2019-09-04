@@ -51,7 +51,7 @@ public interface ContractManageService {
      * @return
      */
 
-    String ContractFileUpload(MultipartFile file) throws IOException;
+    String ContractFileUpload(MultipartFile file,int cid) throws IOException;
 
 
 
@@ -263,5 +263,14 @@ public interface ContractManageService {
      * @throws Exception
      */
      ResultMap queryAllEndTenderInfo(String token, HttpServletResponse response) throws Exception;
+
+
+    /**
+     * 单位关联合同主表
+     * @param unitId
+     * @param contractId
+     * @return
+     */
+    ResultMap insertCidAndUid(int unitId, int contractId);
 }
 

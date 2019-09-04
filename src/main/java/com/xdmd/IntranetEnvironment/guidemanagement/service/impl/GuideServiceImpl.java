@@ -182,7 +182,6 @@ public class GuideServiceImpl implements GuideService {
         try{
             //获取当前时间戳
             String nowtime = new SimpleDateFormat("yyyyMMddHHmmss").format(System.currentTimeMillis());
-
             for (GuideSummary summary : guideSummary) {
                summary.setCreateTime(nowtime);
             }
@@ -332,15 +331,17 @@ public class GuideServiceImpl implements GuideService {
     @Override
     public ResultMap updateIsSelectByIds(List<Long> ids) {
         try{
-            ids.forEach(id-> System.out.println(id));
-            List<Integer> guideMap=guideMapper.updateIsSelectByIds(ids);
-            if(!guideMap.isEmpty()){
-                resultMap.success().message(guideMap);
-            }else if(guideMap.size()==0){
+         ids.forEach(id-> System.out.println(id));
+            int idNum=guideMapper.updateIsSelectByIds(ids);
+            System.out.println(idNum);
+            if(idNum>0){
+                resultMap.success().message(idNum);
+            }else if(idNum==0){
                 resultMap.fail().message("没有查到相关信息");
             }
         }catch (Exception e){
-            resultMap.success().message("系统异常");
+            e.printStackTrace();
+            resultMap.fail().message("系统异常");
         }
         return resultMap;
     }

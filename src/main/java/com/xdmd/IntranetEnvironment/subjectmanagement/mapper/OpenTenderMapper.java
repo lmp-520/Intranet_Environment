@@ -6,7 +6,6 @@ import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -141,7 +140,7 @@ public interface OpenTenderMapper {
      **/
     @Select(value = "<script>" +
             "SELECT\n" +
-            "ot.id," +
+            "ot.id,\n" +
             "ot.project_name as projectName,\n" +
             "ot.subject_name as subjectName,\n" +
             "ot.winning_amount as winningAmount,\n" +
@@ -149,23 +148,24 @@ public interface OpenTenderMapper {
             "ot.subject_leader as subjectLeader,\n" +
             "ot.leader_contact as leaderContact,\n" +
             "ot.operator,\n" +
-            "ot.operator_contact as operatorContact\n" +
+            "ot.operator_contact as operatorContact,\n" +
+            "ot.audit_status as auditStatus\n" +
             "FROM\n" +
-            "open_tender AS ot\n" +
+            "open_tender AS ot\t" +
             "<where>" +
             "<if test ='null != projectName'>\n" +
-            "project_name like CONCAT('%',#{projectName},'%')\n" +
+            "ot.project_name like CONCAT('%',#{projectName},'%')\n" +
             "</if>\n" +
             "<if test ='null != subjectName'>\n" +
-            "AND subject_name like CONCAT('%',#{subjectName},'%')\n" +
+            "AND ot.subject_name like CONCAT('%',#{subjectName},'%')\n" +
             "</if>\n" +
             "<if test ='null != subjectLeader'>\n" +
-            "AND subject_leader like CONCAT('%',#{subjectLeader},'%')\n" +
+            "AND ot.subject_leader like CONCAT('%',#{subjectLeader},'%')\n" +
             "</if>\n" +
             "<if test ='null != leaderContact'>\n" +
-            "AND leader_contact like CONCAT('%',#{leaderContact},'%')\n" +
+            "AND ot.leader_contact like CONCAT('%',#{leaderContact},'%')\n" +
             "</if></where>" +
-            "ORDER BY id DESC" +
+            "ORDER BY ot.id DESC" +
             "</script>")
         List<Map> getTenderPageList(String projectName, String subjectName, String subjectLeader, String leaderContact);
 
@@ -178,13 +178,14 @@ public interface OpenTenderMapper {
      * @param oid
      * @return
      */
-    @Update("UPDATE open_tender \n" +
+    @Update("UPDATE open_tender\t" +
             "SET winning_file_attachment_id = #{winningFileAttachmentId},\n" +
             "announcement_transaction_announcement_id = #{announcementTransactionAnnouncementId},\n" +
             "deal_notification_attachment_id = #{dealNotificationAttachmentId}, \n" +
-            "response_file_attachment_id = #{responseFileAttachmentId} \n" +
+            "response_file_attachment_id = #{responseFileAttachmentId},\n" +
+            "other_attachments_id=#{otherAttachmentsId}\t" +
             "WHERE id = #{oid}")
-    int updateAnnexByoid(int winningFileAttachmentId, int announcementTransactionAnnouncementId, int dealNotificationAttachmentId,int responseFileAttachmentId, int oid);
+    int updateAnnexByoid(int winningFileAttachmentId, int announcementTransactionAnnouncementId, int dealNotificationAttachmentId,int responseFileAttachmentId,int otherAttachmentsId, int oid);
 
 
     /////////////////招标备案审核//////////////////////////////////
@@ -437,12 +438,13 @@ public interface OpenTenderMapper {
             "WHERE\n" +
             "uf.id in(\n" +
             "(select uf.id from open_tender ot,upload_file uf where uf.id=ot.winning_file_attachment_id and ot.id=#{id}),\n" +
-            "(select uf.id from open_tender ot,upload_file uf where uf.id=ot.announcement_transaction_announcement_id and ot.id=#{id),\n" +
-            "(select uf.id from open_tender ot,upload_file uf where uf.id=ot.deal_notification_attachment_id and ot.id=#{id),\n" +
-            "(select uf.id from open_tender ot,upload_file uf where uf.id=ot.response_file_attachment_id and ot.id=#{id)\n" +
-            ")\t" +
+            "(select uf.id from open_tender ot,upload_file uf where uf.id=ot.announcement_transaction_announcement_id and ot.id=#{id}),\n" +
+            "(select uf.id from open_tender ot,upload_file uf where uf.id=ot.deal_notification_attachment_id and ot.id=#{id}),\n" +
+            "(select uf.id from open_tender ot,upload_file uf where uf.id=ot.response_file_attachment_id and ot.id=#{id}),\n" +
+            "(select uf.id from open_tender ot,upload_file uf where uf.id=ot.other_attachments_id and ot.id=#{id})\n" +
+            ")\n" +
             "GROUP BY uf.id")
-    HashMap getfileInfo(@Param("id") int id);
+    List<Map> getfileInfo(@Param("id") int id);
 
     /**
      * 根据合同主表id查询审核记录
@@ -451,5 +453,15 @@ public interface OpenTenderMapper {
      */
     @Select("select * from tender_contract_shenhe_record where shenhe_table_id=oid")
     List<TenderContractShenheRecordDTO> getAllShenHeTableRecordInfoByContractId(@Param("oid") int oid);
+
+
+    /**
+     * 单位关联招标备案
+     * @param unitId
+     * @param tenderId
+     * @return
+     */
+    @Insert(value = "INSERT INTO unit_tender (unit_id,tender_id)VALUES(#{unitId},#{tenderId})")
+    int insertTidAndUid(int unitId, int tenderId);
 }
 

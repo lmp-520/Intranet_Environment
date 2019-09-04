@@ -44,10 +44,8 @@ public class OpenTenderController {
      */
     @ApiOperation(value = "新增招标信息【外网】")
     @PostMapping(value = "insertTender")
-    ResultMap insertTender(//@CookieValue(value = "IntranecToken", required = false) String token, HttpServletResponse response,
+    ResultMap insertTender(@CookieValue(value = "token", required = false) String token, HttpServletResponse response,
                            @RequestBody OpenTender openTender) {
-        String token = "aaa";
-        HttpServletResponse response = null;
         if (StringUtils.isEmpty(token)) {
             return resultMap.fail().message("请先登录");
         }
@@ -56,23 +54,21 @@ public class OpenTenderController {
 
     /**
      * 根据单位的id查询招标信息【外网】
-     *
-     * @param uid
      * @return
      */
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "uid", value = "单位id"),
-            @ApiImplicitParam(name = "projectName", value = "项目名称"),
-            @ApiImplicitParam(name = "subjectName", value = "课题名称"),
-            @ApiImplicitParam(name = "subjectLeader", value = "课题负责人"),
-            @ApiImplicitParam(name = "leaderContact", value = "课题负责人联系方式"),
-            @ApiImplicitParam(name = "pageNum", value = "当前页数", required = true),
-            @ApiImplicitParam(name = "pageSize", value = "每页显示条数", required = true)
-    })
+    //@ApiImplicitParams({
+    //        @ApiImplicitParam(name = "projectName", value = "项目名称"),
+    //        @ApiImplicitParam(name = "subjectName", value = "课题名称"),
+    //        @ApiImplicitParam(name = "subjectLeader", value = "课题负责人"),
+    //        @ApiImplicitParam(name = "leaderContact", value = "课题负责人联系方式"),
+    //        @ApiImplicitParam(name = "pageNum", value = "当前页数", required = true),
+    //        @ApiImplicitParam(name = "pageSize", value = "每页显示条数", required = true)
+    //})
     @ApiOperation(value = "根据单位的id查询招标信息【外网】")
     @GetMapping(value = "getTenderByUid")
-    ResultMap getTenderByUid(int uid, String projectName, String subjectName, String subjectLeader, String leaderContact, int pagenNum, int pageSize) {
-        return openTenderService.getTenderByUid(uid, projectName, subjectName, subjectLeader, leaderContact, pagenNum, pageSize);
+    ResultMap getTenderByUid(@CookieValue(value = "token", required = false) String token, HttpServletResponse response,
+                                String projectName, String subjectName, String subjectLeader, String leaderContact, int pageNum, int pageSize) {
+        return openTenderService.getTenderByUid(token,response,projectName, subjectName, subjectLeader, leaderContact, pageNum, pageSize);
     }
 
     /**
@@ -112,32 +108,20 @@ public class OpenTenderController {
         return resultMap = openTenderService.getTenderPageList(projectName, subjectName, subjectLeader, leaderContact, pageNum, pageSize);
     }
 
-    /**
-     * 根据招标备案id更新相应的附件id【外网】
-     *
-     * @param winningFileAttachmentId
-     * @param announcementTransactionAnnouncementId
-     * @param dealNotificationAttachmentId
-     * @param oid
-     * @return
-     */
-    ResultMap updateTenderByoid(int winningFileAttachmentId, int announcementTransactionAnnouncementId, int dealNotificationAttachmentId, int responseFileAttachment, int oid) {
-        return resultMap = openTenderService.updateTenderByoid(winningFileAttachmentId, announcementTransactionAnnouncementId, dealNotificationAttachmentId, responseFileAttachment, oid);
-    }
-
 
     /**
      * 招标附件上传
+     * @param oid
      * @param winningDocument         中标文件附件
      * @param transactionAnnouncement 成交公告附件
      * @param noticeTransaction       成交通知书附件
      * @param responseFile            响应文件附件
+     * @param otherAttachments         其他附件
      * @return
      */
     @PostMapping(value = "TenderFileUpload", headers = "content-type=multipart/form-data")
     @ApiOperation(value = "招标附件上传【外网】")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "oid", value = "招标id", required = true),
             @ApiImplicitParam(name = "winningDocument", value = "中标文件附件", dataType = "file", paramType = "form", allowMultiple = true),
             @ApiImplicitParam(name = "transactionAnnouncement", value = "成交公告附件", dataType = "file", paramType = "form", allowMultiple = true),
             @ApiImplicitParam(name = "noticeTransaction", value = "成交通知书附件", dataType = "file", paramType = "form", allowMultiple = true),
@@ -145,20 +129,20 @@ public class OpenTenderController {
             @ApiImplicitParam(name = "otherAttachments", value = "其他附件", dataType = "file", paramType = "form", allowMultiple = true)
 
     })
-    public ResultMap tenderFileUpload(//@CookieValue(value = "IntranecToken", required = false) String token, HttpServletResponse response,
+    public ResultMap tenderFileUpload(@CookieValue(value = "token", required = false) String token, HttpServletResponse response,
+                                      int oid,
                                       MultipartFile winningDocument,
                                       MultipartFile transactionAnnouncement,
                                       MultipartFile noticeTransaction,
                                       MultipartFile responseFile,
                                       MultipartFile otherAttachments) {
-        String token = "aaa";
-        HttpServletResponse response = null;
+        //String token="aaa";
+        //HttpServletResponse response = null;
         if (StringUtils.isEmpty(token)) {
             return resultMap.fail().message("请先登录");
         }
         try {
-            resultMap = openTenderService.tenderMultiUpload(token, response,winningDocument, transactionAnnouncement, noticeTransaction, responseFile,otherAttachments);
-
+            resultMap = openTenderService.tenderMultiUpload(token, response,oid,winningDocument, transactionAnnouncement, noticeTransaction, responseFile,otherAttachments);
         } catch (IOException e) {
             e.printStackTrace();
             log.error("OpenTenderController 中 tenderFileUpload 方法 -- " + e.getMessage());
@@ -187,10 +171,10 @@ public class OpenTenderController {
             @ApiImplicitParam(name = "reason", value = "审核不通过原因", required = false),
             @ApiImplicitParam(name = "oid", value = "审核表id", required = true),
     })
-    public ResultMap tenderShenHeByUnitManager(//@CookieValue(value = "IntranecToken", required = false) String token, HttpServletResponse response,
+    public ResultMap tenderShenHeByUnitManager(@CookieValue(value = "IntranecToken", required = false) String token, HttpServletResponse response,
                                                Boolean type, String reason, Integer oid) {
-        String token = "aaa";
-        HttpServletResponse response = null;
+        //String token = "aaa";
+        //HttpServletResponse response = null;
         if (StringUtils.isEmpty(token)) {
             resultMap.fail().message("请先登录");
         }
@@ -223,10 +207,10 @@ public class OpenTenderController {
     })
     @PostMapping(value = "tenderShenHeByPingGuCenter")
     @ApiOperation(value = "评估中心审核【内网")
-    public ResultMap tenderShenHeByPingGuCenter(//@CookieValue(value = "IntranecToken", required = false) String token, HttpServletResponse response,
+    public ResultMap tenderShenHeByPingGuCenter(@CookieValue(value = "IntranecToken", required = false) String token, HttpServletResponse response,
                                                 Boolean type, String reason, Integer oid) {
-        String token = "aaa";
-        HttpServletResponse response = null;
+        //String token = "aaa";
+        //HttpServletResponse response = null;
         if (StringUtils.isEmpty(token)) {
             return resultMap.fail().message("请先登录");
         }
@@ -375,7 +359,7 @@ public class OpenTenderController {
     }
 
     /**
-     * 根据合同主表id查询审核记录
+     * 根据合同主表id查询审核记录【内网】
      * @param oid
      * @return
      */

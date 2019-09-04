@@ -150,6 +150,9 @@ public class ContractManageDTO {
     @ApiModelProperty("课题意见附件id")
     private Integer subjectSuggestAnnexId;
 
+    @ApiModelProperty("此条数据是否已经加入验收申请（0：未加入，1：已加入）")
+    private String isCheckApply;
+
     public ContractManageDTO() {
     }
 }

@@ -277,7 +277,7 @@ private static final Logger log = LoggerFactory.getLogger(MajorMattersFilingServ
                 resultMap.fail().message("变更申请表附件的文件格式不正确,请上传正确的文件格式");
             }
             //获取变更申请表附件的地址
-            String midCheckAnnexUrl = openTenderServiceImpl.fileUploadUntil(changeApplicationAttachment, unitName, "变更申请表附件", majorid);
+            String midCheckAnnexUrl = openTenderServiceImpl.fileUploadUntil(changeApplicationAttachment, unitName, "变更申请表附件");
             //获取文件后缀名
             String changeApplicationAttachmentSuffixName = changeApplicationAttachmentName.substring(changeApplicationAttachmentName.lastIndexOf(".") + 1);
             // 获取文件大小
@@ -296,7 +296,7 @@ private static final Logger log = LoggerFactory.getLogger(MajorMattersFilingServ
                 resultMap.fail().message("专家论证意见附件附件的文件格式不正确,请上传正确的文件格式");
             }
             //获取专家论证意见附件的地址
-            String expertArgumentationAttachmentUrl = openTenderServiceImpl.fileUploadUntil(expertArgumentationAttachment, unitName, "专家论证意见附件", majorid);
+            String expertArgumentationAttachmentUrl = openTenderServiceImpl.fileUploadUntil(expertArgumentationAttachment, unitName, "专家论证意见附件");
             //获取文件后缀名
             String expertArgumentationAttachmentSuffixName = expertArgumentationAttachmentName.substring(expertArgumentationAttachmentName.lastIndexOf(".") + 1);
             // 获取文件大小
@@ -315,7 +315,7 @@ private static final Logger log = LoggerFactory.getLogger(MajorMattersFilingServ
                 resultMap.fail().message("备案申请表附件的文件格式不正确,请上传正确的文件格式");
             }
             //获取备案申请表附件的地址
-            String filingApplicationAttachmentUrl = openTenderServiceImpl.fileUploadUntil(filingApplicationAttachment, unitName, "备案申请表附件", majorid);
+            String filingApplicationAttachmentUrl = openTenderServiceImpl.fileUploadUntil(filingApplicationAttachment, unitName, "备案申请表附件");
             //获取文件后缀名
             String filingApplicationAttachmentSuffixName = filingApplicationAttachmentName.substring(filingApplicationAttachmentName.lastIndexOf(".") + 1);
             // 获取文件大小
@@ -335,7 +335,7 @@ private static final Logger log = LoggerFactory.getLogger(MajorMattersFilingServ
                 resultMap.fail().message("批准文件附件的文件格式不正确,请上传正确的文件格式");
             }
             //获取批准文件附件的地址
-            String approvalDocumentsAttachmentUrl = openTenderServiceImpl.fileUploadUntil(approvalDocumentsAttachment, unitName, "批准文件附件", majorid);
+            String approvalDocumentsAttachmentUrl = openTenderServiceImpl.fileUploadUntil(approvalDocumentsAttachment, unitName, "批准文件附件");
             //获取文件后缀名
             String approvalDocumentsAttachmentSuffixName = approvalDocumentsAttachmentName.substring(approvalDocumentsAttachmentName.lastIndexOf(".") + 1);
             // 获取文件大小

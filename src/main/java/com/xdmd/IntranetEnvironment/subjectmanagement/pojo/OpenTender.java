@@ -77,6 +77,9 @@ public class OpenTender{
     @ApiModelProperty("响应文件附件id")
     private Integer responseFileAttachmentId;
 
+    @ApiModelProperty("其他附件id")
+    private Integer otherAttachmentsId;
+
     public OpenTender() {
     }
 
