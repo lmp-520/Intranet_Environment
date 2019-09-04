@@ -1,0 +1,28 @@
+package com.xdmd.IntranetEnvironment.shiro;
+
+import com.xdmd.IntranetEnvironment.common.ResultMap;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+@Controller
+@RequestMapping("error")
+public class NotLoginAndPermission {
+
+    @Autowired
+    ResultMap resultMap = new ResultMap();
+
+    @GetMapping("/notLogin")
+    @ResponseBody
+    public ResultMap notLogin(){
+        return resultMap.fail().message("你还未登陆，请先登录");
+    }
+
+    @RequestMapping("/notPermission")
+    @ResponseBody
+    public ResultMap notPermission(){
+        return resultMap.fail().message("你没有此权限");
+    }
+}

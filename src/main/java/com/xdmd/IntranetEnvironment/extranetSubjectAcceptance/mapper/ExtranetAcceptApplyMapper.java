@@ -215,4 +215,6 @@ public interface ExtranetAcceptApplyMapper<T> extends MyBaseMapper<ExtranetCheck
 
     @Select("SELECT id,project_no,subject_name,contract_start_time,contract_end_time,subjece_leader,subject_leader_phone,email,commitment_Unit,commitment_unit_address FROM contract_manage where #{nowTime} >contract_end_time and commitment_Unit = #{cname} and is_check_apply = 0")
     List<SubjectInformation> queryCompanyContractManage(@Param("cname") String cname, @Param("nowTime") String nowTime);
+
+    List<SubjectInformation> queryNewCompanyContractManage(@Param("cname") String cname, @Param("nowTime") String nowTime, @Param("topicName") String topicName, @Param("topicNumber") String topicNumber);
 }

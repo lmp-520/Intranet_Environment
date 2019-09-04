@@ -131,6 +131,7 @@
                 and c.is_outcome = 0 and c.acceptance_phase_id = 7 and c.id = b.cid
             </if>
         </where>
+        order by create_time desc
         limit #{newpage},#{total}
     </select>
 

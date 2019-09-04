@@ -557,9 +557,31 @@ public class ExtranetAcceptApplyController {
     }
 
     //在公司新增验收申请时，显示课题名称与课题编号
+    @PostMapping("newQueryTopicNameAndNumber")
+    @ResponseBody
+    public  ResultMap newQueryTopicNumberAndTopicName(@RequestParam(value = "topicName",required = false)String topicName,     //课题名称
+                                                       @RequestParam(value = "topicNumber",required = false)String topicNumber, //课题编号
+                                                       @CookieValue(value = "token",required = false)String token,HttpServletResponse response,
+                                                       @RequestParam("Page") Integer page,      //页数
+                                                       @RequestParam("total") Integer total     ){  //每页显示条数
+        if(StringUtils.isEmpty(token)){
+            return resultMap.fail().message("请先登录");
+        }
+
+        try {
+            resultMap = extranetAcceptApplyService.newQueryTopicNumberAndTopicName(token,response,page,total,topicName,topicNumber);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("ExtranetAcceptApplyController 中 queryTopicNumberAndTopicName 方法出错 -- "+e.getMessage());
+            return resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
+
+    //在公司新增验收申请时，显示课题名称与课题编号
     @PostMapping("queryTopicNameAndNumber")
     @ResponseBody
-    public  ResultMap queryTopicNumberAndTopicName(@CookieValue(value = "token",required = false)String token,HttpServletResponse response,
+    public  ResultMap QueryTopicNumberAndTopicName(@CookieValue(value = "token",required = false)String token,HttpServletResponse response,
                                                    @RequestParam("Page") Integer page,      //页数
                                                    @RequestParam("total") Integer total     ){  //每页显示条数
         if(StringUtils.isEmpty(token)){

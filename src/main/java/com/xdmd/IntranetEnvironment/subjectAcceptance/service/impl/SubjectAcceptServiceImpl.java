@@ -135,6 +135,11 @@ public class SubjectAcceptServiceImpl implements SubjectAcceptSerivce {
                 //把获取到的文件地址插入到checkApply中
                 checkApply.setExpertGroupCommentsUrl(expertGroupCommentsUrl);
                 checkApply.setExpertAcceptanceFormUrl(expertAcceptanceFormUrl);
+
+                String expertGroupCommentsUrlName = subjectAcceptMapper.queryFileNameByFileId(expertGroupCommentsUrlId);
+                String expertAcceptanceFormUrlName = subjectAcceptMapper.queryFileNameByFileId(expertAcceptanceFormId);
+                checkApply.setExpertGroupCommentsUrlName(expertGroupCommentsUrlName);
+                checkApply.setExpertAcceptanceFormUrlName(expertAcceptanceFormUrlName);
             }
 
             JSONObject jsonObject = JSON.parseObject(checkApply.toString()); //对checkAply实体类进行序列化
