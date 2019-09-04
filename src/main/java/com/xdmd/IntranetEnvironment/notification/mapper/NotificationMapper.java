@@ -23,7 +23,7 @@ public interface NotificationMapper {
     @Select("select * from notification where is_delete = 0  order by create_time desc limit #{newpage},#{total} ")
     List<Notification> queryNotificationList(@Param("newpage") int newpage, @Param("total") Integer total);
 
-    @Select("select * from notification where is_delete = 0 and #{nowTime} between start_time and end_time")
+    @Select("select * from notification where is_delete = 0 and #{nowTime} between start_time and end_time order by start_time desc")
     List<Notification> queryNotificationToExtranet(@Param("nowTime") String nowTime);
 
 }

@@ -4,6 +4,9 @@ import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.company.Pojo.CreditCodeRegex;
 import com.xdmd.IntranetEnvironment.company.Pojo.UserInformation;
 import com.xdmd.IntranetEnvironment.company.Service.CompanyServiceTwo;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,7 +86,7 @@ public class CompanyControllerTwo {
         }
         try {
             resultMap = companyServiceTwo.login(loginName,password,response);
-
+//
 //            //创建shiro的令牌
 //            Subject subject = SecurityUtils.getSubject();
 //            //  在认证提交前准备token（令牌）

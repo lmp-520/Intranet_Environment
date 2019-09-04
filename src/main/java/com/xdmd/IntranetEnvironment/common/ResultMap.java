@@ -25,6 +25,11 @@ public class ResultMap extends HashMap<String, Object> {
         return this;
     }
 
+    public ResultMap loginOverTime(){
+        this.put("resultFlag","2");
+        return this;
+    }
+
     public ResultMap message(Object message) {
         this.put("data", message);
         return this;

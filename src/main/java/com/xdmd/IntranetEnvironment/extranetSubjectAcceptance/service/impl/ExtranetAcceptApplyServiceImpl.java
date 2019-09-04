@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.security.auth.Subject;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.text.ParseException;
@@ -1294,57 +1293,89 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
 
 
         return resultMap.success().message(pageBean);
+    }
+
+    @Override
+    public ResultMap newQueryTopicNumberAndTopicName(String token, HttpServletResponse response, Integer page, Integer total, String topicName, String topicNumber) throws ParseException {
+        //解析token中的数据
+        JwtInformation jwtInformation = new JwtInformation();
+        try {
+            jwtInformation = extranetTokenService.compare(response, token);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (UserNameNotExistentException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (ClaimsNullException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("MenuServiceImpl 中 TokenService 出现问题");
+            return resultMap.message("系统异常");
+        }
+
+        Integer uid = jwtInformation.getUid();
+        String uname = jwtInformation.getUsername();
+        Integer cid = jwtInformation.getCid();
+        String cname = jwtInformation.getCompanyName();
+
+        //获取当前时间
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String nowTime = sdf.format(date);
+
+        List<SubjectInformation> subjectInformationList = acceptApplyMapper.queryNewCompanyContractManage(cname, nowTime,topicName,topicNumber);
+        List<Integer> resultIds = new ArrayList<Integer>();
+
+        //遍历该公司下的，已经结束的合同
+        for (SubjectInformation subjectInformation : subjectInformationList) {
+            String contractEndTime = subjectInformation.getContractEndTime();
+            //把日期字符串进行Date
+            Date sqlTimeParse = sdf.parse(contractEndTime);
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(sqlTimeParse);
+            cal.add(Calendar.MONTH, 3);  //对月份加3
+            String dateOver = sdf.format(cal.getTime());
+
+            if (sdf.parse(dateOver).getTime() > sdf.parse(nowTime).getTime()) {
+                //此时该合同符合要求
+                resultIds.add(subjectInformation.getId());
+            }
+        }
+
+        Integer allTotal = resultIds.size();
+
+        Integer newPage = (page - 1) * total;
+
+        List<SubjectInformation> subjectInformationList1 = new ArrayList<SubjectInformation>();
+        int num = total;
+        if(total>allTotal){
+            num = allTotal;
+        }else {
+            num = newPage+num;
+            if(num>allTotal){
+                num = allTotal;
+            }
+        }
+
+        for (int i = newPage; i < num; i++) {
+            Integer rid = resultIds.get(i);
+            //通过id，获取课题信息
+            SubjectInformation subjectInformation = acceptApplyMapper.querySubjectInformation(rid);
+            //从单位名称查询单位性质
+            Integer unitNature = acceptApplyMapper.queryUnitNatureByCompanyName(subjectInformation.getCommitmentUnit());
+            subjectInformation.setUnitNature(unitNature);
+            subjectInformationList1.add(subjectInformation);
+        }
+
+        PageBean pageBean = new PageBean();
+        pageBean.setCount(allTotal);
+        pageBean.setData(subjectInformationList1);
 
 
-//        //获取当前时间
-//        Date date = new Date();
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-//        String nowTime = sdf.format(date);
-//
-//        //获取符合条件的的合同信息条数
-//        Integer total = acceptApplyMapper.queryAllTotal(cname, nowTime);
-//
-//        //首先获取该公司所有已经结束的合同id
-//        List<Integer> ids = acceptApplyMapper.queryAllEndContractId(nowTime, cname);
-//
-//        //存放符合条件的id集合
-//        List<Integer> resultIds = new ArrayList<>();
-//
-//        for (Integer id : ids) {
-//            //根据id获取合同的结束时间
-//            String contractEndTime = acceptApplyMapper.queryEndTimeById(id);
-//            //把日期字符串进行Date
-//            Date sqlTimeParse = sdf.parse(contractEndTime);
-//            Calendar cal = Calendar.getInstance();
-//            cal.setTime(sqlTimeParse);
-//            cal.add(Calendar.MONTH, 3);  //对月份加3
-//            String dateOver = sdf.format(cal.getTime());
-//
-//            if (sdf.parse(dateOver).getTime() > sdf.parse(nowTime).getTime()) {
-//                //此时该合同符合要求
-//                resultIds.add(id);
-//            }
-//        }
-//
-//        Integer allTotal = resultIds.size();
-//        Integer newPage = (page - 1) * total;
-//
-//
-//        //获取该页的id集合
-//
-//
-//        List<SubjectInformation> subjectNameAndIdList = new ArrayList<>();
-//
-//        //遍历符合要求的id，获取课题名称
-//        for (Integer resultId : resultIds) {
-//            //通过id，获取课题信息
-//            SubjectInformation subjectInformation = acceptApplyMapper.querySubjectInformation(resultId, newPage, total);
-//            //从单位名称查询单位性质
-//            Integer unitNature = acceptApplyMapper.queryUnitNatureByCompanyName(subjectInformation.getCommitmentUnit());
-//            subjectInformation.setUnitNature(unitNature);
-//            subjectNameAndIdList.add(subjectInformation);
-//        }
-//
-//        return resultMap.success().message(subjectNameAndIdList);
+        return resultMap.success().message(pageBean);
+
     }
 }

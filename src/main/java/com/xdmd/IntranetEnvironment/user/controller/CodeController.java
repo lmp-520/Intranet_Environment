@@ -43,7 +43,7 @@ public class CodeController {
         //画矩形的边框,坐标从0开始绘制边框
         g.drawRect(0, 0, width - 1, height - 1);
         //设置需要显示的字母shift+ctrl+x是大写shift+ctrl+y是小写
-        String data = "ABCDEFGHIJKLMNOPQISTUVWXYZabcdefghijklmnopqistuvwxyz";
+        String data = "ABCDEFGHJKMNPQSTUVWXYZabcdefghjkmnpqstuvwxyz";
         Random r = new Random();
         StringBuffer sb = new StringBuffer();
         //连续填充4个字母到图片中

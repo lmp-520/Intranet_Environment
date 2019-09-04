@@ -1,0 +1,12 @@
+package com.xdmd.IntranetEnvironment.shiro.mapper;
+
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
+
+public interface ShiroMapper {
+    //根据登录名查询权限
+    @Select("select name from shiro_permission where pid in (select pid from shiro_permission_role where rid = (select rid from shiro_user_role where uid  = (select uid from shiro_user_information where login_name = #{loginName})))")
+    List<String> getPermission(@Param("loginName") String loginName);
+}

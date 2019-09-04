@@ -78,6 +78,7 @@
                 and acceptance_phase_id in (4,5)
             </if>
         </where>
+        order by create_time desc
         limit #{newpage},#{total}
     </select>
 
