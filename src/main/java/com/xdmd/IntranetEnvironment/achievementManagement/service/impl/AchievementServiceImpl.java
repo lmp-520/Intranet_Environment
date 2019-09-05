@@ -100,7 +100,6 @@ public class AchievementServiceImpl implements AchievementService {
         pageBean.setData(outcomeInformationAllList);
 
         return resultMap.success().message(pageBean);
-
     }
 
     //此时查询的是，通过验收与结题的 待加入成果库的内容信息

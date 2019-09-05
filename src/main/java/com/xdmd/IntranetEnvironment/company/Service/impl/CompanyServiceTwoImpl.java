@@ -318,7 +318,7 @@ public class CompanyServiceTwoImpl implements CompanyServiceTwo {
         //根据登陆名判断密码是否正确
         String newPassword = MD5Utils.md5(password);    //首先对密码进行加密
         String sqlPassword = companyMapper.querySqlPasswordByLoginName(loginName);//取出数据库中登陆名对应的密码
-        if(newPassword.equals(sqlPassword)){
+        if(!newPassword.equals(sqlPassword)){
             return resultMap.fail().message("密码错误");
         }
 
@@ -328,30 +328,204 @@ public class CompanyServiceTwoImpl implements CompanyServiceTwo {
             return resultMap.fail().message("内网账号不允许在外网登陆");
         }
 
-        //此时为登陆成功，获取所有的用户数据
-        UserInformation userInformation = companyMapper.queryUserInformation(loginName);
+        if(identity.equals("0")){
+            //公司管理员登陆
 
-        LoginReturnContent loginReturnContent = new LoginReturnContent();
-        loginReturnContent.setRealName(userInformation.getRealName());
-        loginReturnContent.setIdentity(Integer.valueOf(userInformation.getIdentity()));
-        loginReturnContent.setUid(userInformation.getUid());
-        JSONObject parseObject = JSON.parseObject(loginReturnContent.toString());
+            //获取公司名 公司id
+            String companyName = companyMapper.queryCompanyName(uid);
+            Integer cid = companyMapper.queryCompanyId(uid);
 
-        //判断该账号是否是第一次登陆
-        String isFirst = userInformation.getIsFirst();
-        if(isFirst.equals("0")){
-            //第一次登陆
-            parseObject.put("isFirst",0);
+            //根据uid获取真实姓名
+            String realName = companyMapper.queryRealNameByUid(uid);
+
+            JwtInformation jwtInformation = new JwtInformation();
+            jwtInformation.setCid(cid);
+            jwtInformation.setCompanyName(companyName);
+            jwtInformation.setUid(uid);
+            jwtInformation.setUsername(realName);
+
+            //通过JwtUtil 工具生成token
+            String token = JwtUtil.geneJsonWebToken(jwtInformation);
+            //把生成的token存放在cookie中
+            //设置cookie的最大有效时间
+            Cookie cookie = new Cookie("token", token);
+            cookie.setMaxAge(60 * 30);//三十分钟
+            cookie.setPath("/");
+            response.addCookie(cookie);
+
+            LoginReturnContent loginReturnContent = new LoginReturnContent();
+            loginReturnContent.setUid(uid);
+            loginReturnContent.setIdentity(0);
+            loginReturnContent.setRealName(realName);
+            JSONObject jsonObject = JSON.parseObject(loginReturnContent.toString());
+            jsonObject.put("isFirst",1);    //设置为多次登陆
+
+            //把登陆信息插入到外网登陆日志表中
+            ExtranetLoginLog extranetLoginLog = new ExtranetLoginLog();
+            extranetLoginLog.setIdentity(0);     //身份( 0：管理员 1：员工 2：专家)
+            extranetLoginLog.setLoginName(loginName);
+            //获取当前时间
+            Date date = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String nowTime = sdf.format(date);
+            extranetLoginLog.setLoginTime(nowTime);
+            //新增登陆日志表
+            extranetLoginLogMapper.addLoginLog(extranetLoginLog);
+
+            return resultMap.success().message(jsonObject);
+        }else if(identity.equals("1")){
+            //此时为员工登陆
+            //获取公司名 公司id
+            String companyName = companyMapper.queryCompanyName(uid);
+            Integer cid = companyMapper.queryCompanyId(uid);
+
+            //根据uid获取真实姓名
+            String realName = companyMapper.queryRealNameByUid(uid);
+
+            JwtInformation jwtInformation = new JwtInformation();
+            jwtInformation.setCid(cid);
+            jwtInformation.setCompanyName(companyName);
+            jwtInformation.setUid(uid);
+            jwtInformation.setUsername(realName);
+
+            //通过JwtUtil 工具生成token
+            String token = JwtUtil.geneJsonWebToken(jwtInformation);
+            //把生成的token存放在cookie中
+            //设置cookie的最大有效时间
+            Cookie cookie = new Cookie("token", token);
+            cookie.setMaxAge(60 * 30);//三十分钟
+            cookie.setPath("/");
+            response.addCookie(cookie);
+
+            LoginReturnContent loginReturnContent = new LoginReturnContent();
+            loginReturnContent.setUid(uid);
+            loginReturnContent.setIdentity(1);
+            loginReturnContent.setRealName(realName);
+            JSONObject jsonObject = JSON.parseObject(loginReturnContent.toString());
+
+            //判断该员工是不是第一次登陆
+            String isFirst = companyMapper.queryIsFirst(uid);
+            if(isFirst.equals("0")){
+                //第一次登陆
+                jsonObject.put("isFirst",0);
+            }else {
+                //多次登陆
+                jsonObject.put("isFirst",1);
+            }
+
+            //把登陆信息插入到外网登陆日志表中
+            ExtranetLoginLog extranetLoginLog = new ExtranetLoginLog();
+            extranetLoginLog.setIdentity(1);     //身份( 0：管理员 1：员工 2：专家)
+            extranetLoginLog.setLoginName(loginName);
+            //获取当前时间
+            Date date = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String nowTime = sdf.format(date);
+            extranetLoginLog.setLoginTime(nowTime);
+            //新增登陆日志表
+            extranetLoginLogMapper.addLoginLog(extranetLoginLog);
+
+            return resultMap.success().message(jsonObject);
         }else {
-            //多次登陆
-            parseObject.put("isFirst",1);
+            //此时为专家登陆
+
+            //判断审核状态
+            String isState = companyMapper.queryIsState(uid);
+            if(isState.equals("2")){
+                return resultMap.success().message("账号正在审核中");
+            }
+
+            if(isState.equals("3")){
+                //此时审核未通过
+                //根据uid在专家信息表中获取未通过的原因
+                String reason = companyMapper.queryReasonByUid(uid);
+                LoginReturnContent loginReturnContent = new LoginReturnContent();
+                JSONObject jsonObject = JSON.parseObject(loginReturnContent.toString());
+                jsonObject.put("errorReason",reason);
+                jsonObject.put("uid",uid);
+                return resultMap.fail().message(jsonObject);
+            }
+
+            //根据uid获取登陆人的真实姓名
+            String realName = companyMapper.queryRealNameByUid(uid);
+
+            JwtInformation jwtInformation = new JwtInformation();
+            jwtInformation.setUid(uid);
+            jwtInformation.setUsername(realName);
+
+            String token = JwtUtil.geneJsonWebToken(jwtInformation);
+            //把生成的token存放在cookie中
+            //设置cookie的最大有效时间
+            Cookie cookie = new Cookie("token", token);
+            cookie.setMaxAge(60 * 30);//三十分钟
+            cookie.setPath("/");
+            response.addCookie(cookie);
+
+            LoginReturnContent loginReturnContent = new LoginReturnContent();
+            loginReturnContent.setUid(uid);
+            loginReturnContent.setIdentity(3);
+            loginReturnContent.setRealName(realName);
+
+            JSONObject jsonObject = JSON.parseObject(loginReturnContent.toString());
+
+            //判断该员工是不是第一次登陆
+            String isFirst = companyMapper.queryIsFirst(uid);
+            if(isFirst.equals("0")){
+                //第一次登陆
+                jsonObject.put("isFirst",0);
+            }else {
+                //多次登陆
+                jsonObject.put("isFirst",1);
+            }
+
+            //把登陆信息插入到外网登陆日志表中
+            ExtranetLoginLog extranetLoginLog = new ExtranetLoginLog();
+            extranetLoginLog.setIdentity(3);     //身份( 0：管理员 1：员工 2：专家)
+            extranetLoginLog.setLoginName(loginName);
+            //获取当前时间
+            Date date = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String nowTime = sdf.format(date);
+            extranetLoginLog.setLoginTime(nowTime);
+            //新增登陆日志表
+            extranetLoginLogMapper.addLoginLog(extranetLoginLog);
+
+            return resultMap.success().message(jsonObject);
+
+
         }
 
-
-
-
-        return resultMap;
-
-
+//
+//        //此时为登陆成功，获取所有的用户数据
+//        UserInformation userInformation = companyMapper.queryUserInformation(loginName);
+//
+//        LoginReturnContent loginReturnContent = new LoginReturnContent();
+//        loginReturnContent.setRealName(userInformation.getRealName());
+//        loginReturnContent.setIdentity(Integer.valueOf(userInformation.getIdentity()));
+//        loginReturnContent.setUid(userInformation.getUid());
+//        JSONObject parseObject = JSON.parseObject(loginReturnContent.toString());
+//
+//        //判断该账号是否是第一次登陆
+//        String isFirst = userInformation.getIsFirst();
+//        if(isFirst.equals("0")){
+//            //第一次登陆
+//            parseObject.put("isFirst",0);
+//        }else {
+//            //多次登陆
+//            parseObject.put("isFirst",1);
+//        }
+//        //把外网的登陆信息，插入到外网的登陆日志中
+//        ExtranetLoginLog extranetLoginLog = new ExtranetLoginLog();
+//        extranetLoginLog.setIdentity(Integer.valueOf(userInformation.getIdentity()));     //身份( 0：管理员 1：员工 2：专家)
+//        extranetLoginLog.setLoginName(loginName);
+//        //获取当前时间
+//        Date date = new Date();
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        String nowTime = sdf.format(date);
+//        extranetLoginLog.setLoginTime(nowTime);
+//        //新增登陆日志表
+//        extranetLoginLogMapper.addLoginLog(extranetLoginLog);
+//
+//        return resultMap.success().message(parseObject);
     }
 }

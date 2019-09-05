@@ -109,7 +109,7 @@ public class CompanyControllerTwo {
                                    @CookieValue("check") String check,
                                    @RequestParam("code") String code,   //验证码
                                    HttpServletResponse response){
-        if(check.equalsIgnoreCase(code)){
+        if(!check.equalsIgnoreCase(code)){
             return resultMap.fail().message("验证码输入不正确，请重新输入");
         }
         try {

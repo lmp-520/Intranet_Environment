@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -155,12 +156,19 @@ public class AcceptStateServiceImpl implements AcceptStateService {
 
             //当把审核状态表更新完成后，更新验收申请表中这条数据的验收审核状态
             int num3 = 0;
-            int acceptancePhaseNum = 2;
+            int acceptancePhaseNum = 1;
             num3 = acceptApplyMapper.updateAcceptancePhaseById(id,acceptancePhaseNum);
             if(num3 ==0){
                 throw new UpdateAcceptancePhaseException("更新验收申请表的验收审核状态字段时出错");
             }
         }
+
+        //更新时间
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String nowTime = sdf.format(date);
+        acceptStateMapper.updateCreateTime(id,nowTime);
+
         return resultMap.success().message("提交成功");
     }
 
@@ -183,7 +191,6 @@ public class AcceptStateServiceImpl implements AcceptStateService {
 
         //获取验收申请表的集合
         List<CheckApply> checkApplyList = acceptStateMapper.acceptApplyQuery(newpage, total, topicName, subjectUndertakingUnit, unitNature, projectLeader);
-
 
         List<JSONObject> jsonObjectList = new ArrayList<>();
         //通过查询出来的文件id 获取文件的地址

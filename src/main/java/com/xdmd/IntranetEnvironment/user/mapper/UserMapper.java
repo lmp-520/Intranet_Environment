@@ -1,5 +1,6 @@
 package com.xdmd.IntranetEnvironment.user.mapper;
 
+import com.xdmd.IntranetEnvironment.common.ExtranetLoginLog;
 import com.xdmd.IntranetEnvironment.company.Pojo.UserInformation;
 import com.xdmd.IntranetEnvironment.user.pojo.Menu;
 import com.xdmd.IntranetEnvironment.user.pojo.User;
@@ -30,4 +31,6 @@ public interface UserMapper {
     //根据登陆名取出数据
     @Select("select uid,real_name,login_name,identity,is_delete,is_first,is_state from shiro_user_information where login_name = #{name} and is_delete = 0")
     UserInformation queryAllInformation(@Param("name") String name);
+
+    void addLoginLog(@Param("extranetLoginLog") ExtranetLoginLog extranetLoginLog);
 }

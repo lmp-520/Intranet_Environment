@@ -315,6 +315,11 @@ public class SubjectAcceptServiceImpl implements SubjectAcceptSerivce {
                     if (num4 == 0) {
                         throw new UpdateAcceptancePhaseException("更新验收申请表的验收审核状态字段时出错");
                     }
+
+                    Date date1 = new Date();
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    String nowTime = sdf.format(date1);
+                    subjectAcceptMapper.updateCreateTime(id,nowTime);
                     return resultMap.success().message("审核成功");
                 } else if (acceptanceFinalResult.equals("结题")) {
                     //此时结题
@@ -336,6 +341,11 @@ public class SubjectAcceptServiceImpl implements SubjectAcceptSerivce {
                     if (num4 == 0) {
                         throw new UpdateAcceptancePhaseException("更新验收申请表的验收审核状态字段时出错");
                     }
+
+                    Date date1 = new Date();
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    String nowTime = sdf.format(date1);
+                    subjectAcceptMapper.updateCreateTime(id,nowTime);
                     return resultMap.success().message("审核成功");
                 } else {
 
@@ -369,6 +379,10 @@ public class SubjectAcceptServiceImpl implements SubjectAcceptSerivce {
                         throw new UpdateAcceptancePhaseException("更新验收申请表的验收审核状态字段时出错");
                     }
 
+                    Date date1 = new Date();
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    String nowTime = sdf.format(date1);
+                    subjectAcceptMapper.updateCreateTime(id,nowTime);
                     return resultMap.success().message("审核成功");
                 }
 
@@ -398,6 +412,12 @@ public class SubjectAcceptServiceImpl implements SubjectAcceptSerivce {
                     if (num4 == 0) {
                         throw new UpdateAcceptancePhaseException("更新验收申请表的验收审核状态字段时出错");
                     }
+
+                    Date date1 = new Date();
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    String nowTime = sdf.format(date1);
+                    subjectAcceptMapper.updateCreateTime(id,nowTime);
+
                     return resultMap.success().message("审核成功");
                 } else if (acceptanceFinalResult.equals("结题")) {
                     //此时结题
@@ -419,6 +439,10 @@ public class SubjectAcceptServiceImpl implements SubjectAcceptSerivce {
                     if (num4 == 0) {
                         throw new UpdateAcceptancePhaseException("更新验收申请表的验收审核状态字段时出错");
                     }
+                    Date date1 = new Date();
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    String nowTime = sdf.format(date1);
+                    subjectAcceptMapper.updateCreateTime(id,nowTime);
                     return resultMap.success().message("审核成功");
                 } else {
                     //审核通过时,先把上一条数据进行更新，再新增下一条数据
@@ -450,6 +474,10 @@ public class SubjectAcceptServiceImpl implements SubjectAcceptSerivce {
                     if (num3 == 0) {
                         throw new UpdateAcceptancePhaseException("更新验收申请表的验收审核状态字段时出错");
                     }
+                    Date date1 = new Date();
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    String nowTime = sdf.format(date1);
+                    subjectAcceptMapper.updateCreateTime(id,nowTime);
                     return resultMap.success().message("审核成功");
                 }
 
@@ -469,7 +497,7 @@ public class SubjectAcceptServiceImpl implements SubjectAcceptSerivce {
             //新增下一条数据的处理
             //获取上一次该状态信息的最后提交处理时间，作为新增数据的交办时间
             String firstHandleTime = subjectAcceptMapper.queryCheckApplyLastTime(id);
-            String auditStep = "通过初审，等待提交专家表";
+            String auditStep = "专家表被退回，请重新提交";
             String newState = "等待处理";
             int num2 = 0;
             num2 = subjectAcceptMapper.addNewCheckApplyState(id, auditStep, newState, username, firstHandleTime);
@@ -479,11 +507,16 @@ public class SubjectAcceptServiceImpl implements SubjectAcceptSerivce {
 
             //当把审核状态表更新完成后，更新验收申请表中这条数据的验收审核状态
             int num3 = 0;
-            int acceptancePhaseNum = 4; //5：通过初审，等待提交专家表
+            int acceptancePhaseNum = 8; // 8:专家表被退回，请重新提交
             num3 = subjectAcceptMapper.updateAcceptancePhaseById(id, acceptancePhaseNum);
             if (num3 == 0) {
                 throw new UpdateAcceptancePhaseException("更新验收申请表的验收审核状态字段时出错");
             }
+
+            Date date1 = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String nowTime = sdf.format(date1);
+            subjectAcceptMapper.updateCreateTime(id,nowTime);
             return resultMap.success().message("审核成功");
         }
     }
@@ -549,7 +582,11 @@ public class SubjectAcceptServiceImpl implements SubjectAcceptSerivce {
                 }
             }
         }
-        return resultMap.success().message();
+        Date date1 = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String nowTime = sdf.format(date1);
+        subjectAcceptMapper.updateCreateTime(id,nowTime);
+        return resultMap.success().message("上传成功");
     }
 
     //验收申请中的保存  需要保存专家组意见表

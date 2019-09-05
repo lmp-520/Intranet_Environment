@@ -80,22 +80,11 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
         try {
             number = acceptApplyMapper.updateByPrimaryKey(extranetCheckApply);
 
-//            //把上传的文件上传到文件表
-//            //验收申请表的上传
-//            IntegrationFile applicationAcceptanceIntegrationFile = new IntegrationFile();
-//            UploadFile applicationUploadFile = applicationAcceptanceIntegrationFile.IntegrationFile(applicationAcceptanceFile, extranetCheckApply.getId(), extranetCheckApply.getApplicationAcceptanceUrl(), "验收申请表", createname, extranetCheckApply.getApplicationId());
-//            number2 = acceptApplyFileUploadMapper.updateByPrimaryKey(applicationUploadFile);
-//
-//            //成果附件的上传
-//            IntegrationFile achievementsUploadFile = new IntegrationFile();
-//            UploadFile achievementsUploadFile2 = achievementsUploadFile.IntegrationFile(achievementsFile, extranetCheckApply.getId(), extranetCheckApply.getAchievementsUrl(), "成果附件", createname, extranetCheckApply.getAchievementId());
-//            number3 = acceptApplyFileUploadMapper.updateByPrimaryKey(achievementsUploadFile2);
-//
-//            //提交清单的上传
-//            IntegrationFile submitInventoryUploadFile = new IntegrationFile();
-//            UploadFile submitUploadFile = submitInventoryUploadFile.IntegrationFile(submitInventoryFile, extranetCheckApply.getId(), extranetCheckApply.getSubmitInventoryUrl(), "提交清单", createname, extranetCheckApply.getSubmitId());
-//            number4 = acceptApplyFileUploadMapper.updateByPrimaryKey(submitUploadFile);
-
+            //获取当前时间
+            Date date = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String nowTime = sdf.format(date);
+            acceptApplyMapper.updateCreateTime(extranetCheckApply.getId(),nowTime);
         } catch (Exception e) {
             e.printStackTrace();
             log.error("ExtranetAcceptApplyServiceImpl -- updateAcceptApply 中更新语句出错");
@@ -108,91 +97,6 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
         }
         return resultMap;
     }
-
-//    //验收申请表的查询
-//    public ResultMap queryAcceptApply(String subjectName, String projectLeader, Integer page, Integer total) throws StringToDateException {
-//        //页数
-//        int newpage = 0;
-//        if (page == 1) {
-//            newpage = page - 1;
-//        } else {
-//            newpage = (page - 1) * total;
-//        }
-//
-//        List<ExtranetCheckApply> checkApplyList = acceptApplyMapper.queryAcceptApply(subjectName, projectLeader, newpage, total);
-//        Integer alltotal = acceptApplyMapper.queryAllTotal(subjectName, projectLeader, newpage, total);
-//
-//        List<JSONObject> jsonObjectList = new ArrayList<>();
-//
-//        //判断根据用户输入的筛选条件是否有内容
-//        if (alltotal == null) {
-//            return resultMap.success().message(jsonObjectList);
-//        }
-//
-//        //判断用户输入的页数是否超过总页数
-//        int allPage = 0;
-//        if (alltotal % page == 0) {
-//            allPage = alltotal / page;
-//        } else {
-//            allPage = (alltotal / page) + 1;
-//        }
-//        if (page > allPage) {
-//            return resultMap.fail().message("页数超过总页数");
-//        }
-//
-//
-//        for (ExtranetCheckApply checkApply : checkApplyList) {
-//            //对查询出来的日期进行处理
-//            Date agreementStartTime = checkApply.getAgreementStartTime();
-//            String agreementStartTimeString = SqlDateToString.dateToString(agreementStartTime);
-//
-//            Date agreementEndTime = checkApply.getAgreementEndTime();
-//            String agreementEndTimeString = SqlDateToString.dateToString(agreementEndTime);
-//
-//            Date applicationAcceptanceTime = checkApply.getApplicationAcceptanceTime();
-//            String applicationAcceptanceTimeString = SqlDateToString.dateToString(applicationAcceptanceTime);
-//
-//            //获取申请表的主键
-//            Integer id = checkApply.getId();
-//
-//            String AcceptApplyFile = "验收申请表";
-//            String submitInventoryFile = "提交清单";
-//            String achievementsFile = "成果附件";
-//
-//
-//            //验收申请表
-//            UploadFile uploadFile1 = acceptApplyFileUploadMapper.queryFileUrl(id, AcceptApplyFile);
-//            checkApply.setApplicationId(uploadFile1.getId());
-//            checkApply.setApplicationAcceptanceUrl(uploadFile1.getUploadFileAddress());
-//
-//            //提交清单
-//            UploadFile uploadFile2 = acceptApplyFileUploadMapper.queryFileUrl(id, submitInventoryFile);
-//            checkApply.setSubmitId(uploadFile2.getId());
-//            checkApply.setSubmitInventoryUrl(uploadFile2.getUploadFileAddress());
-//
-//            //成果附件
-//            UploadFile uploadFile3 = acceptApplyFileUploadMapper.queryFileUrl(id, achievementsFile);
-//            checkApply.setAchievementId(uploadFile3.getId());
-//            checkApply.setAchievementsUrl(uploadFile3.getUploadFileAddress());
-//
-//
-//            //通过AliBaBa fastJson工具 把实体类中不需要的字段去除
-//            JSONObject jsonObject = JSON.parseObject(checkApply.toString());
-//            jsonObject.put("agreementStartTimeString", agreementStartTimeString);
-//            jsonObject.put("agreementEndTimeString", agreementEndTimeString);
-//            jsonObject.put("applicationAcceptanceTimeString", applicationAcceptanceTimeString);
-//
-//            jsonObjectList.add(jsonObject);
-//
-//        }
-//        PageBean<Object> objectPageBean = new PageBean<>();
-//        objectPageBean.setData(jsonObjectList);
-//        objectPageBean.setCount(alltotal);
-//
-//
-//        resultMap.success().message(objectPageBean);
-//        return resultMap;
-//    }
 
     //根据公司的id，查询公司的名字
     @Override
@@ -424,6 +328,9 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
             //当把审核状态表更新完成后，更新验收申请表中这条数据的验收审核状态
             int acceptancePhaseNum = 3;
             acceptApplyMapper.updateAcceptancePhaseById(id, acceptancePhaseNum);
+
+            //对createTime进行更新
+            acceptApplyMapper.updateCreateTime(id,nowTime);
         } else {
             //此时审核没有通过，退回给企业员工进行操作
             String state = "已退回";
@@ -443,6 +350,9 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
             //当审核状态表更新完成后，更新验收申请表中的验收审核状态
             int acceptancePhaseNum = 1;
             acceptApplyMapper.updateAcceptancePhaseById(id, acceptancePhaseNum);
+
+            //对createTime进行更新
+            acceptApplyMapper.updateCreateTime(id,nowTime);
         }
         return resultMap.success().message("审核通过");
     }
@@ -700,6 +610,9 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
         String newState = "等待审核";
         acceptApplyMapper.addNewCheckApplyState(cid, uname, auditStep, nowTime, newState);
 
+        //更新create_time时间
+        acceptApplyMapper.updateCreateTime(caId,nowTime);
+
         return resultMap.success().message("提交成功");
     }
 
@@ -789,6 +702,9 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
         String auditStep = "等待审核公司上传的专家文件";
         String newState = "等待审核";
         acceptApplyMapper.addNewCheckApplyState(caId, uname, auditStep, nowTime, newState);
+
+        //更新createTime时间
+        acceptApplyMapper.updateCreateTime(caId,nowTime);
 
         return resultMap.success().message("提交成功");
     }
@@ -895,6 +811,16 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
             extranetCheckApply.setAchievementUrlId(uploadApplicationAcceptanceFile.getId());
         }
         acceptApplyMapper.updateCheckApply(extranetCheckApply);
+
+        //更新create_time时间
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String nowTime = sdf.format(date);
+        acceptApplyMapper.updateCreateTime(extranetCheckApply.getId(),nowTime);
+
+        //修改状态 修改后变为2
+        acceptApplyMapper.updateAcceptancePhaseById(extranetCheckApply.getId(),2);
+
         return resultMap.fail().message("修改成功");
     }
 
@@ -928,7 +854,7 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
             //此时专家组意见文件不为空，则意味着上传了新的专家组意见
             //判断上传的专家组意见文件是否后缀名正确
 
-            ArrayList<String> idCardFileSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".rar", ".zip", ".7z"));
+            ArrayList<String> idCardFileSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".rar", ".zip", ".7z",".pdf"));
             String expertGroupFileName = expertGroupFile.getOriginalFilename();
             Boolean aBoolean = FileSuffixJudgeUtil.SuffixJudge(expertGroupFileName, idCardFileSuffixList);
             if (aBoolean == false) {
@@ -991,6 +917,15 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
         for (ExtranetExpertGroupCommentsName extranetExpertGroupCommentsName : extranetExpertGroupCommentsNameList) {
             acceptApplyMapper.addExpertGroupCommentName(extranetExpertGroupComment.getEgcId(), extranetExpertGroupCommentsName);
         }
+
+        //更新时间
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String nowTime = sdf.format(date);
+        acceptApplyMapper.updateCreateTime(caId,nowTime);
+
+        acceptApplyMapper.updateAcceptancePhaseById(caId,5);
+
         return resultMap.success().message("更新成功");
     }
 
@@ -1050,32 +985,40 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
         acceptApplyMapper.UpdateLastReportFile(caId, acceptanceCertificate);
 
         //把验收证书中专利表对应的信息删除
-        acceptApplyMapper.deleteAcceptanceCertificatePatent(caId);
+        acceptApplyMapper.deleteAcceptanceCertificatePatent(acceptanceCertificate.getId());
         //把验证证书中专利表的信息新增进去
         List<AcceptanceCertificatePatent> acceptanceCertificatePatentList = acceptanceCertificate.getAcceptanceCertificatePatentList();
         for (AcceptanceCertificatePatent acceptanceCertificatePatent : acceptanceCertificatePatentList) {
-            acceptanceCertificatePatent.setAcceptanceCertificateId(acceptanceCertificate.getCid());
+            acceptanceCertificatePatent.setAcceptanceCertificateId(acceptanceCertificate.getId());
             acceptApplyMapper.addAcceptanceCertificatePatent(acceptanceCertificatePatent);
         }
 
         //把验收证书中主要参与人员删除
-        acceptApplyMapper.deleteAcceptanceCertificatePrincipalPersonnel(caId);
+        acceptApplyMapper.deleteAcceptanceCertificatePrincipalPersonnel(acceptanceCertificate.getId());
         //新增最终验收报告的主要参加人员
         List<AcceptanceCertificatePrincipalPersonnel> acceptanceCertificatePrincipalPersonnelList = acceptanceCertificate.getAcceptanceCertificatePrincipalPersonnelList();
         for (AcceptanceCertificatePrincipalPersonnel acceptanceCertificatePrincipalPersonnel : acceptanceCertificatePrincipalPersonnelList) {
-            acceptanceCertificatePrincipalPersonnel.setAcceptanceCertificateId(acceptanceCertificate.getCid());
+            acceptanceCertificatePrincipalPersonnel.setAcceptanceCertificateId(acceptanceCertificate.getId());
             acceptApplyMapper.addAcceptanceCertificatePrincipalPersonnel(acceptanceCertificatePrincipalPersonnel);
         }
 
         //把验收证书中的课题负责人删除
-        acceptApplyMapper.deleteAcceptanceCertificateSubjectPeople(caId);
+        acceptApplyMapper.deleteAcceptanceCertificateSubjectPeople(acceptanceCertificate.getId());
 
         //新增验收证书的课题负责人
         List<AcceptanceCertificateSubjectPeople> acceptanceCertificateSubjectPeopleList = acceptanceCertificate.getAcceptanceCertificateSubjectPeopleList();
         for (AcceptanceCertificateSubjectPeople acceptanceCertificateSubjectPeople : acceptanceCertificateSubjectPeopleList) {
-            acceptanceCertificateSubjectPeople.setAcceptanceCertificateId(acceptanceCertificate.getCid());
+            acceptanceCertificateSubjectPeople.setAcceptanceCertificateId(acceptanceCertificate.getId());
             acceptApplyMapper.addAcceptanceCertificateSubjectPeople(acceptanceCertificateSubjectPeople);
         }
+
+        //更新时间
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String nowTime = sdf.format(date);
+        acceptApplyMapper.updateCreateTime(caId,nowTime);
+
+        acceptApplyMapper.updateAcceptancePhaseById(caId,7);
 
         return resultMap.success().message("更新成功");
     }
