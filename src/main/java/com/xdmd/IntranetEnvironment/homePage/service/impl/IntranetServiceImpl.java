@@ -6,8 +6,10 @@ import com.xdmd.IntranetEnvironment.homePage.mapper.IntranetMapper;
 import com.xdmd.IntranetEnvironment.homePage.service.IntranetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class IntranetServiceImpl implements IntranetService {
 
     @Autowired
