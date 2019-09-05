@@ -20,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.math.BigDecimal;
 
 /**
  * @author: Kong
@@ -56,14 +55,14 @@ public class OpenTenderController {
      * 根据单位的id查询招标信息【外网】
      * @return
      */
-    //@ApiImplicitParams({
-    //        @ApiImplicitParam(name = "projectName", value = "项目名称"),
-    //        @ApiImplicitParam(name = "subjectName", value = "课题名称"),
-    //        @ApiImplicitParam(name = "subjectLeader", value = "课题负责人"),
-    //        @ApiImplicitParam(name = "leaderContact", value = "课题负责人联系方式"),
-    //        @ApiImplicitParam(name = "pageNum", value = "当前页数", required = true),
-    //        @ApiImplicitParam(name = "pageSize", value = "每页显示条数", required = true)
-    //})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "projectName", value = "项目名称"),
+            @ApiImplicitParam(name = "subjectName", value = "课题名称"),
+            @ApiImplicitParam(name = "subjectLeader", value = "课题负责人"),
+            @ApiImplicitParam(name = "leaderContact", value = "课题负责人联系方式"),
+            @ApiImplicitParam(name = "pageNum", value = "当前页数", required = true),
+            @ApiImplicitParam(name = "pageSize", value = "每页显示条数", required = true)
+    })
     @ApiOperation(value = "根据单位的id查询招标信息【外网】")
     @GetMapping(value = "getTenderByUid")
     ResultMap getTenderByUid(@CookieValue(value = "token", required = false) String token, HttpServletResponse response,
@@ -296,23 +295,6 @@ public class OpenTenderController {
 
     /**
      * 不通过被退回时重新提交[即修改]【外网】
-     *
-     * @param projectNo
-     * @param projectName
-     * @param tenderNo
-     * @param subcontractingNo
-     * @param subjectName
-     * @param responsibleUnit
-     * @param bidders
-     * @param subjectLeader
-     * @param leaderContact
-     * @param joinTenderUnits
-     * @param operator
-     * @param operatorContact
-     * @param winningAmount
-     * @param supportingFunds
-     * @param remark
-     * @param oid
      * @return
      */
     @ApiImplicitParams({
@@ -336,15 +318,11 @@ public class OpenTenderController {
     })
     @PostMapping(value = "updateTenderStatusByReturnCommit")
     @ApiOperation(value = "不通过被退回时重新提交[即修改]【外网】")
-    public ResultMap updateTenderStatusByReturnCommit(//@CookieValue(value = "IntranecToken", required = false) String token, HttpServletResponse response,
-            String projectNo, String projectName, String tenderNo, String subcontractingNo, String subjectName, String responsibleUnit, String bidders, String subjectLeader, String leaderContact, String joinTenderUnits, String operator, String operatorContact, BigDecimal winningAmount, BigDecimal supportingFunds, String remark, int oid) {
-
-        String token = "aaa";
-        HttpServletResponse response = null;
+    public ResultMap updateTenderStatusByReturnCommit(@CookieValue(value = "token", required = false) String token, HttpServletResponse response,@RequestBody OpenTender openTender) {
         if (StringUtils.isEmpty(token)) {
             return resultMap.fail().message("请先登录");
         }
-        return resultMap = openTenderService.updateTenderStatusByReturnCommit(token, response,projectNo, projectName, tenderNo, subcontractingNo, subjectName, responsibleUnit, bidders, subjectLeader, leaderContact, joinTenderUnits, operator, operatorContact, winningAmount, supportingFunds, remark, oid);
+        return resultMap = openTenderService.updateTenderStatusByReturnCommit(token, response,openTender);
     }
 
     /**

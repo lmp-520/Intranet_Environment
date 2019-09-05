@@ -2,11 +2,18 @@ package com.xdmd.IntranetEnvironment.guidemanagement.controller;
 
 
 import com.xdmd.IntranetEnvironment.common.ResultMap;
+import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.JwtInformation;
+import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.service.impl.ExtranetTokenService;
 import com.xdmd.IntranetEnvironment.guidemanagement.pojo.GuideCollection;
 import com.xdmd.IntranetEnvironment.guidemanagement.pojo.GuideCollectionLimitTime;
 import com.xdmd.IntranetEnvironment.guidemanagement.pojo.GuideSummary;
 import com.xdmd.IntranetEnvironment.guidemanagement.service.GuideService;
-import io.swagger.annotations.*;
+import com.xdmd.IntranetEnvironment.user.exception.ClaimsNullException;
+import com.xdmd.IntranetEnvironment.user.exception.UserNameNotExistentException;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +34,8 @@ public class GuideController {
     private static final Logger log = LoggerFactory.getLogger(GuideController.class);
     @Autowired
     GuideService guideService;
+    @Autowired
+    ExtranetTokenService extranetTokenService;
     ResultMap resultMap=new ResultMap();
 
     @ApiOperation(value = "新增指南申报信息【外网】")
@@ -151,4 +160,37 @@ public class GuideController {
     public ResultMap getSummaryByCreateTime(String createTime) {
         return resultMap=guideService.getSummaryByCreateTime(createTime);
     }
+
+
+    /**
+     * 从cookie中取值
+     * @return
+     */
+    @PostMapping("getCookieValue")
+    public ResultMap getCookieValue(@CookieValue(value = "token",required = false) String token, HttpServletResponse response){
+        JwtInformation jwtInformation = new JwtInformation();
+        try {
+            jwtInformation = extranetTokenService.compare(response, token);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (UserNameNotExistentException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (ClaimsNullException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("MenuServiceImpl 中 TokenService 出现问题");
+            return resultMap.message("系统异常");
+        }
+        Integer uid = jwtInformation.getUid();
+        String uname = jwtInformation.getUsername();
+        Integer cid = jwtInformation.getCid();
+        String cname = jwtInformation.getCompanyName();
+        return resultMap.success().message(cname);
+    }
+
+
 }

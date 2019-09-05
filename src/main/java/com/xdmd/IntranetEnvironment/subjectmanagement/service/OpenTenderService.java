@@ -9,7 +9,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.math.BigDecimal;
 
 /**
  * 招标业务
@@ -64,11 +63,6 @@ public interface OpenTenderService {
      * @return
     ResultMap updateTenderByoid(int winningFileAttachmentId, int announcementTransactionAnnouncementId, int dealNotificationAttachmentId,int responseFileAttachmentId, int oid);
      */
-
-    /**
-     * 获取最新招标信息
-     */
-    String getNewData();
 
     /**
      * 招标附件上传
@@ -134,32 +128,16 @@ public interface OpenTenderService {
 
     /**
      * 不通过被退回时重新提交[修改]
-     * @param token
-     * @param response
-     * @param projectNo
-     * @param projectName
-     * @param tenderNo
-     * @param subcontractingNo
-     * @param subjectName
-     * @param responsibleUnit
-     * @param bidders
-     * @param subjectLeader
-     * @param leaderContact
-     * @param joinTenderUnits
-     * @param operator
-     * @param operatorContact
-     * @param winningAmount
-     * @param supportingFunds
-     * @param remark
-     * @param oid
+     * @param openTender
      * @return
      */
-    ResultMap updateTenderStatusByReturnCommit(String token, HttpServletResponse response, String projectNo, String projectName, String tenderNo,
-                                               String subcontractingNo, String subjectName, String responsibleUnit,
-                                               String bidders, String subjectLeader, String leaderContact,
-                                               String joinTenderUnits, String operator, String operatorContact,
-                                               BigDecimal winningAmount, BigDecimal supportingFunds, String remark,
-                                               int oid);
+    ResultMap updateTenderStatusByReturnCommit(String token, HttpServletResponse response,OpenTender openTender);
+    //ResultMap updateTenderStatusByReturnCommit(String token, HttpServletResponse response, String projectNo, String projectName, String tenderNo,
+    //                                           String subcontractingNo, String subjectName, String responsibleUnit,
+    //                                           String bidders, String subjectLeader, String leaderContact,
+    //                                           String joinTenderUnits, String operator, String operatorContact,
+    //                                           BigDecimal winningAmount, BigDecimal supportingFunds, String remark,
+    //                                           int oid);
 
 
     /**
@@ -184,4 +162,5 @@ public interface OpenTenderService {
      * @return
      */
     ResultMap insertTidAndUid(int unitId, int tenderId);
+
 }

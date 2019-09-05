@@ -1,5 +1,7 @@
 package com.xdmd.IntranetEnvironment.company.Controller;
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +21,10 @@ public class FileDownLoadController {
 
     //对文件进行下载
     @GetMapping("queryFileStream")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="fileUrl",value = "文件路径"),
+            @ApiImplicitParam(name = "fileName",value = "文件名")
+    })
     public void downLoad(HttpServletResponse response, HttpServletRequest request,
                          @RequestParam("fileUrl")String fileUrl,//文件路径
                          @RequestParam("fileName")String fileName) throws IOException {     //文件名称
