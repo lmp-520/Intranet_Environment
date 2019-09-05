@@ -2,20 +2,21 @@ package com.xdmd.IntranetEnvironment.user.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.xdmd.IntranetEnvironment.common.ExtranetLoginLog;
 import com.xdmd.IntranetEnvironment.common.MD5Utils;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.company.Pojo.JwtInformation;
 import com.xdmd.IntranetEnvironment.company.Pojo.LoginReturnContent;
 import com.xdmd.IntranetEnvironment.company.Pojo.UserInformation;
 import com.xdmd.IntranetEnvironment.user.mapper.UserMapper;
-import com.xdmd.IntranetEnvironment.user.pojo.User;
 import com.xdmd.IntranetEnvironment.user.service.UserService;
 import com.xdmd.IntranetEnvironment.user.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 @Service
@@ -75,36 +76,6 @@ public class UserServiceImpl implements UserService {
         jwtInformation.setUid(userInformation.getUid());
         jwtInformation.setUsername(userInformation.getRealName());
 
-
-
-//        //判断登陆名是否存在
-//        String sqlName = null;
-//        sqlName = userMapper.queryName(name);
-//        if (sqlName == null) {
-//            return resultMap.fail().message("用户名不存在");
-//        }
-//
-//        //获取数据库中的密码
-//        String sqlPassword = userMapper.querySqlPasswordByName(name);
-//        //对用户输入的密码进行加密
-//        String newPassword = MD5Utils.md5(password);
-//
-//        //判断用户输入的密码与数据库中的密码是否相同
-//        if (!sqlPassword.equals(newPassword)) {
-//            return resultMap.fail().message("密码错误");
-//        }
-//
-//        //登陆成功后，查询用户的信息存放到cookie中
-//        User user = userMapper.querInformation(name);
-//        JSONObject jsonObject = JSON.parseObject(user.toString());
-//        jsonObject.remove("name");
-//        jsonObject.remove("isDelete");
-//        jsonObject.remove("password");
-//        jsonObject.remove("department");
-//        jsonObject.remove("createTime");
-//        jsonObject.remove("status");
-//        jsonObject.remove("modify");
-
         //通过JwtUtil工具 生成token
         String token = JwtUtil.IntranetJwt(jwtInformation);
 
@@ -113,6 +84,18 @@ public class UserServiceImpl implements UserService {
         cookie.setMaxAge(60*30);//三十分钟
         cookie.setPath("/");
         response.addCookie(cookie);
+
+        //新增内网登陆日志
+        ExtranetLoginLog extranetLoginLog = new ExtranetLoginLog();
+        extranetLoginLog.setIdentity(Integer.parseInt(userInformation.getIdentity()));     //身份( 3: 科长 4：科员 5：法规科技处)
+        extranetLoginLog.setLoginName(name);
+        //获取当前时间
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String nowTime = sdf.format(date);
+        extranetLoginLog.setLoginTime(nowTime);
+        //新增登陆日志表
+        userMapper.addLoginLog(extranetLoginLog);
 
         return resultMap.success().message(parseObject);
     }

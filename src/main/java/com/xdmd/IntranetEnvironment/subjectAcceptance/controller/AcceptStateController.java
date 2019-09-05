@@ -58,8 +58,8 @@ public class AcceptStateController {
                                  @RequestParam("type") Boolean type,//审核的状态.   true为审核通过  false为审核未通过
                                  @RequestParam(value = "reason", required = false) String reason,//审核未通过原因
                                  @RequestParam("id") Integer id,//验收申请表id
-                                 @RequestParam("specialAuditFile")MultipartFile specialAuditFile,//专项审计报告文件
-                                 @RequestParam("firstInspectionFile") MultipartFile firstInspectionFile) {  //初审报告文件
+                                 @RequestParam(value = "specialAuditFile",required = false)MultipartFile specialAuditFile,//专项审计报告文件
+                                 @RequestParam(value = "firstInspectionFile",required = false) MultipartFile firstInspectionFile) {  //初审报告文件
         if (StringUtils.isEmpty(token)) {
             return resultMap.fail().message("请先登录");
         }

@@ -1,7 +1,6 @@
 package com.xdmd.IntranetEnvironment.company.mapper;
 
 import com.xdmd.IntranetEnvironment.common.ExtranetLoginLog;
-import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 
 public interface ExtranetLoginLogMapper {

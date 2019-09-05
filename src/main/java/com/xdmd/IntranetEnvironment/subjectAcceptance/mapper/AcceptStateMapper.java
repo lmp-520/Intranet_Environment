@@ -64,4 +64,7 @@ public interface AcceptStateMapper {
 
     @Select("select upload_file_name from upload_file where id = #{id}")
     String queryFileNameByFileId(@Param("id") Integer applicationUrlId);
+
+    @Update("update check_apply set create_time = #{nowTime} where id = #{id}")
+    void updateCreateTime(@Param("id") Integer id, @Param("nowTime") String nowTime);
 }

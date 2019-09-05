@@ -13,7 +13,7 @@ public interface CompanyMapper {
     Integer queryCidByCname(@Param("companyName") String companyName);
 
     //判断注册的登陆名是否存在
-    @Select("select uid from shiro_user_information where login_name = #{loginName} and is_delete = 0 and identity in(0,1)")
+    @Select("select uid from shiro_user_information where login_name = #{loginName} and is_delete = 0")
     Integer queryLoginNameByExist(@Param("loginName") String loginName);
 
     //对文件进行上传
@@ -75,4 +75,11 @@ public interface CompanyMapper {
 
     @Select("select uid,real_name,login_name,identity,is_delete,is_first,is_state from shiro_user_information where login_name = #{loginName}")
     UserInformation queryUserInformation(@Param("loginName") String loginName);
+
+    //判断审核状态
+    @Select("select is_state from shiro_user_information where uid = #{uid}")
+    String queryIsState(@Param("uid") Integer uid);
+
+    @Select("select reason from expert_information where aid = #{uid}")
+    String queryReasonByUid(@Param("uid") Integer uid);
 }

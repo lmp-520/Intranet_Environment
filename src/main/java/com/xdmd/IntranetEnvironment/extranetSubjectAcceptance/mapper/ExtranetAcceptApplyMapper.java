@@ -98,7 +98,7 @@ public interface ExtranetAcceptApplyMapper<T> extends MyBaseMapper<ExtranetCheck
     void updateAchievementIdById(@Param("cid") Integer id, @Param("fileId") Integer id1);
 
     //对旧的验收申请表文件文件id进行更新
-    @Update("update check_apply set application_url_id = #{fileId} where id = #{cid}")
+    @Update("update check_apply set application_url_id = #{fileId} where id = #{id}")
     void updateApplicationAcceptanceIdById(@Param("id") Integer id, @Param("fileId") Integer id1);
 
     //对旧的专家组意见文件文件id进行更新
@@ -217,4 +217,7 @@ public interface ExtranetAcceptApplyMapper<T> extends MyBaseMapper<ExtranetCheck
     List<SubjectInformation> queryCompanyContractManage(@Param("cname") String cname, @Param("nowTime") String nowTime);
 
     List<SubjectInformation> queryNewCompanyContractManage(@Param("cname") String cname, @Param("nowTime") String nowTime, @Param("topicName") String topicName, @Param("topicNumber") String topicNumber);
+
+    @Update("update check_apply set create_time = #{nowTime} where id = #{id}")
+    void updateCreateTime(@Param("id") Integer id, @Param("nowTime") String nowTime);
 }

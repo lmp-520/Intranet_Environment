@@ -171,9 +171,10 @@
                 and topic_number like CONCAT ('%',#{topicNumber},'%')
             </if>
             <if test="0 == 0">
-                and subject_undertaking_unit_id = #{cid} and acceptance_phase_id in(1,2,3,4,5,6,7)
+                and subject_undertaking_unit_id = #{cid} and acceptance_phase_id in(1,2,3,4,5,6,7,8,9)
             </if>
         </where>
+        order by create_time desc
         limit #{page},#{total};
     </select>
 
@@ -187,7 +188,7 @@
                 and topic_number like CONCAT ('%',#{topicNumber},'%')
             </if>
             <if test="0 == 0">
-                and subject_undertaking_unit_id = #{cid} and acceptance_phase_id in(1,2,3,4,5,6,7)
+                and subject_undertaking_unit_id = #{cid} and acceptance_phase_id in(1,2,3,4,5,6,7,8,9)
             </if>
         </where>
     </select>
@@ -226,6 +227,7 @@
                 and subject_undertaking_unit_id = #{cid} and acceptance_phase_id in(77,88,99)
             </if>
         </where>
+        order by create_time desc
         limit #{page},#{total}
     </select>
 
@@ -381,7 +383,8 @@
             implementation_achievement,
             science_department_opinion,
             check_department_opinion,
-            environment_office_opinion
+            environment_office_opinion,
+            total_expenditure
         )
         VALUES(
             #{acceptanceCertificate.id},
@@ -438,13 +441,13 @@
             #{acceptanceCertificate.implementationAchievement},
             #{acceptanceCertificate.scienceDepartmentOpinion},
             #{acceptanceCertificate.checkDepartmentOpinion},
-            #{acceptanceCertificate.environmentOfficeOpinion}
+            #{acceptanceCertificate.environmentOfficeOpinion},
+            #{acceptanceCertificate.total_expenditure}
         );
     </insert>
 
     <insert id="addAcceptanceCertificatePatent">
         INSERT INTO acceptance_certificate_patent (
-            id,
             acceptance_certificate_id,
             application_invention,
             use_new_type,
@@ -463,7 +466,6 @@
             new_technology
         )
         VALUES(
-            #{acceptanceCertificatePatent.id},
             #{acceptanceCertificatePatent.acceptanceCertificateId},
             #{acceptanceCertificatePatent.applicationInvention},
             #{acceptanceCertificatePatent.useNewType},
