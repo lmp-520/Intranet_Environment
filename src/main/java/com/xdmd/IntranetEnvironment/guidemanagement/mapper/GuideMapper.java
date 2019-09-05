@@ -73,6 +73,7 @@ public interface GuideMapper {
             "fill_unit,\n" +
             "fill_contacts,\n" +
             "unit_principal,\n" +
+           // "unit_category," +
             "reason_basis,\n" +
             "research_content_technology,\n" +
             "expected_target_outcome,\n" +
@@ -113,7 +114,8 @@ public interface GuideMapper {
             "</where>" +
             "order by gc.id desc" +
             "</script>")
-    List<Map> getUnitCollection(String guideName, Integer domain, Integer category, String fillUnit, String fillContacts, String contactPhone, int uid);
+    List<Map> getUnitCollection(@Param("guideName") String guideName, @Param("domain")Integer domain, @Param("category")Integer category, @Param("fillUnit")String fillUnit, @Param("fillContacts")String fillContacts,
+                                @Param("contactPhone")String contactPhone,@Param("uid") int uid);
 
     /**
      * [新增]单位关联指南征集

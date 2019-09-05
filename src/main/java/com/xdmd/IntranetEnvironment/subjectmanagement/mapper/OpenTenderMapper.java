@@ -5,7 +5,6 @@ import com.xdmd.IntranetEnvironment.subjectmanagement.pojo.OpenTender;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -57,11 +56,17 @@ public interface OpenTenderMapper {
     int insertTender(OpenTender openTender);
 
     /**
-     * 获取最新的id【外网-课题编号】
+     * 获取最新的课题编号【外网-课题编号】
      * @return
      */
     @Select(value = "SELECT project_no FROM open_tender ORDER BY id DESC LIMIT 1")
     String  getNewData();
+    /**
+     * 判断是否有数据【外网-课题编号】
+     * @return
+     */
+    @Select(value = "SELECT count(id) FROM open_tender")
+    int  isGetData();
 
 
 
@@ -226,22 +231,7 @@ public interface OpenTenderMapper {
 
     /**
      * 不通过被退回时重新提交[修改]
-     * @param projectNo
-     * @param projectName
-     * @param tenderNo
-     * @param subcontractingNo
-     * @param subjectName
-     * @param responsibleUnit
-     * @param bidders
-     * @param subjectLeader
-     * @param leaderContact
-     * @param joinTenderUnits
-     * @param operator
-     * @param operatorContact
-     * @param winningAmount
-     * @param supportingFunds
-     * @param remark
-     * @param oid
+     * @param openTender
      * @return
      */
     @Update(value = "UPDATE open_tender SET \n" +
@@ -260,13 +250,14 @@ public interface OpenTenderMapper {
             "winning_amount = #{winningAmount}, \n" +
             "supporting_funds = #{supportingFunds}, \n" +
             "remark = #{remark}\t" +
-            "where id=#{oid}")
-    int updateTenderStatusByReturnCommit(@Param("projectNo") String projectNo, @Param("projectName") String projectName, @Param("tenderNo") String tenderNo,
-                                         @Param("subcontractingNo") String subcontractingNo, @Param("subjectName") String subjectName, @Param("responsibleUnit") String responsibleUnit,
-                                         @Param("bidders") String bidders, @Param("subjectLeader") String subjectLeader, @Param("leaderContact") String leaderContact,
-                                         @Param("joinTenderUnits") String joinTenderUnits, @Param("operator") String operator, @Param("operatorContact") String operatorContact,
-                                         @Param("winningAmount") BigDecimal winningAmount, @Param("supportingFunds")BigDecimal supportingFunds, @Param("remark") String remark,
-                                         @Param("oid") int oid);
+            "where id=#{id}")
+    int updateTenderStatusByReturnCommit(OpenTender openTender);
+    //int updateTenderStatusByReturnCommit(@Param("projectNo") String projectNo, @Param("projectName") String projectName, @Param("tenderNo") String tenderNo,
+    //                                     @Param("subcontractingNo") String subcontractingNo, @Param("subjectName") String subjectName, @Param("responsibleUnit") String responsibleUnit,
+    //                                     @Param("bidders") String bidders, @Param("subjectLeader") String subjectLeader, @Param("leaderContact") String leaderContact,
+    //                                     @Param("joinTenderUnits") String joinTenderUnits, @Param("operator") String operator, @Param("operatorContact") String operatorContact,
+    //                                     @Param("winningAmount") BigDecimal winningAmount, @Param("supportingFunds")BigDecimal supportingFunds, @Param("remark") String remark,
+    //                                     @Param("oid") int oid);
 
 
     /**
@@ -451,7 +442,7 @@ public interface OpenTenderMapper {
      * @param oid
      * @return
      */
-    @Select("select * from tender_contract_shenhe_record where shenhe_table_id=oid")
+    @Select("select * from tender_contract_shenhe_record where shenhe_table_id=#{oid}")
     List<TenderContractShenheRecordDTO> getAllShenHeTableRecordInfoByContractId(@Param("oid") int oid);
 
 

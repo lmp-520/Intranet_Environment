@@ -122,7 +122,7 @@ public class GuideServiceImpl implements GuideService {
         Integer cid = jwtInformation.getCid();
         String cname = jwtInformation.getCompanyName();
         try{
-            guideCollection.setFillUnit(cname);
+            //guideCollection.setFillUnit(cname);
             int gmInfo=guideMapper.insertGuideInfo(guideCollection);
             //提交指南申报的同时新增单位关联指南申报表
             insertCidAndUid(cid,guideCollection.getId());
@@ -173,7 +173,7 @@ public class GuideServiceImpl implements GuideService {
 
 
     /**
-     * 新增汇总信息实现【批量插入】
+     * 新增汇总信息【批量插入】
      * @param guideSummary
      * @return
      */
@@ -345,6 +345,8 @@ public class GuideServiceImpl implements GuideService {
         }
         return resultMap;
     }
+
+
 
 }
 
