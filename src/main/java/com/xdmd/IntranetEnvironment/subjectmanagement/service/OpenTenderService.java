@@ -55,16 +55,6 @@ public interface OpenTenderService {
 
 
     /**
-     * 根据招标备案id更新相应的附件id
-     * @param winningFileAttachmentId
-     * @param announcementTransactionAnnouncementId
-     * @param dealNotificationAttachmentId
-     * @param oid
-     * @return
-    ResultMap updateTenderByoid(int winningFileAttachmentId, int announcementTransactionAnnouncementId, int dealNotificationAttachmentId,int responseFileAttachmentId, int oid);
-     */
-
-    /**
      * 招标附件上传
      * @param token
      * @param response
@@ -131,14 +121,10 @@ public interface OpenTenderService {
      * @param openTender
      * @return
      */
-    ResultMap updateTenderStatusByReturnCommit(String token, HttpServletResponse response,OpenTender openTender);
-    //ResultMap updateTenderStatusByReturnCommit(String token, HttpServletResponse response, String projectNo, String projectName, String tenderNo,
-    //                                           String subcontractingNo, String subjectName, String responsibleUnit,
-    //                                           String bidders, String subjectLeader, String leaderContact,
-    //                                           String joinTenderUnits, String operator, String operatorContact,
-    //                                           BigDecimal winningAmount, BigDecimal supportingFunds, String remark,
-    //                                           int oid);
-
+    ResultMap updateTenderStatusByReturnCommit(String token, HttpServletResponse response,
+                                               String oldWinningDocumentFUrl, String oldTransactionAnnouncementFileUrl, String oldNoticeTransactionFileUrl, String oldResponseFileFileUrl,String oldOtherAttachmentsFileUrl,
+                                               MultipartFile winningDocument, MultipartFile transactionAnnouncement, MultipartFile noticeTransaction, MultipartFile responseFile,MultipartFile otherAttachments,
+                                               OpenTender openTender);
 
     /**
      * 根据招标备案表id获取文件路径和文件名
@@ -162,5 +148,12 @@ public interface OpenTenderService {
      * @return
      */
     ResultMap insertTidAndUid(int unitId, int tenderId);
+
+
+    //更新招标附件
+    //ResultMap modifyTenderAnnex(String token, HttpServletResponse response,
+    //                            String oldWinningDocumentFUrl, String oldTransactionAnnouncementFileUrl, String oldNoticeTransactionFileUrl, String oldResponseFileFileUrl,String oldOtherAttachmentsFileUrl,
+    //                            MultipartFile winningDocument, MultipartFile transactionAnnouncement, MultipartFile noticeTransaction, MultipartFile responseFile,MultipartFile otherAttachments,
+    //                            ) throws Exception;
 
 }

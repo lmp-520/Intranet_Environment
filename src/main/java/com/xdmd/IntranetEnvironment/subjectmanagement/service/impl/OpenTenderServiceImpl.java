@@ -276,7 +276,6 @@ public class OpenTenderServiceImpl implements OpenTenderService {
 
     /**
      * 招标附件上传
-     *
      * @param oid                     招标主表id
      * @param winningDocument         中标文件附件
      * @param transactionAnnouncement 成交公告附件
@@ -307,7 +306,6 @@ public class OpenTenderServiceImpl implements OpenTenderService {
         }
         //Integer userid = jwtInformation.getUid();
         String username = jwtInformation.getUsername();
-
         //Integer cid = jwtInformation.getCid();
         //String cname = jwtInformation.getCompanyName();
 
@@ -345,7 +343,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
             //获取成交公告附件的地址
             String transactionAnnouncementUrl = fileUploadUntil(transactionAnnouncement, unitName, "成交公告附件");
             //获取文件后缀名
-            String transactionAnnouncementSuffixName = transactionAnnouncementName.substring(winningDocumentName.lastIndexOf(".") + 1);
+            String transactionAnnouncementSuffixName = transactionAnnouncementName.substring(transactionAnnouncementName.lastIndexOf(".") + 1);
             // 获取文件大小
             File transactionAnnouncementFile = new File(transactionAnnouncementUrl);
             String transactionAnnouncementFileSize = String.valueOf(winningDocumentFile.length());
@@ -791,11 +789,23 @@ public class OpenTenderServiceImpl implements OpenTenderService {
 
     /**
      * 不通过被退回时重新提交[即修改]【外网】
+     * @param token
+     * @param response
+     * @param oldWinningDocumentFUrl
+     * @param oldTransactionAnnouncementFileUrl
+     * @param oldNoticeTransactionFileUrl
+     * @param oldResponseFileFileUrl
+     * @param oldOtherAttachmentsFileUrl
+     * @param winningDocument
+     * @param transactionAnnouncement
+     * @param noticeTransaction
+     * @param responseFile
+     * @param otherAttachments
      * @param openTender
      * @return
      */
     @Override
-    public ResultMap updateTenderStatusByReturnCommit(String token, HttpServletResponse response,OpenTender openTender) {
+    public ResultMap updateTenderStatusByReturnCommit(String token, HttpServletResponse response, String oldWinningDocumentFUrl, String oldTransactionAnnouncementFileUrl, String oldNoticeTransactionFileUrl, String oldResponseFileFileUrl, String oldOtherAttachmentsFileUrl, MultipartFile winningDocument, MultipartFile transactionAnnouncement, MultipartFile noticeTransaction, MultipartFile responseFile, MultipartFile otherAttachments, OpenTender openTender) {
         JwtInformation jwtInformation = new JwtInformation();
         try {
             jwtInformation = extranetTokenService.compare(response, token);
@@ -816,11 +826,124 @@ public class OpenTenderServiceImpl implements OpenTenderService {
         //Integer userid = jwtInformation.getUid();
         String username = jwtInformation.getUsername();
         //Integer cid = jwtInformation.getCid();
-        //String cname = jwtInformation.getCompanyName();
-
+        String unitName = jwtInformation.getCompanyName();
 
         try {
+            //更新招标数据
             int updateNum = openTenderMapper.updateTenderStatusByReturnCommit(openTender);
+            AnnexUpload winningDocumentData=null;
+            AnnexUpload transactionAnnouncementData=null;
+            AnnexUpload noticeTransactionData=null;
+            AnnexUpload responseFileAttachmentData=null;
+            AnnexUpload otherAttachmentsData=null;
+            //判断五个旧文件是否为空
+            if (oldWinningDocumentFUrl != null) {
+                //判断上传中标文件附件的后缀名是否正确
+                String winningDocumentName = winningDocument.getOriginalFilename();
+                Boolean aBoolean = FileSuffixJudge.suffixJudge(winningDocumentName);
+                if (aBoolean == false) {
+                    resultMap.fail().message("中标文件附件的文件格式不正确,请上传正确的文件格式");
+                }
+                //再根据旧的文件地址，先把文件给删除掉
+                File file = new File(oldWinningDocumentFUrl);
+                file.delete();
+                //对新的中标文件附件进行上传
+                String winningDocumentUrl = fileUploadUntil(winningDocument, unitName, "中标文件附件");
+                //获取文件后缀名
+                String winningDocumentSuffixName = winningDocumentName.substring(winningDocumentName.lastIndexOf(".") + 1);
+                // 获取文件大小
+                String winningDocumentFileSize = String.valueOf(new File(winningDocumentUrl).length());
+                winningDocumentData = new AnnexUpload(0, winningDocumentUrl, winningDocumentName, "中标文件附件", winningDocumentSuffixName, winningDocumentFileSize, null, username);
+                //把该文件上传到文件表中
+                uploadFileMapper.insertUpload(winningDocumentData);
+            }
+            if (oldTransactionAnnouncementFileUrl != null) {
+                //判断上传成交公告附件的后缀名是否正确
+                String transactionAnnouncementName = transactionAnnouncement.getOriginalFilename();
+                Boolean bBoolean = FileSuffixJudge.suffixJudge(transactionAnnouncementName);
+                if (bBoolean == false) {
+                    resultMap.fail().message("成交公告附件的文件格式不正确,请上传正确的文件格式");
+                }
+                //再根据旧的文件地址，先把文件给删除掉
+                File file = new File(oldTransactionAnnouncementFileUrl);
+                file.delete();
+                //获取成交公告附件的地址
+                String transactionAnnouncementUrl = fileUploadUntil(transactionAnnouncement, unitName, "成交公告附件");
+                //获取文件后缀名
+                String transactionAnnouncementSuffixName = transactionAnnouncementName.substring(transactionAnnouncementName.lastIndexOf(".") + 1);
+                // 获取文件大小
+                File transactionAnnouncementFile = new File(transactionAnnouncementUrl);
+                String transactionAnnouncementFileSize = String.valueOf(transactionAnnouncementFile.length());
+                transactionAnnouncementData = new AnnexUpload(0, transactionAnnouncementUrl, transactionAnnouncementName, "成交公告附件", transactionAnnouncementSuffixName, transactionAnnouncementFileSize, null, username);
+                //把该文件上传到文件表中
+                uploadFileMapper.insertUpload(transactionAnnouncementData);
+            }
+            if (oldNoticeTransactionFileUrl != null) {
+                //判断上传成交通知书附件的后缀名是否正确
+                String noticeTransactionName = noticeTransaction.getOriginalFilename();
+                Boolean cBoolean = FileSuffixJudge.suffixJudge(noticeTransactionName);
+                if (cBoolean == false) {
+                    resultMap.fail().message("成交通知书附件的文件格式不正确,请上传正确的文件格式");
+                }
+                //再根据旧的文件地址，先把文件给删除掉
+                File file = new File(oldNoticeTransactionFileUrl);
+                file.delete();
+                //获取成交通知书附件的地址
+                String noticeTransactionUrl = fileUploadUntil(noticeTransaction, unitName, "成交通知书附件");
+                //获取文件后缀名
+                String noticeTransactionSuffixName = noticeTransactionName.substring(noticeTransactionName.lastIndexOf(".") + 1);
+                // 获取文件大小
+                File noticeTransactionFile = new File(noticeTransactionUrl);
+                String noticeTransactionFileSize = String.valueOf(noticeTransactionFile.length());
+                 noticeTransactionData = new AnnexUpload(0, noticeTransactionUrl, noticeTransactionName, "成交公告附件", noticeTransactionSuffixName, noticeTransactionFileSize, null, username);
+                //把该文件上传到文件表中
+                uploadFileMapper.insertUpload(noticeTransactionData);
+            }
+            if (oldResponseFileFileUrl != null) {
+                //判断上传响应文件附件的后缀名是否正确
+                String responseFileName = responseFile.getOriginalFilename();
+                Boolean dBoolean = FileSuffixJudge.suffixJudge(responseFileName);
+                if (dBoolean == false) {
+                    resultMap.fail().message("成交通知书附件的文件格式不正确,请上传正确的文件格式");
+                }
+                //再根据旧的文件地址，先把文件给删除掉
+                File file = new File(oldResponseFileFileUrl);
+                file.delete();
+                //获取响应文件附件的地址
+                String responseFileUrl = fileUploadUntil(responseFile, unitName, "响应文件附件");
+                //获取文件后缀名
+                String responseFileSuffixName = responseFileName.substring(responseFileName.lastIndexOf(".") + 1);
+                // 获取文件大小
+                String responseFileFileSize = String.valueOf(new File(responseFileUrl).length());
+                responseFileAttachmentData = new AnnexUpload(0, responseFileUrl, responseFileName, "响应文件附件", responseFileSuffixName, responseFileFileSize, null, username);
+                //把该文件上传到文件表中
+                uploadFileMapper.insertUpload(responseFileAttachmentData);
+            }
+            if (oldOtherAttachmentsFileUrl != null) {
+                //判断上传其他附件的后缀名是否正确
+                String otherAttachmentsName = otherAttachments.getOriginalFilename();
+                Boolean eBoolean = FileSuffixJudge.suffixJudge(otherAttachmentsName);
+                if (eBoolean == false) {
+                    resultMap.fail().message("其他附件文件格式不正确,请上传正确的文件格式");
+                }
+                //再根据旧的文件地址，先把文件给删除掉
+                File file = new File(oldOtherAttachmentsFileUrl);
+                file.delete();
+                //获取其他附件的地址
+                String otherAttachmentsUrl = fileUploadUntil(otherAttachments, unitName, "其他附件");
+                //获取文件后缀名
+                String otherAttachmentsSuffixName = otherAttachmentsName.substring(otherAttachmentsName.lastIndexOf(".") + 1);
+                // 获取文件大小
+                String otherAttachmentsFileSize = String.valueOf(new File(otherAttachmentsUrl).length());
+                otherAttachmentsData = new AnnexUpload(0, otherAttachmentsUrl, otherAttachmentsName, "其他附件", otherAttachmentsSuffixName, otherAttachmentsFileSize, null, username);
+                //把该文件上传到文件表中
+                uploadFileMapper.insertUpload(otherAttachmentsData);
+            }
+            /**
+             * 把上传附件的id取出，存到招标备案表中
+             */
+            int updateTenderNum=openTenderMapper.updateAnnexByoid(winningDocumentData.getId(), transactionAnnouncementData.getId(), noticeTransactionData.getId(), responseFileAttachmentData.getId(), otherAttachmentsData.getId(), openTender.getId());
+
             //获取当前系统时间
             String nowtime = new SimpleDateFormat("yyyy-MM-dd:HH:mm:ss").format(System.currentTimeMillis());
             //审核不通过重新修改数据提交时,先把上一条数据进行更新，再新增下一条数据
@@ -833,7 +956,6 @@ public class OpenTenderServiceImpl implements OpenTenderService {
             if (num0 == 0) {
                 throw new UpdateSqlException("在更新审核状态，更新上一条数据时出错");
             }
-
             //新增员工提交信息
             String auditStep = "单位员工提交，等待评估中心审核";
             String newState = "等待处理";
@@ -846,10 +968,11 @@ public class OpenTenderServiceImpl implements OpenTenderService {
             if (num3 == 0) {
                 throw new UpdateStatusException("更新招标备案表的审核状态字段时出错");
             }
-            if (updateNum > 0) {
-                resultMap.success().message("重新修改并提交成功");
-            } else if (updateNum == 0) {
-                resultMap.fail().message("重新修改并提交失败");
+
+            if (updateNum>0&updateTenderNum>0) {
+                resultMap.success().message("修改数据并上传附件成功");
+            } else if (updateNum == 0&&updateTenderNum==0) {
+                resultMap.fail().message("修改数据并上传附件失败");
             }
         } catch (Exception e) {
             e.printStackTrace();
