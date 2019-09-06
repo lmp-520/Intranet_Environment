@@ -442,7 +442,7 @@
             #{acceptanceCertificate.scienceDepartmentOpinion},
             #{acceptanceCertificate.checkDepartmentOpinion},
             #{acceptanceCertificate.environmentOfficeOpinion},
-            #{acceptanceCertificate.total_expenditure}
+            #{acceptanceCertificate.totalExpenditure}
         );
     </insert>
 

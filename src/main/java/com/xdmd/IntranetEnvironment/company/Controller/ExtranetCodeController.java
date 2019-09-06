@@ -42,7 +42,7 @@ public class ExtranetCodeController {
         //画矩形的边框,坐标从0开始绘制边框
         g.drawRect(0, 0, width - 1, height - 1);
         //设置需要显示的字母shift+ctrl+x是大写shift+ctrl+y是小写
-        String data = "ABCDEFGHIJKLMNOPQISTUVWXYZabcdefghijklmnopqistuvwxyz";
+        String data = "ABCDEFGHJKMNPQSTUVWXYZabcdefghjkmnpqstuvwxyz";
         Random r = new Random();
         StringBuffer sb = new StringBuffer();
         //连续填充4个字母到图片中
@@ -61,7 +61,7 @@ public class ExtranetCodeController {
         }
 
         //设置干扰线
-        for (int i = 1; i <= 10; i++) {
+        for (int i = 1; i <= 5; i++) {
             //两点连成一直线，每一个点都有一个坐标x1和y1代表起点的坐标，x2和y2代表终点的坐标
             g.drawLine(r.nextInt(width), r.nextInt(height), r.nextInt(width), r.nextInt(height));
             //设置线条的颜色
@@ -69,9 +69,9 @@ public class ExtranetCodeController {
         }
 
         //把验证码存到cookie中
-        Cookie cookie = new Cookie("check",sb.toString());
+        Cookie cookie = new Cookie("extranetCheck",sb.toString());
         cookie.setPath("/");
-        cookie.setMaxAge(60);
+        cookie.setMaxAge(60*30);
         response.addCookie(cookie);
 
 

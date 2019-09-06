@@ -76,7 +76,7 @@ public class CompanyControllerTwo {
     @PostMapping("login")
     public ResultMap login(@RequestParam("loginName") String loginName, //登陆名
                            @RequestParam("password") String password,   //密码
-                           @CookieValue(value = "check", required = false) String check,
+                           @CookieValue(value = "extranetCheck", required = false) String check,
                            @RequestParam("code") String code,   //验证码
                            HttpServletResponse response){
 

@@ -142,10 +142,8 @@ public class NotificationServiceImpl implements NotificationService {
 
         //获取当页的数据
         List<Notification> notificationList = notificationMapper.queryNotificationList(newpage,total);
-
         pageBean.setAlltotal(alltotal);
         pageBean.setData(notificationList);
-
         return resultMap.success().message(pageBean);
 
     }

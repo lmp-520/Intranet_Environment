@@ -1,14 +1,11 @@
 package com.xdmd.IntranetEnvironment.achievementManagement.service.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.xdmd.IntranetEnvironment.achievementManagement.controller.AchievementController;
 import com.xdmd.IntranetEnvironment.achievementManagement.mapper.AchievementMapper;
 import com.xdmd.IntranetEnvironment.achievementManagement.pojo.*;
 import com.xdmd.IntranetEnvironment.achievementManagement.service.AchievementService;
 import com.xdmd.IntranetEnvironment.common.*;
 import com.xdmd.IntranetEnvironment.common.PageBean;
-import com.xdmd.IntranetEnvironment.expert.pojo.ExpertInformation;
 import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.*;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.mapper.AcceptApplyMapper;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.pojo.CheckApply;
@@ -315,11 +312,12 @@ public class AchievementServiceImpl implements AchievementService {
         //根据验收申请表的id，获取验收申请表的信息
         CheckApply checkApply = acceptApplyMapper.queryCheckApply(cid);
 
+        Integer applyApplicationUrlId = checkApply.getApplicationUrlId();
         //通过验收申请表id获取文件的地址
-        String applicationFileUrl = acceptApplyMapper.queryFileUrlByFileId(applicationUrlId);
+        String applicationFileUrl = acceptApplyMapper.queryFileUrlByFileId(applyApplicationUrlId);
         checkApply.setApplicationAcceptanceUrl(applicationFileUrl);
         //获取验收申请表的真实名字
-        String applicationFileName = acceptApplyMapper.queryFileNameByFileId(applicationUrlId);
+        String applicationFileName = acceptApplyMapper.queryFileNameByFileId(applyApplicationUrlId);
         checkApply.setApplicationAcceptanceUrlName(applicationFileName);
 
         //获取提交清单Id

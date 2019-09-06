@@ -300,9 +300,6 @@ public class PersonInformationManageServiceImpl implements PersonInformationMana
             //把员工信息更新到数据库中
             personInformationManageMapper.updateStaffInformationAndIdCardFile(subaccount.getAid(), subaccount);
             return resultMap.success().message("修改成功");
-
         }
-
     }
-
 }
