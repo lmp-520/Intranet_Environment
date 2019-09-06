@@ -439,11 +439,12 @@ public class OpenTenderServiceImpl implements OpenTenderService {
             return "上传文件不可为空";
         }
         // 获取文件名拼接当前系统时间作为新文件名
-        String nowtime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String nowtime = dateFormat.format(new Date());
         StringBuilder pinjiefileName = new StringBuilder(nowtime).append(file.getOriginalFilename());
         String fileName = pinjiefileName.toString();
 
-        //获取招标课题名稱
+        //获取招标课题名稱t
         //Object ketiName = openTenderMapper.getTenderById(oid).get("subjectName");
         //获取文件上传绝对路径
         String path = "D:/xdmd/environment/" + unitName + "/" + fileType + "/";

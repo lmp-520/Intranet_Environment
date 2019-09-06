@@ -418,11 +418,13 @@ public class ContractManageController {
      * @throws UpdateStatusException
      * @throws UpdateSqlException
      */
+    @ResponseBody
    @PostMapping(value = "updateContractStatusByReturnCommit")
    @ApiOperation(value = "不通过被退回时重新提交[即修改]【外网】")
    public ResultMap updateContractStatusByReturnCommit(@CookieValue(value = "token", required = false) String token, HttpServletResponse response,
-                                                       @RequestBody ContractManageDTO contractManageDTO,
-                                                       @RequestParam("oldcontractAnnexUrl") String oldcontractAnnexUrl, MultipartFile contractAnnex) throws UpdateSqlException, UpdateStatusException, IOException, FileUploadException{
+                                                       @RequestPart(value = "contractManageDTO",required = false) ContractManageDTO contractManageDTO,
+                                                       @RequestPart(value = "oldcontractAnnexUrl",required = false) String oldcontractAnnexUrl,
+                                                       @RequestPart(value = "contractAnnex",required = false) MultipartFile contractAnnex) throws UpdateSqlException, UpdateStatusException, IOException, FileUploadException{
 
         if (StringUtils.isEmpty(token)) {
             return resultMap.fail().message("请先登录");
