@@ -296,7 +296,7 @@ public class OpenTenderController {
     /**
      * 不通过被退回时重新提交[即修改]【外网】
      * @return
-     */
+
     @ApiImplicitParams({
             @ApiImplicitParam(name = "projectNo",value = "课题编号"),
             @ApiImplicitParam(name = "projectName",value = "项目名称"),
@@ -323,7 +323,7 @@ public class OpenTenderController {
             return resultMap.fail().message("请先登录");
         }
         return resultMap = openTenderService.updateTenderStatusByReturnCommit(token, response,openTender);
-    }
+    }  */
 
     /**
      * 根据招标备案表id获取文件路径和文件名
@@ -345,6 +345,67 @@ public class OpenTenderController {
     @ApiOperation(value = "根据合同主表id查询审核记录【内网】")
     public ResultMap getAllShenHeTableRecordInfoByContractId(int oid) {
         return resultMap=openTenderService.getAllShenHeTableRecordInfoByContractId(oid);
+    }
+
+
+
+
+    /**
+     * 不通过被退回时重新提交[即修改]【外网】
+     * @param token
+     * @param response
+     * @param oldWinningDocumentFileUrl
+     * @param oldTransactionAnnouncementFileUrl
+     * @param oldNoticeTransactionFileUrl
+     * @param oldResponseFileFileUrl
+     * @param oldOtherAttachmentsFileUrl
+     * @param winningDocument
+     * @param transactionAnnouncement
+     * @param noticeTransaction
+     * @param responseFile
+     * @param otherAttachments
+     * @param openTender
+     * @return
+     */
+    @ResponseBody
+    @PostMapping("updateTenderStatusByReturnCommit")
+    @ApiOperation("不通过被退回时重新提交[即修改]【外网】")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="oldWinningDocumentFileUrl",value = "旧的中标文件附件url"),
+            @ApiImplicitParam(name="oldTransactionAnnouncementFileUrl",value = "旧的成交通告附件附件url"),
+            @ApiImplicitParam(name="oldNoticeTransactionFileUrl",value = "旧的成交通知书附件附件url"),
+            @ApiImplicitParam(name="oldResponseFileFileUrl",value = "旧的响应附件附件url"),
+            @ApiImplicitParam(name="oldOtherAttachmentsFileUrl",value = "旧的其他文件附件url"),
+            @ApiImplicitParam(name="winningDocument",value = "新的中标附件"),
+            @ApiImplicitParam(name="transactionAnnouncement",value = "新的成交公告附件"),
+            @ApiImplicitParam(name="noticeTransaction",value = "新的成交通知书附件"),
+            @ApiImplicitParam(name="responseFile",value = "新的响应文件附件"),
+            @ApiImplicitParam(name="otherAttachments",value = "新的其他文件附件"),
+            @ApiImplicitParam(name="openTender",value = "招标实体类"),
+    })
+    public ResultMap updateTenderStatusByReturnCommit(@CookieValue(value = "token",required = false) String token, HttpServletResponse response,
+                                 @RequestPart(value = "oldWinningDocumentFileUrl",required = false) String oldWinningDocumentFileUrl,
+                                 @RequestPart(value = "oldTransactionAnnouncementFileUrl",required = false) String oldTransactionAnnouncementFileUrl,
+                                 @RequestPart(value = "oldNoticeTransactionFileUrl",required = false)String oldNoticeTransactionFileUrl,
+                                 @RequestPart(value = "oldResponseFileFileUrl",required = false)String oldResponseFileFileUrl,
+                                 @RequestPart(value = "oldOtherAttachmentsFileUrl",required = false)String oldOtherAttachmentsFileUrl,
+                                 @RequestPart(value = "winningDocument",required = false) MultipartFile winningDocument,
+                                 @RequestPart(value = "transactionAnnouncement",required = false) MultipartFile transactionAnnouncement,
+                                 @RequestPart(value = "responseFile",required = false) MultipartFile responseFile,
+                                 @RequestPart(value = "noticeTransaction",required = false) MultipartFile noticeTransaction,
+                                 @RequestPart(value = "otherAttachments",required = false) MultipartFile otherAttachments,
+                                 @RequestPart OpenTender openTender){
+        if(StringUtils.isEmpty(token)){
+            return resultMap.fail().message("请先登录");
+        }
+        try {
+            resultMap = openTenderService.updateTenderStatusByReturnCommit(token, response, oldWinningDocumentFileUrl, oldTransactionAnnouncementFileUrl, oldNoticeTransactionFileUrl, oldResponseFileFileUrl, oldOtherAttachmentsFileUrl, winningDocument, transactionAnnouncement, responseFile, noticeTransaction, otherAttachments, openTender);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("OpenTenderController 中 updateTenderStatusByReturnCommit  -- " + e.getMessage());
+            return resultMap.fail().message("系统异常");
+        }
+        return resultMap;
     }
 }
 

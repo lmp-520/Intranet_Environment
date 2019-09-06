@@ -32,7 +32,8 @@ public class KeyResearchDevelopersController {
     @ApiOperation("新增主要开发人员")
     @PostMapping("insertKeyDev")
     public ResultMap insert(@RequestBody List<KeyResearchDevelopersDTO> keyResearchDevelopers){
-        return resultMap=keyResearchDevelopersService.batchInsertKeyDev(keyResearchDevelopers);
+         int KeyDevNum=keyResearchDevelopersService.batchInsertKeyDev(keyResearchDevelopers);
+         return KeyDevNum>0?resultMap.success().message("成功新增"+KeyDevNum+"条信息"):resultMap.success().message("新增失败");
     }
 
 
@@ -50,13 +51,14 @@ public class KeyResearchDevelopersController {
 
 
     /**
-     * 更新主要研究人员【批量更新】
-     * @param keyResearchDevelopersDTOS
+     * 根据合同id刪除信息
+     * @param contractId
      * @return
      */
-    @ApiOperation("更新主要研究人员【批量更新】-【有问题,暂不可用】")
-    @PostMapping("batchUpdate")
-    public ResultMap batchUpdate(@RequestBody List<KeyResearchDevelopersDTO> keyResearchDevelopersDTOS) {
-        return resultMap=keyResearchDevelopersService.batchUpdateKeyDev(keyResearchDevelopersDTOS);
+    @ApiOperation("根据合同id刪除信息")
+    @PostMapping("deleteDeveloperInfo")
+    @ApiImplicitParam(name="contractId",value = "合同主表id")
+    public int deleteDeveloperInfo(int contractId) {
+        return keyResearchDevelopersService.deleteDeveloperInfo(contractId);
     }
 }

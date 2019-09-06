@@ -36,9 +36,6 @@ public class GuideCollection {
     @ApiModelProperty("单位负责人(签字)")
     private String unitPrincipal;
 
-   // @ApiModelProperty("单位类别")
-   // private String unitCategory;
-
     @ApiModelProperty("建议理由及依据(300字以内)")
     private String reasonBasis;
 
@@ -52,7 +49,7 @@ public class GuideCollection {
     private String standardsSpecificationsRegulatory;
 
     @ApiModelProperty("研究期限")
-    private Integer researchPeriod;
+    private String researchPeriod;
 
     @ApiModelProperty("研究经费测算（万元）")
     private BigDecimal researchFund;

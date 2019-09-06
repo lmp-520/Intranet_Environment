@@ -3,7 +3,6 @@ package com.xdmd.IntranetEnvironment.contractmanage.service;
 import com.xdmd.IntranetEnvironment.common.FileUploadException;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.contractmanage.pojo.ContractManageDTO;
-import com.xdmd.IntranetEnvironment.subjectmanagement.exception.InsertSqlException;
 import com.xdmd.IntranetEnvironment.subjectmanagement.exception.UpdateSqlException;
 import com.xdmd.IntranetEnvironment.subjectmanagement.exception.UpdateStatusException;
 import org.apache.ibatis.annotations.Param;
@@ -38,11 +37,11 @@ public interface ContractManageService {
     ResultMap insert(String token, HttpServletResponse response, ContractManageDTO contractManageDTO);
 
     /**
-     * [查詢合同主表] 根据合同主表id查询
+     * 根据合同主表id查询合同详情
      * @param id
      * @return
      */
-    ContractManageDTO getManageInfoById(int id);
+    ResultMap getManageInfoById(int id);
 
 
     /**
@@ -51,7 +50,7 @@ public interface ContractManageService {
      * @return
      */
 
-    String ContractFileUpload(MultipartFile file,int cid) throws IOException;
+    ResultMap ContractFileUpload(String token, HttpServletResponse response, MultipartFile file, int contractId) throws IOException;
 
 
 
@@ -70,19 +69,18 @@ public interface ContractManageService {
 
     /**
      * [查詢] 根據单位id查詢本单位合同
-     * @param uid
      * @return
      */
-    List<Map> getManageInfoByUid(int uid,String subjectCategory,String subjectName,
+    ResultMap getManageInfoByUid(String token,HttpServletResponse response,String subjectCategory,String subjectName,
                                  String subjectContact,String subjectContactPhone,String commitmentUnit,
-                                 String subjectSupervisorDepartment);
+                                 String subjectSupervisorDepartment,int pageNum,int pageSize);
 
 
     /**
-     * [查詢合同主表] 查詢主表全部
+     * 查詢主表全部
      * @return
      */
-    ResultMap getAllInfo(String subjectCategory, String subjectName, String subjectContact, String subjectContactPhone, String commitmentUnit, String subjectSupervisorDepartment, int pageNum, int pageSize);
+    ResultMap getAllInfo(String token,HttpServletResponse response,String subjectCategory, String subjectName, String subjectContact, String subjectContactPhone, String commitmentUnit, String subjectSupervisorDepartment, int pageNum, int pageSize);
 
 
 
@@ -142,8 +140,10 @@ public interface ContractManageService {
      * @param reason 审核不通过原因
      * @param cid 审核表id
      * @return
-     */
+
     ResultMap contractShenHeByUnitManager(String token, HttpServletResponse response, Boolean type, String reason, Integer cid) throws UpdateSqlException, InsertSqlException;
+     */
+
 
     /**
      * 评估中心审核
@@ -168,7 +168,7 @@ public interface ContractManageService {
      * @param contractManageDTO
      * @return
      */
-    ResultMap updateContractStatusByReturnCommit(String token, HttpServletResponse response,ContractManageDTO contractManageDTO) throws UpdateSqlException, UpdateStatusException, UpdateStatusException;
+    ResultMap updateContractStatusByReturnCommit(String token, HttpServletResponse response, ContractManageDTO contractManageDTO, String oldcontractAnnexUrl, MultipartFile contractAnnex) throws UpdateSqlException, UpdateStatusException, IOException, FileUploadException;
 
     /**
      * 展示所有通过单位管理员审批的 【外网】
@@ -181,22 +181,17 @@ public interface ContractManageService {
      * @param pageNum
      * @param pageSize
      * @return
-     */
+
     ResultMap showAllPassContractReviewByUnitManager(String subjectCategory,String subjectName, String subjectContact,String subjectContactPhone,String commitmentUnit, String subjectSupervisorDepartmentint, int pageNum, int pageSize);
+     */
+
 
     /**
      * 展示所有未通过单位管理员审批的 【外网】
-     * @param subjectCategory
-     * @param subjectName
-     * @param subjectContact
-     * @param subjectContactPhone
-     * @param commitmentUnit
-     * @param subjectSupervisorDepartmentint
-     * @param pageNum
-     * @param pageSize
      * @return
-     */
     ResultMap showAllNoPassContractReviewByUnitManager(String subjectCategory,String subjectName, String subjectContact,String subjectContactPhone,String commitmentUnit, String subjectSupervisorDepartmentint, int pageNum, int pageSize);
+     */
+
 
     /**
      * 展示所有通过评估中心审批的 【内网】

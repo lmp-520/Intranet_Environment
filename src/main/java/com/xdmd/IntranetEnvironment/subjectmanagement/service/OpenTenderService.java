@@ -94,24 +94,24 @@ public interface OpenTenderService {
     ResultMap tenderShenHeByPingGuCenter(String token, HttpServletResponse response,Boolean type, String reason, Integer oid);
 
     /**
-     * 展示所有未通过单位管理员审批的
+     * 展示所有单位管理员未审批的
      * @return
      */
     ResultMap showAllPassTenderReviewByUnitManager(String projectName, String subjectName, String subjectLeader, String leaderContact,int pageNum,int pageSize);
     /**
-     * 展示所有已通过单位管理员审批的
+     * 展示所有单位管理员已审批的
      * @return
      */
     ResultMap showAllNoPassTenderReviewByUnitManager(String projectName, String subjectName, String subjectLeader, String leaderContact,int pageNum,int pageSize);
 
     /**
-     * 展示所有通过评估中心审批的
+     * 展示所有评估中心已审批的
      * @return
      */
     ResultMap showAllPassTenderReviewByPingGu(String projectName, String subjectName, String subjectLeader, String leaderContact,int pageNum,int pageSize);
 
     /**
-     * 展示所有未通过评估中心审批的
+     * 展示所有评估中心未审批的
      * @return
      */
     ResultMap showAllNoPassReviewTenderByPingGu(String projectName, String subjectName, String subjectLeader, String leaderContact,int pageNum, int pageSize);

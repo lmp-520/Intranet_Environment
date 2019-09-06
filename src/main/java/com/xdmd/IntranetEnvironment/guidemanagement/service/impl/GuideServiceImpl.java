@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
 import java.text.DateFormat;
@@ -30,6 +31,7 @@ import java.util.Map;
  * @description: 指南征集业务实现类
  */
 @Service
+@Transactional
 public class GuideServiceImpl implements GuideService {
     private static final Logger log = LoggerFactory.getLogger(GuideServiceImpl.class);
     ResultMap resultMap = new ResultMap();
@@ -331,7 +333,7 @@ public class GuideServiceImpl implements GuideService {
     @Override
     public ResultMap updateIsSelectByIds(List<Long> ids) {
         try{
-         ids.forEach(id-> System.out.println(id));
+        // ids.forEach(id-> System.out.println(id));
             int idNum=guideMapper.updateIsSelectByIds(ids);
             System.out.println(idNum);
             if(idNum>0){

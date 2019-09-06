@@ -29,7 +29,6 @@ public class KeyResearchDevlpersProvider {
                         "#'{'list[{0}].gender},#'{'list[{0}].age},#'{'list[{0}].professionalTitle}," +
                         "#'{'list[{0}].professional},#'{'list[{0}].workTask},#'{'list[{0}].workingTime})"
         );
-
         for (int i = 0; i < summaryList.size(); i++) {
             sb.append(mf.format(new Object[]{i}));
             if (i < summaryList.size() - 1) {
