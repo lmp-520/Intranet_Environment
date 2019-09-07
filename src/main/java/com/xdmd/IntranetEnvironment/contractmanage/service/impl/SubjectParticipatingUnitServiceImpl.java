@@ -5,6 +5,7 @@ import com.xdmd.IntranetEnvironment.contractmanage.pojo.SubjectParticipatingUnit
 import com.xdmd.IntranetEnvironment.contractmanage.service.SubjectParticipatingUnitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -14,6 +15,7 @@ import java.util.List;
  * @description: 课题承担单位、参加单位及课题负责人
  */
 @Service
+@Transactional
 public class SubjectParticipatingUnitServiceImpl implements SubjectParticipatingUnitService {
     @Autowired
     SubjectParticipatingUnitMapper subjectParticipatingUnitMapper;

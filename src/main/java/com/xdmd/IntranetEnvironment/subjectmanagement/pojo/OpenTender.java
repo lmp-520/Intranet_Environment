@@ -13,7 +13,6 @@ import java.math.BigDecimal;
 @Data
 @ApiModel("招标备案实体类")
 public class OpenTender{
-
     @ApiModelProperty("主键【注:系统默认生成,新增时不用填】")
     private int id;
 

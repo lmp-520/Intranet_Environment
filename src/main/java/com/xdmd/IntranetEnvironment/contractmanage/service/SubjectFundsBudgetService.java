@@ -1,6 +1,5 @@
 package com.xdmd.IntranetEnvironment.contractmanage.service;
 
-import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.contractmanage.pojo.SubjectFundsBudgetDTO;
 import org.apache.ibatis.annotations.Param;
 
@@ -36,5 +35,5 @@ public interface SubjectFundsBudgetService {
      * @param subjectFundsBudgetDTO
      * @return
      */
-    ResultMap UpdateSubjectFundsBudget(SubjectFundsBudgetDTO subjectFundsBudgetDTO);
+    int UpdateSubjectFundsBudget(SubjectFundsBudgetDTO subjectFundsBudgetDTO);
 }

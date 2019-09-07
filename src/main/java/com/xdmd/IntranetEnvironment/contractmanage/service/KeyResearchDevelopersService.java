@@ -11,8 +11,9 @@ public interface KeyResearchDevelopersService {
      * [新增]
      * @author Kong
      * @date 2019/08/06
-     **/
-    ResultMap batchInsertKeyDev(List<KeyResearchDevelopersDTO> keyResearchDevelopers);
+     *
+     * @return*/
+    int batchInsertKeyDev(List<KeyResearchDevelopersDTO> keyResearchDevelopers);
 
     /**
      * [查詢] 根據合同管理id查詢
@@ -23,9 +24,9 @@ public interface KeyResearchDevelopersService {
 
 
     /**
-     * 更新主要研究人员【批量更新】
-     * @param keyResearchDevelopersDTOS
+     * 根据合同id刪除信息
+     * @param contractId
      * @return
      */
-    ResultMap batchUpdateKeyDev(List<KeyResearchDevelopersDTO> keyResearchDevelopersDTOS);
+    int deleteDeveloperInfo(int contractId);
 }

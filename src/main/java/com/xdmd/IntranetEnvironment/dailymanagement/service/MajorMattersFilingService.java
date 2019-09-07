@@ -45,8 +45,7 @@ public interface MajorMattersFilingService {
      * [查詢] 根据单位id分頁筛选查詢【内网】
      * @return
      */
-    ResultMap getAllMajorInfoByUid(int uid,String subjectName, String commitmentUnit, Integer adjustTypId, Integer adjustmentMattersId, int pageNum, int pageSize);
-
+    ResultMap getAllMajorInfoByUid(String token, HttpServletResponse response, String subjectName, String commitmentUnit, Integer adjustTypId, Integer adjustmentMattersId, int pageNum, int pageSize);
 
     /**
      * 更新重大事项的审核状态【内网】
@@ -81,5 +80,6 @@ public interface MajorMattersFilingService {
      * @return
      */
     ResultMap  AdjustmentMatters();
+
 
 }

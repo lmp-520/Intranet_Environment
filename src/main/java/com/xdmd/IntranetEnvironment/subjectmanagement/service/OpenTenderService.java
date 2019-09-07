@@ -55,16 +55,6 @@ public interface OpenTenderService {
 
 
     /**
-     * 根据招标备案id更新相应的附件id
-     * @param winningFileAttachmentId
-     * @param announcementTransactionAnnouncementId
-     * @param dealNotificationAttachmentId
-     * @param oid
-     * @return
-    ResultMap updateTenderByoid(int winningFileAttachmentId, int announcementTransactionAnnouncementId, int dealNotificationAttachmentId,int responseFileAttachmentId, int oid);
-     */
-
-    /**
      * 招标附件上传
      * @param token
      * @param response
@@ -104,24 +94,24 @@ public interface OpenTenderService {
     ResultMap tenderShenHeByPingGuCenter(String token, HttpServletResponse response,Boolean type, String reason, Integer oid);
 
     /**
-     * 展示所有未通过单位管理员审批的
+     * 展示所有单位管理员未审批的
      * @return
      */
     ResultMap showAllPassTenderReviewByUnitManager(String projectName, String subjectName, String subjectLeader, String leaderContact,int pageNum,int pageSize);
     /**
-     * 展示所有已通过单位管理员审批的
+     * 展示所有单位管理员已审批的
      * @return
      */
     ResultMap showAllNoPassTenderReviewByUnitManager(String projectName, String subjectName, String subjectLeader, String leaderContact,int pageNum,int pageSize);
 
     /**
-     * 展示所有通过评估中心审批的
+     * 展示所有评估中心已审批的
      * @return
      */
     ResultMap showAllPassTenderReviewByPingGu(String projectName, String subjectName, String subjectLeader, String leaderContact,int pageNum,int pageSize);
 
     /**
-     * 展示所有未通过评估中心审批的
+     * 展示所有评估中心未审批的
      * @return
      */
     ResultMap showAllNoPassReviewTenderByPingGu(String projectName, String subjectName, String subjectLeader, String leaderContact,int pageNum, int pageSize);
@@ -131,14 +121,10 @@ public interface OpenTenderService {
      * @param openTender
      * @return
      */
-    ResultMap updateTenderStatusByReturnCommit(String token, HttpServletResponse response,OpenTender openTender);
-    //ResultMap updateTenderStatusByReturnCommit(String token, HttpServletResponse response, String projectNo, String projectName, String tenderNo,
-    //                                           String subcontractingNo, String subjectName, String responsibleUnit,
-    //                                           String bidders, String subjectLeader, String leaderContact,
-    //                                           String joinTenderUnits, String operator, String operatorContact,
-    //                                           BigDecimal winningAmount, BigDecimal supportingFunds, String remark,
-    //                                           int oid);
-
+    ResultMap updateTenderStatusByReturnCommit(String token, HttpServletResponse response,
+                                               String oldWinningDocumentFUrl, String oldTransactionAnnouncementFileUrl, String oldNoticeTransactionFileUrl, String oldResponseFileFileUrl,String oldOtherAttachmentsFileUrl,
+                                               MultipartFile winningDocument, MultipartFile transactionAnnouncement, MultipartFile noticeTransaction, MultipartFile responseFile,MultipartFile otherAttachments,
+                                               OpenTender openTender);
 
     /**
      * 根据招标备案表id获取文件路径和文件名
@@ -162,5 +148,12 @@ public interface OpenTenderService {
      * @return
      */
     ResultMap insertTidAndUid(int unitId, int tenderId);
+
+
+    //更新招标附件
+    //ResultMap modifyTenderAnnex(String token, HttpServletResponse response,
+    //                            String oldWinningDocumentFUrl, String oldTransactionAnnouncementFileUrl, String oldNoticeTransactionFileUrl, String oldResponseFileFileUrl,String oldOtherAttachmentsFileUrl,
+    //                            MultipartFile winningDocument, MultipartFile transactionAnnouncement, MultipartFile noticeTransaction, MultipartFile responseFile,MultipartFile otherAttachments,
+    //                            ) throws Exception;
 
 }

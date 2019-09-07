@@ -67,8 +67,8 @@ public interface ContractManageMapper {
             "#{guaranteedUnitZipC},\n" +
             "#{subjectSigningDescription},\n" +
             "#{subjectObjectivesResearch},\n" +
-            "#{subjectAcceptanceAssessment},0,\n" +
-            "DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT)")
+            "#{subjectAcceptanceAssessment},\n" +
+            "DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT)")
     int insert(ContractManageDTO contractManageDTO);
 
     /**
@@ -94,11 +94,12 @@ public interface ContractManageMapper {
             "cm.subject_contact as subjectContact,\n" +
             "cm.subject_contact_phone as subjectContactPhone,\n" +
             "cm.commitment_unit as commitmentUnit,\n" +
-            "cm.subject_supervisor_department as subjectSupervisorDepartment\n" +
+            "cm.subject_supervisor_department as subjectSupervisorDepartment\n," +
+            "cm.approval_status as approvalStatus\n" +
             "From\n" +
             "contract_manage cm,unit_contract uc\t" +
             "<where>\n" +
-            "cm.id=uc.contract_id and uc .unit_id= #{uid}\n" +
+            "cm.id=uc.contract_id and uc.unit_id= #{uid}\n" +
             "<if test ='null != subjectCategory'>\n" +
             "AND cm.subject_category like CONCAT('%',#{subjectCategory},'%')\n" +
             "</if>\n" +
@@ -117,13 +118,14 @@ public interface ContractManageMapper {
             "<if test ='null != subjectSupervisorDepartment'>\n" +
             "AND cm.subject_supervisor_department like CONCAT('%',#{subjectSupervisorDepartment},'%')\n" +
             "</if></where>" +
+            "order by cm.id desc" +
             "</script>")
     List<Map> getManageInfoByUid(@Param("uid") int uid,@Param("subjectCategory") String subjectCategory,@Param("subjectName")String subjectName,
                                          @Param("subjectContact")String subjectContact,@Param("subjectContactPhone")String subjectContactPhone,@Param("commitmentUnit")String commitmentUnit,
                                          @Param("subjectSupervisorDepartment")String subjectSupervisorDepartment);
 
     /**
-     * [查詢] 查詢全部合同主表
+     * 查询全部合同主表
      * @param
      * @return
      */
@@ -136,10 +138,12 @@ public interface ContractManageMapper {
             "subject_contact as subjectContact,\n" +
             "subject_contact_phone as subjectContactPhone,\n" +
             "commitment_unit as commitmentUnit,\n" +
-            "subject_supervisor_department as subjectSupervisorDepartment\n" +
+            "subject_supervisor_department as subjectSupervisorDepartment,\n" +
+            "approval_status as approvalStatus\t" +
             "From\n" +
             "contract_manage\n" +
             "<where>\n" +
+            "approval_status > 1\n" +
             "<if test ='null != subjectCategory'>\n" +
             "AND subject_category like CONCAT('%',#{subjectCategory},'%')\n" +
             "</if>\n" +
@@ -157,7 +161,9 @@ public interface ContractManageMapper {
             "</if>\n" +
             "<if test ='null != subjectSupervisorDepartment'>\n" +
             "AND subject_supervisor_department like CONCAT('%',#{subjectSupervisorDepartment},'%')\n" +
-            "</if></where>" +
+            "</if>" +
+            "</where>" +
+            "order by id desc" +
             "</script>")
     List<Map> getAllInfo(@Param("subjectCategory") String subjectCategory,@Param("subjectName")String subjectName,
                          @Param("subjectContact")String subjectContact,@Param("subjectContactPhone")String subjectContactPhone,@Param("commitmentUnit")String commitmentUnit,
@@ -172,6 +178,9 @@ public interface ContractManageMapper {
      */
     @Select(value = "select id subject_name,contract_start_time,subject_objectives_research from contract_manage where mid_record_id=1")
     List<Map> getInfoByMidRecord(@Param("mId") int mId);
+
+
+
 
     /**
      * [查詢] 根据单位id && 中检记录id查詢本单位的课题合同【外网中检】
@@ -220,9 +229,33 @@ public interface ContractManageMapper {
             "WHERE id = #{cid}")
     int updateMidCheckAnnextByCid(int midCheckAnnexId, int expertAssessmentAnnexId, int subjectSuggestAnnexId, int cid);
 
+    /**
+     * 根据合同id更新中期检查附件id【修改】
+     * @param midCheckAnnexId
+     * @param cid
+     * @return
+     */
+    @Update(value = "update contract_manage set mid_check_annex_id=#{midCheckAnnexId} where id=#{cid}")
+    int updateMidCheckAnnexIdByCid(int midCheckAnnexId, int cid);
+    /**
+     * 根据合同id更新专家评估附件id【修改】
+     * @param expertAssessmentAnnexId
+     * @param cid
+     * @return
+     */
+    @Update(value = "update contract_manage set expert_assessment_annex_id=#{expertAssessmentAnnexId} where id=#{cid}")
+    int updateExpertAssessmentAnnexIdByCid(int expertAssessmentAnnexId, int cid);
+    /**
+     * 根据合同id更新课题意见附件id【修改】
+     * @param subjectSuggestAnnexId
+     * @param cid
+     * @return
+     */
+    @Update(value = "update contract_manage set subject_suggest_annex_id=#{subjectSuggestAnnexId} where id=#{cid}")
+    int updateSubjectSuggestAnnexIdByCid(int subjectSuggestAnnexId, int cid);
 
     /**
-     * 根据合同id更新合同附件id【外网提交】
+     * 根据合同id更新合同附件id【外网提交-修改】
      * @param contractAnnexId
      * @param cid
      * @return
@@ -277,7 +310,7 @@ public interface ContractManageMapper {
     String queryUnitNameBycid(Integer cid);
 
     /**
-     * 不通过被退回时重新提交[修改]
+     * 不通过被退回时重新提交[主表修改]
      * @param contractManageDTO
      * @return
      */
@@ -322,10 +355,16 @@ public interface ContractManageMapper {
             "where id=#{id}")
     int updateContractStatusByReturnCommit(ContractManageDTO contractManageDTO);
 
+
+
+
+
+
+
     /**
      * 展示所有通过单位管理员审批的 【外网】
      * @return
-     */
+
     @Select("SELECT \n" +
             "id,\n" +
             "subject_category as subjectCategory,\n" +
@@ -363,11 +402,12 @@ public interface ContractManageMapper {
     List<Map> showAllPassContractReviewByUnitManager(@Param("subjectCategory") String subjectCategory,@Param("subjectName")String subjectName,
                                                      @Param("subjectContact")String subjectContact,@Param("subjectContactPhone")String subjectContactPhone,@Param("commitmentUnit")String commitmentUnit,
                                                      @Param("subjectSupervisorDepartment")String subjectSupervisorDepartment);
+     */
 
     /**
      * 展示所有未通过单位管理员审批的 【外网】
      * @return
-     */
+
     @Select("SELECT \n" +
             "id,\n" +
             "subject_category as subjectCategory,\n" +
@@ -386,9 +426,16 @@ public interface ContractManageMapper {
     List<Map> showAllNoPassContractReviewByUnitManager(@Param("subjectCategory") String subjectCategory,@Param("subjectName")String subjectName,
                                                        @Param("subjectContact")String subjectContact,@Param("subjectContactPhone")String subjectContactPhone,@Param("commitmentUnit")String commitmentUnit,
                                                        @Param("subjectSupervisorDepartment")String subjectSupervisorDepartment);
+     */
+
+
+
+
+
+
 
     /**
-     * 展示所有通过评估中心审批的 【内网】
+     * 展示所有评估中心已审批的 【内网】
      * @return
      */
     @Select("SELECT \n" +
@@ -410,7 +457,7 @@ public interface ContractManageMapper {
                                                 @Param("subjectContact")String subjectContact,@Param("subjectContactPhone")String subjectContactPhone,@Param("commitmentUnit")String commitmentUnit,
                                                 @Param("subjectSupervisorDepartment")String subjectSupervisorDepartment);
     /**
-     * 展示所有未通过评估中心审批的 【内网】
+     * 展示所有评估中心待审批的 【内网】
      * @return
      */
     @Select("SELECT \n" +
@@ -434,7 +481,7 @@ public interface ContractManageMapper {
 
 
     /**
-     * 展示所有通过法规科技处审批的 【内网】
+     * 展示所有法规科技处已审批的 【内网】
      * @return
      */
     @Select("SELECT \n" +
@@ -457,7 +504,7 @@ public interface ContractManageMapper {
                                                              @Param("subjectSupervisorDepartment")String subjectSupervisorDepartment);
 
     /**
-     * 展示所有未通过法规科技处审批的 【内网】
+     * 展示所有法规科技处未审批的 【内网】
      * @return
      */
     @Select("SELECT \n" +
@@ -473,7 +520,7 @@ public interface ContractManageMapper {
             "FROM\n" +
             "contract_manage\n" +
             "WHERE\n" +
-            "approval_status =3 \n" +
+            "approval_status =3\t\n" +
             "ORDER BY id DESC")
     List<ContractManageDTO> showAllNoPassReviewContractByFaGui(@Param("subjectCategory") String subjectCategory,@Param("subjectName")String subjectName,
                                                                @Param("subjectContact")String subjectContact,@Param("subjectContactPhone")String subjectContactPhone,@Param("commitmentUnit")String commitmentUnit,
@@ -495,8 +542,7 @@ public interface ContractManageMapper {
             "ot.audit_status\n" +
             "FROM\n" +
             "open_tender ot,unit_tender ut\n" +
-            "where ot.id=ut.tender_id and ot.audit_status =3 and ut.unit_id=#{unitId} \n" +
-            "ORDER BY ot.id DESC\n")
+            "where ot.id=ut.tender_id and ot.audit_status =3 and ut.unit_id=#{unitId}")
     List<Map> queryAllEndTenderInfo(@Param("unitId")int unitId);
 
 
@@ -507,5 +553,5 @@ public interface ContractManageMapper {
      * @return
      */
     @Insert(value = "INSERT INTO unit_contract (unit_id,contract_id)VALUES(#{unitId},#{contractId})")
-    int insertCidAndUid(int unitId, int contractId);
+    int insertCidAndUid(@Param("unitId") int unitId, @Param("contractId") int contractId);
 }

@@ -6,6 +6,7 @@ import com.xdmd.IntranetEnvironment.contractmanage.pojo.KeyResearchDevelopersDTO
 import com.xdmd.IntranetEnvironment.contractmanage.service.KeyResearchDevelopersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ import java.util.List;
  * @description: 主要开发人员实现
  */
 @Service
+@Transactional
 public class KeyResearchDevelopersServiceImpl implements KeyResearchDevelopersService {
     @Autowired
     KeyResearchDevelopersMapper keyResearchDevelopersMapper;
@@ -27,19 +29,9 @@ public class KeyResearchDevelopersServiceImpl implements KeyResearchDevelopersSe
      * @return
      */
     @Override
-    public ResultMap batchInsertKeyDev(List<KeyResearchDevelopersDTO> keyResearchDevelopers) {
-        try{
-            int insertNo= keyResearchDevelopersMapper.batchInsertKeyDev(keyResearchDevelopers);
-            if(insertNo>0){
-                resultMap.success().message("成功新增"+insertNo+"条数据");
-            }else if(insertNo==0){
-                resultMap.success().message("没有查到相关信息");
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-            resultMap.fail().message("系统异常");
-        }
-        return resultMap;
+    public int batchInsertKeyDev(List<KeyResearchDevelopersDTO> keyResearchDevelopers) {
+        int  insertNo= keyResearchDevelopersMapper.batchInsertKeyDev(keyResearchDevelopers);
+        return insertNo;
     }
 
     /**
@@ -64,23 +56,12 @@ public class KeyResearchDevelopersServiceImpl implements KeyResearchDevelopersSe
     }
 
     /**
-     * 更新主要研究人员【批量更新】
-     * @param keyResearchDevelopersDTOS
+     * 根据合同id刪除信息
+     * @param contractId
      * @return
      */
     @Override
-    public ResultMap batchUpdateKeyDev(List<KeyResearchDevelopersDTO> keyResearchDevelopersDTOS) {
-        try{
-            int updateNum= keyResearchDevelopersMapper.batchUpdateKeyDev(keyResearchDevelopersDTOS);
-            if(updateNum>0){
-                resultMap.success().message("成功新增"+updateNum+"条数据");
-            }else if(updateNum==0){
-                resultMap.fail().message("没有修改任何信息");
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-            resultMap.fail().message("系统异常");
-        }
-        return resultMap;
+    public int deleteDeveloperInfo(int contractId) {
+        return keyResearchDevelopersMapper.deleteDeveloperInfo(contractId);
     }
 }
