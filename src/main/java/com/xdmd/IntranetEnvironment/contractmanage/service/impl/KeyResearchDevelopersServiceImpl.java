@@ -30,18 +30,7 @@ public class KeyResearchDevelopersServiceImpl implements KeyResearchDevelopersSe
      */
     @Override
     public int batchInsertKeyDev(List<KeyResearchDevelopersDTO> keyResearchDevelopers) {
-        int insertNo=0;
-        try{
-            insertNo= keyResearchDevelopersMapper.batchInsertKeyDev(keyResearchDevelopers);
-            if(insertNo>0){
-                resultMap.success().message("成功新增"+insertNo+"条数据");
-            }else if(insertNo==0){
-                resultMap.success().message("没有查到相关信息");
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-            resultMap.fail().message("系统异常");
-        }
+        int  insertNo= keyResearchDevelopersMapper.batchInsertKeyDev(keyResearchDevelopers);
         return insertNo;
     }
 

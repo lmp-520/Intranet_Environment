@@ -22,7 +22,7 @@ import java.util.List;
 public class KeyResearchDevelopersController {
     @Autowired
     KeyResearchDevelopersService keyResearchDevelopersService;
-    ResultMap resultMap;
+    ResultMap resultMap=new ResultMap();
 
     /**
      * [新增]主要开发人员
@@ -33,7 +33,7 @@ public class KeyResearchDevelopersController {
     @PostMapping("insertKeyDev")
     public ResultMap insert(@RequestBody List<KeyResearchDevelopersDTO> keyResearchDevelopers){
          int KeyDevNum=keyResearchDevelopersService.batchInsertKeyDev(keyResearchDevelopers);
-         return KeyDevNum>0?resultMap.success().message("成功新增"+KeyDevNum+"条信息"):resultMap.success().message("新增失败");
+        return KeyDevNum>0?resultMap.success().message("新增成功"):resultMap.fail().message("新增失败");
     }
 
 

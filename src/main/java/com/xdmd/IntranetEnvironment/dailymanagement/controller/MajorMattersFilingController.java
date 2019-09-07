@@ -24,7 +24,7 @@ import java.io.IOException;
  */
 @Api(tags = "重大事项管理")
 @RestController
-@RequestMapping("enviroment/daily/majormatter")
+@RequestMapping("/enviroment/daily/majormatter")
 public class MajorMattersFilingController {
 private static final Logger log = LoggerFactory.getLogger(MajorMattersFilingController.class);
     @Autowired
@@ -84,10 +84,9 @@ private static final Logger log = LoggerFactory.getLogger(MajorMattersFilingCont
     }
 
     /**
-     * [查詢] 根据单位id分頁查詢【waiwang】
+     * [查詢] 根据单位id分頁查詢【外网】
      * @return
      */
-
     @ApiImplicitParams({
             @ApiImplicitParam(name="uid",value = "单位id",required = true),
             @ApiImplicitParam(name="subjectName",value = "课题名称"),
@@ -97,10 +96,14 @@ private static final Logger log = LoggerFactory.getLogger(MajorMattersFilingCont
             @ApiImplicitParam(name="pageNum",value = "当前页数",required = true),
             @ApiImplicitParam(name="pageSize",value = "每页条数",required = true)
     })
-    @ApiOperation("根据单位id分頁查詢【waiwang】")
+    @ApiOperation("根据单位id分頁查詢重大事项【外网】")
     @GetMapping("getAllMajorInfoByUid")
-    public ResultMap getAllMajorInfoByUid(int uid,String subjectName, String commitmentUnit, Integer adjustTypId, Integer adjustmentMattersId, int pageNum, int pageSize){
-        return  resultMap= majorMattersFilingService.getAllMajorInfoByUid(uid,subjectName, commitmentUnit, adjustTypId, adjustmentMattersId,pageNum,pageSize);
+    public ResultMap getAllMajorInfoByUid(@CookieValue(value = "token", required = false) String token, HttpServletResponse response,
+            String subjectName, String commitmentUnit, Integer adjustTypId, Integer adjustmentMattersId, int pageNum, int pageSize){
+        if (StringUtils.isEmpty(token)) {
+            return resultMap.fail().message("请先登录");
+        }
+        return  resultMap= majorMattersFilingService.getAllMajorInfoByUid(token,response,subjectName, commitmentUnit, adjustTypId, adjustmentMattersId,pageNum,pageSize);
     }
 
 

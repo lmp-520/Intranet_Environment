@@ -288,7 +288,8 @@ public class GuideServiceImpl implements GuideService {
         Integer unitid = jwtInformation.getCid();
         System.out.println(unitid);
         try{
-            PageHelper.startPage(pageNum,pageSize,true);
+            String orderby="gc.id desc";
+            PageHelper.startPage(pageNum,pageSize,orderby);
             List<Map> mapList=guideMapper.getUnitCollection(guideName,domain,category,fillUnit,fillContacts,contactPhone,unitid);
             PageInfo pageInfo=new PageInfo(mapList);
             if(mapList.size()>0){

@@ -43,10 +43,8 @@ public class ContractManageController {
      */
     @ApiOperation(value = "新增合同信息【外网提交】")
     @PostMapping(value = "addContractInfo")
-    public ResultMap insertContractInfo(//@CookieValue(value = "IntranecToken", required = false) String token, HttpServletResponse response,
+    public ResultMap insertContractInfo(@CookieValue(value = "token", required = false) String token, HttpServletResponse response,
                                         @RequestBody ContractManageDTO contractManageDTO) {
-        String token = "aaa";
-        HttpServletResponse response = null;
         if (StringUtils.isEmpty(token)) {
             return resultMap.fail().message("请先登录");
         }
@@ -78,17 +76,18 @@ public class ContractManageController {
             @ApiImplicitParam(name = "subjectContactPhone", value = "课题联系人电话或手机"),
             @ApiImplicitParam(name = "commitmentUnit", value = "承担单位"),
             @ApiImplicitParam(name = "subjectSupervisorDepartment", value = "课题主管部门"),
+            @ApiImplicitParam(name = "pageNum", value = "当前页",required = true),
+            @ApiImplicitParam(name = "pageSize", value = "每页显示条数",required = true)
 
     })
     public ResultMap getManageInfoByUid(@CookieValue(value = "token", required = false) String token, HttpServletResponse response,
                                         String subjectCategory, String subjectName, String subjectContact, String subjectContactPhone,
                                         String commitmentUnit, String subjectSupervisorDepartment,
-                                        int pageNum,int pageSize) {
+                                        int pageNum, int pageSize) {
         if (StringUtils.isEmpty(token)) {
             return resultMap.fail().message("请先登录");
         }
-        resultMap=contractManageService.getManageInfoByUid(token,response,subjectCategory, subjectName, subjectContact, subjectContactPhone, commitmentUnit, subjectSupervisorDepartment,pageNum, pageSize);
-        return resultMap;
+        return resultMap=contractManageService.getManageInfoByUid(token,response,subjectCategory, subjectName, subjectContact, subjectContactPhone, commitmentUnit, subjectSupervisorDepartment,pageNum, pageSize);
     }
 
     /**
@@ -108,7 +107,7 @@ public class ContractManageController {
     })
     @ApiOperation(value = "查询合同主表信息")
     @GetMapping(value = "getAllInfo")
-    public ResultMap getAllInfo(@CookieValue(value = "token", required = false) String token, HttpServletResponse response,
+    public ResultMap getAllInfo(@CookieValue(value = "IntranecToken", required = false) String token, HttpServletResponse response,
                                 String subjectCategory, String subjectName, String subjectContact, String subjectContactPhone, String commitmentUnit,
                                 String subjectSupervisorDepartment, int pageNum, int pageSize) {
         return resultMap = contractManageService.getAllInfo(token,response,subjectCategory, subjectName, subjectContact, subjectContactPhone, commitmentUnit, subjectSupervisorDepartment, pageNum, pageSize);
@@ -438,11 +437,10 @@ public class ContractManageController {
      * @return
      * @throws Exception
      */
-
-    public ResultMap queryAllEndTenderInfo(//@CookieValue(value = "token",required = false) String token, HttpServletResponse response
+    @PostMapping(value = "queryAllEndTenderInfo")
+    @ApiOperation(value = "在提交合同时回显关联的部分招标信息【外网】")
+    public ResultMap queryAllEndTenderInfo(@CookieValue(value = "token",required = false) String token, HttpServletResponse response
                                         ) throws Exception {
-        String token = "aaa";
-        HttpServletResponse response = null;
         if (StringUtils.isEmpty(token)) {
             return resultMap.fail().message("请先登录");
         }

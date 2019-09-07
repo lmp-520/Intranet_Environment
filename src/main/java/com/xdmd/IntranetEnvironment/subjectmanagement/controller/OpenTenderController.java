@@ -381,7 +381,7 @@ public class OpenTenderController {
             @ApiImplicitParam(name="noticeTransaction",value = "新的成交通知书附件"),
             @ApiImplicitParam(name="responseFile",value = "新的响应文件附件"),
             @ApiImplicitParam(name="otherAttachments",value = "新的其他文件附件"),
-            @ApiImplicitParam(name="openTender",value = "招标实体类"),
+            @ApiImplicitParam(name="openTender",value = "招标实体类")
     })
     public ResultMap updateTenderStatusByReturnCommit(@CookieValue(value = "token",required = false) String token, HttpServletResponse response,
                                  @RequestPart(value = "oldWinningDocumentFileUrl",required = false) String oldWinningDocumentFileUrl,

@@ -87,13 +87,13 @@ public class ContractManageServiceImpl implements ContractManageService {
             }
             //Integer userid = jwtInformation.getUid();
             String username = jwtInformation.getUsername();
-            //Integer cid = jwtInformation.getCid();
+            Integer cid = jwtInformation.getCid();
             //String cname = jwtInformation.getCompanyName();
 
             //执行新增操作
             int insertNo = contractManageMapper.insert(contractManageDTO);
             //单位关联合同主表
-            // insertCidAndUid(0,0);
+            insertContractidAndUnitid(cid, contractManageDTO.getId());
             //获取当前系统时间
             String nowtime = new SimpleDateFormat("yyyy-MM-dd:HH:mm:ss").format(new Date());
             //新增员工提交信息
@@ -178,16 +178,16 @@ public class ContractManageServiceImpl implements ContractManageService {
         Integer uid = jwtInformation.getCid();
         //单位名称
         //String cname = jwtInformation.getCompanyName();
-
         try {
-            String orderby = "ot.id desc";
-            PageHelper.startPage(pageNum, pageSize, orderby);
-            List<Map> getContractByUidMap = contractManageMapper.getManageInfoByUid(uid, subjectCategory, subjectName, subjectContact, subjectContactPhone, commitmentUnit, subjectSupervisorDepartment);
-            PageInfo pageInfo = new PageInfo(getContractByUidMap);
+            PageHelper.startPage(pageNum, pageSize);
+             List<Map> getContractByUidMap = contractManageMapper.getManageInfoByUid(uid, subjectCategory, subjectName, subjectContact, subjectContactPhone, commitmentUnit, subjectSupervisorDepartment);
+            //打印信息
+             // getContractByUidMap.forEach(info-> System.out.println(info));
+             PageInfo pageInfo = new PageInfo(getContractByUidMap);
             if (getContractByUidMap != null) {
                 resultMap.success().message(pageInfo);
             } else if (getContractByUidMap == null) {
-                resultMap.success().message("没有查到相关信息");
+                resultMap.fail().message("没有查到相关信息");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -198,45 +198,41 @@ public class ContractManageServiceImpl implements ContractManageService {
     }
 
     /**
-     * 查詢主表全部
+     * 查询全部合同主表
      *
      * @return
      */
     @Override
     public ResultMap getAllInfo(String token, HttpServletResponse response, String subjectCategory, String subjectName, String subjectContact, String subjectContactPhone, String commitmentUnit, String subjectSupervisorDepartment, int pageNum, int pageSize) {
-        JwtInformation jwtInformation = new JwtInformation();
+              User user = new User();
+               try {
+                   user = tokenService.compare(response, token);
+               } catch (NullPointerException e) {
+                   e.printStackTrace();
+                   return resultMap.fail().message("请先登录");
+               } catch (UserNameNotExistentException e) {
+                   e.printStackTrace();
+                   return resultMap.fail().message("请先登录");
+               } catch (ClaimsNullException e){
+                   e.printStackTrace();
+                   return resultMap.fail().message("请先登录");
+               }catch (Exception e) {
+                   e.printStackTrace();
+                   log.error("MenuServiceImpl 中 TokenService 出现问题");
+                   return resultMap.message("系统异常");
+               }
+               //当前登录者
+               //Integer uid = user.getId();
+               //String username = user.getUsername();
+
         try {
-            jwtInformation = extranetTokenService.compare(response, token);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            return resultMap.fail().message("请先登录");
-        } catch (UserNameNotExistentException e) {
-            e.printStackTrace();
-            return resultMap.fail().message("请先登录");
-        } catch (ClaimsNullException e) {
-            e.printStackTrace();
-            return resultMap.fail().message("请先登录");
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.error("MenuServiceImpl 中 TokenService 出现问题");
-            return resultMap.message("系统异常");
-        }
-        //用户id
-        //Integer userid = jwtInformation.getUid();
-        //用户名
-        //String username = jwtInformation.getUsername();
-        //单位id
-        Integer uid = jwtInformation.getCid();
-        //单位名称
-        //String cname = jwtInformation.getCompanyName();
-        try {
-            PageHelper.startPage(pageNum, pageSize, true);
+            PageHelper.startPage(pageNum, pageSize);
             List<Map> contractMap = contractManageMapper.getAllInfo(subjectCategory, subjectName, subjectContact, subjectContactPhone, commitmentUnit, subjectSupervisorDepartment);
             PageInfo pageInfo = new PageInfo(contractMap);
             if (contractMap.size() > 0) {
                 resultMap.success().message(pageInfo);
             } else if (contractMap.size() == 0) {
-                resultMap.success().message("没有查到相关信息");
+                resultMap.fail().message("没有查到相关信息");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -714,7 +710,6 @@ public class ContractManageServiceImpl implements ContractManageService {
                 //根据数据的id 把处理人，审核状态，审核内容，处理时间更新
                 int num = 0;
                 num = contractManageMapper.updateContractStateRecord(cid, username, state, handleContent, nowtime);
-                System.out.println(num);
                 if (num == 0) {
                     throw new UpdateSqlException("审核未通过时，在更新审核状态，更新上一条数据时出错");
                 }
@@ -724,7 +719,6 @@ public class ContractManageServiceImpl implements ContractManageService {
                 String newState = "等待处理";
                 int num2 = 0;
                 num2 = contractManageMapper.insertNewContractStateRecord(cid, username, auditStep, nowtime, newState);
-                System.out.println(num2);
                 if (num2 == 0) {
                     throw new InsertSqlException("在新增审核状态时，新增下一条数据时出错");
                 }
@@ -733,7 +727,6 @@ public class ContractManageServiceImpl implements ContractManageService {
                 int num3 = 0;
                 int auditStatus = 0;
                 num3 = contractManageMapper.updateContractStatus(auditStatus, cid);
-                System.out.println(num3);
                 if (num3 == 0) {
                     throw new UpdateStatusException("更新合同主表的审核状态字段时出错");
                 }
@@ -981,7 +974,7 @@ public class ContractManageServiceImpl implements ContractManageService {
      if (contractMap.size() > 0) {
      resultMap.success().message(pageInfo);
      } else if (contractMap.size() == 0) {
-     resultMap.fail().message("没有找到数据");
+     resultMap.fail().message("没有查到相关信息");
      }
      } catch (Exception e) {
      e.printStackTrace();
@@ -1004,7 +997,7 @@ public class ContractManageServiceImpl implements ContractManageService {
      if (contractMap.size() > 0) {
      resultMap.success().message(pageInfo);
      } else if (contractMap.size() == 0) {
-     resultMap.fail().message("没有找到数据");
+     resultMap.fail().message("没有查到相关信息");
      }
      } catch (Exception e) {
      e.printStackTrace();
@@ -1029,7 +1022,7 @@ public class ContractManageServiceImpl implements ContractManageService {
             if (contractMap.size() > 0) {
                 resultMap.success().message(pageInfo);
             } else if (contractMap.size() == 0) {
-                resultMap.fail().message("没有找到数据");
+                resultMap.fail().message("没有查到相关信息");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1055,7 +1048,7 @@ public class ContractManageServiceImpl implements ContractManageService {
             if (contractMap.size() > 0) {
                 resultMap.success().message(pageInfo);
             } else if (contractMap.size() == 0) {
-                resultMap.fail().message("没有找到数据");
+                resultMap.fail().message("没有查到相关信息");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1081,7 +1074,7 @@ public class ContractManageServiceImpl implements ContractManageService {
             if (contractMap.size() > 0) {
                 resultMap.success().message(pageInfo);
             } else if (contractMap.size() == 0) {
-                resultMap.fail().message("没有找到数据");
+                resultMap.fail().message("没有查到相关信息");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1107,7 +1100,7 @@ public class ContractManageServiceImpl implements ContractManageService {
             if (contractMap.size() > 0) {
                 resultMap.success().message(pageInfo);
             } else if (contractMap.size() == 0) {
-                resultMap.fail().message("没有找到数据");
+                resultMap.fail().message("没有查到相关信息");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1146,16 +1139,16 @@ public class ContractManageServiceImpl implements ContractManageService {
             return resultMap.message("系统异常");
         }
         //根据登陆信息获取单位id
-        Integer unitid = jwtInformation.getCid();
+        Integer unitId = jwtInformation.getCid();
         try {
             //获取该公司所有审核通过的招标id
-            List<Map> queryAllEndTenderInfo = contractManageMapper.queryAllEndTenderInfo(unitid);
+            List<Map> queryAllEndTenderInfo = contractManageMapper.queryAllEndTenderInfo(unitId);
+            //queryAllEndTenderInfo.forEach(info-> System.out.println(info));
             if (queryAllEndTenderInfo.size() > 0) {
                 resultMap.success().message(queryAllEndTenderInfo);
             } else {
                 resultMap.fail().message("没有查到信息");
             }
-
         } catch (Exception e) {
             e.printStackTrace();
             resultMap.fail().message("系统异常");
@@ -1172,7 +1165,7 @@ public class ContractManageServiceImpl implements ContractManageService {
      * @return
      */
     @Override
-    public ResultMap insertCidAndUid(int unitId, int contractId) {
+    public ResultMap insertContractidAndUnitid(int unitId, int contractId) {
         try {
             int insertNo = contractManageMapper.insertCidAndUid(unitId, contractId);
             if (insertNo > 0) {

@@ -67,8 +67,8 @@ public interface ContractManageMapper {
             "#{guaranteedUnitZipC},\n" +
             "#{subjectSigningDescription},\n" +
             "#{subjectObjectivesResearch},\n" +
-            "#{subjectAcceptanceAssessment},0,\n" +
-            "DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT)")
+            "#{subjectAcceptanceAssessment},\n" +
+            "DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT)")
     int insert(ContractManageDTO contractManageDTO);
 
     /**
@@ -99,7 +99,7 @@ public interface ContractManageMapper {
             "From\n" +
             "contract_manage cm,unit_contract uc\t" +
             "<where>\n" +
-            "cm.id=uc.contract_id and uc .unit_id= #{uid}\n" +
+            "cm.id=uc.contract_id and uc.unit_id= #{uid}\n" +
             "<if test ='null != subjectCategory'>\n" +
             "AND cm.subject_category like CONCAT('%',#{subjectCategory},'%')\n" +
             "</if>\n" +
@@ -118,13 +118,14 @@ public interface ContractManageMapper {
             "<if test ='null != subjectSupervisorDepartment'>\n" +
             "AND cm.subject_supervisor_department like CONCAT('%',#{subjectSupervisorDepartment},'%')\n" +
             "</if></where>" +
+            "order by cm.id desc" +
             "</script>")
     List<Map> getManageInfoByUid(@Param("uid") int uid,@Param("subjectCategory") String subjectCategory,@Param("subjectName")String subjectName,
                                          @Param("subjectContact")String subjectContact,@Param("subjectContactPhone")String subjectContactPhone,@Param("commitmentUnit")String commitmentUnit,
                                          @Param("subjectSupervisorDepartment")String subjectSupervisorDepartment);
 
     /**
-     * 查詢合同主表
+     * 查询全部合同主表
      * @param
      * @return
      */
@@ -138,10 +139,11 @@ public interface ContractManageMapper {
             "subject_contact_phone as subjectContactPhone,\n" +
             "commitment_unit as commitmentUnit,\n" +
             "subject_supervisor_department as subjectSupervisorDepartment,\n" +
-            "approval_status  &gt; 1\t" +
+            "approval_status as approvalStatus\t" +
             "From\n" +
             "contract_manage\n" +
             "<where>\n" +
+            "approval_status > 1\n" +
             "<if test ='null != subjectCategory'>\n" +
             "AND subject_category like CONCAT('%',#{subjectCategory},'%')\n" +
             "</if>\n" +
@@ -161,6 +163,7 @@ public interface ContractManageMapper {
             "AND subject_supervisor_department like CONCAT('%',#{subjectSupervisorDepartment},'%')\n" +
             "</if>" +
             "</where>" +
+            "order by id desc" +
             "</script>")
     List<Map> getAllInfo(@Param("subjectCategory") String subjectCategory,@Param("subjectName")String subjectName,
                          @Param("subjectContact")String subjectContact,@Param("subjectContactPhone")String subjectContactPhone,@Param("commitmentUnit")String commitmentUnit,
@@ -454,7 +457,7 @@ public interface ContractManageMapper {
                                                 @Param("subjectContact")String subjectContact,@Param("subjectContactPhone")String subjectContactPhone,@Param("commitmentUnit")String commitmentUnit,
                                                 @Param("subjectSupervisorDepartment")String subjectSupervisorDepartment);
     /**
-     * 展示所有评估中心未审批的 【内网】
+     * 展示所有评估中心待审批的 【内网】
      * @return
      */
     @Select("SELECT \n" +
@@ -539,8 +542,7 @@ public interface ContractManageMapper {
             "ot.audit_status\n" +
             "FROM\n" +
             "open_tender ot,unit_tender ut\n" +
-            "where ot.id=ut.tender_id and ot.audit_status =4 and ut.unit_id=#{unitId} \n" +
-            "ORDER BY ot.id DESC\n")
+            "where ot.id=ut.tender_id and ot.audit_status =3 and ut.unit_id=#{unitId}")
     List<Map> queryAllEndTenderInfo(@Param("unitId")int unitId);
 
 
@@ -551,5 +553,5 @@ public interface ContractManageMapper {
      * @return
      */
     @Insert(value = "INSERT INTO unit_contract (unit_id,contract_id)VALUES(#{unitId},#{contractId})")
-    int insertCidAndUid(int unitId, int contractId);
+    int insertCidAndUid(@Param("unitId") int unitId, @Param("contractId") int contractId);
 }

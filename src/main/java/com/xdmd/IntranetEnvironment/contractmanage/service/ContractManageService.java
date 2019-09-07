@@ -266,6 +266,6 @@ public interface ContractManageService {
      * @param contractId
      * @return
      */
-    ResultMap insertCidAndUid(int unitId, int contractId);
+    ResultMap insertContractidAndUnitid(int unitId, int contractId);
 }
 

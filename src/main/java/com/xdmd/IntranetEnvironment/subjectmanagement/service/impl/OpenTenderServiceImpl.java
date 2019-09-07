@@ -439,8 +439,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
             return "上传文件不可为空";
         }
         // 获取文件名拼接当前系统时间作为新文件名
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String nowtime = dateFormat.format(new Date());
+        String nowtime = new SimpleDateFormat("yyyyMMddHHmmss").format(System.currentTimeMillis());
         StringBuilder pinjiefileName = new StringBuilder(nowtime).append(file.getOriginalFilename());
         String fileName = pinjiefileName.toString();
 
@@ -866,8 +865,8 @@ public class OpenTenderServiceImpl implements OpenTenderService {
              * 成交公告附件
              */
             if (oldTransactionAnnouncementFileUrl != null) {
-                //判断上传成交公告附件的后缀名是否正确
                 String transactionAnnouncementName = transactionAnnouncement.getOriginalFilename();
+                //判断上传成交公告附件的后缀名是否正确
                 Boolean bBoolean = FileSuffixJudge.suffixJudge(transactionAnnouncementName);
                 if (bBoolean == false) {
                     resultMap.fail().message("成交公告附件的文件格式不正确,请上传正确的文件格式");
@@ -984,7 +983,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
             num1 = openTenderMapper.insertNewOpenTenderStateRecord(openTender.getId(), username, auditStep, nowtime, newState);
             //当把审核状态表更新完成后，更新招标备案表中这条数据的审核状态
             int num3 = 0;
-            int auditStatus = 1;
+            int auditStatus = 2;
             num3 = openTenderMapper.updateTenderStatus(auditStatus, openTender.getId());
             if (num3 == 0) {
                 throw new UpdateStatusException("更新招标备案表的审核状态字段时出错");
