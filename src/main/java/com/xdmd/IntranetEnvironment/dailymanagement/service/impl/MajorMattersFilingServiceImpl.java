@@ -9,11 +9,16 @@ import com.xdmd.IntranetEnvironment.dailymanagement.pojo.AdjustTypeDTO;
 import com.xdmd.IntranetEnvironment.dailymanagement.pojo.AdjustmentMattersDTO;
 import com.xdmd.IntranetEnvironment.dailymanagement.pojo.MajorMattersFilingDTO;
 import com.xdmd.IntranetEnvironment.dailymanagement.service.MajorMattersFilingService;
+import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.JwtInformation;
+import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.service.impl.ExtranetTokenService;
 import com.xdmd.IntranetEnvironment.subjectmanagement.service.impl.OpenTenderServiceImpl;
+import com.xdmd.IntranetEnvironment.user.exception.ClaimsNullException;
+import com.xdmd.IntranetEnvironment.user.exception.UserNameNotExistentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -28,49 +33,52 @@ import java.util.Map;
  * @description: 重大事项变更
  */
 @Service
+@Transactional
 public class MajorMattersFilingServiceImpl implements MajorMattersFilingService {
 private static final Logger log = LoggerFactory.getLogger(MajorMattersFilingServiceImpl.class);
     @Autowired
     MajorMattersFilingMapper majorMattersFilingMapper;
     @Autowired
     UploadFileMapper uploadFileMapper;
+    @Autowired
+    ExtranetTokenService extranetTokenService;
     ResultMap resultMap = new ResultMap();
 
     /**
-     * 新增【waiwang】
-     *
+     * 新增重大事项变更【外网】
      * @param majorMattersFiling
      * @return
      */
     @Override
-    public ResultMap insert(MajorMattersFilingDTO majorMattersFiling) {
+    public ResultMap insert(String token, HttpServletResponse response,MajorMattersFilingDTO majorMattersFiling) {
+        JwtInformation jwtInformation = new JwtInformation();
+        try {
+            jwtInformation = extranetTokenService.compare(response, token);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (UserNameNotExistentException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (ClaimsNullException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("MenuServiceImpl 中 TokenService 出现问题");
+            return resultMap.message("系统异常");
+        }
+        //Integer userid = jwtInformation.getUid();
+        String username = jwtInformation.getUsername();
+        Integer cid = jwtInformation.getCid();
+        //String cname = jwtInformation.getCompanyName();
         try {
             int insertNo = majorMattersFilingMapper.insert(majorMattersFiling);
+            insertMidAndUid(cid,majorMattersFiling.getId());
             if (insertNo > 0) {
                 resultMap.success().message("新增" + insertNo + "条数据");
             } else if (insertNo == 0) {
                 resultMap.fail().message("新增失败");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            resultMap.fail().message("系统异常");
-        }
-        return resultMap;
-    }
-
-    /**
-     * [更新]重大事项附件id【waiwang】
-     *
-     * @return
-     */
-    @Override
-    public ResultMap updateMajorAnnexId(int changeApplicationAttachmentId, int expertArgumentationAttachmentId, int filingApplicationAttachmentId, int approvalDocumentsAttachmentId, int id) {
-        try {
-            int updateNo = majorMattersFilingMapper.updateMajorAnnexId(changeApplicationAttachmentId, expertArgumentationAttachmentId, filingApplicationAttachmentId, approvalDocumentsAttachmentId, id);
-            if (updateNo > 0) {
-                resultMap.success().message("成功更新" + updateNo + "条数据");
-            } else if (updateNo == 0) {
-                resultMap.fail().message("没有查到相关信息");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -132,7 +140,6 @@ private static final Logger log = LoggerFactory.getLogger(MajorMattersFilingServ
 
     /**
      * 根据单位id分页筛选查询【内网】
-     * @param uid
      * @param subjectName
      * @param commitmentUnit
      * @param adjustTypId
@@ -142,36 +149,36 @@ private static final Logger log = LoggerFactory.getLogger(MajorMattersFilingServ
      * @return
      */
     @Override
-    public ResultMap getAllMajorInfoByUid(int uid, String subjectName, String commitmentUnit, Integer adjustTypId, Integer adjustmentMattersId, int pageNum, int pageSize) {
+    public ResultMap getAllMajorInfoByUid(String token, HttpServletResponse response, String subjectName, String commitmentUnit, Integer adjustTypId, Integer adjustmentMattersId, int pageNum, int pageSize) {
+        JwtInformation jwtInformation = new JwtInformation();
         try {
-            PageHelper.startPage(pageNum,pageSize,true);
-            List<Map> majorsByUid = majorMattersFilingMapper.getAllMajorInfoByUid(uid,subjectName, commitmentUnit, adjustTypId, adjustmentMattersId);
+            jwtInformation = extranetTokenService.compare(response, token);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (UserNameNotExistentException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (ClaimsNullException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("MenuServiceImpl 中 TokenService 出现问题");
+            return resultMap.message("系统异常");
+        }
+        //Integer userid = jwtInformation.getUid();
+        //String username = jwtInformation.getUsername();
+        Integer cid = jwtInformation.getCid();
+        //String cname = jwtInformation.getCompanyName();
+        try {
+            PageHelper.startPage(pageNum,pageSize);
+            List<Map> majorsByUid = majorMattersFilingMapper.getAllMajorInfoByUid(cid,subjectName, commitmentUnit, adjustTypId, adjustmentMattersId);
             PageInfo pageInfo=new PageInfo((List) majorsByUid);
             if (majorsByUid != null) {
                 resultMap.success().message(pageInfo);
             } else if (majorsByUid == null) {
                 resultMap.fail().message("没有查到相关信息");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            resultMap.fail().message("系统异常");
-        }
-        return resultMap;
-    }
-
-    /**
-     * 更新重大审核状态
-     * @param id
-     * @return
-     */
-    @Override
-    public ResultMap updateMajorStatus(int id) {
-        try {
-            int updateNo = majorMattersFilingMapper.updateMajorStatus(id);
-            if (updateNo > 0) {
-                resultMap.success().message("成功更新" + updateNo + "条数据");
-            } else if (updateNo == 0) {
-                resultMap.fail();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -224,6 +231,24 @@ private static final Logger log = LoggerFactory.getLogger(MajorMattersFilingServ
         return resultMap;
     }
 
+
+    /**
+     * 单位关联重大事项主表
+     * @param unitId
+     * @param majorId
+     * @return
+     */
+    @Override
+    public ResultMap insertMidAndUid(int unitId, int majorId) {
+        if (majorMattersFilingMapper.insertMidAndUid(unitId,majorId)>0) {
+            resultMap.success().message("关联成功");
+        }
+        else {
+            resultMap.fail().message("关联失败");
+        }
+        return resultMap;
+    }
+
     /**
      *重大事项的附件上传
      * @param token
@@ -237,35 +262,28 @@ private static final Logger log = LoggerFactory.getLogger(MajorMattersFilingServ
      * @throws FileUploadException
      */
     @Override
-    public ResultMap majorFileUpload(String token, HttpServletResponse response, MultipartFile changeApplicationAttachment, MultipartFile expertArgumentationAttachment, MultipartFile filingApplicationAttachment,MultipartFile approvalDocumentsAttachment) throws IOException, FileUploadException{
-//      User user = new User();
-//        try {
-//            user = tokenService.compare(response, token);
-//        } catch (NullPointerException e) {
-//            e.printStackTrace();
-//            return resultMap.fail().message("请先登录");
-//        } catch (UserNameNotExistentException e) {
-//            e.printStackTrace();
-//            return resultMap.fail().message("请先登录");
-//        } catch (ClaimsNullException e){
-//            e.printStackTrace();
-//            return resultMap.fail().message("请先登录");
-//        }catch (Exception e) {
-//            e.printStackTrace();
-//            log.error("MenuServiceImpl 中 TokenService 出现问题");
-//            return resultMap.message("系统异常");
-//        }
-//        //当前登录者
-//        Integer uid = user.getId();
-//        String username = user.getUsername();
-
-
-        String username = "测试人员";
-        //根据重大事项表的id 获取该公司的名字
-        MajorMattersFilingDTO majorMattersFilingDTO=new MajorMattersFilingDTO();
-        int majorid=majorMattersFilingDTO.getId();
-        String unitName = majorMattersFilingMapper.queryUnitNameBymajorid(majorid);
-        OpenTenderServiceImpl openTenderServiceImpl=new OpenTenderServiceImpl();
+    public ResultMap majorFileUpload(String token, HttpServletResponse response, int majorid, MultipartFile changeApplicationAttachment, MultipartFile expertArgumentationAttachment, MultipartFile filingApplicationAttachment, MultipartFile approvalDocumentsAttachment) throws IOException, FileUploadException{
+        JwtInformation jwtInformation = new JwtInformation();
+        try {
+            jwtInformation = extranetTokenService.compare(response, token);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (UserNameNotExistentException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (ClaimsNullException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("MenuServiceImpl 中 TokenService 出现问题");
+            return resultMap.message("系统异常");
+        }
+        //Integer userid = jwtInformation.getUid();
+        String username = jwtInformation.getUsername();
+        Integer uid = jwtInformation.getCid();
+        String unitName = jwtInformation.getCompanyName();
         try {
             /**
              * 变更申请表附件
@@ -277,15 +295,15 @@ private static final Logger log = LoggerFactory.getLogger(MajorMattersFilingServ
                 resultMap.fail().message("变更申请表附件的文件格式不正确,请上传正确的文件格式");
             }
             //获取变更申请表附件的地址
-            String midCheckAnnexUrl = openTenderServiceImpl.fileUploadUntil(changeApplicationAttachment, unitName, "变更申请表附件");
+            String midCheckAnnexUrl = new OpenTenderServiceImpl().fileUploadUntil(changeApplicationAttachment, unitName, "变更申请表附件");
             //获取文件后缀名
             String changeApplicationAttachmentSuffixName = changeApplicationAttachmentName.substring(changeApplicationAttachmentName.lastIndexOf(".") + 1);
             // 获取文件大小
             File changeApplicationAttachmentFile = new File(midCheckAnnexUrl);
             String changeApplicationAttachmentFileSize = String.valueOf(changeApplicationAttachmentFile.length());
-            AnnexUpload changeRequestAnnex = new AnnexUpload(0, midCheckAnnexUrl,changeApplicationAttachmentName, "变更申请表附件", changeApplicationAttachmentSuffixName, changeApplicationAttachmentFileSize, null, username);
+            AnnexUpload changeApplicationAttachmentData = new AnnexUpload(0, midCheckAnnexUrl,changeApplicationAttachmentName, "变更申请表附件", changeApplicationAttachmentSuffixName, changeApplicationAttachmentFileSize, null, username);
             //把该文件上传到文件表中
-            uploadFileMapper.insertUpload(changeRequestAnnex);
+            uploadFileMapper.insertUpload(changeApplicationAttachmentData);
             /**
              * 专家论证意见附件
              */
@@ -296,15 +314,15 @@ private static final Logger log = LoggerFactory.getLogger(MajorMattersFilingServ
                 resultMap.fail().message("专家论证意见附件附件的文件格式不正确,请上传正确的文件格式");
             }
             //获取专家论证意见附件的地址
-            String expertArgumentationAttachmentUrl = openTenderServiceImpl.fileUploadUntil(expertArgumentationAttachment, unitName, "专家论证意见附件");
+            String expertArgumentationAttachmentUrl = new OpenTenderServiceImpl().fileUploadUntil(expertArgumentationAttachment, unitName, "专家论证意见附件");
             //获取文件后缀名
             String expertArgumentationAttachmentSuffixName = expertArgumentationAttachmentName.substring(expertArgumentationAttachmentName.lastIndexOf(".") + 1);
             // 获取文件大小
             File expertArgumentationAttachmentFile = new File(expertArgumentationAttachmentUrl);
             String expertArgumentationAttachmentFileSize = String.valueOf(expertArgumentationAttachmentFile.length());
-            AnnexUpload expertArgumentAnnex = new AnnexUpload(0, expertArgumentationAttachmentUrl, expertArgumentationAttachmentName, "专家论证意见附件", expertArgumentationAttachmentSuffixName, expertArgumentationAttachmentFileSize, null, username);
+            AnnexUpload expertArgumentationAttachmentData = new AnnexUpload(0, expertArgumentationAttachmentUrl, expertArgumentationAttachmentName, "专家论证意见附件", expertArgumentationAttachmentSuffixName, expertArgumentationAttachmentFileSize, null, username);
             //把该文件上传到文件表中
-            uploadFileMapper.insertUpload(expertArgumentAnnex);
+            uploadFileMapper.insertUpload(expertArgumentationAttachmentData);
             /**
              * 备案申请表附件
              */
@@ -315,15 +333,15 @@ private static final Logger log = LoggerFactory.getLogger(MajorMattersFilingServ
                 resultMap.fail().message("备案申请表附件的文件格式不正确,请上传正确的文件格式");
             }
             //获取备案申请表附件的地址
-            String filingApplicationAttachmentUrl = openTenderServiceImpl.fileUploadUntil(filingApplicationAttachment, unitName, "备案申请表附件");
+            String filingApplicationAttachmentUrl = new OpenTenderServiceImpl().fileUploadUntil(filingApplicationAttachment, unitName, "备案申请表附件");
             //获取文件后缀名
             String filingApplicationAttachmentSuffixName = filingApplicationAttachmentName.substring(filingApplicationAttachmentName.lastIndexOf(".") + 1);
             // 获取文件大小
             File filingApplicationAttachmentFile = new File(filingApplicationAttachmentUrl);
             String filingApplicationAttachmentFileSize = String.valueOf(filingApplicationAttachmentFile.length());
-            AnnexUpload filingApplicationAnnex = new AnnexUpload(0, filingApplicationAttachmentUrl, filingApplicationAttachmentName, "备案申请表附件", filingApplicationAttachmentSuffixName, filingApplicationAttachmentFileSize, null, username);
+            AnnexUpload filingApplicationAttachmentData = new AnnexUpload(0, filingApplicationAttachmentUrl, filingApplicationAttachmentName, "备案申请表附件", filingApplicationAttachmentSuffixName, filingApplicationAttachmentFileSize, null, username);
             //把该文件上传到文件表中
-            uploadFileMapper.insertUpload(filingApplicationAnnex);
+            uploadFileMapper.insertUpload(filingApplicationAttachmentData);
 
             /**
              * 批准文件附件
@@ -335,20 +353,20 @@ private static final Logger log = LoggerFactory.getLogger(MajorMattersFilingServ
                 resultMap.fail().message("批准文件附件的文件格式不正确,请上传正确的文件格式");
             }
             //获取批准文件附件的地址
-            String approvalDocumentsAttachmentUrl = openTenderServiceImpl.fileUploadUntil(approvalDocumentsAttachment, unitName, "批准文件附件");
+            String approvalDocumentsAttachmentUrl = new OpenTenderServiceImpl().fileUploadUntil(approvalDocumentsAttachment, unitName, "批准文件附件");
             //获取文件后缀名
             String approvalDocumentsAttachmentSuffixName = approvalDocumentsAttachmentName.substring(approvalDocumentsAttachmentName.lastIndexOf(".") + 1);
             // 获取文件大小
             File approvalDocumentsAttachmentFile = new File(approvalDocumentsAttachmentUrl);
             String approvalDocumentsAttachmentFileSize = String.valueOf(approvalDocumentsAttachmentFile.length());
-            AnnexUpload approvalDocumentsAnnex = new AnnexUpload(0, approvalDocumentsAttachmentUrl, approvalDocumentsAttachmentName, "批准文件附件", approvalDocumentsAttachmentSuffixName, approvalDocumentsAttachmentFileSize, null, username);
+            AnnexUpload approvalDocumentsAttachmentData = new AnnexUpload(0, approvalDocumentsAttachmentUrl, approvalDocumentsAttachmentName, "批准文件附件", approvalDocumentsAttachmentSuffixName, approvalDocumentsAttachmentFileSize, null, username);
             //把该文件上传到文件表中
-            uploadFileMapper.insertUpload(approvalDocumentsAnnex);
+            uploadFileMapper.insertUpload(approvalDocumentsAttachmentData);
 
             /**
              * 把上传附件的id取出，存到招标备案表中
              */
-            majorMattersFilingMapper.updateMajorAnnexId(changeRequestAnnex.getId(),expertArgumentAnnex.getId(),filingApplicationAnnex.getId(),approvalDocumentsAnnex.getId(),majorid);
+            majorMattersFilingMapper.updateMajorAnnexId(changeApplicationAttachmentData.getId(),expertArgumentationAttachmentData.getId(),filingApplicationAttachmentData.getId(),approvalDocumentsAttachmentData.getId(),majorid);
             return resultMap.success().message("多个附件上传成功");
         } catch (IOException e) {
             e.printStackTrace();
@@ -359,6 +377,24 @@ private static final Logger log = LoggerFactory.getLogger(MajorMattersFilingServ
             resultMap.success().message("附件上传失败");
         }
         return resultMap;
+    }
+
+
+    /**
+     * 更新重大事项的审核状态
+     * @param id
+     * @return
+     */
+    @Override
+    public ResultMap updateMajorStatus(int id) {
+
+            if (majorMattersFilingMapper.updateMajorStatus(id)>0) {
+                resultMap.success().message("审核成功");
+            }
+            else {
+                resultMap.fail().message("审核失败");
+            }
+            return resultMap;
     }
 
 }
