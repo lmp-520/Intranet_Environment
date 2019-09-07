@@ -287,7 +287,7 @@ public class ContractManageServiceImpl implements ContractManageService {
         //单位id
         Integer uid = jwtInformation.getCid();
         //单位名称
-        //String cname = jwtInformation.getCompanyName();
+        String unitName = jwtInformation.getCompanyName();
 
         //判断文件是否为空
         if (file.isEmpty()) {
@@ -299,7 +299,7 @@ public class ContractManageServiceImpl implements ContractManageService {
         String fileName = pinjiefileName.toString();
 
         //根据合同主表的id 获取该公司的名字
-        String unitName = contractManageMapper.queryUnitNameBycid(uid);
+        //String unitName = contractManageMapper.queryUnitNameBycid(uid);
 
         //获取文件上传绝对路径
         String path = "D:/xdmd/environment/" + unitName + "/" + "合同附件" + "/";
