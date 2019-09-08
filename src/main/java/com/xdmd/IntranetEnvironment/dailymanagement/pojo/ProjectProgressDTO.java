@@ -42,8 +42,6 @@ public class ProjectProgressDTO {
     @ApiModelProperty("项目负责人电话")
     private String primaryContactsPhone;
 
-
-
     @ApiModelProperty("进展情况类型/45-超前 46-正常 47-滞后")
     private Integer progress;
 
@@ -74,8 +72,11 @@ public class ProjectProgressDTO {
     @ApiModelProperty("预计申请课题验收时间")
     private String estimatedAcceptanceTime;
 
-    @ApiModelProperty("s varchar(255)")
+    @ApiModelProperty("单位审核意见")
     private String unitAuditComments;
+
+    @ApiModelProperty("进展审核状态")
+    private Integer progressShenheStatus;
 
     @ApiModelProperty("开题报告附件id")
     private Integer openReportAnnexId;

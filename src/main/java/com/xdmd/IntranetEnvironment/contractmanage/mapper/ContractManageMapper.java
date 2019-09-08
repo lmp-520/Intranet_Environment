@@ -522,7 +522,7 @@ public interface ContractManageMapper {
             "WHERE\n" +
             "approval_status =3\t\n" +
             "ORDER BY id DESC")
-    List<ContractManageDTO> showAllNoPassReviewContractByFaGui(@Param("subjectCategory") String subjectCategory,@Param("subjectName")String subjectName,
+    List<ContractManageDTO>showAllNoPassReviewContractByFaGui(@Param("subjectCategory") String subjectCategory,@Param("subjectName")String subjectName,
                                                                @Param("subjectContact")String subjectContact,@Param("subjectContactPhone")String subjectContactPhone,@Param("commitmentUnit")String commitmentUnit,
                                                                @Param("subjectSupervisorDepartment")String subjectSupervisorDepartment);
 
@@ -547,11 +547,11 @@ public interface ContractManageMapper {
 
 
     /**
-     * 单位关联合同主表
+     * 单位关联课题进展主表
      * @param unitId
-     * @param contractId
+     * @param subjectProgressId
      * @return
      */
-    @Insert(value = "INSERT INTO unit_contract (unit_id,contract_id)VALUES(#{unitId},#{contractId})")
-    int insertCidAndUid(@Param("unitId") int unitId, @Param("contractId") int contractId);
+    @Insert(value = "INSERT INTO unit_project_progress (unit_id,subject_progress_id)VALUES(#{unitId},#{subjectProgressId})")
+    int insertCidAndUid(@Param("unitId") int unitId, @Param("subjectProgressId") int subjectProgressId);
 }

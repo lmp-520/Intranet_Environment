@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: Kong
@@ -73,7 +74,7 @@ public interface ProjectProgressMapper {
 
 
     /**
-     * [查詢] 根據参数查詢
+     * [查詢] 分页筛选查询【内网】
      * @param subjectName
      * @param bearerUnit
      * @param progress
@@ -97,8 +98,41 @@ public interface ProjectProgressMapper {
             "<if test ='null != progress'>" +
             "AND progress =#{progress}" +
             "</if></where>" +
+            "ORDER BY id DESC " +
             "</script>")
-    List<ProjectProgressDTO> getInfoByParam(String subjectName, String bearerUnit, Integer progress);
+    List<Map> getInfoByParam(String subjectName, String bearerUnit, Integer progress);
+
+
+    /**
+     * [查詢] 根据单位id查询课题进展【外网】
+     * @param subjectName
+     * @param bearerUnit
+     * @param progress
+     * @return
+     */
+    @Select(value = "<script>" +
+            "SELECT\n" +
+            "subject_name,\n" +
+            "bearer_unit,\n" +
+            "progress,\n" +
+            "commit_time\n" +
+            "FROM\n" +
+            "project_progress pp,unit_project_progress upp\n" +
+            "<where>" +
+            "pp.id=upp.subject_progress_id and upp.unit_id=#{uid}\t" +
+            "<if test ='null != subjectName'>" +
+            "and subject_name like CONCAT('%',#{subjectName},'%')" +
+            "</if>" +
+            "<if test ='null != bearerUnit'>" +
+            "AND bearer_unit like CONCAT('%',#{bearerUnit},'%')" +
+            "</if>" +
+            "<if test ='null != progress'>" +
+            "AND progress =#{progress}" +
+            "</if></where>" +
+            "order by id desc" +
+            "</script>")
+    List<Map> getProgressInfoByUid(int uid, String subjectName, String bearerUnit, Integer progress);
+
 
     /**
      * [新增] 合同要求研发任务【课题进展第一部分】
@@ -189,6 +223,36 @@ public interface ProjectProgressMapper {
     @Select(value ="select nwp.* from next_work_plan nwp,project_progress pp WHERE nwp.progress_id=pp.id and pp.id=#{Pid}")
     List<NextWorkPlanDTO> getNWPByPid(@Param("Pid") int Pid);
 
+
+
+
+    @Update("UPDATE project_progress\t" +
+            "Set\t" +
+            "bearer_unit = #{bearerUnit}," +
+            "fill_time = #{fillTime}," +
+            "subject_name = #{subjectName}," +
+            "project_no = #{projectNo}," +
+            "project_leader = #{projectLeader}," +
+            "project_leader_phone = #{projectLeaderPhone}," +
+            "progress = #{progress}," +
+            "progress_completed_percentage = #{progressCompletedPercentage}," +
+            "total_funds_inplace = #{totalFundsInplace}," +
+            "project_funds_used = #{projectFundsUsed}," +
+            "total_funding = #{totalFunding}," +
+            "provincial_environmental_funds_used = #{provincialEnvironmentalFundsUsed}," +
+            "provincial_environmental_funds_percent = #{provincialEnvironmentalFundsPercent}," +
+            "contract_agreed_closing_time = #{contractAgreedClosingTime}," +
+            "is_complate_contract = #{isComplateContract}," +
+            "estimated_acceptance_time = #{estimatedAcceptanceTime}," +
+            "unit_audit_comments = #{unitAuditComments}," +
+            "commit_time = #{commitTime}\t" +
+            "WHERE id= #{id}")
+   int regularUpdateProgressInfo(ProjectProgressDTO projectProgressDTO);
+
+
+
+
+
     /**
      * 根据课题进展主表id更新相应的附件id
      * @param pid
@@ -198,7 +262,7 @@ public interface ProjectProgressMapper {
      * @param expertSuggestAnnexId
      * @return
      */
-    @Update(value = "UPDATE contract_manage \n" +
+    @Update(value = "UPDATE project_progress \n" +
             "SET open_report_annex_id = #{openReportAnnexId},\n" +
             "subject_progress_annex_id = #{subjectProgressAnnexId},\n" +
             "fund_progress_annex_id = #{fundProgressAnnexId},\n" +
@@ -213,4 +277,32 @@ public interface ProjectProgressMapper {
      * @return
      */
     String queryUnitNameBypid(int pid);
+
+
+    /**
+     * 单位关联课题进展主表
+     * @param uid
+     * @param subjectProgressId
+     * @return
+     */
+    @Insert("INSERT INTO unit_project_progress (unit_id,subject_progress_id)VALUES(#{unitId},#{subjectProgressId})")
+    int insertPidAndUid(@Param("unitId") Integer uid,@Param("subjectProgressId")  Integer subjectProgressId);
+
+    /**
+     * 根据课题进展主表id更新课题进展附件id
+     * @param subjectProgressAnnexId
+     * @param pid
+     * @return
+     */
+    @Update(value = "UPDATE project_progress SET subject_progress_annex_id = #{subjectProgressAnnexId} WHERE id = #{pid}")
+    int updateSubjectProgressAnnexIdByPid(Integer subjectProgressAnnexId, Integer pid);
+
+    /**
+     * 根据课题进展主表id更新课题经费进展使用情况附件id
+     * @param fundProgressAnnexId
+     * @param pid
+     * @return
+     */
+    @Update(value = "UPDATE project_progress SET fund_progress_annex_id = #{fundProgressAnnexId} WHERE id = #{pid}")
+    int updateFundProgressAnnexIdByPid(Integer fundProgressAnnexId, Integer pid);
 }

@@ -172,9 +172,10 @@ private static final Logger log = LoggerFactory.getLogger(MajorMattersFilingServ
         Integer cid = jwtInformation.getCid();
         //String cname = jwtInformation.getCompanyName();
         try {
-            PageHelper.startPage(pageNum,pageSize);
-            List<Map> majorsByUid = majorMattersFilingMapper.getAllMajorInfoByUid(cid,subjectName, commitmentUnit, adjustTypId, adjustmentMattersId);
-            PageInfo pageInfo=new PageInfo((List) majorsByUid);
+            PageHelper.startPage(pageNum, pageSize);
+            List<Map> majorsByUid = majorMattersFilingMapper.getAllMajorInfoByUid(cid,subjectName, commitmentUnit, adjustTypId, adjustmentMattersId);            //打印信息
+            // getContractByUidMap.forEach(info-> System.out.println(info));
+            PageInfo pageInfo = new PageInfo(majorsByUid);
             if (majorsByUid != null) {
                 resultMap.success().message(pageInfo);
             } else if (majorsByUid == null) {

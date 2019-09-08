@@ -25,8 +25,8 @@ public class MajorMattersFilingDTO {
     @ApiModelProperty("单位负责人")
     private String unitHead;
 
-    @ApiModelProperty("单位负责人电话")
-    private String unitHeadPhone;
+   // @ApiModelProperty("单位负责人电话")
+   // private String unitHeadPhone;
 
     @ApiModelProperty("課題編號")
     private String projectNo;
@@ -35,7 +35,7 @@ public class MajorMattersFilingDTO {
     private Integer adjustTypeId;
 
     @ApiModelProperty("调整事项")
-    private Integer adjustmentMattersId;
+    private String adjustmentMattersId;
 
     @ApiModelProperty("具体情况说明")
     private String specificFacts;

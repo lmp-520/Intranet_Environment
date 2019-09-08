@@ -4,6 +4,7 @@ package com.xdmd.IntranetEnvironment.contractmanage.controller;
 import com.xdmd.IntranetEnvironment.common.FileUploadException;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.contractmanage.pojo.ContractManageDTO;
+import com.xdmd.IntranetEnvironment.contractmanage.pojo.TotalContract;
 import com.xdmd.IntranetEnvironment.contractmanage.service.ContractManageService;
 import com.xdmd.IntranetEnvironment.subjectmanagement.exception.UpdateSqlException;
 import com.xdmd.IntranetEnvironment.subjectmanagement.exception.UpdateStatusException;
@@ -225,12 +226,11 @@ public class ContractManageController {
             @ApiImplicitParam(name = "subjectSuggestAnnex", value = "课题建议附件", dataType = "file", paramType = "form", allowMultiple = true)
 
     })
-    public ResultMap tenderFileUpload(//@CookieValue(value = "IntranecToken", required = false) String token, HttpServletResponse response,
+    public ResultMap tenderFileUpload(@CookieValue(value = "token", required = false) String token, HttpServletResponse response,
                                       MultipartFile midCheckAnnex,
                                       MultipartFile expertAssessmentAnnex,
                                       MultipartFile subjectSuggestAnnex) {
-        String token = "aaa";
-        HttpServletResponse response = null;
+
         if (StringUtils.isEmpty(token)) {
             return resultMap.fail().message("请先登录");
         }
@@ -412,7 +412,6 @@ public class ContractManageController {
 
     /**
      * 不通过被退回时重新提交[即修改]【外网】
-     * @param contractManageDTO
      * @return
      * @throws UpdateStatusException
      * @throws UpdateSqlException
@@ -421,14 +420,17 @@ public class ContractManageController {
    @PostMapping(value = "updateContractStatusByReturnCommit")
    @ApiOperation(value = "不通过被退回时重新提交[即修改]【外网】")
    public ResultMap updateContractStatusByReturnCommit(@CookieValue(value = "token", required = false) String token, HttpServletResponse response,
-                                                       @RequestPart(value = "contractManageDTO",required = false) ContractManageDTO contractManageDTO,
+                                                       @RequestPart(value = "totalContract",required = false) TotalContract totalContract,
                                                        @RequestPart(value = "oldcontractAnnexUrl",required = false) String oldcontractAnnexUrl,
                                                        @RequestPart(value = "contractAnnex",required = false) MultipartFile contractAnnex) throws UpdateSqlException, UpdateStatusException, IOException, FileUploadException{
 
         if (StringUtils.isEmpty(token)) {
             return resultMap.fail().message("请先登录");
         }
-        return resultMap = contractManageService.updateContractStatusByReturnCommit(token, response,contractManageDTO,oldcontractAnnexUrl,contractAnnex);
+        if (totalContract!=null) {
+            resultMap.fail().message("没有获取到数据");
+        }
+        return resultMap = contractManageService.updateContractStatusByReturnCommit(token, response,totalContract,oldcontractAnnexUrl,contractAnnex);
     }
 
 

@@ -3,6 +3,7 @@ package com.xdmd.IntranetEnvironment.contractmanage.service;
 import com.xdmd.IntranetEnvironment.common.FileUploadException;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.contractmanage.pojo.ContractManageDTO;
+import com.xdmd.IntranetEnvironment.contractmanage.pojo.TotalContract;
 import com.xdmd.IntranetEnvironment.subjectmanagement.exception.UpdateSqlException;
 import com.xdmd.IntranetEnvironment.subjectmanagement.exception.UpdateStatusException;
 import org.apache.ibatis.annotations.Param;
@@ -168,7 +169,7 @@ public interface ContractManageService {
      * @param contractManageDTO
      * @return
      */
-    ResultMap updateContractStatusByReturnCommit(String token, HttpServletResponse response, ContractManageDTO contractManageDTO, String oldcontractAnnexUrl, MultipartFile contractAnnex) throws UpdateSqlException, UpdateStatusException, IOException, FileUploadException;
+//    ResultMap updateContractStatusByReturnCommit(String token, HttpServletResponse response, ContractManageDTO contractManageDTO, String oldcontractAnnexUrl, MultipartFile contractAnnex) throws UpdateSqlException, UpdateStatusException, IOException, FileUploadException;
 
     /**
      * 展示所有通过单位管理员审批的 【外网】
@@ -267,5 +268,16 @@ public interface ContractManageService {
      * @return
      */
     ResultMap insertContractidAndUnitid(int unitId, int contractId);
+
+    /**
+     * 不通过被退回时重新提交[修改]
+     * @param token
+     * @param response
+     * @param totalContract
+     * @param oldcontractAnnexUrl
+     * @param contractAnnex
+     * @return
+     */
+    ResultMap updateContractStatusByReturnCommit(String token, HttpServletResponse response, TotalContract totalContract, String oldcontractAnnexUrl, MultipartFile contractAnnex) throws UpdateSqlException, UpdateStatusException, IOException, FileUploadException;
 }
 

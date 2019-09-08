@@ -130,7 +130,7 @@ private static final Logger log = LoggerFactory.getLogger(MajorMattersFilingCont
      * @return
      */
     @PostMapping(value = "majorFileUpload", headers = "content-type=multipart/form-data")
-    @ApiOperation(value = "中期检查附件上传【外网】")
+    @ApiOperation(value = "重大事项的附件上传【外网】")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "majorid", value = "重大事项", required = true),
             @ApiImplicitParam(name = "changeApplicationAttachment", value = "变更申请表附件", dataType = "file", paramType = "form", allowMultiple = true),
