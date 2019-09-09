@@ -6,6 +6,7 @@ import com.xdmd.IntranetEnvironment.contractmanage.pojo.ContentIndicatorsDTO;
 import com.xdmd.IntranetEnvironment.contractmanage.service.ContentIndicatorsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ import java.util.List;
  * @description: 计划内容实现
  */
 @Service
+@Transactional
 public class ContentIndicatorsServiceImpl implements ContentIndicatorsService {
     @Autowired
     ContentIndicatorsMapper contentIndicatorsMapper;
@@ -39,12 +41,14 @@ public class ContentIndicatorsServiceImpl implements ContentIndicatorsService {
         return contentIndicatorsMapper.getIndicatorById(id);
     }
 
+
     /**
-     * 全部查询
+     * 根据合同id刪除信息
+     * @param contractId
      * @return
      */
     @Override
-    public List<ContentIndicatorsDTO> getAllInfo() {
-        return contentIndicatorsMapper.getAllInfo();
+    public int deleteAllIndicatorInfo(int contractId) {
+        return contentIndicatorsMapper.deleteAllIndicatorInfo(contractId);
     }
 }

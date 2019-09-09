@@ -37,7 +37,6 @@ public class JwtUtil {
         return token;
     }
 
-
     /**
      * 校验token
      * @param token

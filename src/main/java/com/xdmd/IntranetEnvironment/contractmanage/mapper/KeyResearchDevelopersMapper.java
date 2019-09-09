@@ -2,6 +2,7 @@ package com.xdmd.IntranetEnvironment.contractmanage.mapper;
 
 
 import com.xdmd.IntranetEnvironment.contractmanage.pojo.KeyResearchDevelopersDTO;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -35,8 +36,10 @@ public interface KeyResearchDevelopersMapper {
 
 
     /**
-     * 批量更新数据【有问题,不可用】
-     * @param keyResearchDevelopersDTOS
+     * 根据合同id刪除信息
+     * @param contractId
+     * @return
      */
-    int batchUpdateKeyDev(@Param("smsConfigTemplateList") List<KeyResearchDevelopersDTO> keyResearchDevelopersDTOS);
+    @Delete("DELETE from key_research_developers where contract_id==#{contractId}")
+    int deleteDeveloperInfo(int contractId);
 }

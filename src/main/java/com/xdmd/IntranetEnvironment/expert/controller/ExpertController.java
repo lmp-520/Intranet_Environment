@@ -108,7 +108,7 @@ public class ExpertController {
     //修改专家的启用或者停用状态
     @PostMapping("changeState")
     @ResponseBody
-    public ResultMap changeState(@CookieValue("token") String token, HttpServletResponse response,
+    public ResultMap changeState(@CookieValue("IntranecToken") String token, HttpServletResponse response,
                                  @RequestParam("id") Integer id,         //专家的id
                                  @RequestParam("type") Boolean type){    //类型  true 启用  false 停用
         if(StringUtils.isEmpty(token)){

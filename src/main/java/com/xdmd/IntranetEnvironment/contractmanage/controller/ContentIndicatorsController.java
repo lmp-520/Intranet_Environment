@@ -5,6 +5,7 @@ import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.contractmanage.pojo.ContentIndicatorsDTO;
 import com.xdmd.IntranetEnvironment.contractmanage.service.ContentIndicatorsService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +37,6 @@ public class ContentIndicatorsController {
 
     }
 
-
     /**
      * 根据合同id查询
      * @param id
@@ -50,13 +50,14 @@ public class ContentIndicatorsController {
     }
 
     /**
-     * 全部查询
+     * 根据合同id刪除信息
+     * @param contractId
      * @return
      */
-    @ApiOperation(value = "查询全部")
-    @GetMapping (value = "getAllnfo")
-    public ResultMap getAllnfo() {
-        List<ContentIndicatorsDTO> dtoList=contentIndicatorsService.getAllInfo();
-        return dtoList.size()>0?resultMap.success().message(dtoList):resultMap.fail().message("查询失败");
+    @ApiOperation("根据合同id刪除信息")
+    @PostMapping("deleteAllIndicatorInfo")
+    @ApiImplicitParam(name="contractId",value = "合同主表id")
+    public int deleteAllIndicatorInfo(int contractId){
+        return contentIndicatorsService.deleteAllIndicatorInfo(contractId);
     }
 }

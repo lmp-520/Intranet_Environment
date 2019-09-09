@@ -7,6 +7,7 @@ import com.xdmd.IntranetEnvironment.contractmanage.pojo.SubjectFundsBudgetDTO;
 import com.xdmd.IntranetEnvironment.contractmanage.service.SubjectFundsBudgetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ import java.util.List;
  * @description: 课题经费预算业务实现
  */
 @Service
+@Transactional
 public  class SubjectFundsBudgetServiceImpl implements SubjectFundsBudgetService {
     @Autowired
     SubjectFundsBudgetMapper subjectFundsBudgetMapper;
@@ -55,20 +57,8 @@ public  class SubjectFundsBudgetServiceImpl implements SubjectFundsBudgetService
      * @return
      */
     @Override
-    public ResultMap UpdateSubjectFundsBudget(SubjectFundsBudgetDTO subjectFundsBudgetDTO) {
-        try {
-            int updateNum=subjectFundsBudgetMapper.UpdateSubjectFundsBudget(subjectFundsBudgetDTO);
-            if(updateNum>0){
-                resultMap.success().message("更新成功");
-            }
-            else{
-                resultMap.fail().message("更新失败");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            resultMap.fail().message("系统异常");
-        }
-        return resultMap;
+    public int UpdateSubjectFundsBudget(SubjectFundsBudgetDTO subjectFundsBudgetDTO) {
+        return subjectFundsBudgetMapper.UpdateSubjectFundsBudget(subjectFundsBudgetDTO);
     }
   
 }

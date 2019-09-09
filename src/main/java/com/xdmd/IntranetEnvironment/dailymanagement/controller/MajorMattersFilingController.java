@@ -24,7 +24,7 @@ import java.io.IOException;
  */
 @Api(tags = "重大事项管理")
 @RestController
-@RequestMapping("enviroment/daily/majormatter")
+@RequestMapping("/enviroment/daily/majormatter")
 public class MajorMattersFilingController {
 private static final Logger log = LoggerFactory.getLogger(MajorMattersFilingController.class);
     @Autowired
@@ -38,20 +38,13 @@ private static final Logger log = LoggerFactory.getLogger(MajorMattersFilingCont
      */
     @ApiOperation("新增重大事项变更【外网】")
     @PostMapping("insertMajor")
-    public ResultMap insert(@RequestBody MajorMattersFilingDTO majorMattersFiling){
-        return  resultMap= majorMattersFilingService.insert(majorMattersFiling);
+    public ResultMap insert(@CookieValue(value = "token", required = false) String token, HttpServletResponse response,
+                            @RequestBody MajorMattersFilingDTO majorMattersFiling){
+        if (StringUtils.isEmpty(token)) {
+            return resultMap.fail().message("请先登录");
+        }
+        return  resultMap= majorMattersFilingService.insert(token,response,majorMattersFiling);
     }
-
-    /**
-     * [更新]重大事项附件id
-     * @return
-     */
-    @ApiOperation("更新重大事项附件【外网】")
-    @PostMapping("updateMajorAnnexId")
-    public ResultMap updateMajorAnnexId(int changeApplicationAttachmentId,int expertArgumentationAttachmentId,int filingApplicationAttachmentId,int approvalDocumentsAttachmentId,int id){
-        return  resultMap= majorMattersFilingService.updateMajorAnnexId(changeApplicationAttachmentId,expertArgumentationAttachmentId, filingApplicationAttachmentId, approvalDocumentsAttachmentId, id);
-    }
-
     /**
      * [查詢] 根據id查詢详情
      * @param id
@@ -84,12 +77,10 @@ private static final Logger log = LoggerFactory.getLogger(MajorMattersFilingCont
     }
 
     /**
-     * [查詢] 根据单位id分頁查詢【waiwang】
+     * [查詢] 根据单位id分頁查詢【外网】
      * @return
      */
-
     @ApiImplicitParams({
-            @ApiImplicitParam(name="uid",value = "单位id",required = true),
             @ApiImplicitParam(name="subjectName",value = "课题名称"),
             @ApiImplicitParam(name="commitmentUnit",value = "承担单位"),
             @ApiImplicitParam(name="adjustTypId",value = "调整类型id"),
@@ -97,26 +88,15 @@ private static final Logger log = LoggerFactory.getLogger(MajorMattersFilingCont
             @ApiImplicitParam(name="pageNum",value = "当前页数",required = true),
             @ApiImplicitParam(name="pageSize",value = "每页条数",required = true)
     })
-    @ApiOperation("根据单位id分頁查詢【waiwang】")
+    @ApiOperation("根据单位id分頁查詢重大事项【外网】")
     @GetMapping("getAllMajorInfoByUid")
-    public ResultMap getAllMajorInfoByUid(int uid,String subjectName, String commitmentUnit, Integer adjustTypId, Integer adjustmentMattersId, int pageNum, int pageSize){
-        return  resultMap= majorMattersFilingService.getAllMajorInfoByUid(uid,subjectName, commitmentUnit, adjustTypId, adjustmentMattersId,pageNum,pageSize);
+    public ResultMap getAllMajorInfoByUid(@CookieValue(value = "token", required = false) String token, HttpServletResponse response,
+            String subjectName, String commitmentUnit, Integer adjustTypId, Integer adjustmentMattersId, int pageNum, int pageSize){
+        if (StringUtils.isEmpty(token)) {
+            return resultMap.fail().message("请先登录");
+        }
+        return  resultMap= majorMattersFilingService.getAllMajorInfoByUid(token,response,subjectName, commitmentUnit, adjustTypId, adjustmentMattersId,pageNum,pageSize);
     }
-
-
-    /**
-     * 更新重大事项的审核状态【内网】
-     * @param id
-     * @return
-     */
-    @ApiImplicitParam(name="id",value = "主键id",required = true)
-    @ApiOperation("更新重大事项的审核状态【内网】")
-    @PostMapping("updateMajorStatus")
-    public ResultMap updateMajorStatus(int id){
-        return resultMap=majorMattersFilingService.updateMajorStatus(id);
-    }
-
-
     /**
      * 查询所有调整类型
      * @return
@@ -138,48 +118,55 @@ private static final Logger log = LoggerFactory.getLogger(MajorMattersFilingCont
    }
 
 
-
     /**
-     *重大事项的附件上传
+     * 重大事项的附件上传
+     * @param token
+     * @param response
+     * @param majorid
      * @param changeApplicationAttachment 变更申请表附件
      * @param expertArgumentationAttachment 专家论证意见附件
      * @param filingApplicationAttachment 备案申请表附件
      * @param approvalDocumentsAttachment 批准文件附件
      * @return
-     * @throws IOException
-     * @throws FileUploadException
      */
-    @PostMapping(value = "MidCheckFileUpload", headers = "content-type=multipart/form-data")
+    @PostMapping(value = "majorFileUpload", headers = "content-type=multipart/form-data")
     @ApiOperation(value = "中期检查附件上传【外网】")
     @ApiImplicitParams({
+            @ApiImplicitParam(name = "majorid", value = "重大事项", required = true),
             @ApiImplicitParam(name = "changeApplicationAttachment", value = "变更申请表附件", dataType = "file", paramType = "form", allowMultiple = true),
             @ApiImplicitParam(name = "expertArgumentationAttachment", value = "专家论证意见附件", dataType = "file", paramType = "form", allowMultiple = true),
             @ApiImplicitParam(name = "filingApplicationAttachment", value = "备案申请表附件", dataType = "file", paramType = "form", allowMultiple = true),
             @ApiImplicitParam(name = "filingApplicationAttachment", value = "批准文件附件", dataType = "file", paramType = "form", allowMultiple = true)
 
     })
-    public ResultMap majorFileUpload(//@CookieValue(value = "IntranecToken", required = false) String token, HttpServletResponse response,
+    public ResultMap majorFileUpload(@CookieValue(value = "token", required = false) String token, HttpServletResponse response,
+                                      int majorid,
                                       MultipartFile changeApplicationAttachment,
                                       MultipartFile expertArgumentationAttachment,
                                       MultipartFile filingApplicationAttachment,
-                                      MultipartFile approvalDocumentsAttachment) {
-        String token = "aaa";
-        HttpServletResponse response = null;
+                                      MultipartFile approvalDocumentsAttachment){
         if (StringUtils.isEmpty(token)) {
             return resultMap.fail().message("请先登录");
         }
         try {
-            resultMap = majorMattersFilingService.majorFileUpload(token,response,changeApplicationAttachment,expertArgumentationAttachment,filingApplicationAttachment,approvalDocumentsAttachment);
-
+            resultMap = majorMattersFilingService.majorFileUpload(token,response,majorid,changeApplicationAttachment,expertArgumentationAttachment,filingApplicationAttachment,approvalDocumentsAttachment);
         } catch (IOException e) {
             e.printStackTrace();
-            log.error("OpenTenderController 中 tenderFileUpload 方法 -- " + e.getMessage());
-            return resultMap.fail().message("系统异常");
         } catch (FileUploadException e) {
             e.printStackTrace();
-            log.error("OpenTenderController 中 tenderFileUpload 方法 -- " + e.getMessage());
-            return resultMap.fail().message("系统异常");
         }
+
         return resultMap;
+    }
+
+    /**
+     * 更新重大事项的审核状态
+     * @param id
+     * @return
+     */
+    @GetMapping("updateMajorStatus")
+    @ApiOperation(value = "更新重大事项的审核状态【内网-评估中心】")
+    public ResultMap updateMajorStatus(int id) {
+        return resultMap=majorMattersFilingService.updateMajorStatus(id);
     }
 }

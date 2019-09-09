@@ -39,7 +39,7 @@ public class GuideSummary {
     private String fillContacts;
 
     @ApiModelProperty("研究期限")
-    private Integer researchPeriod;
+    private String researchPeriod;
 
     @ApiModelProperty("建议理由及依据")
     private String reasonBasis;

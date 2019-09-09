@@ -16,16 +16,13 @@ import java.io.IOException;
 public interface MajorMattersFilingService {
     /**
      * 新增重大事项变更
+     *
+     * @param token
+     * @param response
      * @param majorMattersFiling
      * @return
      */
-    ResultMap insert(@Param("majorMattersFiling") MajorMattersFilingDTO majorMattersFiling);
-
-    /**
-     * [更新]重大事项附件id
-     * @return
-     */
-    ResultMap updateMajorAnnexId(int changeApplicationAttachmentId, int expertArgumentationAttachmentId, int filingApplicationAttachmentId, int approvalDocumentsAttachmentId, int id);
+    ResultMap insert(String token, HttpServletResponse response, @Param("majorMattersFiling") MajorMattersFilingDTO majorMattersFiling);
 
     /**
      * [查詢] 根據主鍵 id 查詢
@@ -45,29 +42,7 @@ public interface MajorMattersFilingService {
      * [查詢] 根据单位id分頁筛选查詢【内网】
      * @return
      */
-    ResultMap getAllMajorInfoByUid(int uid,String subjectName, String commitmentUnit, Integer adjustTypId, Integer adjustmentMattersId, int pageNum, int pageSize);
-
-
-    /**
-     * 更新重大事项的审核状态【内网】
-     * @param id
-     * @return
-     */
-    ResultMap updateMajorStatus(int id);
-
-    /**
-     *重大事项的附件上传
-     * @param token
-     * @param response
-     * @param changeApplicationAttachment
-     * @param expertArgumentationAttachment
-     * @param filingApplicationAttachment
-     * @param approvalDocumentsAttachment
-     * @return
-     * @throws IOException
-     * @throws FileUploadException
-     */
-    ResultMap majorFileUpload(String token, HttpServletResponse response, MultipartFile changeApplicationAttachment, MultipartFile expertArgumentationAttachment, MultipartFile filingApplicationAttachment,MultipartFile approvalDocumentsAttachment) throws IOException, FileUploadException;
+    ResultMap getAllMajorInfoByUid(String token, HttpServletResponse response, String subjectName, String commitmentUnit, Integer adjustTypId, Integer adjustmentMattersId, int pageNum, int pageSize);
 
 
     /**
@@ -81,5 +56,43 @@ public interface MajorMattersFilingService {
      * @return
      */
     ResultMap  AdjustmentMatters();
+
+    /**
+     * 单位关联重大事项主表
+     * @param unitId
+     * @param majorId
+     * @return
+     */
+    ResultMap insertMidAndUid(@Param("unitId") int unitId, @Param("majorId") int majorId);
+
+
+    /**
+     * 重大事项的附件上传
+     * @param token
+     * @param response
+     * @param majorid
+     * @param changeApplicationAttachment
+     * @param expertArgumentationAttachment
+     * @param filingApplicationAttachment
+     * @param approvalDocumentsAttachment
+     * @return
+     */
+    ResultMap majorFileUpload(String token, HttpServletResponse response, int majorid, MultipartFile changeApplicationAttachment, MultipartFile expertArgumentationAttachment, MultipartFile filingApplicationAttachment, MultipartFile approvalDocumentsAttachment) throws IOException, FileUploadException;
+
+
+
+    /**
+     * 更新重大事项的审核状态【内网】
+     * @param id
+     * @return
+     */
+    ResultMap updateMajorStatus(@Param("id") int id);
+
+
+
+
+
+
+
 
 }

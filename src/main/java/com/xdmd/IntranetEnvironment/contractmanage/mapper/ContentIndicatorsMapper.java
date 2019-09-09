@@ -1,9 +1,7 @@
 package com.xdmd.IntranetEnvironment.contractmanage.mapper;
 
 import com.xdmd.IntranetEnvironment.contractmanage.pojo.ContentIndicatorsDTO;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -38,10 +36,10 @@ public interface ContentIndicatorsMapper {
     List<ContentIndicatorsDTO> getIndicatorById(@Param("id") int id);
 
     /**
-     * [查詢] 查詢全部计划内容
-     * @param
+     * 根据合同id刪除信息
+     * @param contractId
      * @return
      */
-    @Select(value = "select * from content_indicators")
-    List<ContentIndicatorsDTO> getAllInfo();
+    @Delete("DELETE from content_indicators where contract_id=#{contractId}")
+    int deleteAllIndicatorInfo(int contractId);
 }

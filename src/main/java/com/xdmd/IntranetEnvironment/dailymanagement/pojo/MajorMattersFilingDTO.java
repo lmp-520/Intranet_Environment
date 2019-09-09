@@ -35,7 +35,7 @@ public class MajorMattersFilingDTO {
     private Integer adjustTypeId;
 
     @ApiModelProperty("调整事项")
-    private String adjustmentMattersId;
+    private Integer adjustmentMattersId;
 
     @ApiModelProperty("具体情况说明")
     private String specificFacts;

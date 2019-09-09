@@ -22,9 +22,9 @@ public interface ContentIndicatorsService {
     List<ContentIndicatorsDTO> getIndicatorById(@Param("id") int id);
 
     /**
-     * [查詢] 查詢全部计划内容
-     * @param
+     * 根据合同id刪除信息
+     * @param contractId
      * @return
      */
-    List<ContentIndicatorsDTO> getAllInfo();
+    int deleteAllIndicatorInfo(int contractId);
 }

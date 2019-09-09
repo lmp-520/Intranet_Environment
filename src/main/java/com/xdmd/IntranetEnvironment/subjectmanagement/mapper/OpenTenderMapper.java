@@ -85,24 +85,25 @@ public interface OpenTenderMapper {
             "ot.subject_leader as subjectLeader,\n" +
             "ot.leader_contact as leaderContact,\n" +
             "ot.operator,\n" +
-            "ot.operator_contact as operatorContact\n" +
+            "ot.operator_contact as operatorContact,\n" +
+            "ot.audit_status as auditStatus\t\n" +
             "FROM\n" +
             "open_tender ot,\n" +
             "unit_tender ut\n" +
             "WHERE\n" +
-            "ot.id = ut.tender_id\n" +
-            "AND ut.unit_id =#{uid}\n" +
+            "ot.id = ut.tender_id\t" +
+            "AND ut.unit_id =#{uid}\t" +
             "<if test ='null != projectName'>\n" +
-            "AND project_name like CONCAT('%',#{projectName},'%')\n" +
+            "AND ot.project_name like CONCAT('%',#{projectName},'%')\n" +
             "</if>\n" +
             "<if test ='null != subjectName'>\n" +
-            "AND subject_name like CONCAT('%',#{subjectName},'%')\n" +
+            "AND ot.subject_name like CONCAT('%',#{subjectName},'%')\n" +
             "</if>\n" +
             "<if test ='null != subjectLeader'>\n" +
-            "AND subject_leader like CONCAT('%',#{subjectLeader},'%')\n" +
+            "AND ot.subject_leader like CONCAT('%',#{subjectLeader},'%')\n" +
             "</if>\n" +
             "<if test ='null != leaderContact'>\n" +
-            "AND leader_contact like CONCAT('%',#{leaderContact},'%')\n" +
+            "AND ot.leader_contact like CONCAT('%',#{leaderContact},'%')\n" +
             "</if>" +
             "</script>")
     List<Map> getTenderByUid(int uid, String projectName, String subjectName, String subjectLeader, String leaderContact);
@@ -133,7 +134,7 @@ public interface OpenTenderMapper {
             "remark\t" +
             "FROM\n" +
             "open_tender\n" +
-            "WHERE id =#{id}\n" +
+            "WHERE id =#{id}\t" +
             "</script>")
         Map getTenderById(int id);
 
@@ -158,8 +159,9 @@ public interface OpenTenderMapper {
             "FROM\n" +
             "open_tender AS ot\t" +
             "<where>" +
+            "ot.audit_status  &gt; 1\t" +
             "<if test ='null != projectName'>\n" +
-            "ot.project_name like CONCAT('%',#{projectName},'%')\n" +
+            "AND ot.project_name like CONCAT('%',#{projectName},'%')\n" +
             "</if>\n" +
             "<if test ='null != subjectName'>\n" +
             "AND ot.subject_name like CONCAT('%',#{subjectName},'%')\n" +
@@ -169,7 +171,8 @@ public interface OpenTenderMapper {
             "</if>\n" +
             "<if test ='null != leaderContact'>\n" +
             "AND ot.leader_contact like CONCAT('%',#{leaderContact},'%')\n" +
-            "</if></where>" +
+            "</if>" +
+            "</where>" +
             "ORDER BY ot.id DESC" +
             "</script>")
         List<Map> getTenderPageList(String projectName, String subjectName, String subjectLeader, String leaderContact);
@@ -191,6 +194,63 @@ public interface OpenTenderMapper {
             "other_attachments_id=#{otherAttachmentsId}\t" +
             "WHERE id = #{oid}")
     int updateAnnexByoid(int winningFileAttachmentId, int announcementTransactionAnnouncementId, int dealNotificationAttachmentId,int responseFileAttachmentId,int otherAttachmentsId, int oid);
+
+
+    /**
+     * 根据招标备案id更新中标文件附件id
+     * @param winningFileAttachmentId
+     * @param oid
+     * @return
+     */
+    @Update("UPDATE open_tender\t" +
+            "SET winning_file_attachment_id = #{winningFileAttachmentId}\t" +
+            "WHERE id = #{oid}")
+    int updateWinningFileAttachmentIdByoid(int winningFileAttachmentId,int oid);
+
+    /**
+     * 根据招标备案id更新成交公告附件id
+     * @param announcementTransactionAnnouncementId
+     * @param oid
+     * @return
+     */
+    @Update("UPDATE open_tender\t" +
+            "SET announcement_transaction_announcement_id = #{announcementTransactionAnnouncementId}\t" +
+            "WHERE id = #{oid}")
+    int updateAnnouncementTransactionAnnouncementIdByoid(int announcementTransactionAnnouncementId,int oid);
+
+    /**
+     * 根据招标备案id更新成交通知书附件id
+     * @param dealNotificationAttachmentId
+     * @param oid
+     * @return
+     */
+    @Update("UPDATE open_tender\t" +
+            "SET deal_notification_attachment_id = #{dealNotificationAttachmentId}\t" +
+            "WHERE id = #{oid}")
+    int updateDealNotificationAttachmentIdByoid(int dealNotificationAttachmentId,int oid);
+
+    /**
+     * 根据招标备案id更新响应文件附件id
+     * @param responseFileAttachmentId
+     * @param oid
+     * @return
+     */
+    @Update("UPDATE open_tender\t" +
+            "SET response_file_attachment_id = #{responseFileAttachmentId}\t" +
+            "WHERE id = #{oid}")
+    int updateResponseFileAttachmentIdByoid(int responseFileAttachmentId,int oid);
+
+    /**
+     * 根据招标备案id更新其他文件附件id
+     * @param otherAttachmentsId
+     * @param oid
+     * @return
+     */
+    @Update("UPDATE open_tender\t" +
+            "SET other_attachments_id = #{otherAttachmentsId}\t" +
+            "WHERE id = #{oid}")
+    int updateOtherAttachmentsIdByoid(int otherAttachmentsId,int oid);
+
 
 
     /////////////////招标备案审核//////////////////////////////////
@@ -252,13 +312,6 @@ public interface OpenTenderMapper {
             "remark = #{remark}\t" +
             "where id=#{id}")
     int updateTenderStatusByReturnCommit(OpenTender openTender);
-    //int updateTenderStatusByReturnCommit(@Param("projectNo") String projectNo, @Param("projectName") String projectName, @Param("tenderNo") String tenderNo,
-    //                                     @Param("subcontractingNo") String subcontractingNo, @Param("subjectName") String subjectName, @Param("responsibleUnit") String responsibleUnit,
-    //                                     @Param("bidders") String bidders, @Param("subjectLeader") String subjectLeader, @Param("leaderContact") String leaderContact,
-    //                                     @Param("joinTenderUnits") String joinTenderUnits, @Param("operator") String operator, @Param("operatorContact") String operatorContact,
-    //                                     @Param("winningAmount") BigDecimal winningAmount, @Param("supportingFunds")BigDecimal supportingFunds, @Param("remark") String remark,
-    //                                     @Param("oid") int oid);
-
 
     /**
      * 展示所有通过单位管理员审批的

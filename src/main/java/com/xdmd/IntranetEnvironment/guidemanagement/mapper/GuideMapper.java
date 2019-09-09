@@ -67,52 +67,47 @@ public interface GuideMapper {
     @Select(value = "<script>" +
             "SELECT\t" +
             "gc.id," +
-            "guide_name,\n" +
+            "gc.guide_name,\n" +
             "dic.content as domain,\n" +
             "d.content as category,\n" +
-            "fill_unit,\n" +
-            "fill_contacts,\n" +
-            "unit_principal,\n" +
-           // "unit_category," +
-            "reason_basis,\n" +
-            "research_content_technology,\n" +
-            "expected_target_outcome,\n" +
-            "standards_specifications_regulatory,\n" +
-            "research_period,\n" +
-            "research_fund,\n" +
-            "demonstration_scale,\n" +
-            "demonstration_point,\n" +
-            "province_domain_mechanism,\n" +
-            "contact_phone,\n" +
-            "is_select\t" +
+            "gc.fill_unit,\n" +
+            "gc.fill_contacts,\n" +
+            "gc.unit_principal,\n" +
+            "gc.reason_basis,\n" +
+            "gc.research_content_technology,\n" +
+            "gc.expected_target_outcome,\n" +
+            "gc.standards_specifications_regulatory,\n" +
+            "gc.research_period,\n" +
+            "gc.research_fund,\n" +
+            "gc.demonstration_scale,\n" +
+            "gc.demonstration_point,\n" +
+            "gc.province_domain_mechanism,\n" +
+            "gc.contact_phone,\n" +
+            "gc.is_select\t" +
             "FROM\n" +
-            "\tguide_collection gc,\n" +
-            "\tdictionary d,\n" +
-            "\tdictionary dic,\n" +
-            "\tunit_guide_collection ugc \n" +
+            "guide_collection gc," +
+            "dictionary d," +
+            "dictionary dic," +
+            "unit_guide_collection ugc\t" +
             "<where>" +
-            "\tgc.id = ugc.collection_id \n" +
-            "\tAND gc.category = d.id \n" +
-            "\tAND gc.domain = dic.id \n" +
-            "\tAND ugc.unit_id =#{uid} \n" +
+            "gc.id = ugc.collection_id AND gc.category = d.id AND gc.domain = dic.id AND ugc.unit_id =#{uid}\t" +
             "<if test ='null != guideName'>\n" +
-            "gc.guide_name like CONCAT('%',#{guideName},'%')\n" +
+            "AND gc.guide_name like CONCAT('%',#{guideName},'%')\n" +
             "</if>\n" +
             "<if test ='null != domain'>\n" +
             "AND gc.domain =#{domain}\n" +
             "</if>\n" +
-            " <if test ='null != category'>\n" +
-            " AND gc.category = #{category}\n" +
-            " </if>\n" +
+            "<if test ='null != category'>\n" +
+            "AND gc.category = #{category}\n" +
+            "</if>\n" +
             "<if test ='null != fillUnit'>\n" +
-            "AND gc.fill_unit like CONCAT('%',#{fillUnit},'%')</if>\n" +
+            "AND gc.fill_unit like CONCAT('%',#{fillUnit},'%')</if>\n"+
             "<if test ='null != fillContacts'>\n" +
-            "AND gc.fill_contacts like CONCAT('%',#{fillContacts},'%')\n" +
+            "AND gc.fill_contacts like CONCAT('%',#{fillContacts},'%')\n"+
             "</if>\n" +
             "<if test ='null != contactPhone'>\n" +
             "AND gc.contact_phone like CONCAT('%',#{contactPhone},'%')</if>\n" +
             "</where>" +
-            "order by gc.id desc" +
             "</script>")
     List<Map> getUnitCollection(@Param("guideName") String guideName, @Param("domain")Integer domain, @Param("category")Integer category, @Param("fillUnit")String fillUnit, @Param("fillContacts")String fillContacts,
                                 @Param("contactPhone")String contactPhone,@Param("uid") int uid);
@@ -228,7 +223,7 @@ public interface GuideMapper {
      * 分页查询全部汇总信息【内网】--汇总4
      * @return
      */
-    @Select(value = "<script>" +
+    @Select("<script>" +
             "SELECT\n" +
             "gs.guide_summary_title as guideSummaryTitle,\n" +
             "d.content as ownershipDomain,\n" +
