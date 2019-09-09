@@ -23,7 +23,11 @@ public class MidCheckRecordDTO {
     private String midCheckInitiateTime;
 
     @ApiModelProperty("中期检查状态（0--未完成 1--已完成）")
-    private String midCheckState;
+    private Integer midCheckState;
+
+    @ApiModelProperty("中期检查专家总意见附件id")
+    private Integer midCheckExpertOpinionAnnexId;
+
 
     public MidCheckRecordDTO() {
     }

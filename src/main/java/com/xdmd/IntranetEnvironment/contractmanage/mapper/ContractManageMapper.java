@@ -234,27 +234,32 @@ public interface ContractManageMapper {
     /**
      * 根据合同id更新中期检查附件id【修改】
      * @param midCheckAnnexId
-     * @param cid
+     * @param mid
      * @return
      */
-    @Update(value = "update contract_manage set mid_check_annex_id=#{midCheckAnnexId} where id=#{cid}")
-    int updateMidCheckAnnexIdByCid(int midCheckAnnexId, int cid);
+    @Update(value = "update mid_check_template set mid_check_annex_id=#{midCheckAnnexId} where id=#{mid}")
+    int updateMidCheckAnnexIdByCid(int midCheckAnnexId, int mid);
     /**
      * 根据合同id更新专家评估附件id【修改】
      * @param expertAssessmentAnnexId
-     * @param cid
+     * @param eid
      * @return
      */
-    @Update(value = "update contract_manage set expert_assessment_annex_id=#{expertAssessmentAnnexId} where id=#{cid}")
-    int updateExpertAssessmentAnnexIdByCid(int expertAssessmentAnnexId, int cid);
+    @Update(value = "update expert_assessment_annex_id set expert_assessment_annex_id=#{expertAssessmentAnnexId} where id=#{eid}")
+    int updateExpertAssessmentAnnexIdByCid(int expertAssessmentAnnexId, int eid);
+
+
+
     /**
      * 根据合同id更新课题意见附件id【修改】
      * @param subjectSuggestAnnexId
      * @param cid
      * @return
-     */
     @Update(value = "update contract_manage set subject_suggest_annex_id=#{subjectSuggestAnnexId} where id=#{cid}")
     int updateSubjectSuggestAnnexIdByCid(int subjectSuggestAnnexId, int cid);
+     */
+
+
 
     /**
      * 根据合同id更新合同附件id【外网提交-修改】

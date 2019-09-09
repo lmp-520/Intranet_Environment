@@ -33,9 +33,9 @@ public class ExpertAssessmentServiceImpl implements ExpertAssessmentService {
         try{
             int insertNo=expertAssessmentMapper.insertEA(expertAssessment);
             if(insertNo>0){
-                resultMap.success().message("成功新增"+insertNo+"条数据");
+                resultMap.success().message(expertAssessment.getId());
             }else if(insertNo==0){
-                resultMap.success().message("新增失败");
+                resultMap.fail().message("新增失败");
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -56,7 +56,7 @@ public class ExpertAssessmentServiceImpl implements ExpertAssessmentService {
             if(ea!=null){
                 resultMap.success().message(ea);
             }else if(ea==null){
-                resultMap.success().message("没有查到相关信息");
+                resultMap.fail().message("没有查到相关信息");
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -88,7 +88,7 @@ public class ExpertAssessmentServiceImpl implements ExpertAssessmentService {
     }
 
     /**
-     * 从字典里查询全部评估内容
+     * 从字典里查询全部单选评估内容
      * @return
      */
     @Override
@@ -98,7 +98,7 @@ public class ExpertAssessmentServiceImpl implements ExpertAssessmentService {
             if(pinggucontent.size()>0){
                 resultMap.success().message(pinggucontent);
             }else if(pinggucontent.size()==0){
-                resultMap.success().message("没有查到相关信息");
+                resultMap.fail().message("没有查到相关信息");
             }
         }catch (Exception e){
             e.printStackTrace();

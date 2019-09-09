@@ -2,6 +2,7 @@ package com.xdmd.IntranetEnvironment.dailymanagement.mapper;
 
 import com.xdmd.IntranetEnvironment.dailymanagement.pojo.ExpertAssessmentDTO;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
@@ -18,6 +19,7 @@ public interface ExpertAssessmentMapper {
      * @author Kong
      * @date 2019/08/17
      **/
+    @Options(useGeneratedKeys = true,keyProperty = "id",keyColumn = "id")
     @Insert(value = "insert into expert_assessment\n" +
             "VALUES(\n" +
             "DEFAULT,\n" +
