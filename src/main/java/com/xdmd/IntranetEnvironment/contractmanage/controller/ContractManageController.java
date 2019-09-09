@@ -8,7 +8,10 @@ import com.xdmd.IntranetEnvironment.contractmanage.pojo.TotalContract;
 import com.xdmd.IntranetEnvironment.contractmanage.service.ContractManageService;
 import com.xdmd.IntranetEnvironment.subjectmanagement.exception.UpdateSqlException;
 import com.xdmd.IntranetEnvironment.subjectmanagement.exception.UpdateStatusException;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author: Kong
@@ -169,41 +171,43 @@ public class ContractManageController {
      * @param ids
      * @return
      */
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="mid",value = "中期检查记录id"),
+            @ApiImplicitParam(name="ids",value = "合同id集合")
+    })
     @ApiOperation(value = "根据勾选的合同主表id修改相应的中期检查记录【内网中检】")
     @PostMapping(value = "updateContractByIds")
-    public ResultMap updateContractByIds(@RequestParam("mid") @ApiParam("中检id") int mid, @RequestBody @ApiParam("合同id集合") List<Long> ids) {
-        int no = contractManageService.updateContractByIds(mid, ids);
-        return no > 0 ? resultMap.success() : resultMap.fail();
+    public ResultMap updateContractByIds(@RequestParam("mid") int mid, @RequestBody List<Long> ids) {
+        return resultMap = contractManageService.updateContractByIds(mid, ids);
     }
 
     /**
      * 根据中期检查记录查詢相应合同主表【内网中检】
-     *
      * @return
      */
     @ApiOperation(value = "根据中期检查记录查詢相应合同主表【内网中检】")
     @GetMapping(value = "getInfoByMidRecord")
-    public ResultMap getInfoByMidRecord(@RequestParam("mId") int mId) {
-        List<Map> mapList = contractManageService.getInfoByMidRecord(mId);
-        return mapList.size() > 0 ? resultMap.success() : resultMap.fail();
+    public ResultMap getInfoByMidRecord(@RequestParam("mid") int mid,int pageNum,int pageSize) {
+        return resultMap= contractManageService.getInfoByMidRecord(mid,pageNum,pageSize);
     }
 
 
     /**
-     * [查詢] 根据单位id & 中检记录id查詢本单位的课题【外网中检】
-     *
-     * @param Uid
+     *  [查詢] 根据单位id & 中检记录id查詢本单位的课题【外网中检】
+     * @param uid
+     * @param mid
+     * @param pageNum
+     * @param pageSize
      * @return
      */
     @ApiOperation(value = "根据单位id & 中检记录id查詢本单位的课题【外网中检】")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "Uid", value = "单位id", dataType = "Long"),
-            @ApiImplicitParam(name = "Mid", value = "中检记录id", dataType = "Long"),
+            @ApiImplicitParam(name = "uid", value = "单位id"),
+            @ApiImplicitParam(name = "mid", value = "中检记录id")
     })
     @GetMapping(value = "getContractByUid")
-    public ResultMap getContractByUid(@RequestParam("Uid") int Uid, @RequestParam("Mid") int Mid) {
-        List<Map> maps = contractManageService.getContractByUid(Uid, Mid);
-        return maps.size() > 0 ? resultMap.success() : resultMap.fail();
+    public ResultMap getContractByUid(@RequestParam("uid") int uid, @RequestParam("mid") int mid,int pageNum,int pageSize) {
+        return resultMap = contractManageService.getContractByUid(uid, mid, pageNum, pageSize);
     }
 
 

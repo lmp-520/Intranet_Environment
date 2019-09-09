@@ -82,6 +82,7 @@ public interface ProjectProgressMapper {
      */
     @Select(value = "<script>" +
             "SELECT\n" +
+            "id," +
             "subject_name,\n" +
             "bearer_unit,\n" +
             "progress,\n" +
@@ -112,6 +113,7 @@ public interface ProjectProgressMapper {
      */
     @Select(value = "<script>" +
             "SELECT\n" +
+            "pp.id," +
             "subject_name,\n" +
             "bearer_unit,\n" +
             "progress,\n" +
@@ -129,7 +131,7 @@ public interface ProjectProgressMapper {
             "<if test ='null != progress'>" +
             "AND progress =#{progress}" +
             "</if></where>" +
-            "order by id desc" +
+            "order by pp.id desc" +
             "</script>")
     List<Map> getProgressInfoByUid(int uid, String subjectName, String bearerUnit, Integer progress);
 

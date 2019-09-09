@@ -31,7 +31,7 @@ public class ExpertAssessmentController {
      * @param expertAssessment
      * @return
      */
-    @ApiOperation(value = "新增专家评估")
+    @ApiOperation(value = "新增专家评估【外网】")
     @PostMapping("insertEA")
     ResultMap insert(@Param("expertAssessment") ExpertAssessmentDTO expertAssessment){
         return resultMap=expertAssessmentService.insert(expertAssessment);
@@ -42,7 +42,7 @@ public class ExpertAssessmentController {
      * @param id
      * @return
      */
-    @ApiOperation(value = "根據主鍵id查詢")
+    @ApiOperation(value = "根據主鍵id查詢【内网】")
     @GetMapping("getEAByid")
     ResultMap getEAByid(@Param("id") int id){
         return resultMap=expertAssessmentService.getEAByid(id);
@@ -52,7 +52,7 @@ public class ExpertAssessmentController {
      * 查詢全部
      * @return
      */
-    @ApiOperation(value = "查詢全部专家评估信息")
+    @ApiOperation(value = "查詢全部专家评估信息【内网】")
     @GetMapping("getAllEA")
     ResultMap getAllEA(int pageNum,int pageSize){
         return resultMap=expertAssessmentService.getAllEA(pageNum,pageSize);
@@ -62,7 +62,7 @@ public class ExpertAssessmentController {
      * 查詢全部评估内容
      * @return
      */
-    @ApiOperation(value = "查詢全部评估内容")
+    @ApiOperation(value = "查詢全部评估内容【内网】")
     @GetMapping("getAllEvaluationContent")
     public ResultMap getAllEvaluationContent(){
         return resultMap=expertAssessmentService.getAllEvaluationContent();

@@ -6,6 +6,8 @@ import com.xdmd.IntranetEnvironment.contractmanage.pojo.SubjectFundsBudgetDTO;
 import com.xdmd.IntranetEnvironment.contractmanage.service.SubjectFundsBudgetService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +24,10 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "environment/contract/subjectfundbudget")
 public class SubjectFundsBudgetController {
+    private static final Logger log = LoggerFactory.getLogger(SubjectFundsBudgetController.class);
     @Autowired
     SubjectFundsBudgetService subjectFundsBudgetService;
+
     ResultMap resultMap=new ResultMap();
     /**
      * 新增

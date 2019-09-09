@@ -2,16 +2,25 @@ package com.xdmd.IntranetEnvironment.dailymanagement.service;
 
 
 import com.xdmd.IntranetEnvironment.common.ResultMap;
-import com.xdmd.IntranetEnvironment.dailymanagement.pojo.MidCheckDTO;
 import com.xdmd.IntranetEnvironment.dailymanagement.pojo.MidCheckRecordDTO;
+import com.xdmd.IntranetEnvironment.dailymanagement.pojo.MidCheckTemplateDTO;
 
 public interface MidCheckService {
     /**
      * 新增中期检查表
-     * @param midCheckDTO
+     * @param midCheckTemplateDTO
      * @return
      */
-    ResultMap insertMidCheck(MidCheckDTO midCheckDTO);
+    ResultMap insertMidCheckTemplate(MidCheckTemplateDTO midCheckTemplateDTO);
+
+
+    /**
+     * 根据中期检查表id查询详情
+     * @param midchecktemplateid
+     * @return
+     */
+    ResultMap getAllMidCheckTemplate(int midchecktemplateid);
+
 
     /**
      * [新增] 中期检察记录
@@ -24,5 +33,12 @@ public interface MidCheckService {
      * [更新] 中期检察记录状态
      * @return
      */
-    ResultMap updateMidCheck();
+    ResultMap updateMidCheckRecord();
+
+
+    /**
+     * [查询] 中期检察记录状态
+     * @return
+     */
+    ResultMap getMidCheckRecord(int pageNum, int pageSize);
 }

@@ -22,6 +22,10 @@ import java.util.List;
 public class SubjectParticipatingUnitController {
     @Autowired
     SubjectParticipatingUnitService subjectParticipatingUnitService;
+
+    /**
+     * 状态码
+     */
     ResultMap resultMap=new ResultMap();
 
     /**
