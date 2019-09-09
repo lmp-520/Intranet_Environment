@@ -1,7 +1,5 @@
 package com.xdmd.IntranetEnvironment.expert.service.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.xdmd.IntranetEnvironment.common.*;
 import com.xdmd.IntranetEnvironment.company.Pojo.UserInformation;
 import com.xdmd.IntranetEnvironment.expert.mapper.ExpertMapper;
@@ -9,12 +7,10 @@ import com.xdmd.IntranetEnvironment.expert.pojo.*;
 import com.xdmd.IntranetEnvironment.expert.service.ExpertService;
 import com.xdmd.IntranetEnvironment.expert.updateSqlException;
 import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.UploadFile;
-import com.xdmd.IntranetEnvironment.subjectAcceptance.exception.InsertSqlException;
 import com.xdmd.IntranetEnvironment.user.exception.ClaimsNullException;
 import com.xdmd.IntranetEnvironment.user.exception.UserNameNotExistentException;
 import com.xdmd.IntranetEnvironment.user.pojo.User;
 import com.xdmd.IntranetEnvironment.user.service.impl.TokenService;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -313,10 +309,8 @@ public class ExpertServiceImpl implements ExpertService {
                 expertInformationResearchDirection.setExpertId(expertInformation.getId());  //把研究方向中的对应的专家信息表的id存入
                 expertMapper.addExpertInformationResearchDirection(expertInformationResearchDirection); //新增专家信息表对应的研究方向列表
             }
-
         }
         return resultMap.success().message("更新成功");
-
     }
 
     //修改专家的启用或者停用状态
@@ -380,7 +374,6 @@ public class ExpertServiceImpl implements ExpertService {
         if (page > allPage) {
             return resultMap.fail().message("页数超过总页数");
         }
-
 
         //获取符合条件的专家id集合
         List<Integer> allExpertIdList = expertMapper.queryAllExpertIdList(newpage,total,name,natureWork,professionalField,isProvince);

@@ -570,6 +570,7 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
         //修改验收证书的状态
         acceptApplyMapper.updateAcceptancePhaseById(caId, 7);
 
+
         //新增最终验收报告表单
         acceptanceCertificate.setCid(caId);
         //新增最终验收报告的主表
@@ -1316,9 +1317,6 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
         PageBean pageBean = new PageBean();
         pageBean.setCount(allTotal);
         pageBean.setData(subjectInformationList1);
-
-
         return resultMap.success().message(pageBean);
-
     }
 }

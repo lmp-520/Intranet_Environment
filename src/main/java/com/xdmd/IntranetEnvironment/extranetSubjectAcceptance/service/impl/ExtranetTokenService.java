@@ -62,7 +62,10 @@ public class ExtranetTokenService {
 
         //把token存放到cookie中
         Cookie cookie = new Cookie("token", newToken);
-        cookie.setMaxAge(60 * 60*24);//六十分钟
+      //  cookie.setMaxAge(60 * 30);//三十分钟
+
+        cookie.setMaxAge(60 * 60 * 24); //二十四小时
+
         cookie.setPath("/");
         response.addCookie(cookie);
 

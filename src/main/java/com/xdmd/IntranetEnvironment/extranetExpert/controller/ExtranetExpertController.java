@@ -57,16 +57,14 @@ public class ExtranetExpertController {
             log.error("ExpertController 中 register 方法错误 -- " + e.getMessage());
             return resultMap.fail().message("系统异常");
         }
-
         return resultMap;
-
     }
 
     @ResponseBody
     @PostMapping("login")
     public ResultMap login(@RequestParam("loginName") String loginName, //登陆名
                            @RequestParam("password") String password,   //密码
-                           @CookieValue(value = "check", required = false) String check,
+                           @CookieValue(value = "extranetCheck", required = false) String check,
                            @RequestParam("code") String code,   //验证码
                            HttpServletResponse response){
         if (!check.equalsIgnoreCase(code)) {

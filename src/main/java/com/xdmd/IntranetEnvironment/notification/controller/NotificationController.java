@@ -126,5 +126,4 @@ public class NotificationController {
         }
         return resultMap;
     }
-
 }

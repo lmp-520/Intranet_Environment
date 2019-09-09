@@ -2,7 +2,6 @@ package com.xdmd.IntranetEnvironment.user.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.imageio.ImageIO;
@@ -72,7 +71,7 @@ public class CodeController {
         //把验证码存到cookie中
         Cookie cookie = new Cookie("check",sb.toString());
         cookie.setPath("/");
-        cookie.setMaxAge(60*10);
+        cookie.setMaxAge(60*30);
         response.addCookie(cookie);
 
 

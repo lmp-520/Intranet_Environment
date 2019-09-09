@@ -114,7 +114,6 @@ public class ExtranetExpertServiceImpl implements ExtranetExpertService {
         for (ExpertInformationArticle expertInformationArticle : expertInformationArticleList) {
             expertInformationArticle.setExpertId(expertInformation.getId());    //把文章列表中对应的专家信息表的id存入
             extranetExpertMapper.addExpertInformationArticle(expertInformationArticle); //新增专家信息表对应的文章列表
-
         }
 
         //新增专家信息表中著作表
@@ -147,7 +146,6 @@ public class ExtranetExpertServiceImpl implements ExtranetExpertService {
 
         //新增该账号与角色之间的关系
         extranetExpertMapper.addUserRole(userInformation.getUid());
-
         return resultMap.success().message("注册成功，请等待审核");
     }
 
@@ -238,7 +236,6 @@ public class ExtranetExpertServiceImpl implements ExtranetExpertService {
         extranetLoginLog.setLoginTime(nowTime);
         //新增登陆日志表
         extranetLoginLogMapper.addLoginLog(extranetLoginLog);
-
         return resultMap.success().message(jsonObject);
     }
 

@@ -291,6 +291,7 @@
                 AND e.aid = s.uid and is_state in(1,2) and identity = 2
             </if>
         </where>
+        order by create_time desc
         limit #{newpage},#{total}
     </select>
 

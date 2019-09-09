@@ -222,7 +222,7 @@ public class SubjectAcceptServiceImpl implements SubjectAcceptSerivce {
 
                 //判断这两个上传的文件后缀名是否正确
                 String expertGroupCommentsFilename = expertGroupCommentsFile.getOriginalFilename();      //获取专家意见表文件名
-                List<String> expertGroupCommentsSuffixList = new ArrayList<String>(Arrays.asList(".doc", ".docx",".pdf")); //定义专家组意见表允许上传的类型
+                List<String> expertGroupCommentsSuffixList = new ArrayList<String>(Arrays.asList(".zip", ".7z", ".rar",".doc", ".docx",".pdf")); //定义专家组意见表允许上传的类型
                 Boolean flag1 = FileSuffixJudgeUtil.SuffixJudge(expertGroupCommentsFilename, expertGroupCommentsSuffixList);  //判断专家组意见表后缀名是否有误
                 //获取专家评议表的文件名
                 String expertAcceptanceFormFilename = expertAcceptanceFormFile.getOriginalFilename();

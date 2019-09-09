@@ -224,7 +224,8 @@ public class CompanyServiceTwoImpl implements CompanyServiceTwo {
             //把生成的token存放在cookie中
             //设置cookie的最大有效时间
             Cookie cookie = new Cookie("token", token);
-            cookie.setMaxAge(60 * 30);//三十分钟
+            //cookie.setMaxAge(60 * 30);//三十分钟
+            cookie.setMaxAge(60 * 60 * 24);//二十四小时
             cookie.setPath("/");
             response.addCookie(cookie);
 

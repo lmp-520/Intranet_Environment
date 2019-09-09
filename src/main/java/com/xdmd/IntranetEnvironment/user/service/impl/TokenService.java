@@ -2,14 +2,15 @@ package com.xdmd.IntranetEnvironment.user.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.user.exception.ClaimsNullException;
+import com.xdmd.IntranetEnvironment.user.exception.UserNameNotExistentException;
 import com.xdmd.IntranetEnvironment.user.mapper.UserMapper;
 import com.xdmd.IntranetEnvironment.user.pojo.User;
 import com.xdmd.IntranetEnvironment.user.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
@@ -62,10 +63,11 @@ public class TokenService {
 
         //把token存放到cookie中
         Cookie cookie = new Cookie("IntranecToken", newToken);
-        cookie.setMaxAge(60 * 60 * 24);//三十分钟--24小时
+        //cookie.setMaxAge(60 * 30);//三十分钟
+
+        cookie.setMaxAge(60 * 60 * 24);//二十四小时
         cookie.setPath("/");
         response.addCookie(cookie);
-
         return user;
     }
 }

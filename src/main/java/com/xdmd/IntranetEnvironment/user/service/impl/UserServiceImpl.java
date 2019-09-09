@@ -81,7 +81,8 @@ public class UserServiceImpl implements UserService {
 
         //把token存放到cookie中
         Cookie cookie = new Cookie("IntranecToken", token);
-        cookie.setMaxAge(60*30);//三十分钟
+        //cookie.setMaxAge(60*30);//三十分钟
+        cookie.setMaxAge(60*60*24);//三十分钟
         cookie.setPath("/");
         response.addCookie(cookie);
 

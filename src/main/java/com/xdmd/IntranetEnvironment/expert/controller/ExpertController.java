@@ -5,11 +5,6 @@ import com.xdmd.IntranetEnvironment.company.Pojo.UserInformation;
 import com.xdmd.IntranetEnvironment.expert.pojo.ExpertInformation;
 import com.xdmd.IntranetEnvironment.expert.service.ExpertService;
 import com.xdmd.IntranetEnvironment.subjectAcceptance.controller.AcceptStateController;
-import com.xdmd.IntranetEnvironment.subjectAcceptance.exception.InsertSqlException;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -113,7 +108,7 @@ public class ExpertController {
     //修改专家的启用或者停用状态
     @PostMapping("changeState")
     @ResponseBody
-    public ResultMap changeState(@CookieValue("token") String token, HttpServletResponse response,
+    public ResultMap changeState(@CookieValue("IntranecToken") String token, HttpServletResponse response,
                                  @RequestParam("id") Integer id,         //专家的id
                                  @RequestParam("type") Boolean type){    //类型  true 启用  false 停用
         if(StringUtils.isEmpty(token)){
