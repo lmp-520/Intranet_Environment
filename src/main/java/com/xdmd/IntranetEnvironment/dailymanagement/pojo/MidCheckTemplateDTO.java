@@ -207,7 +207,7 @@ public class MidCheckTemplateDTO {
     private String bearContaactPhone;
 
     @ApiModelProperty("中期检查附件")
-    private Integer midInspectionAnnex;
+    private Integer midCheckAnnexId;
 
     public MidCheckTemplateDTO() {
 

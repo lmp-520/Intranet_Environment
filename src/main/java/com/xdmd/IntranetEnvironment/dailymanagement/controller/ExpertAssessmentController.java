@@ -5,13 +5,10 @@ import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.dailymanagement.pojo.ExpertAssessmentDTO;
 import com.xdmd.IntranetEnvironment.dailymanagement.service.ExpertAssessmentService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author: Kong
@@ -32,8 +29,8 @@ public class ExpertAssessmentController {
      * @return
      */
     @ApiOperation(value = "新增专家评估【外网】")
-    @PostMapping("insertEA")
-    ResultMap insert(@Param("expertAssessment") ExpertAssessmentDTO expertAssessment){
+    @PostMapping("insertExpertAssessment")
+    ResultMap insert(@RequestBody ExpertAssessmentDTO expertAssessment){
         return resultMap=expertAssessmentService.insert(expertAssessment);
     }
 
@@ -42,27 +39,28 @@ public class ExpertAssessmentController {
      * @param id
      * @return
      */
-    @ApiOperation(value = "根據主鍵id查詢【内网】")
+    @ApiOperation(value = "根據id查詢专专家评估主要信息【内网】")
     @GetMapping("getEAByid")
-    ResultMap getEAByid(@Param("id") int id){
+    @ApiImplicitParam(name = "id",value = "专家表id")
+    ResultMap getExpertAssessmentByid(int id){
         return resultMap=expertAssessmentService.getEAByid(id);
     }
 
     /**
-     * 查詢全部
+     * 查詢全部【用不到】
      * @return
      */
-    @ApiOperation(value = "查詢全部专家评估信息【内网】")
-    @GetMapping("getAllEA")
+    @ApiOperation(value = "查詢全部专家评估主要信息【内网】")
+    @GetMapping("getAllExpertAssessment")
     ResultMap getAllEA(int pageNum,int pageSize){
         return resultMap=expertAssessmentService.getAllEA(pageNum,pageSize);
     }
 
     /**
-     * 查詢全部评估内容
+     * 查询全部单选的专家评估内容
      * @return
      */
-    @ApiOperation(value = "查詢全部评估内容【内网】")
+    @ApiOperation(value = "查询全部单选的专家评估内容【内网】")
     @GetMapping("getAllEvaluationContent")
     public ResultMap getAllEvaluationContent(){
         return resultMap=expertAssessmentService.getAllEvaluationContent();

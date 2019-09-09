@@ -6,8 +6,8 @@ import com.xdmd.IntranetEnvironment.dailymanagement.pojo.MidCheckRecordDTO;
 import com.xdmd.IntranetEnvironment.dailymanagement.pojo.MidCheckTemplateDTO;
 import com.xdmd.IntranetEnvironment.dailymanagement.service.MidCheckService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,7 +46,8 @@ public class MidCheckController {
      */
     @ApiOperation(value = "根据中期检查表id查询详情【内网】")
     @GetMapping ("getAllMidCheckTemplate")
-    public ResultMap getAllMidCheckTemplate(@ApiParam("中期检查表id") int midchecktemplateid){
+    @ApiImplicitParam(name = "midchecktemplateid",value = "中期检查表id")
+    public ResultMap getAllMidCheckTemplate(int midchecktemplateid){
         return  resultMap= midCheckService.getAllMidCheckTemplate(midchecktemplateid);
     }
 

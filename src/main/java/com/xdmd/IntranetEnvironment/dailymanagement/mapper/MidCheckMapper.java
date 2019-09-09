@@ -86,7 +86,7 @@ public interface MidCheckMapper {
             "#{recommendationsProblemsSolutions},\n" +
             "#{bearContaacter},\n" +
             "#{bearContaactPhone},\n" +
-            "#{midInspectionAnnex})")
+            "#{midCheckAnnexId})")
     int insertMidCheckTemplate(MidCheckTemplateDTO midCheckTemplateDTO);
 
 
@@ -110,7 +110,7 @@ public interface MidCheckMapper {
             "DEFAULT,\n" +
             "#{midCheckName},\n" +
             "now(),\n" +
-            "DEFAULT)")
+            "DEFAULT,DEFAULT)")
     int insertMidCheckRecord(MidCheckRecordDTO midCheckRecordDTO);
 
 
