@@ -3,6 +3,7 @@ package com.xdmd.IntranetEnvironment.contractmanage.service;
 import com.xdmd.IntranetEnvironment.common.FileUploadException;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.contractmanage.pojo.ContractManageDTO;
+import com.xdmd.IntranetEnvironment.contractmanage.pojo.TotalContract;
 import com.xdmd.IntranetEnvironment.subjectmanagement.exception.UpdateSqlException;
 import com.xdmd.IntranetEnvironment.subjectmanagement.exception.UpdateStatusException;
 import org.apache.ibatis.annotations.Param;
@@ -11,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author: Kong
@@ -95,20 +95,20 @@ public interface ContractManageService {
      * @param ids
      * @return
      */
-    int updateContractByIds(int mid, List<Long> ids);
+    ResultMap updateContractByIds(int mid, List<Long> ids);
 
     /**
      * [查詢] 根据中期检查记录id查詢相应合同主表
      * @return
      */
-    List<Map> getInfoByMidRecord(@Param("mId") int mId);
+    ResultMap getInfoByMidRecord(@Param("mid") int mid,int pageNum,int pageSize);
 
     /**
      * [查詢] 根据单位id & 中检记录id查詢本单位的课题合同
      * @param Uid
      * @return
      */
-    List<Map> getContractByUid(@Param("Uid") int Uid, @Param("Mid") int Mid);
+    ResultMap getContractByUid(int Uid, int Mid, int pageNum, int pageSize);
 
     /**
      * 根据合同id更新相应的附件id【外网上传】
@@ -168,7 +168,7 @@ public interface ContractManageService {
      * @param contractManageDTO
      * @return
      */
-    ResultMap updateContractStatusByReturnCommit(String token, HttpServletResponse response, ContractManageDTO contractManageDTO, String oldcontractAnnexUrl, MultipartFile contractAnnex) throws UpdateSqlException, UpdateStatusException, IOException, FileUploadException;
+//    ResultMap updateContractStatusByReturnCommit(String token, HttpServletResponse response, ContractManageDTO contractManageDTO, String oldcontractAnnexUrl, MultipartFile contractAnnex) throws UpdateSqlException, UpdateStatusException, IOException, FileUploadException;
 
     /**
      * 展示所有通过单位管理员审批的 【外网】
@@ -267,5 +267,16 @@ public interface ContractManageService {
      * @return
      */
     ResultMap insertContractidAndUnitid(int unitId, int contractId);
+
+    /**
+     * 不通过被退回时重新提交[修改]
+     * @param token
+     * @param response
+     * @param totalContract
+     * @param oldcontractAnnexUrl
+     * @param contractAnnex
+     * @return
+     */
+    ResultMap updateContractStatusByReturnCommit(String token, HttpServletResponse response, TotalContract totalContract, String oldcontractAnnexUrl, MultipartFile contractAnnex) throws UpdateSqlException, UpdateStatusException, IOException, FileUploadException;
 }
 

@@ -25,7 +25,6 @@ public interface MajorMattersFilingMapper {
             "subject_name,\n" +
             "commitment_unit,\n" +
             "unit_head,\n" +
-            "unit_head_phone," +
             "project_no,\n" +
             "adjust_type_id,\n" +
             "adjustment_matters_id,\n" +
@@ -34,7 +33,6 @@ public interface MajorMattersFilingMapper {
             "#{subjectName},\n" +
             "#{commitmentUnit},\n" +
             "#{unitHead},\n" +
-            "#{unitHeadPhone}," +
             "#{projectNo},\n" +
             "#{adjustTypeId},\n" +
             "#{adjustmentMattersId},\n" +

@@ -41,5 +41,5 @@ public interface ContentIndicatorsMapper {
      * @return
      */
     @Delete("DELETE from content_indicators where contract_id=#{contractId}")
-    int deleteAllIndicatorInfo(int contractId);
+    int deleteAllIndicatorInfo(@Param("contractId") int contractId);
 }

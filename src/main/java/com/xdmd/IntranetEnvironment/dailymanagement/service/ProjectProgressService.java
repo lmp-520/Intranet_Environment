@@ -16,7 +16,7 @@ public interface ProjectProgressService {
      * @author Kong
      * @date 2019/08/14
      **/
-    ResultMap insert(ProjectProgressDTO progressDTO);
+    ResultMap insert(String token, HttpServletResponse response, ProjectProgressDTO progressDTO);
 
     /**
      * [查詢] 根據主鍵 id 查詢
@@ -25,14 +25,27 @@ public interface ProjectProgressService {
      **/
     ResultMap getInfoById(int id);
 
+
     /**
-     * [查詢] 根據参数查詢
+     * 根据单位id查询课题进展
      * @param subjectName
      * @param bearerUnit
      * @param progress
      * @return
      */
-    ResultMap getInfoByParam(String subjectName, String bearerUnit, Integer progress,int pageNum,int pageSize);
+    ResultMap getProgressInfoByUid(String token, HttpServletResponse response, String subjectName, String bearerUnit, Integer progress, int pageNum, int pageSize);
+
+    /**
+     * [查詢] 分页筛选查询课题进展
+     *
+     * @param token
+     * @param response
+     * @param subjectName
+     * @param bearerUnit
+     * @param progress
+     * @return
+     */
+    ResultMap getInfoByParam(String token, HttpServletResponse response, String subjectName, String bearerUnit, Integer progress, int pageNum, int pageSize);
 
 
     /**
@@ -106,13 +119,23 @@ public interface ProjectProgressService {
 
     /**
      * 课题进展附件上传
+     *
+     * @param pid
      * @param openReportAnnex     开题报告附件
      * @param expertSuggestAnnex 专家意见附件
      * @param subjectProgressAnnex 课题进展附件
      * @param fundProgressAnnex   进度经费使用情况附件
      * @return
      */
-    ResultMap ProgressMultiUpload(String token, HttpServletResponse response, MultipartFile openReportAnnex, MultipartFile expertSuggestAnnex, MultipartFile subjectProgressAnnex, MultipartFile fundProgressAnnex) throws FileUploadException;
+    ResultMap ProgressMultiUpload(String token, HttpServletResponse response, int pid, MultipartFile openReportAnnex, MultipartFile expertSuggestAnnex, MultipartFile subjectProgressAnnex, MultipartFile fundProgressAnnex) throws FileUploadException;
 
 
+
+    /**
+     * 单位关联课题进度主表
+     * @param uid
+     * @param pid
+     * @return
+     */
+    ResultMap insertPidAndUid(int uid, int pid);
 }

@@ -443,7 +443,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
         StringBuilder pinjiefileName = new StringBuilder(nowtime).append(file.getOriginalFilename());
         String fileName = pinjiefileName.toString();
 
-        //获取招标课题名稱t
+        //获取招标课题名稱
         //Object ketiName = openTenderMapper.getTenderById(oid).get("subjectName");
         //获取文件上传绝对路径
         String path = "D:/xdmd/environment/" + unitName + "/" + fileType + "/";

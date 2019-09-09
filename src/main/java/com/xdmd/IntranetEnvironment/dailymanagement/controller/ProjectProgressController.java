@@ -30,52 +30,87 @@ import java.util.List;
 @RequestMapping("/environment/progress")
 public class ProjectProgressController {
     private static final Logger log = LoggerFactory.getLogger(ProjectProgressController.class);
+    ResultMap resultMap=new ResultMap();
     @Autowired
     ProjectProgressService projectProgressService;
     @Autowired
     UploadFileMapper uploadFileMapper;
-    ResultMap resultMap=new ResultMap();
+
 
     /**
      * [新增] 课题进展主体
      * @param progressDTO
      * @return
      */
-    @ApiOperation(value = "新增课题进展主体")
+    @ApiOperation(value = "新增课题进展主体【外网】")
     @PostMapping("insertProgress")
-    public ResultMap insert(@RequestBody ProjectProgressDTO progressDTO) {
-       return resultMap=projectProgressService.insert(progressDTO);
+    public ResultMap insert(@CookieValue(value = "token", required = false) String token, HttpServletResponse response,
+            @RequestBody ProjectProgressDTO progressDTO) {
+
+        if (StringUtils.isEmpty(token)) {
+            return resultMap.fail().message("请先登录");
+        }
+       return resultMap=projectProgressService.insert(token,response,progressDTO);
     }
 
     /**
-     *  [查詢] 根據id查詢课题进展主体
+     *  [查詢] 根据id查詢课题进展主体详情
      * @param id
      * @return
      */
-    @ApiOperation(value = "根據id查詢课题进展主体")
+    @ApiOperation(value = "根据id查詢课题进展主体【内外网】")
     @GetMapping ("getInfoById")
-    public ResultMap getInfoById(int id) {
+    public ResultMap getInfoById(Integer id) {
         return resultMap=projectProgressService.getInfoById(id);
     }
 
+
     /**
-     * [查詢] 根據参数查詢
+     * 根据单位id查詢课题进展主体
+     * @param token
+     * @param response
+     * @param subjectName
+     * @param bearerUnit
+     * @param progress
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @ApiOperation(value = "根据单位id查詢课题进展主体【外网】")
+    @GetMapping(value = "getProgressInfoByUid")
+    public ResultMap getProgressInfoByUid(@CookieValue(value = "token", required = false) String token, HttpServletResponse response,
+            String subjectName, String bearerUnit, Integer progress,int pageNum,int pageSize){
+        if (StringUtils.isEmpty(token)) {
+            return resultMap.fail().message("请先登录");
+        }
+        resultMap = projectProgressService.getProgressInfoByUid(token, response,subjectName,bearerUnit,progress,pageNum,pageSize);
+        return resultMap;
+    }
+
+
+    /**
+     * [查詢] 分页筛选查詢
      * @param subjectName
      * @param bearerUnit
      * @param progress
      * @return
      */
-    @ApiOperation(value = "根據参数查詢课题进展主体")
+    @ApiOperation(value = "分页筛选查詢进展主体【内网】")
     @ApiImplicitParams({
-            @ApiImplicitParam(name="subjectName",value = "课题名称",paramType = "string"),
-            @ApiImplicitParam(name="bearerUnit",value = "承担单位",paramType = "string"),
-            @ApiImplicitParam(name="progress",value = "课题进展类型【45-超前 46-正常 47-滞后】",paramType = "int"),
+            @ApiImplicitParam(name="subjectName",value = "课题名称"),
+            @ApiImplicitParam(name="bearerUnit",value = "承担单位"),
+            @ApiImplicitParam(name="progress",value = "课题进展类型【45-超前 46-正常 47-滞后】"),
             @ApiImplicitParam(name="pageNum",value = "当前页数",required = true),
             @ApiImplicitParam(name="pageSize",value = "每页显示多少条数",required = true)
     })
     @GetMapping("getInfoByParam")
-    public ResultMap getInfoByParam(String subjectName,String bearerUnit,Integer progress,int pageNum,int pageSize) {
-        return  resultMap=projectProgressService.getInfoByParam(subjectName,bearerUnit,progress,pageNum,pageSize);
+    public ResultMap getInfoByParam(@CookieValue(value = "IntranecToken", required = false) String token, HttpServletResponse response,
+            String subjectName,String bearerUnit,Integer progress,int pageNum,int pageSize) {
+
+        if (StringUtils.isEmpty(token)) {
+            return resultMap.fail().message("请先登录");
+        }
+        return  resultMap=projectProgressService.getInfoByParam(token,response,subjectName,bearerUnit,progress,pageNum,pageSize);
     }
 
 
@@ -84,20 +119,20 @@ public class ProjectProgressController {
      * @param contractResearchDevelopmentTasks
      * @return
      */
-    @ApiOperation(value = "新增合同要求研发任务【课题进展第一部分】")
+    @ApiOperation(value = "新增合同要求研发任务【课题进展第一部分  -- 外网】")
     @PostMapping("insertCRDT")
     public ResultMap insertCRDT(@RequestBody List<ContractResearchDevelopmentTasksDTO> contractResearchDevelopmentTasks){
         return  resultMap=projectProgressService.insertCRDT(contractResearchDevelopmentTasks);
     }
 
     /**
-     * [查詢] 根據课题进展id查詢【课题进展第一部分】
+     * [查詢] 根据课题进展id查詢【课题进展第一部分】
      * @param Pid
      * @return
      */
-    @ApiOperation(value = "根據id查詢【课题进展第一部分】")
+    @ApiOperation(value = "根据id查詢【课题进展第一部分    -- 外网】")
     @GetMapping ("getCRDTByPid")
-    public ResultMap getCRDTByPid(int Pid){
+    public ResultMap getCRDTByPid(Integer Pid){
         return  resultMap=projectProgressService.getCRDTByPid(Pid);
     }
 
@@ -107,7 +142,7 @@ public class ProjectProgressController {
      * @param currentProgress
      * @return
      */
-    @ApiOperation(value = "新增目前进展情况【课题进展第二部分】")
+    @ApiOperation(value = "新增目前进展情况【课题进展第二部分    -- 外网】")
     @PostMapping("insertCP")
     public ResultMap insertCP(@RequestBody List<CurrentProgressDTO> currentProgress){
         return  resultMap=projectProgressService.insertCP(currentProgress);
@@ -115,35 +150,34 @@ public class ProjectProgressController {
     }
 
     /**
-     * [查詢] 根據课题进展id查詢【课题进展第二部分】
+     * [查詢] 根据课题进展id查詢【课题进展第二部分     -- 外网】
      * @param Pid
      * @return
      */
-    @ApiOperation(value = "根據id查詢【课题进展第二部分】")
+    @ApiOperation(value = "根据id查詢【课题进展第二部分      -- 外网】")
     @GetMapping ("getCPByPid")
-    public ResultMap getCPByPid(int Pid){
+    public ResultMap getCPByPid(Integer Pid){
         return  resultMap=projectProgressService.getCPByPid(Pid);
-
     }
     /**
      * [新增] 课题实施中存在的主要问题【课题进展第四部分】
      * @param projectMainProblemsDTO
      * @return
      */
-    @ApiOperation(value = "新增课题实施中存在的主要问题【课题进展第四部分】")
+    @ApiOperation(value = "新增课题实施中存在的主要问题【课题进展第四部分      -- 外网】")
     @PostMapping("insertPMP")
     public ResultMap insertPMP(@RequestBody List<ProjectMainProblemsDTO> projectMainProblemsDTO){
         return  resultMap=projectProgressService.insertPMP(projectMainProblemsDTO);
     }
 
     /**
-     * [查詢] 根據课题进展id查詢
+     * [查詢] 根据课题进展id查詢
      * @param Pid
      * @return
      */
-    @ApiOperation(value = "根據id查詢【课题进展第四部分】")
+    @ApiOperation(value = "根据id查詢【课题进展第四部分      -- 外网】")
     @GetMapping ("getPMPByPid")
-    public ResultMap getPMPByPid(int Pid){
+    public ResultMap getPMPByPid(Integer Pid){
         return  resultMap=projectProgressService.getPMPByPid(Pid);
     }
 
@@ -152,20 +186,20 @@ public class ProjectProgressController {
      * @param nextWorkPlanDTO
      * @return
      */
-    @ApiOperation(value = "新增下一步工作计划【课题进展第五部分】")
+    @ApiOperation(value = "新增下一步工作计划【课题进展第五部分       -- 外网】")
     @PostMapping("insertNWP")
     public ResultMap insertNWP(@RequestBody List<NextWorkPlanDTO> nextWorkPlanDTO){
         return  resultMap=projectProgressService.insertNWP(nextWorkPlanDTO);
     }
 
     /**
-     * [查詢] 根據课题进展id查詢【课题进展第五部分】
+     * [查詢] 根据课题进展id查詢【课题进展第五部分】
      * @param Pid
      * @return
      */
-    @ApiOperation(value = "根據id查詢【课题进展第五部分】")
+    @ApiOperation(value = "根据id查詢【课题进展第五部分      -- 外网】")
     @GetMapping ("getNWPByPid")
-    public ResultMap getNWPByPid(int Pid){
+    public ResultMap getNWPByPid(Integer Pid){
         return  resultMap=projectProgressService.getNWPByPid(Pid);
     }
 
@@ -177,9 +211,9 @@ public class ProjectProgressController {
      * @param expertSuggestAnnexId
      * @param pid
      * @return
-     */
+
     @PostMapping ("updateSubjectProgressByPid")
-    @ApiOperation(value = "根据课题进展主表id更新上传附件id")
+    @ApiOperation(value = "根据课题进展主表id更新上传附件id       -- 外网")
     @ApiImplicitParams({
         @ApiImplicitParam(name = "openReportAnnexId",value = "开题报告附件id",dataType ="int"),
         @ApiImplicitParam(name = "subjectProgressAnnexId",value = "课题进展情况附件id",dataType ="int"),
@@ -190,7 +224,7 @@ public class ProjectProgressController {
     })
     public ResultMap updateSubjectProgressByPid(int openReportAnnexId, int subjectProgressAnnexId, int fundProgressAnnexId, int expertSuggestAnnexId, int pid){
         return  resultMap=projectProgressService.updateSubjectProgressByPid(openReportAnnexId,subjectProgressAnnexId,fundProgressAnnexId,expertSuggestAnnexId,pid);
-    }
+    }  */
 
 
     /**
@@ -204,23 +238,23 @@ public class ProjectProgressController {
     @PostMapping(value = "ProgressMultiUpload", headers = "content-type=multipart/form-data")
     @ApiOperation(value = "课题进展附件上传【外网】")
     @ApiImplicitParams({
+            @ApiImplicitParam(name = "pid", value = "课题进展主体id",required = true),
             @ApiImplicitParam(name = "openReportAnnex", value = "开题报告附件", dataType = "file", paramType = "form", allowMultiple = true),
             @ApiImplicitParam(name = "expertSuggestAnnex", value = "专家意见附件", dataType = "file", paramType = "form", allowMultiple = true),
             @ApiImplicitParam(name = "subjectProgressAnnex", value = "课题进展附件", dataType = "file", paramType = "form", allowMultiple = true),
             @ApiImplicitParam(name = "fundProgressAnnex", value = "进度经费使用情况附件", dataType = "file", paramType = "form", allowMultiple = true),
 
     })
-    public ResultMap ProgressMultiUpload(//@CookieValue(value = "IntranecToken", required = false) String token, HttpServletResponse response,
+    public ResultMap ProgressMultiUpload(@CookieValue(value = "token", required = false) String token, HttpServletResponse response,
+                                      int pid,
                                       MultipartFile openReportAnnex,
                                       MultipartFile expertSuggestAnnex,
                                       MultipartFile subjectProgressAnnex,
                                       MultipartFile fundProgressAnnex) throws FileUploadException {
-        String token = "aaa";
-        HttpServletResponse response = null;
         if (StringUtils.isEmpty(token)) {
             return resultMap.fail().message("请先登录");
         }
-        resultMap = projectProgressService.ProgressMultiUpload(token, response,openReportAnnex, expertSuggestAnnex, subjectProgressAnnex, fundProgressAnnex);
+        resultMap = projectProgressService.ProgressMultiUpload(token, response,pid,openReportAnnex, expertSuggestAnnex, subjectProgressAnnex, fundProgressAnnex);
         return resultMap;
     }
 

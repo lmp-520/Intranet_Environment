@@ -176,18 +176,17 @@ public interface ContractManageMapper {
      * @param
      * @return
      */
-    @Select(value = "select id subject_name,contract_start_time,subject_objectives_research from contract_manage where mid_record_id=1")
-    List<Map> getInfoByMidRecord(@Param("mId") int mId);
-
-
+    @Select(value = "select id subject_name,contract_start_time,subject_objectives_research from contract_manage where mid_record_id=#{mid}")
+    List<Map> getInfoByMidRecord(@Param("mid") int mid);
 
 
     /**
      * [查詢] 根据单位id && 中检记录id查詢本单位的课题合同【外网中检】
-     * @param Uid
+     * @param uid
+     * @param mid
      * @return
      */
-    @Select(value = "SELECT\n" +
+    @Select("SELECT\n" +
             "cm.id,\n" +
             "uc.contract_id,\n" +
             "cm.subject_name,\n" +
@@ -195,24 +194,27 @@ public interface ContractManageMapper {
             "cm.subject_objectives_research \n" +
             "FROM\n" +
             "contract_manage cm,unit_contract uc\n" +
-            "where cm.id=uc.contract_id and uc.unit_id=#{Uid} and cm.id in (select id from contract_manage where mid_record_id=#{Mid})")
-    List<Map> getContractByUid(@Param("Uid") int Uid, @Param("Mid") int Mid);
+            "where cm.id=uc.contract_id and uc.unit_id=#{uid} and cm.id in (select id from contract_manage where mid_record_id=#{mid})")
+    List<Map> getContractByUid(@Param("uid") int uid, @Param("mid") int mid);
 
     /**
      * 根据勾选的合同主表id修改相应的中期检查记录【内网中检】
      * @param ids
      * @return
      */
-    @Update(value ="<script>" +
+    @Update("<script>" +
             "UPDATE contract_manage \n" +
             "SET mid_record_id = #{mid} \n" +
             "WHERE\t" +
-            "id\tIN" +
-            "<foreach\tcollection='ids'\titem='cId'\topen='(' separator=',' close=')'>" +
-            "#{cId}\n" +
+            "id IN" +
+            "<foreach\tcollection='ids'\titem='id'\topen='(' separator=',' close=')'>" +
+            "#{id}\n" +
             "</foreach>\n" +
             "</script>")
-    @Results(value = {@Result(column = "id", property = "id")})
+    @Results(value = {
+            @Result(column = "id", property = "id"),
+            @Result(column = "mid_record_id", property = "mid")
+    })
     int updateContractByIds(@Param("mid") int mid, @Param("ids") List<Long> ids);
 
     /**
@@ -522,7 +524,7 @@ public interface ContractManageMapper {
             "WHERE\n" +
             "approval_status =3\t\n" +
             "ORDER BY id DESC")
-    List<ContractManageDTO> showAllNoPassReviewContractByFaGui(@Param("subjectCategory") String subjectCategory,@Param("subjectName")String subjectName,
+    List<ContractManageDTO>showAllNoPassReviewContractByFaGui(@Param("subjectCategory") String subjectCategory,@Param("subjectName")String subjectName,
                                                                @Param("subjectContact")String subjectContact,@Param("subjectContactPhone")String subjectContactPhone,@Param("commitmentUnit")String commitmentUnit,
                                                                @Param("subjectSupervisorDepartment")String subjectSupervisorDepartment);
 
@@ -547,11 +549,11 @@ public interface ContractManageMapper {
 
 
     /**
-     * 单位关联合同主表
+     * 单位关联课题进展主表
      * @param unitId
-     * @param contractId
+     * @param subjectProgressId
      * @return
      */
-    @Insert(value = "INSERT INTO unit_contract (unit_id,contract_id)VALUES(#{unitId},#{contractId})")
-    int insertCidAndUid(@Param("unitId") int unitId, @Param("contractId") int contractId);
+    @Insert(value = "INSERT INTO unit_project_progress (unit_id,subject_progress_id)VALUES(#{unitId},#{subjectProgressId})")
+    int insertCidAndUid(@Param("unitId") int unitId, @Param("subjectProgressId") int subjectProgressId);
 }

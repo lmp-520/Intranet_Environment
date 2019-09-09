@@ -1,11 +1,12 @@
 package com.xdmd.IntranetEnvironment.dailymanagement.mapper;
 
 
-import com.xdmd.IntranetEnvironment.dailymanagement.pojo.MidCheckDTO;
 import com.xdmd.IntranetEnvironment.dailymanagement.pojo.MidCheckRecordDTO;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Update;
+import com.xdmd.IntranetEnvironment.dailymanagement.pojo.MidCheckTemplateDTO;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * @author: Kong
@@ -19,7 +20,8 @@ public interface MidCheckMapper {
      * @author Kong
      * @date 2019/08/13
      **/
-    @Insert(value = "insert into mid_check VALUES(" +
+    @Options(useGeneratedKeys = true,keyColumn = "id",keyProperty = "id")
+    @Insert(value = "insert into mid_check_template VALUES(" +
             "DEFAULT,\n" +
             "#{subjectNo},\n" +
             "#{subjectName},\n" +
@@ -85,18 +87,29 @@ public interface MidCheckMapper {
             "#{bearContaacter},\n" +
             "#{bearContaactPhone},\n" +
             "#{midInspectionAnnex})")
-    int insertMidCheck(MidCheckDTO midCheckDTO);
+    int insertMidCheckTemplate(MidCheckTemplateDTO midCheckTemplateDTO);
+
+
+    /**
+     * 根据中期检查表id查询详情
+     * @param id
+     * @return
+     */
+    @Select("select * from mid_check_template where id=#{id}")
+    MidCheckTemplateDTO getAllMidCheckTemplate(@Param("id") int id);
+
 
     /**
      * [新增] 中期检察记录
      * @author Kong
      * @date 2019/08/14
      **/
+    @Options(useGeneratedKeys = true,keyColumn = "id",keyProperty = "id")
     @Insert(value = "INSERT INTO mid_check_record\n" +
             "VALUES(" +
             "DEFAULT,\n" +
             "#{midCheckName},\n" +
-            "#{midCheckInitiateTime},\n" +
+            "now(),\n" +
             "DEFAULT)")
     int insertMidCheckRecord(MidCheckRecordDTO midCheckRecordDTO);
 
@@ -107,6 +120,13 @@ public interface MidCheckMapper {
      * @date 2019/08/14
      **/
     @Update(value = "UPDATE mid_check_record set mid_check_state=1 where mid_check_state=0")
-    int updateMidCheck();
+    int updateMidCheckRecord();
 
+
+    /**
+     * [查询] 中期检察记录状态
+     * @return
+     */
+    @Select("select * from mid_check_record")
+    List<MidCheckRecordDTO> getMidCheckRecord();
 }

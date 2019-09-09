@@ -13,7 +13,7 @@ import java.math.BigDecimal;
  */
 @Data
 @ApiModel(description = "中期检查模板表")
-public class MidCheckDTO {
+public class MidCheckTemplateDTO {
 
     @ApiModelProperty("主键【注:系统默认生成,新增时不用填】")
     private Integer id;
@@ -209,7 +209,7 @@ public class MidCheckDTO {
     @ApiModelProperty("中期检查附件")
     private Integer midInspectionAnnex;
 
-    public MidCheckDTO() {
+    public MidCheckTemplateDTO() {
 
     }
 

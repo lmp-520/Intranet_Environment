@@ -40,6 +40,6 @@ public interface KeyResearchDevelopersMapper {
      * @param contractId
      * @return
      */
-    @Delete("DELETE from key_research_developers where contract_id==#{contractId}")
-    int deleteDeveloperInfo(int contractId);
+    @Delete("DELETE from key_research_developers where contract_id=#{contractId}")
+    int deleteDeveloperInfo(@Param("contractId") int contractId);
 }
