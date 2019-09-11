@@ -69,7 +69,7 @@ public interface ContractManageMapper {
             "#{subjectSigningDescription},\n" +
             "#{subjectObjectivesResearch},\n" +
             "#{subjectAcceptanceAssessment},\n" +
-            "DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT)")
+            "DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT)")
     int insert(ContractManageDTO contractManageDTO);
 
     /**
@@ -119,6 +119,7 @@ public interface ContractManageMapper {
             "<if test ='null != subjectSupervisorDepartment'>\n" +
             "AND cm.subject_supervisor_department like CONCAT('%',#{subjectSupervisorDepartment},'%')\n" +
             "</if></where>" +
+            "group by cm.id\t" +
             "order by cm.id desc" +
             "</script>")
     List<Map> getManageInfoByUid(@Param("uid") int uid,@Param("subjectCategory") String subjectCategory,@Param("subjectName")String subjectName,
@@ -564,4 +565,7 @@ public interface ContractManageMapper {
             "WHERE\n" +
             "cm.contract_annex_id=uf.id and cm.id=#{cid}")
     List<Map> getContractAnnexInfo(@Param("cid") int cid);
+
+
+    int updateContractMidCheckStateOne();
 }

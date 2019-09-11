@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: Kong
@@ -107,6 +108,20 @@ public interface MidCheckMapper {
     int updateMidCheckAnnexIdByMid(int midInspectionAnnex, int mid);
 
 
+    /**
+     * 更新合同主表中关联的中期检查表id和专家评估表id
+     * @param midCheckTemplateId
+     * @param expertAssessmentTableId
+     * @param cid
+     * @return
+     */
+    @Update("UPDATE contract_manage \n" +
+            "SET\t" +
+            "mid_check_template_id = #{midCheckTemplateId},\n" +
+            "expert_assessment_table_id=#{expertAssessmentTableId}\n" +
+            "where id=#{cid}")
+    int updateContractMidCheckUpLoadFileIdByCid(int midCheckTemplateId,int expertAssessmentTableId, int cid);
+
 
     /**
      * [新增] 中期检察记录
@@ -123,13 +138,37 @@ public interface MidCheckMapper {
     int insertMidCheckRecord(MidCheckRecordDTO midCheckRecordDTO);
 
 
+    ////////////////更新合同的中期检查审核状态
+
     /**
-     * [更新] 中期检察记录状态
+     * 更新合同中期检查状态【当外网提交完所有材料但内网未审核】
      * @author Kong
      * @date 2019/08/14
      **/
-    @Update(value = "UPDATE mid_check_record set mid_check_state=1 where mid_check_state=0")
+    @Update(value = "UPDATE contract_manage set mid_record_id=1 where mid_record_id=0 ")
+    int updateContractMidCheckStateOne();
+
+
+
+    /**
+     * 更新合同中期检查状态【当外网提交完所有材料且内网已审核并提交相应材料】
+     * @author Kong
+     * @date 2019/08/14
+     **/
+    @Update(value = "UPDATE contract_manage set mid_record_id=2 where mid_record_id=1")
+    int updateContractMidCheckStateTwo();
+
+
+    /**
+     * [更新] 中期检察记录状态【中检最后一步】
+     * @author Kong
+     * @date 2019/08/14
+     **/
+    @Update(value = "UPDATE mid_check_record set mid_check_state=1 where mid_check_state=1")
     int updateMidCheckRecord();
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
     /**
@@ -150,8 +189,9 @@ public interface MidCheckMapper {
     int updateMidCheckExpertOpinionAnnexIdByCid(int midCheckExpertOpinionAnnexId, int recordId);
 
 
+
     /**
-     * 获取中期检查表附件的路径和文件名
+     * 获取中期检查专家总意见附件的路径和文件名
      * @param mid
      * @return
      */
@@ -161,16 +201,9 @@ public interface MidCheckMapper {
             "uf.upload_file_address\n" +
             "FROM\n" +
             "upload_file uf,\n" +
-            "mid_check_template mct\n" +
+            "mid_check_record mcr\n" +
             "WHERE\n" +
-            "mct.mid_inspection_annex=uf.id and mct.id=#{mid}")
-    List<UploadFile> getMidCheckFileInfo(@Param("mid") int mid);
-
-    /**
-     * 获取中期检查专家总意见附件的路径和文件名
-     * @param mid
-     * @return
-     */
+            "mcr.mid_check_expert_opinion_id=uf.id and mcr.id=#{mid}")
     List<UploadFile> getMidCheckExpertOpinionInfo(@Param("mid")int mid);
 
 
@@ -214,4 +247,88 @@ public interface MidCheckMapper {
     @Update(value = "update expert_assessment set expert_assessment_annex_id=#{expertAssessmentAnnexId} where id=#{eid}")
     int updateExpertAssessmentAnnexIdByCid(int expertAssessmentAnnexId, int eid);
 
+
+    /**
+     * 根据合同id查询关联的中期检查模板表
+     * @param cid
+     * @return
+     */
+    @Select("select mct.* \n" +
+            "from mid_check_template mct,contract_manage cm\n" +
+            "where cm.mid_check_template_id=mct.id\n" +
+            "and cm.id=#{cid}")
+    MidCheckTemplateDTO getMidCheckTemplateByCid(@Param("cid") int cid);
+
+    /**
+     * 获取中期检查表附件的路径和文件名
+     * @param mid
+     * @return
+     */
+    @Select("SELECT\n" +
+            "uf.id,\n" +
+            "uf.upload_file_name,\n" +
+            "uf.upload_file_address\n" +
+            "FROM\n" +
+            "upload_file uf,\n" +
+            "mid_check_template mct\n" +
+            "WHERE\n" +
+            "mct.mid_inspection_annex=uf.id and mct.id=#{mid}")
+    List<Map> getMidCheckFileInfo(@Param("mid") int mid);
+
+
+
+
+    /**
+     * 根据合同id查询关联的专家评估表
+     * @param cid
+     * @return
+     */
+    @Select("select ea.* \n" +
+            "from expert_assessment ea,contract_manage cm\n" +
+            "where cm.expert_assessment_table_id=ea.id\n" +
+            "and cm.id=#{cid}")
+    ExpertAssessmentDTO getExpertAssessmentByCid(@Param("cid") int cid);
+
+    /**
+     * 获取专家评估附件的路径和文件名
+     * @param eid
+     * @return
+     */
+    @Select("SELECT\n" +
+            "uf.id,\n" +
+            "uf.upload_file_name,\n" +
+            "uf.upload_file_address\n" +
+            "FROM\n" +
+            "upload_file uf,\n" +
+            "expert_assessment ea\n" +
+            "WHERE\n" +
+            "ea.expert_assessment_annex_id=uf.id and ea.id=#{eid}")
+    List<Map> getEAFileInfo(int eid);
+
+
+    /**
+     * 获取未知类型附件的路径和文件名
+     * @param cid
+     * @return
+     */
+    @Select("SELECT\n" +
+            "uf.id,\n" +
+            "uf.upload_file_name,\n" +
+            "uf.upload_file_address\n" +
+            "FROM\n" +
+            "upload_file uf,\n" +
+            "contract_manage cm\n" +
+            "WHERE\n" +
+            "cm.contract_weizhi_annex_id=uf.id and cm.id=#{cid}")
+    List<Map> getWeizhiFileInfo(int cid);
+
+
+    /**
+     * 根据合同ID更新关联的未知类型表
+     * @param contractWeizhiAnnexId
+     * @param cid
+     * @return
+     */
+    @Update(value = "update contract_manage set contract_weizhi_annex_id=#{contractWeizhiAnnexId} where id=#{cid}")
+    int updateContractWeiZhiAnnexIdByCid(int contractWeizhiAnnexId, int cid);
 }

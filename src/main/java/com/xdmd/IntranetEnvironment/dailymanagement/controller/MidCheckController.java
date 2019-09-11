@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * @author: Kong
@@ -99,15 +100,6 @@ public class MidCheckController {
         return  resultMap= midCheckService.insertMidCheckRecord(midCheckRecordDTO);
     }
 
-    /**
-     *  [更新] 中期检察记录状态
-     * @return
-     */
-    @ApiOperation(value = "更新中期检查记录状态【内外网】")
-    @PostMapping("updatemidcheckrecord")
-    public ResultMap update(){
-        return  resultMap= midCheckService.updateMidCheckRecord();
-    }
 
     /**
      *  [查询] 中期检察记录状态
@@ -147,30 +139,6 @@ public class MidCheckController {
         return resultMap;
     }
 
-    /**
-     * 获取中期检查表附件的路径和文件名
-     * @param mid
-     * @return
-     */
-    @GetMapping(value = "getMidCheckFileInfo")
-    @ApiOperation(value = "根据中期检查表附件id获取文件路径和文件名")
-    @ApiImplicitParam(name = "mid",value = "中期检查表id")
-    public ResultMap getMidCheckFileInfo(int mid){
-        return resultMap=midCheckService.getMidCheckFileInfo(mid);
-    }
-
-
-    /**
-     * 获取中期检查专家总意见附件的路径和文件名
-     * @param mid
-     * @return
-     */
-    @GetMapping(value = "getMidCheckExpertOpinionInfo")
-    @ApiOperation(value = "根据专家总意见附件id获取文件路径和文件名")
-    @ApiImplicitParam(name = "mid",value = "中期检查表id")
-    public ResultMap getMidCheckExpertOpinionInfo(int mid){
-        return resultMap=midCheckService.getMidCheckExpertOpinionInfo(mid);
-    }
 
 
     /**
@@ -204,6 +172,140 @@ public class MidCheckController {
         return resultMap;
 
     };
+
+
+    /**
+     * 更新合同中期检查状态【当外网提交完所有材料但内网未审核】
+     * @author Kong
+     * @date 2019/08/14
+     **/
+    @PostMapping(value = "updateContractMidCheckStateOne")
+    @ApiOperation(value = "更新合同中期检查状态【当外网提交完所有材料但内网未审核】")
+    public ResultMap updateContractMidCheckStateOne(){
+        return resultMap=midCheckService.updateContractMidCheckStateOne();
+
+    }
+
+
+
+    /**
+     * 更新合同中期检查状态【当外网提交完所有材料且内网已审核并提交相应材料】
+     * @author Kong
+     * @date 2019/08/14
+     **/
+    @PostMapping(value = "updateContractMidCheckStateTwo")
+    @ApiOperation(value = "更新合同中期检查状态【当外网提交完所有材料且内网已审核并提交相应材料】")
+    public ResultMap updateContractMidCheckStateTwo(){
+        return resultMap=midCheckService.updateContractMidCheckStateTwo();
+    }
+
+
+    /**
+     * [更新] 中期检察记录状态【中检最后一步】
+     * @author Kong
+     * @date 2019/08/14
+     **/
+    @PostMapping(value = "updateMidCheckRecord")
+    @ApiOperation(value = "更新中期检察记录最终状态【中检最后一步】")
+    public ResultMap updateMidCheckRecord(){
+        return resultMap=midCheckService.updateMidCheckRecord();
+    }
+
+
+    /**
+     * 根据合同id查询关联的中期检查模板表
+     * @param cid
+     * @return
+     */
+    @PostMapping(value = "getMidCheckTemplateByCid")
+    @ApiOperation(value = "根据合同id查询关联的中期检查模板表【内外网】")
+    public ResultMap getMidCheckTemplateByCid(int cid){
+        return resultMap=midCheckService.getMidCheckTemplateByCid(cid);
+    }
+
+    /**
+     * 根据合同id查询关联的专家评估表
+     * @param cid
+     * @return
+     */
+    @PostMapping(value = "getExpertAssessmentByCid")
+    @ApiOperation(value = "根据合同id查询关联的专家评估表【内外网】")
+    public ResultMap getExpertAssessmentByCid(int cid){
+        return resultMap=midCheckService.getExpertAssessmentByCid(cid);
+    }
+
+    /**
+     * 获取专家评估附件的路径和文件名
+     * @param eid
+     * @return
+     */
+    @GetMapping(value = "getEAFileInfo")
+    @ApiOperation(value = "根据专家评估附件id获取的路径和文件名")
+    @ApiImplicitParam(name = "eid",value = "专家评估表id")
+    public ResultMap getEAFileInfo(int eid){
+        return resultMap=midCheckService.getEAFileInfo(eid);
+    }
+
+    /**
+     * 获取中期检查表附件的路径和文件名
+     * @param mid
+     * @return
+     */
+    @GetMapping(value = "getMidCheckFileInfo")
+    @ApiOperation(value = "根据中期检查表附件id获取文件路径和文件名")
+    @ApiImplicitParam(name = "mid",value = "中期检查表id")
+    public ResultMap getMidCheckFileInfo(int mid){
+        return resultMap=midCheckService.getMidCheckFileInfo(mid);
+    }
+
+
+    /**
+     * 获取中期检查专家总意见附件的路径和文件名
+     * @param mid
+     * @return
+     */
+    @GetMapping(value = "getMidCheckExpertOpinionInfo")
+    @ApiOperation(value = "根据专家总意见附件id获取文件路径和文件名")
+    @ApiImplicitParam(name = "mid",value = "中期检查记录表id")
+    public ResultMap getMidCheckExpertOpinionInfo(int mid){
+        return resultMap=midCheckService.getMidCheckExpertOpinionInfo(mid);
+    }
+
+
+    /**
+     *
+     * @param file
+     * @return
+     */
+    @PostMapping("contractFileUpload")
+    @ApiOperation(value = "未知类型附件上传【不确定什么类型的文件，备用】")
+    public ResultMap AnnexUpload(@CookieValue(value = "token", required = false) String token, HttpServletResponse response,
+                                 MultipartFile file, int cid) throws IOException{
+        try {
+            if (StringUtils.isEmpty(token)) {
+                return resultMap.fail().message("请先登录");
+            }
+            resultMap = midCheckService.AnnexUpload(token, response, file, cid);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resultMap;
+    }
+
+
+    /**
+     * 获取未知类型附件的路径和文件名【不确定什么类型的文件，备用】
+     * @return
+     */
+    @GetMapping(value = "getWeizhiFileInfo")
+    @ApiOperation(value = "获取未知类型附件的路径和文件名【不确定什么类型的文件，备用】")
+    @ApiImplicitParam(name = "mid",value = "中期检查表id")
+    public ResultMap getWeizhiFileInfo(int cid){
+        return resultMap=midCheckService.getWeizhiFileInfo(cid);
+    }
+
+
+
 
 
 }

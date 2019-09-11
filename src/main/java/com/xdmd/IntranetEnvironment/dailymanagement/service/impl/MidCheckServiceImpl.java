@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: Kong
@@ -116,9 +117,11 @@ public class MidCheckServiceImpl implements MidCheckService {
         try{
             //中期检查表模板
             int mctNum= midCheckMapper.insertMidCheckTemplate(midCheckTemplateDTO);
-            System.out.println(mctNum);
+
             int eaNum=midCheckMapper.insertEA(expertAssessmentDTO);
-            System.out.println(eaNum);
+            //genju
+            int updateNum=midCheckMapper.updateContractMidCheckUpLoadFileIdByCid(midCheckTemplateDTO.getId(),expertAssessmentDTO.getId(),cid);
+
             /**
              * 中期检查附件
              */
@@ -290,26 +293,6 @@ public class MidCheckServiceImpl implements MidCheckService {
     }
 
 
-    /**
-     * [更新] 中期检察记录状态
-     * @return
-     */
-    @Override
-    public ResultMap updateMidCheckRecord() {
-        try{
-            int midcheckrecord= midCheckMapper.updateMidCheckRecord();
-            if(midcheckrecord>0){
-                resultMap.success().message("更新成功");
-            }else if(midcheckrecord<0){
-                resultMap.success().message("更新失败");
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-            resultMap.success().message("系统异常");
-        }
-        return resultMap;
-    }
-
 
     /**
      * [查询] 中期检查记录状态
@@ -417,15 +400,102 @@ public class MidCheckServiceImpl implements MidCheckService {
 
     }
 
+
+
     /**
-     *
+     * 更新合同中期检查状态【当外网提交完所有材料但内网未审核】
+     * @return
+     */
+    @Override
+    public ResultMap updateContractMidCheckStateOne() {
+        try {
+            int updateNum = midCheckMapper.updateContractMidCheckStateOne();
+            if (updateNum > 0) {
+                resultMap.success().message("更新成功");
+            } else if (updateNum== 0) {
+                resultMap.fail().message("没有查到相关信息");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
+
+    /**
+     * 更新合同中期检查状态【当外网提交完所有材料且内网已审核并提交相应材料】
+     * @return
+     */
+    @Override
+    public ResultMap updateContractMidCheckStateTwo() {
+        try {
+            int updateNum = midCheckMapper.updateContractMidCheckStateTwo();
+            if (updateNum > 0) {
+                resultMap.success().message("更新成功");
+            } else if (updateNum== 0) {
+                resultMap.fail().message("没有查到相关信息");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
+
+
+    /**
+     * 根据合同id查询关联的中期检查模板表
+     * @param cid
+     * @return
+     */
+    @Override
+    public ResultMap getMidCheckTemplateByCid(int cid) {
+        try{
+            MidCheckTemplateDTO midCheckTemplateDTO= midCheckMapper.getMidCheckTemplateByCid(cid);
+            if(midCheckTemplateDTO!=null){
+                resultMap.success().message(midCheckTemplateDTO);
+            }else if(midCheckTemplateDTO==null){
+                resultMap.success().message("没有查到相关信息");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            resultMap.success().message("系统异常");
+        }
+        return resultMap;
+    }
+
+
+    /**
+     * 根据合同id查询关联专家评估表
+     * @param cid
+     * @return
+     */
+    @Override
+    public ResultMap getExpertAssessmentByCid(int cid) {
+        try{
+            ExpertAssessmentDTO expertAssessmentDTO= midCheckMapper.getExpertAssessmentByCid(cid);
+            if(expertAssessmentDTO!=null){
+                resultMap.success().message(expertAssessmentDTO);
+            }else if(expertAssessmentDTO==null){
+                resultMap.success().message("没有查到相关信息");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            resultMap.success().message("系统异常");
+        }
+        return resultMap;
+    }
+
+
+    /**
+     *获取专家中期检查模板表附件的路径和文件名
      * @param mid
      * @return
      */
     @Override
     public ResultMap getMidCheckFileInfo(int mid) {
         try {
-            List<UploadFile> fileinfo = midCheckMapper.getMidCheckFileInfo(mid);
+            List<Map> fileinfo = midCheckMapper.getMidCheckFileInfo(mid);
             if (fileinfo.size() > 0) {
                 resultMap.success().message(fileinfo);
             } else if (fileinfo.size() == 0) {
@@ -460,4 +530,148 @@ public class MidCheckServiceImpl implements MidCheckService {
         return resultMap;
     }
 
+
+    /**
+     * 获取专家评估附件的路径和文件名
+     * @param eid
+     * @return
+     */
+    @Override
+    public ResultMap getEAFileInfo(int eid) {
+        try {
+            List<Map> fileinfo = midCheckMapper.getEAFileInfo(eid);
+            if (fileinfo.size() > 0) {
+                resultMap.success().message(fileinfo);
+            } else if (fileinfo.size() == 0) {
+                resultMap.fail().message("没有查到相关信息");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
+
+
+    /**
+     * 未知类型附件上传
+     * @param file
+     * @param cid
+     * @return
+     * @throws IOException
+     */
+    @Override
+    public ResultMap AnnexUpload(String token, HttpServletResponse response, MultipartFile file, int cid) throws IOException {
+        User user = new User();
+        try {
+            user = tokenService.compare(response, token);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (UserNameNotExistentException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (ClaimsNullException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("MenuServiceImpl 中 TokenService 出现问题");
+            return resultMap.message("系统异常");
+        }
+        //当前登录者
+        //Integer uid = user.getId();
+        String username = user.getUsername();
+
+
+        //判断文件是否为空
+        if (file.isEmpty()) {
+            resultMap.fail().message("上传文件不可为空");
+        }
+        // 获取文件名拼接当前系统时间作为新文件名
+        String nowtime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+        StringBuilder pinjiefileName = new StringBuilder(nowtime).append(file.getOriginalFilename());
+        String fileName = pinjiefileName.toString();
+
+        //根据合同主表的id 获取该公司的名字
+        //String unitName = contractManageMapper.queryUnitNameBycid(uid);
+
+        //获取文件上传绝对路径
+        String path = "D:/xdmd/environment/+" + "未知类型附件/";
+        StringBuilder initPath = new StringBuilder(path);
+        String filePath = initPath.append(fileName).toString();
+        File dest = new File(filePath);
+
+        //获取文件后缀名
+        String suffixName = fileName.substring(fileName.lastIndexOf(".") + 1);
+        //判断上传文件类型是否符合要求
+        Boolean typeIsOK = FileSuffixJudge.suffixJudge(file.getOriginalFilename());
+        if (typeIsOK == false) {
+            resultMap.fail().message("上传的文件类型不符合要求");
+        }
+        //判断文件父目录是否存在
+        if (!dest.getParentFile().exists()) {
+            dest.getParentFile().mkdirs();
+        }
+        try {
+            //保存文件
+            file.transferTo(dest);
+            // 获取文件大小
+            String fileSize = String.valueOf(dest.length());
+            //封装对象
+            AnnexUpload annexUpload = new AnnexUpload(0, filePath, fileName, "未知类型附件", suffixName, fileSize, null, username);
+            //保存到数据库中
+            int insertNum = uploadFileMapper.insertUpload(annexUpload);
+            //更改相应合同附件id
+            midCheckMapper.updateContractWeiZhiAnnexIdByCid(annexUpload.getId(), cid);
+            resultMap.success().message("上传合同附件成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultMap.fail().message("上传失败");
+        }
+        return resultMap;
+    }
+
+
+    /**
+     *获取未知类型附件的路径和文件名
+     * @param cid
+     * @return
+     */
+    @Override
+    public ResultMap getWeizhiFileInfo(int cid) {
+        try{
+            int midcheckrecord= midCheckMapper.updateMidCheckRecord();
+            if(midcheckrecord>0){
+                resultMap.success().message("更新成功");
+            }else if(midcheckrecord<0){
+                resultMap.success().message("更新失败");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            resultMap.success().message("系统异常");
+        }
+        return resultMap;
+    }
+
+
+    /**
+     * [更新] 中期检察记录状态
+     * @return
+     */
+    @Override
+    public ResultMap updateMidCheckRecord() {
+        try{
+            int midcheckrecord= midCheckMapper.updateMidCheckRecord();
+            if(midcheckrecord>0){
+                resultMap.success().message("更新成功");
+            }else if(midcheckrecord<0){
+                resultMap.success().message("更新失败");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            resultMap.success().message("系统异常");
+        }
+        return resultMap;
+    }
 }

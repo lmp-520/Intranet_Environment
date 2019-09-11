@@ -39,22 +39,4 @@ public interface ExpertAssessmentService {
      **/
     ResultMap getAllEvaluationContent();
 
-
-
-    /**
-     *专家评估附件上传
-     * @param token
-     * @param response
-     * @param expertAssessmentAnnex
-     * @return
-
-    ResultMap EAFileUpload(String token, HttpServletResponse response, MultipartFile expertAssessmentAnnex, int eid) throws IOException, FileUploadException;
-    */
-
-    /**
-     * 获取专家评估附件的路径和文件名
-     * @param eid
-     * @return
-     */
-    ResultMap getEAFileInfo(int eid);
 }

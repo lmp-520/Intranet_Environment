@@ -62,6 +62,9 @@ public interface MidCheckService {
      **/
     ResultMap insertMidCheckRecord(MidCheckRecordDTO midCheckRecordDTO);
 
+
+
+
     /**
      * [更新] 中期检察记录状态
      * @return
@@ -86,6 +89,35 @@ public interface MidCheckService {
     ResultMap midCheckExpertOpinionFileUpload(String token, HttpServletResponse response, MultipartFile midCheckAnnex, int mid) throws IOException, FileUploadException;
 
 
+
+
+    /**
+     * 获取中期检查专家总意见附件的路径和文件名
+     * @param mid
+     * @return
+     */
+    ResultMap getMidCheckExpertOpinionInfo(int mid);
+
+    /**
+     * 更新合同中期检查状态【当外网提交完所有材料但内网未审核】
+     * @return
+     */
+    ResultMap updateContractMidCheckStateOne();
+
+    /**
+     * 更新合同中期检查状态【当外网提交完所有材料且内网已审核并提交相应材料】
+     * @return
+     */
+    ResultMap updateContractMidCheckStateTwo();
+
+
+    /**
+     * 根据合同id查询关联的中期检查模板表
+     * @param cid
+     * @return
+     */
+    ResultMap getMidCheckTemplateByCid(int cid);
+
     /**
      * 获取中期检查表附件的路径和文件名
      * @param mid
@@ -94,9 +126,38 @@ public interface MidCheckService {
     ResultMap getMidCheckFileInfo(int mid);
 
     /**
-     * 获取中期检查专家总意见附件的路径和文件名
-     * @param mid
+     * 根据合同id查询关联的中期检查模板表
+     * @param cid
      * @return
      */
-    ResultMap getMidCheckExpertOpinionInfo(int mid);
+    ResultMap getExpertAssessmentByCid(int cid);
+
+    /**
+     * 获取专家评估附件的路径和文件名
+     * @param eid
+     * @return
+     */
+    ResultMap getEAFileInfo(int eid);
+
+
+
+    /**
+     * 未知类型附件上传
+     * @param file
+     * @return
+     */
+    ResultMap AnnexUpload(String token,HttpServletResponse response,MultipartFile file, int cid) throws IOException;
+
+
+    /**
+     * 获取未知类型附件的路径和文件名
+     * @return
+     */
+    ResultMap getWeizhiFileInfo(int cid);
+
+
+
+
+
+
 }

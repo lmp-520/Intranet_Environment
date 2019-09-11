@@ -74,26 +74,10 @@ public interface ExpertAssessmentMapper {
      * @param expertAssessmentAnnexId
      * @param eid
      * @return
-*/
+     */
     @Update(value = "update expert_assessment_annex_id set expert_assessment_annex_id=#{expertAssessmentAnnexId} where id=#{eid}")
     int updateExpertAssessmentAnnexIdByCid(int expertAssessmentAnnexId, int eid);
 
-
-    /**
-     * 获取专家评估附件的路径和文件名
-     * @param eid
-     * @return
-     */
-    @Select("SELECT\n" +
-            "uf.id,\n" +
-            "uf.upload_file_name,\n" +
-            "uf.upload_file_address\n" +
-            "FROM\n" +
-            "upload_file uf,\n" +
-            "expert_assessment ea\n" +
-            "WHERE\n" +
-            "ea.expert_assessment_annex_id=uf.id and ea.id=#{eid}")
-    List<Map> getEAFileInfo(int eid);
 
 
 }

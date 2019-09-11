@@ -195,25 +195,6 @@ public class ExpertAssessmentServiceImpl implements ExpertAssessmentService {
     }
 
 
-    /**
-     * 获取专家评估附件的路径和文件名
-     * @param eid
-     * @return
-     */
-    @Override
-    public ResultMap getEAFileInfo(int eid) {
-        try {
-            List<Map> fileinfo = expertAssessmentMapper.getEAFileInfo(eid);
-            if (fileinfo.size() > 0) {
-                resultMap.success().message(fileinfo);
-            } else if (fileinfo.size() == 0) {
-                resultMap.fail().message("没有查到相关信息");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            resultMap.fail().message("系统异常");
-        }
-        return resultMap;
-    }
+
 
 }

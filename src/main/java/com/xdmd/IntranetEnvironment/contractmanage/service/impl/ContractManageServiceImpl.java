@@ -424,7 +424,7 @@ public class ContractManageServiceImpl implements ContractManageService {
             //把该文件上传到文件表中
             uploadFileMapper.insertUpload(subjectSuggestFileAnnexData);
             contractManageMapper.updateSubjectSuggestAnnexIdByCid(subjectSuggestFileAnnexData.getId(),cid);
-            resultMap.fail().message("上传课题意见附件成功");
+            resultMap.success().message("上传课题意见附件成功");
         } catch (IOException e) {
             e.printStackTrace();
             log.error("附件上传出错:" + e.getMessage());
@@ -1043,6 +1043,7 @@ public class ContractManageServiceImpl implements ContractManageService {
         }
         return resultMap;
     }
+
 
 
     /**

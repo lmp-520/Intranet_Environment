@@ -95,17 +95,4 @@ public class ExpertAssessmentController {
     }*/
 
 
-
-    /**
-     * 获取专家评估附件的路径和文件名
-     * @param eid
-     * @return
-     */
-    @GetMapping(value = "getEAFileInfo")
-    @ApiOperation(value = "根据专家评估附件id获取的路径和文件名")
-    @ApiImplicitParam(name = "eid",value = "专家评估表id")
-    public ResultMap getEAFileInfo(int eid){
-        return resultMap=expertAssessmentService.getEAFileInfo(eid);
-    }
-
 }
