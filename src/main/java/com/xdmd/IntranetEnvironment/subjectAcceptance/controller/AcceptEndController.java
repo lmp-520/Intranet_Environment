@@ -48,7 +48,6 @@ public class AcceptEndController {
         return resultMap;
     }
 
-
     //验收结束的审核
     @ResponseBody
     @PostMapping("examine")
@@ -68,5 +67,4 @@ public class AcceptEndController {
         }
         return resultMap;
     }
-
 }
