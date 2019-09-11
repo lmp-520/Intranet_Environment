@@ -570,7 +570,6 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
         //修改验收证书的状态
         acceptApplyMapper.updateAcceptancePhaseById(caId, 7);
 
-
         //新增最终验收报告表单
         acceptanceCertificate.setCid(caId);
         //新增最终验收报告的主表
@@ -880,7 +879,6 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
             File file = new File(oldExpertAcceptanceFormFile);
             file.delete();
         }
-
 
         if (oldExpertGroupFileUrl != null) {
             //此时旧的专家组意见文件地址存在
