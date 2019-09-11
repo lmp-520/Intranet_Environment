@@ -327,22 +327,22 @@ public class OpenTenderController {
 
     /**
      * 根据招标备案表id获取文件路径和文件名
-     * @param id
+     * @param oid
      * @return
      */
-    @GetMapping(value = "updateTenderStatusByReturnCommit")
+    @GetMapping(value = "getTenderFileInfo")
     @ApiOperation(value = "根据招标备案表id获取文件路径和文件名【内外网】")
-    public ResultMap getfileInfo(int id) {
-        return  resultMap=openTenderService.getfileInfo(id);
+    public ResultMap getfileInfo(int oid) {
+        return  resultMap=openTenderService.getfileInfo(oid);
     }
 
     /**
-     * 根据合同主表id查询审核记录【内网】
+     * 根据招标主表id查询审核记录【内网】
      * @param oid
      * @return
      */
     @GetMapping(value = "getAllShenHeTableRecordInfoByContractId")
-    @ApiOperation(value = "根据合同主表id查询审核记录【内网】")
+    @ApiOperation(value = "根据招标备案表id查询审核记录【内网】")
     public ResultMap getAllShenHeTableRecordInfoByContractId(int oid) {
         return resultMap=openTenderService.getAllShenHeTableRecordInfoByContractId(oid);
     }

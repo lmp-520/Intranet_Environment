@@ -1,7 +1,6 @@
 package com.xdmd.IntranetEnvironment.dailymanagement.service;
 
 import com.xdmd.IntranetEnvironment.common.ResultMap;
-import com.xdmd.IntranetEnvironment.dailymanagement.pojo.ExpertAssessmentDTO;
 
 
 /**
@@ -10,13 +9,15 @@ import com.xdmd.IntranetEnvironment.dailymanagement.pojo.ExpertAssessmentDTO;
  * @description: 专家评估业务
  */
 public interface ExpertAssessmentService {
+
     /**
      * [新增]
      * @author Kong
      * @date 2019/08/17
      *
-     * @return*/
+     * @return
     ResultMap insert(ExpertAssessmentDTO expertAssessment);
+     */
 
     /**
      * [查詢] 根據主鍵 id 查詢
@@ -37,4 +38,23 @@ public interface ExpertAssessmentService {
      * @date 2019/08/17
      **/
     ResultMap getAllEvaluationContent();
+
+
+
+    /**
+     *专家评估附件上传
+     * @param token
+     * @param response
+     * @param expertAssessmentAnnex
+     * @return
+
+    ResultMap EAFileUpload(String token, HttpServletResponse response, MultipartFile expertAssessmentAnnex, int eid) throws IOException, FileUploadException;
+    */
+
+    /**
+     * 获取专家评估附件的路径和文件名
+     * @param eid
+     * @return
+     */
+    ResultMap getEAFileInfo(int eid);
 }

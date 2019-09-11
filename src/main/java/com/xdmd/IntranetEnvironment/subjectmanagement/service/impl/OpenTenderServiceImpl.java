@@ -1006,13 +1006,13 @@ public class OpenTenderServiceImpl implements OpenTenderService {
     /**
      * 根据招标备案表id获取文件路径和文件名
      *
-     * @param id
+     * @param oid
      * @return
      */
     @Override
-    public ResultMap getfileInfo(int id) {
+    public ResultMap getfileInfo(int oid) {
         try {
-            List<Map> fileInfoMap = openTenderMapper.getfileInfo(id);
+            List<Map> fileInfoMap = openTenderMapper.getfileInfo(oid);
             if (fileInfoMap.size() > 0) {
                 resultMap.success().message(fileInfoMap);
             } else if (fileInfoMap.size() == 0) {
@@ -1027,8 +1027,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
 
 
     /**
-     * 根据合同主表id查询审核记录
-     *
+     * 根据招标表id查询审核记录
      * @param oid
      * @return
      */
@@ -1039,7 +1038,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
             if (shenHeInfo.size() > 0) {
                 resultMap.success().message(shenHeInfo);
             } else if (shenHeInfo.size() == 0) {
-                resultMap.fail().message("没有找到");
+                resultMap.fail().message("没有查到相关信息");
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -2,13 +2,14 @@ package com.xdmd.IntranetEnvironment.dailymanagement.controller;
 
 
 import com.xdmd.IntranetEnvironment.common.ResultMap;
-import com.xdmd.IntranetEnvironment.dailymanagement.pojo.ExpertAssessmentDTO;
 import com.xdmd.IntranetEnvironment.dailymanagement.service.ExpertAssessmentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author: Kong
@@ -27,12 +28,12 @@ public class ExpertAssessmentController {
      * 新增
      * @param expertAssessment
      * @return
-     */
+
     @ApiOperation(value = "新增专家评估【外网】")
     @PostMapping("insertExpertAssessment")
     ResultMap insert(@RequestBody ExpertAssessmentDTO expertAssessment){
         return resultMap=expertAssessmentService.insert(expertAssessment);
-    }
+    } */
 
     /**
      * 根據主鍵 id 查詢
@@ -65,4 +66,46 @@ public class ExpertAssessmentController {
     public ResultMap getAllEvaluationContent(){
         return resultMap=expertAssessmentService.getAllEvaluationContent();
     }
+
+
+    /**
+     * 专家评估附件上传
+     * @param token
+     * @param response
+     * @param expertAssessmentAnnex
+     * @return
+
+    @ApiOperation(value = "专家评估附件上传【外网】")
+    @PostMapping("EAFileUpload")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "expertAssessmentAnnex", value = "专家评估附件"),
+            @ApiImplicitParam(name = "eid", value = "专家评估表id")
+    })
+    public ResultMap EAFileUpload(@CookieValue(value = "token", required = false) String token, HttpServletResponse response,
+                                  MultipartFile expertAssessmentAnnex, int eid) throws IOException, FileUploadException {
+        try {
+            if (StringUtils.isEmpty(token)) {
+                return resultMap.fail().message("请先登录");
+            }
+            resultMap = expertAssessmentService.EAFileUpload(token,response,expertAssessmentAnnex,eid);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resultMap;
+    }*/
+
+
+
+    /**
+     * 获取专家评估附件的路径和文件名
+     * @param eid
+     * @return
+     */
+    @GetMapping(value = "getEAFileInfo")
+    @ApiOperation(value = "根据专家评估附件id获取的路径和文件名")
+    @ApiImplicitParam(name = "eid",value = "专家评估表id")
+    public ResultMap getEAFileInfo(int eid){
+        return resultMap=expertAssessmentService.getEAFileInfo(eid);
+    }
+
 }

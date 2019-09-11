@@ -258,4 +258,14 @@ public class ProjectProgressController {
         return resultMap;
     }
 
+    /**
+     * 获取课题进展附件文件路径和文件名
+     * @param pid
+     * @return
+     */
+    @GetMapping(value = "getProgressFileInfo")
+    @ApiOperation(value = "获取课题进展附件的文件路径和文件名【内外网】")
+    public ResultMap getfileInfo(int pid) {
+        return  resultMap=projectProgressService.getfileInfo(pid);
+    }
 }

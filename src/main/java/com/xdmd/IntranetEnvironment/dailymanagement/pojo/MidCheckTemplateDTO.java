@@ -47,8 +47,8 @@ public class MidCheckTemplateDTO {
     @ApiModelProperty("课题按合同计划进度执行情况(字典id/41-44)")
     private Integer contractPlanCrogressExecution;
 
-    @ApiModelProperty("课题未按时完成原因(字典id/48-52)")
-    private Integer notCompletingReason;
+    @ApiModelProperty("课题未按时完成原因(字典id/48-52)【多选】")
+    private String notCompletingReason;
 
     @ApiModelProperty("预算总经费（万元）")
     private BigDecimal totalBudget;
@@ -74,28 +74,28 @@ public class MidCheckTemplateDTO {
     @ApiModelProperty("其他支出预算")
     private BigDecimal otherExpenditureBudget;
 
-    @ApiModelProperty("设备费使用情况")
+    @ApiModelProperty("设备费")
     private BigDecimal equipmentUsage;
 
-    @ApiModelProperty("材料费使用情况")
+    @ApiModelProperty("材料费")
     private BigDecimal materialUsage;
 
-    @ApiModelProperty("测试化验使用情况")
-    private BigDecimal testIngyUse;
+    //@ApiModelProperty("测试化验使用情况")
+   // private BigDecimal testIngyUse;
 
-    @ApiModelProperty("加工费使用情况")
+    @ApiModelProperty("测试化验加工费")
     private BigDecimal processingFeeUsage;
 
-    @ApiModelProperty("燃料动力费使用情况")
+    @ApiModelProperty("燃料动力费")
     private BigDecimal fuelUsage;
 
-    @ApiModelProperty("差旅费使用情况")
+    @ApiModelProperty("差旅费")
     private BigDecimal travelExpenses;
 
-    @ApiModelProperty("会议费使用情况")
+    @ApiModelProperty("会议费")
     private BigDecimal meetingFeeUsage;
 
-    @ApiModelProperty("专家咨询费使用情况")
+    @ApiModelProperty("专家咨询费")
     private BigDecimal expertConsultationFeesUsage;
 
     @ApiModelProperty("出版/文献/信息传播/知识产权事务费使用情况")
@@ -167,10 +167,10 @@ public class MidCheckTemplateDTO {
     @ApiModelProperty("出版专著（部）")
     private Integer publicationMonograph;
 
-    @ApiModelProperty("研究（咨询）")
-    private String research;
+    //@ApiModelProperty("研究（咨询）")
+    //private String research;
 
-    @ApiModelProperty("报告（份）")
+    @ApiModelProperty("研究（咨询）报告（份）")
     private Integer report;
 
     @ApiModelProperty("制定技术标准（个）")
@@ -200,11 +200,11 @@ public class MidCheckTemplateDTO {
     @ApiModelProperty("项目执行过程中存在的问题、解决措施及有关建议（限200字以内）")
     private String recommendationsProblemsSolutions;
 
-    @ApiModelProperty("承担单位联系人")
-    private String bearContaacter;
+    //@ApiModelProperty("承担单位联系人")
+    //private String bearContaacter;
 
-    @ApiModelProperty("承担单位联系人电话")
-    private String bearContaactPhone;
+   // @ApiModelProperty("承担单位联系人电话")
+   // private String bearContaactPhone;
 
     @ApiModelProperty("中期检查附件")
     private Integer midCheckAnnexId;
