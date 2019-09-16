@@ -552,13 +552,13 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
         Integer cid = jwtInformation.getCid();
         String cname = jwtInformation.getCompanyName();
 
-        //判断验收证书后缀名是否正确
-        List<String> acceptanceCertificateSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".rar", ".zip", ".7z"));
-        String lastReportFilename = lastReport.getOriginalFilename();
-        Boolean aBoolean = FileSuffixJudgeUtil.SuffixJudge(lastReportFilename, acceptanceCertificateSuffixList);
-        if (aBoolean == false) {
-            return resultMap.fail().message("请上传正确的验收证书格式");
-        }
+//        //判断验收证书后缀名是否正确
+//        List<String> acceptanceCertificateSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".rar", ".zip", ".7z"));
+//        String lastReportFilename = lastReport.getOriginalFilename();
+//        Boolean aBoolean = FileSuffixJudgeUtil.SuffixJudge(lastReportFilename, acceptanceCertificateSuffixList);
+//        if (aBoolean == false) {
+//            return resultMap.fail().message("请上传正确的验收证书格式");
+//        }
 
         //对验收证书进行文件上传
         String lastReportFileUrl = FileUploadUtil.fileUpload(lastReport, cname, "验收证书");
@@ -642,21 +642,21 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
         Integer cid = jwtInformation.getCid();
         String cname = jwtInformation.getCompanyName();
 
-        //判断专家组文件类型是否正确
-        ArrayList<String> expertGroupCommentsFileSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".rar", ".zip", ".7z"));
-        String expertGroupCommentsFileName = expertGroupCommentsFile.getOriginalFilename();
-        Boolean aBoolean = FileSuffixJudgeUtil.SuffixJudge(expertGroupCommentsFileName, expertGroupCommentsFileSuffixList);
-        if (aBoolean == false) {
-            return resultMap.fail().message("请上传正确的专家组意见文件格式");
-        }
-
-        //判断专家组评议表文件是否正确
-        ArrayList<String> expertAcceptanceFormFileSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".rar", ".zip", ".7z"));
-        String expertAcceptanceFormFilename = expertAcceptanceFormFile.getOriginalFilename();
-        Boolean bBoolean = FileSuffixJudgeUtil.SuffixJudge(expertAcceptanceFormFilename, expertAcceptanceFormFileSuffixList);
-        if (bBoolean == false) {
-            return resultMap.fail().message("请上传正确的验收证书格式");
-        }
+//        //判断专家组文件类型是否正确
+//        ArrayList<String> expertGroupCommentsFileSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".rar", ".zip", ".7z"));
+//        String expertGroupCommentsFileName = expertGroupCommentsFile.getOriginalFilename();
+//        Boolean aBoolean = FileSuffixJudgeUtil.SuffixJudge(expertGroupCommentsFileName, expertGroupCommentsFileSuffixList);
+//        if (aBoolean == false) {
+//            return resultMap.fail().message("请上传正确的专家组意见文件格式");
+//        }
+//
+//        //判断专家组评议表文件是否正确
+//        ArrayList<String> expertAcceptanceFormFileSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".rar", ".zip", ".7z"));
+//        String expertAcceptanceFormFilename = expertAcceptanceFormFile.getOriginalFilename();
+//        Boolean bBoolean = FileSuffixJudgeUtil.SuffixJudge(expertAcceptanceFormFilename, expertAcceptanceFormFileSuffixList);
+//        if (bBoolean == false) {
+//            return resultMap.fail().message("请上传正确的验收证书格式");
+//        }
 
         //对专家组意见文件进行上传
         String expertGroupCommentsFileUrl = FileUploadUtil.fileUpload(expertGroupCommentsFile, cname, "专家组意见");
@@ -739,12 +739,12 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
         if (oldSubmitInventoryFileUrl != null) {
             //提交清单不为空
             //判断文件输入的格式是否正确
-            ArrayList<String> idCardFileSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".rar", ".zip", ".7z", ".pdf"));
-            String submitInventoryFileName = submitInventoryFile.getOriginalFilename();
-            Boolean aBoolean = FileSuffixJudgeUtil.SuffixJudge(submitInventoryFileName, idCardFileSuffixList);
-            if (aBoolean == false) {
-                return resultMap.fail().message("请上传正确的提交清单格式");
-            }
+//            ArrayList<String> idCardFileSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".rar", ".zip", ".7z", ".pdf"));
+//            String submitInventoryFileName = submitInventoryFile.getOriginalFilename();
+//            Boolean aBoolean = FileSuffixJudgeUtil.SuffixJudge(submitInventoryFileName, idCardFileSuffixList);
+//            if (aBoolean == false) {
+//                return resultMap.fail().message("请上传正确的提交清单格式");
+//            }
             //再根据旧的文件地址，先把文件给删除掉
             File file = new File(oldSubmitInventoryFileUrl);
             file.delete();
@@ -764,12 +764,12 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
         if (oldAchievementsFileUrl != null) {
             //旧的成果附件不为null时
             //判断文件输入的格式是否正确
-            ArrayList<String> idCardFileSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".rar", ".zip", ".7z", ".pdf"));
-            String achievementsFileName = achievementsFile.getOriginalFilename();
-            Boolean aBoolean = FileSuffixJudgeUtil.SuffixJudge(achievementsFileName, idCardFileSuffixList);
-            if (aBoolean == false) {
-                return resultMap.fail().message("请上传正确的成果附件格式");
-            }
+//            ArrayList<String> idCardFileSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".rar", ".zip", ".7z", ".pdf"));
+//            String achievementsFileName = achievementsFile.getOriginalFilename();
+//            Boolean aBoolean = FileSuffixJudgeUtil.SuffixJudge(achievementsFileName, idCardFileSuffixList);
+//            if (aBoolean == false) {
+//                return resultMap.fail().message("请上传正确的成果附件格式");
+//            }
             //再根据旧的文件地址，先把文件给删除掉
             File file = new File(oldAchievementsFileUrl);
             file.delete();
@@ -788,12 +788,12 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
 
         if (oldApplicationAcceptanceFileUrl != null) {
             //旧的验收申请不为null时
-            ArrayList<String> idCardFileSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".rar", ".zip", ".7z", ".pdf"));
-            String applicationAcceptanceFileName = applicationAcceptanceFile.getOriginalFilename();
-            Boolean aBoolean = FileSuffixJudgeUtil.SuffixJudge(applicationAcceptanceFileName, idCardFileSuffixList);
-            if (aBoolean == false) {
-                return resultMap.fail().message("请上传正确的验收申请表格式");
-            }
+//            ArrayList<String> idCardFileSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".rar", ".zip", ".7z", ".pdf"));
+//            String applicationAcceptanceFileName = applicationAcceptanceFile.getOriginalFilename();
+//            Boolean aBoolean = FileSuffixJudgeUtil.SuffixJudge(applicationAcceptanceFileName, idCardFileSuffixList);
+//            if (aBoolean == false) {
+//                return resultMap.fail().message("请上传正确的验收申请表格式");
+//            }
             //再根据旧的文件地址，先把文件给删除掉
             File file = new File(oldApplicationAcceptanceFileUrl);
             file.delete();
@@ -854,12 +854,12 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
             //此时专家组意见文件不为空，则意味着上传了新的专家组意见
             //判断上传的专家组意见文件是否后缀名正确
 
-            ArrayList<String> idCardFileSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".rar", ".zip", ".7z",".pdf"));
-            String expertGroupFileName = expertGroupFile.getOriginalFilename();
-            Boolean aBoolean = FileSuffixJudgeUtil.SuffixJudge(expertGroupFileName, idCardFileSuffixList);
-            if (aBoolean == false) {
-                return resultMap.fail().message("请上传正确的专家组文件格式");
-            }
+//            ArrayList<String> idCardFileSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".rar", ".zip", ".7z",".pdf"));
+//            String expertGroupFileName = expertGroupFile.getOriginalFilename();
+//            Boolean aBoolean = FileSuffixJudgeUtil.SuffixJudge(expertGroupFileName, idCardFileSuffixList);
+//            if (aBoolean == false) {
+//                return resultMap.fail().message("请上传正确的专家组文件格式");
+//            }
             //再根据旧的文件地址，先把文件给删除掉
             File file = new File(oldExpertGroupFileUrl);
             file.delete();
@@ -869,12 +869,12 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
             //此时专家组意见文件不为空，则意味着上传了新的专家组意见
             //判断上传的专家组意见文件是否后缀名正确
 
-            ArrayList<String> idCardFileSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".rar", ".zip", ".7z"));
-            String expertAcceptanceFormFileName = expertAcceptanceFormFile.getOriginalFilename();
-            Boolean aBoolean = FileSuffixJudgeUtil.SuffixJudge(expertAcceptanceFormFileName, idCardFileSuffixList);
-            if (aBoolean == false) {
-                return resultMap.fail().message("请上传正确的专家组评议文件格式");
-            }
+//            ArrayList<String> idCardFileSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".rar", ".zip", ".7z"));
+//            String expertAcceptanceFormFileName = expertAcceptanceFormFile.getOriginalFilename();
+//            Boolean aBoolean = FileSuffixJudgeUtil.SuffixJudge(expertAcceptanceFormFileName, idCardFileSuffixList);
+//            if (aBoolean == false) {
+//                return resultMap.fail().message("请上传正确的专家组评议文件格式");
+//            }
             //再根据旧的文件地址，先把文件给删除掉
             File file = new File(oldExpertAcceptanceFormFile);
             file.delete();
@@ -957,12 +957,12 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
         if (lastReportFile != null) {
             //此时专家组意见文件不为空，则意味着上传了新的专家组意见
             //判断上传的专家组意见文件是否后缀名正确
-            ArrayList<String> idCardFileSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".rar", ".zip", ".7z"));
-            String lastReportFileName = lastReportFile.getOriginalFilename();
-            Boolean aBoolean = FileSuffixJudgeUtil.SuffixJudge(lastReportFileName, idCardFileSuffixList);
-            if (aBoolean == false) {
-                return resultMap.fail().message("请上传正确的最终验收证书文件格式");
-            }
+//            ArrayList<String> idCardFileSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".rar", ".zip", ".7z"));
+//            String lastReportFileName = lastReportFile.getOriginalFilename();
+//            Boolean aBoolean = FileSuffixJudgeUtil.SuffixJudge(lastReportFileName, idCardFileSuffixList);
+//            if (aBoolean == false) {
+//                return resultMap.fail().message("请上传正确的最终验收证书文件格式");
+//            }
             //再根据旧的文件地址，先把文件给删除掉
             File file = new File(oldLastReportFileUrl);
             file.delete();

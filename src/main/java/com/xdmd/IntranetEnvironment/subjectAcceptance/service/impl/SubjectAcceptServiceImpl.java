@@ -220,19 +220,19 @@ public class SubjectAcceptServiceImpl implements SubjectAcceptSerivce {
                 String companyName = subjectAcceptMapper.queryCompanyNameByCid(cid);//根据公司的id，找到公司的名称
                 String subejctName = subjectAcceptMapper.querySubjectNameByCid(id);//根据验收申请表id，找到该课题名称
 
-                //判断这两个上传的文件后缀名是否正确
-                String expertGroupCommentsFilename = expertGroupCommentsFile.getOriginalFilename();      //获取专家意见表文件名
-                List<String> expertGroupCommentsSuffixList = new ArrayList<String>(Arrays.asList(".zip", ".7z", ".rar",".doc", ".docx",".pdf")); //定义专家组意见表允许上传的类型
-                Boolean flag1 = FileSuffixJudgeUtil.SuffixJudge(expertGroupCommentsFilename, expertGroupCommentsSuffixList);  //判断专家组意见表后缀名是否有误
-                //获取专家评议表的文件名
-                String expertAcceptanceFormFilename = expertAcceptanceFormFile.getOriginalFilename();
-                List<String> expertAcceptanceFormSuffixList = new ArrayList<String>(Arrays.asList(".zip", ".7z", ".rar"));//定义专家评议表的允许上传的类型
-                Boolean flag2 = FileSuffixJudgeUtil.SuffixJudge(expertAcceptanceFormFilename, expertAcceptanceFormSuffixList);//判断专家评议表上传的类型是否有误
-
-                if (flag1 == false || flag2 == false) {
-                    //两个文件中有一个错误，就意味着有文件上传格式不正确
-                    return resultMap.fail().message("请上传正确的文件格式");
-                }
+//                //判断这两个上传的文件后缀名是否正确
+//                String expertGroupCommentsFilename = expertGroupCommentsFile.getOriginalFilename();      //获取专家意见表文件名
+//                List<String> expertGroupCommentsSuffixList = new ArrayList<String>(Arrays.asList(".zip", ".7z", ".rar",".doc", ".docx",".pdf")); //定义专家组意见表允许上传的类型
+//                Boolean flag1 = FileSuffixJudgeUtil.SuffixJudge(expertGroupCommentsFilename, expertGroupCommentsSuffixList);  //判断专家组意见表后缀名是否有误
+//                //获取专家评议表的文件名
+//                String expertAcceptanceFormFilename = expertAcceptanceFormFile.getOriginalFilename();
+//                List<String> expertAcceptanceFormSuffixList = new ArrayList<String>(Arrays.asList(".zip", ".7z", ".rar"));//定义专家评议表的允许上传的类型
+//                Boolean flag2 = FileSuffixJudgeUtil.SuffixJudge(expertAcceptanceFormFilename, expertAcceptanceFormSuffixList);//判断专家评议表上传的类型是否有误
+//
+//                if (flag1 == false || flag2 == false) {
+//                    //两个文件中有一个错误，就意味着有文件上传格式不正确
+//                    return resultMap.fail().message("请上传正确的文件格式");
+//                }
                 try {
                     String expertGroupCommentsUrl = FileUploadUtil.UploadSubejctAcceptExpertFile(expertGroupCommentsFile, "专家组意见", companyName, subejctName);
                     UploadFile UploadExpertGroupComments = IntegrationFile.IntegrationFile(expertGroupCommentsFile, expertGroupCommentsUrl, "专家组意见", username);

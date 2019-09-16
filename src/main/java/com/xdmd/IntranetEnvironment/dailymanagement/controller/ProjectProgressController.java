@@ -257,5 +257,4 @@ public class ProjectProgressController {
         resultMap = projectProgressService.ProgressMultiUpload(token, response,pid,openReportAnnex, expertSuggestAnnex, subjectProgressAnnex, fundProgressAnnex);
         return resultMap;
     }
-
 }

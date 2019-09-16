@@ -48,34 +48,41 @@ public class CompanyServiceTwoImpl implements CompanyServiceTwo {
         //判断上传文件的类型是否正确
 
 
-        //营业执照的格式判断
-        List<String> businessSuffixList = new ArrayList<String>(Arrays.asList(".jpg", ".png", ".jpeg", ".pdf"));
-        //获取文件名
-        String businessName = businessFile.getOriginalFilename();
-        Boolean aBoolean = FileSuffixJudgeUtil.SuffixJudge(businessName, businessSuffixList);
-        if (aBoolean == false) {
-            return resultMap.fail().message("请上传正确的营业执照格式");
-        }
-
-        //法人身份证文件格式的判断
-        List<String> legalCardIdSuffixList = new ArrayList<String>(Arrays.asList(".doc", ".docx", ".zip", ".rar", ".7z"));
-        String legalName = legalCardIdFile.getOriginalFilename();
-        Boolean aBoolean1 = FileSuffixJudgeUtil.SuffixJudge(legalName, legalCardIdSuffixList);
-        if (aBoolean1 == false) {
-            return resultMap.fail().message("请上传正确的法人身份证文件格式");
-        }
-
-        //联系人身份证的格式判断
-        List<String> contactCardSuffixList = new ArrayList<String>(Arrays.asList(".doc", ".docx", ".zip", ".rar", ".7z"));
-        String originalName = contactCardFile.getOriginalFilename();
-        Boolean aBoolean2 = FileSuffixJudgeUtil.SuffixJudge(originalName, contactCardSuffixList);
-        if (aBoolean2 == false) {
-            return resultMap.fail().message("请上传正确的联系人身份证格式");
-        }
+//        //营业执照的格式判断
+//        List<String> businessSuffixList = new ArrayList<String>(Arrays.asList(".jpg", ".png", ".jpeg", ".pdf"));
+//        //获取文件名
+//        String businessName = businessFile.getOriginalFilename();
+//        Boolean aBoolean = FileSuffixJudgeUtil.SuffixJudge(businessName, businessSuffixList);
+//        if (aBoolean == false) {
+//            return resultMap.fail().message("请上传正确的营业执照格式");
+//        }
+//
+//        //法人身份证文件格式的判断
+//        List<String> legalCardIdSuffixList = new ArrayList<String>(Arrays.asList(".doc", ".docx", ".zip", ".rar", ".7z"));
+//        String legalName = legalCardIdFile.getOriginalFilename();
+//        Boolean aBoolean1 = FileSuffixJudgeUtil.SuffixJudge(legalName, legalCardIdSuffixList);
+//        if (aBoolean1 == false) {
+//            return resultMap.fail().message("请上传正确的法人身份证文件格式");
+//        }
+//
+//        //联系人身份证的格式判断
+//        List<String> contactCardSuffixList = new ArrayList<String>(Arrays.asList(".doc", ".docx", ".zip", ".rar", ".7z"));
+//        String originalName = contactCardFile.getOriginalFilename();
+//        Boolean aBoolean2 = FileSuffixJudgeUtil.SuffixJudge(originalName, contactCardSuffixList);
+//        if (aBoolean2 == false) {
+//            return resultMap.fail().message("请上传正确的联系人身份证格式");
+//        }
 
         //判断该公司是否已经存在
         Integer cid = null;
         cid = companyMapper.queryCidByCname(userInformation.getAdministratorInformation().getCompanyName());
+
+        //判断社会信用代码是否存在
+        int num = companyMapper.querySocialCreditCode(userInformation.getAdministratorInformation().getSocialCreditCode());
+        if(num == 1){
+            //此时这个社会信用账号已存在
+            return resultMap.fail().message("该公司已经被注册，请找公司管理员分配账号");
+        }
 
         if(cid != null){
             //此时意味着 该公司已经被注册过
@@ -134,7 +141,7 @@ public class CompanyServiceTwoImpl implements CompanyServiceTwo {
         }
 
         //把新注册的公司的名称存入公司表中
-        companyMapper.addCompanyName(userInformation.getAdministratorInformation().getCompanyName());
+        companyMapper.addCompanyName(userInformation.getAdministratorInformation().getCompanyName(),userInformation.getAdministratorInformation().getSocialCreditCode());
 
         //获取新注册的公司的id
         Integer cid3 = companyMapper.queryCidByCname(userInformation.getAdministratorInformation().getCompanyName());
@@ -169,6 +176,9 @@ public class CompanyServiceTwoImpl implements CompanyServiceTwo {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String nowTime = sdf.format(date);
         administratorInformation.setCreateTime(nowTime);
+
+        //第一次注册的时候，所有的企业都是白名单
+        administratorInformation.setCreditRoster("0");
 
         //把公司管理员的具体信息填入数据库中
         companyMapper.addAdministratorInformation(administratorInformation);
