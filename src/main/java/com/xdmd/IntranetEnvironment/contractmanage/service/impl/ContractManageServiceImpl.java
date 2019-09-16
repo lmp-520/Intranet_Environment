@@ -947,7 +947,7 @@ public class ContractManageServiceImpl implements ContractManageService {
             System.out.println(updateNum6);
             //更新合同附件
             if (oldcontractAnnexUrl != null) {
-                //判断上传中标文件附件的后缀名是否正确
+                //判断上传合同附件的后缀名是否正确
                 String contractAnnexName = contractAnnex.getOriginalFilename();
                 Boolean aBoolean = FileSuffixJudge.suffixJudge(contractAnnexName);
                 if (aBoolean == false) {
@@ -1161,7 +1161,7 @@ public class ContractManageServiceImpl implements ContractManageService {
         int pageNum, int pageSize){
             try {
                 PageHelper.startPage(pageNum, pageSize, true);
-                List<ContractManageDTO> contractMap = contractManageMapper.showAllPassContractReviewByFaGui(subjectCategory, subjectName, subjectContact, subjectContactPhone, commitmentUnit, subjectSupervisorDepartmentint);
+                List<Map> contractMap = contractManageMapper.showAllPassContractReviewByFaGui(subjectCategory, subjectName, subjectContact, subjectContactPhone, commitmentUnit, subjectSupervisorDepartmentint);
                 PageInfo pageInfo = new PageInfo(contractMap);
                 if (contractMap.size() > 0) {
                     resultMap.success().message(pageInfo);
@@ -1189,7 +1189,7 @@ public class ContractManageServiceImpl implements ContractManageService {
         int pageNum, int pageSize){
             try {
                 PageHelper.startPage(pageNum, pageSize, true);
-                List<ContractManageDTO> contractMap = contractManageMapper.showAllNoPassReviewContractByFaGui(subjectCategory, subjectName, subjectContact, subjectContactPhone, commitmentUnit, subjectSupervisorDepartmentint);
+                List<Map> contractMap = contractManageMapper.showAllNoPassReviewContractByFaGui(subjectCategory, subjectName, subjectContact, subjectContactPhone, commitmentUnit, subjectSupervisorDepartmentint);
                 PageInfo pageInfo = new PageInfo(contractMap);
                 if (contractMap.size() > 0) {
                     resultMap.success().message(pageInfo);

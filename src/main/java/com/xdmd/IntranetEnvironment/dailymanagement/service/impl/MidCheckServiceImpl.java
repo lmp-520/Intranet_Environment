@@ -119,7 +119,7 @@ public class MidCheckServiceImpl implements MidCheckService {
             int mctNum= midCheckMapper.insertMidCheckTemplate(midCheckTemplateDTO);
 
             int eaNum=midCheckMapper.insertEA(expertAssessmentDTO);
-            //genju
+            //把中期检查表的id和专家评估表的id更新到合同表对应字段
             int updateNum=midCheckMapper.updateContractMidCheckUpLoadFileIdByCid(midCheckTemplateDTO.getId(),expertAssessmentDTO.getId(),cid);
 
             /**
@@ -283,11 +283,11 @@ public class MidCheckServiceImpl implements MidCheckService {
             if(midcheckrecord>0){
                 resultMap.success().message(midCheckRecordDTO.getId());
             }else if(midcheckrecord<0){
-                resultMap.success().message("新增失败");
+                resultMap.fail().message("新增失败");
             }
         }catch (Exception e){
             e.printStackTrace();
-            resultMap.success().message("系统异常");
+            resultMap.fail().message("系统异常");
         }
         return resultMap;
     }
@@ -308,11 +308,11 @@ public class MidCheckServiceImpl implements MidCheckService {
             if(midCheckRecordDTOs.size()>0){
                 resultMap.success().message(pageInfo);
             }else if(midCheckRecordDTOs.size()==0){
-                resultMap.success().message("没有查到相关信息");
+                resultMap.fail().message("没有查到相关信息");
             }
         }catch (Exception e){
             e.printStackTrace();
-            resultMap.success().message("系统异常");
+            resultMap.fail().message("系统异常");
         }
         return resultMap;
     }
@@ -359,9 +359,6 @@ public class MidCheckServiceImpl implements MidCheckService {
         String nowtime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
         StringBuilder pinjiefileName = new StringBuilder(nowtime).append(midCheckExpertOpinion.getOriginalFilename());
         String fileName = pinjiefileName.toString();
-
-        //根据合同主表的id 获取该公司的名字
-        //String unitName = contractManageMapper.queryUnitNameBycid(uid);
 
         //获取文件上传绝对路径
         String path = "D:/xdmd/environment/" +"第"+mid+"次中期检查记录"+"/"+ "专家总意见附件" + "/";

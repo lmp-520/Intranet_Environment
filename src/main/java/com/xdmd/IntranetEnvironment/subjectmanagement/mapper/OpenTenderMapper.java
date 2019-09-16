@@ -469,7 +469,7 @@ public interface OpenTenderMapper {
 
     /**
      * 获取招标文件路径和文件名
-     * @param id
+     * @param oid
      * @return
      */
     @Select("SELECT\n" +
@@ -490,6 +490,8 @@ public interface OpenTenderMapper {
             "GROUP BY uf.id")
     List<Map> getfileInfo(int oid);
 
+
+
     /**
      * 根据招标主表id查询审核记录
      * @param oid
@@ -507,5 +509,34 @@ public interface OpenTenderMapper {
      */
     @Insert(value = "INSERT INTO unit_tender (unit_id,tender_id)VALUES(#{unitId},#{tenderId})")
     int insertTidAndUid(int unitId, int tenderId);
+
+
+    /**
+     *
+     * @param winningFileId
+     * @return
+     */
+    @Select("SELECT upload_file_name FROM upload_file where id = #{fileId}")
+    String queryFileNameByOid(@Param("fileId") int winningFileId);
+
+    @Select("SELECT upload_file_address FROM upload_file where id = #{winningFileId}")
+    String queryFileUrlOid(@Param("winningFileId") int winningFileId);
+
+
+
+    @Select("SELECT winning_file_attachment_id FROM open_tender where id = #{oid}")
+    int queryWinningFileIdByOid(@Param("oid") int oid);
+
+    @Select("SELECT announcement_transaction_announcement_id FROM open_tender where id = #{oid}")
+    int queryTransactionAnnouncementIdByOid(@Param("oid") int oid);
+
+    @Select("SELECT deal_notification_attachment_id FROM open_tender where id = #{oid}")
+    int queryNoticeTransactionIdByOid(@Param("oid") int oid);
+
+    @Select("SELECT response_file_attachment_id FROM open_tender where id = #{oid}")
+    int queryResponseIdByOid(@Param("oid") int oid);
+
+    @Select("SELECT other_attachments_id FROM open_tender where id = #{oid}")
+    int queryOtherAttachmentIdByOid(@Param("oid") int oid);
 }
 

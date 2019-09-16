@@ -426,12 +426,12 @@ public class ContractManageController {
     }
 
     /**
-     * 展示所有未通过法规科技处审批的【内网】
+     * 展示所有通过法规科技处未审批的【内网】
      *
      * @return
      */
     @GetMapping(value = "showAllNoPassReviewContractByFaGui")
-    @ApiOperation(value = "展示所有未通过法规科技处审批的【内网】")
+    @ApiOperation(value = "展示所有通过法规科技处未审批的【内网】")
     public ResultMap showAllNoPassReviewContractByFaGui(String subjectCategory, String subjectName, String subjectContact, String subjectContactPhone, String commitmentUnit, String subjectSupervisorDepartmentint, int pageNum, int pageSize) {
         return resultMap = contractManageService.showAllNoPassReviewContractByFaGui(subjectCategory, subjectName, subjectContact, subjectContactPhone, commitmentUnit, subjectSupervisorDepartmentint, pageNum, pageSize);
     }

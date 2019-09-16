@@ -52,7 +52,7 @@ public class SubjectParticipatingUnitDTO {
     private String workTask;
 
     @ApiModelProperty("为本课题工作时间（%）")
-    private Integer workingTime;
+    private Double workingTime;
 
 
     public SubjectParticipatingUnitDTO() {

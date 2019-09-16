@@ -424,7 +424,8 @@ public interface ContractManageMapper {
      * 展示所有评估中心已审批的 【内网】
      * @return
      */
-    @Select("SELECT \n" +
+    @Select("<script>" +
+            "SELECT \n" +
             "id,\n" +
             "subject_category as subjectCategory,\n" +
             "subject_name as subjectName,\n" +
@@ -436,9 +437,28 @@ public interface ContractManageMapper {
             "approval_status as approvalStatus\n" +
             "FROM\n" +
             "contract_manage\n" +
-            "WHERE\n" +
-            "approval_status=3\n" +
-            "ORDER BY id DESC")
+            "<where>\n" +
+            "approval_status=3\t" +
+            "<if test ='null != subjectCategory'>\n" +
+            "AND subject_category like CONCAT('%',#{subjectCategory},'%')\n" +
+            "</if>\n" +
+            "<if test ='null != subjectName'>\n" +
+            "AND subject_name like CONCAT('%',#{subjectName},'%')\n" +
+            "</if>\n" +
+            "<if test ='null != subjectContact'>\n" +
+            "AND subject_contact like CONCAT('%',#{subjectContact},'%')\n" +
+            "</if>\n" +
+            "<if test ='null != subjectContactPhone'>\n" +
+            "AND subject_contact_phone like CONCAT('%',#{subjectContactPhone },'%')\n" +
+            "</if>\n" +
+            "<if test ='null != commitmentUnit'>\n" +
+            "AND commitment_Unit like CONCAT('%',#{commitmentUnit},'%')\n" +
+            "</if>\n" +
+            "<if test ='null != subjectSupervisorDepartment'>\n" +
+            "AND subject_supervisor_department like CONCAT('%',#{subjectSupervisorDepartment},'%')\n" +
+            "</if></where>" +
+            "ORDER BY id DESC" +
+            "</script>")
     List<Map> showAllPassContractReviewByPingGu(@Param("subjectCategory") String subjectCategory,@Param("subjectName")String subjectName,
                                                 @Param("subjectContact")String subjectContact,@Param("subjectContactPhone")String subjectContactPhone,@Param("commitmentUnit")String commitmentUnit,
                                                 @Param("subjectSupervisorDepartment")String subjectSupervisorDepartment);
@@ -446,7 +466,8 @@ public interface ContractManageMapper {
      * 展示所有评估中心待审批的 【内网】
      * @return
      */
-    @Select("SELECT \n" +
+    @Select("<script>" +
+            "SELECT \n" +
             "id,\n" +
             "subject_category as subjectCategory,\n" +
             "subject_name as subjectName,\n" +
@@ -458,9 +479,28 @@ public interface ContractManageMapper {
             "approval_status as approvalStatus\n" +
             "FROM\n" +
             "contract_manage\n" +
-            "WHERE\n" +
-            "approval_status =2 \n" +
-            "ORDER BY id DESC")
+            "<where>\n" +
+            "approval_status=2\n" +
+            "<if test ='null != subjectCategory'>\n" +
+            "AND subject_category like CONCAT('%',#{subjectCategory},'%')\n" +
+            "</if>\n" +
+            "<if test ='null != subjectName'>\n" +
+            "AND subject_name like CONCAT('%',#{subjectName},'%')\n" +
+            "</if>\n" +
+            "<if test ='null != subjectContact'>\n" +
+            "AND subject_contact like CONCAT('%',#{subjectContact},'%')\n" +
+            "</if>\n" +
+            "<if test ='null != subjectContactPhone'>\n" +
+            "AND subject_contact_phone like CONCAT('%',#{subjectContactPhone},'%')\n" +
+            "</if>\n" +
+            "<if test ='null != commitmentUnit'>\n" +
+            "AND commitment_Unit like CONCAT('%',#{commitmentUnit},'%')\n" +
+            "</if>\n" +
+            "<if test ='null != subjectSupervisorDepartment'>\n" +
+            "AND subject_supervisor_department like CONCAT('%',#{subjectSupervisorDepartment},'%')\n" +
+            "</if></where>" +
+            "ORDER BY id DESC" +
+            "</script>")
     List<Map> showAllNoPassReviewContractByPingGu(@Param("subjectCategory") String subjectCategory,@Param("subjectName")String subjectName,
                                                   @Param("subjectContact")String subjectContact,@Param("subjectContactPhone")String subjectContactPhone,@Param("commitmentUnit")String commitmentUnit,
                                                   @Param("subjectSupervisorDepartment")String subjectSupervisorDepartment);
@@ -470,7 +510,8 @@ public interface ContractManageMapper {
      * 展示所有法规科技处已审批的 【内网】
      * @return
      */
-    @Select("SELECT \n" +
+    @Select("<script>" +
+            "SELECT \n" +
             "id,\n" +
             "subject_category as subjectCategory,\n" +
             "subject_name as subjectName,\n" +
@@ -482,10 +523,29 @@ public interface ContractManageMapper {
             "approval_status as approvalStatus\n" +
             "FROM\n" +
             "contract_manage\n" +
-            "WHERE\n" +
-            "approval_status =4 \n" +
-            "ORDER BY id DESC")
-    List<ContractManageDTO> showAllPassContractReviewByFaGui(@Param("subjectCategory") String subjectCategory,@Param("subjectName")String subjectName,
+            "<where>\n" +
+            "approval_status=4\t" +
+            "<if test ='null != subjectCategory'>\n" +
+            "AND subject_category like CONCAT('%',#{subjectCategory},'%')\n" +
+            "</if>\n" +
+            "<if test ='null != subjectName'>\n" +
+            "AND subject_name like CONCAT('%',#{subjectName},'%')\n" +
+            "</if>\n" +
+            "<if test ='null != subjectContact'>\n" +
+            "AND subject_contact like CONCAT('%',#{subjectContact},'%')\n" +
+            "</if>\n" +
+            "<if test ='null != subjectContactPhone'>\n" +
+            "AND subject_contact_phone like CONCAT('%',#{subjectContactPhone },'%')\n" +
+            "</if>\n" +
+            "<if test ='null != commitmentUnit'>\n" +
+            "AND commitment_Unit like CONCAT('%',#{commitmentUnit},'%')\n" +
+            "</if>\n" +
+            "<if test ='null != subjectSupervisorDepartment'>\n" +
+            "AND subject_supervisor_department like CONCAT('%',#{subjectSupervisorDepartment},'%')\n" +
+            "</if></where>" +
+            "ORDER BY id DESC" +
+            "</script>")
+    List<Map> showAllPassContractReviewByFaGui(@Param("subjectCategory") String subjectCategory,@Param("subjectName")String subjectName,
                                                              @Param("subjectContact")String subjectContact,@Param("subjectContactPhone")String subjectContactPhone,@Param("commitmentUnit")String commitmentUnit,
                                                              @Param("subjectSupervisorDepartment")String subjectSupervisorDepartment);
 
@@ -493,7 +553,8 @@ public interface ContractManageMapper {
      * 展示所有法规科技处未审批的 【内网】
      * @return
      */
-    @Select("SELECT \n" +
+    @Select("<script>" +
+            "SELECT \n" +
             "id,\n" +
             "subject_category as subjectCategory,\n" +
             "subject_name as subjectName,\n" +
@@ -505,10 +566,29 @@ public interface ContractManageMapper {
             "approval_status as approvalStatus\n" +
             "FROM\n" +
             "contract_manage\n" +
-            "WHERE\n" +
-            "approval_status =3\t\n" +
-            "ORDER BY id DESC")
-    List<ContractManageDTO>showAllNoPassReviewContractByFaGui(@Param("subjectCategory") String subjectCategory,@Param("subjectName")String subjectName,
+            "<where>\n" +
+            "approval_status=3\t" +
+            "<if test ='null != subjectCategory'>\n" +
+            "AND subject_category like CONCAT('%',#{subjectCategory},'%')\n" +
+            "</if>\n" +
+            "<if test ='null != subjectName'>\n" +
+            "AND subject_name like CONCAT('%',#{subjectName},'%')\n" +
+            "</if>\n" +
+            "<if test ='null != subjectContact'>\n" +
+            "AND subject_contact like CONCAT('%',#{subjectContact},'%')\n" +
+            "</if>\n" +
+            "<if test ='null != subjectContactPhone'>\n" +
+            "AND subject_contact_phone like CONCAT('%',#{subjectContactPhone },'%')\n" +
+            "</if>\n" +
+            "<if test ='null != commitmentUnit'>\n" +
+            "AND commitment_Unit like CONCAT('%',#{commitmentUnit},'%')\n" +
+            "</if>\n" +
+            "<if test ='null != subjectSupervisorDepartment'>\n" +
+            "AND subject_supervisor_department like CONCAT('%',#{subjectSupervisorDepartment},'%')\n" +
+            "</if></where>" +
+            "ORDER BY id DESC" +
+            "</script>")
+    List<Map>showAllNoPassReviewContractByFaGui(@Param("subjectCategory") String subjectCategory,@Param("subjectName")String subjectName,
                                                                @Param("subjectContact")String subjectContact,@Param("subjectContactPhone")String subjectContactPhone,@Param("commitmentUnit")String commitmentUnit,
                                                                @Param("subjectSupervisorDepartment")String subjectSupervisorDepartment);
 

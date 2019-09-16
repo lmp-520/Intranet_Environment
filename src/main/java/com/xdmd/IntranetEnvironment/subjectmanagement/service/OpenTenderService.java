@@ -133,7 +133,6 @@ public interface OpenTenderService {
      */
     ResultMap getfileInfo(int oid);
 
-
     /**
      * 根据招标主表id查询审核记录
      * @param oid
