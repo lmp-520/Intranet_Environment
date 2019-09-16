@@ -244,13 +244,13 @@ public class AchievementServiceImpl implements AchievementService {
         String username = user.getUsername();
 
         //判断上传的文件后缀名是否正确
-        List<String> achievementSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".zip", ".rar", ".7z"));
-        //获取文件名
-        String achievementFileName = achievementFile.getOriginalFilename();
-        Boolean aBoolean = FileSuffixJudgeUtil.SuffixJudge(achievementFileName, achievementSuffixList);
-        if (aBoolean == false) {
-            return resultMap.fail().message("请上传正确的成果信息文件格式");
-        }
+//        List<String> achievementSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".zip", ".rar", ".7z"));
+//        //获取文件名
+//        String achievementFileName = achievementFile.getOriginalFilename();
+//        Boolean aBoolean = FileSuffixJudgeUtil.SuffixJudge(achievementFileName, achievementSuffixList);
+//        if (aBoolean == false) {
+//            return resultMap.fail().message("请上传正确的成果信息文件格式");
+//        }
 
         //对成果信息文件进行上传
         try {

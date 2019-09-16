@@ -61,15 +61,15 @@ public class ExpertServiceImpl implements ExpertService {
         String username = user.getUsername();
 
 
-        //判断上传的文件后缀名是否正确
-        //专家信息文件后缀名的判断
-        List<String> expertSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".zip", ".rar", ".7z"));
-        //获取文件名
-        String expertFileName = expertFile.getOriginalFilename();
-        Boolean aBoolean = FileSuffixJudgeUtil.SuffixJudge(expertFileName, expertSuffixList);
-        if (aBoolean == false) {
-            return resultMap.fail().message("请上传正确的专家信息文件格式");
-        }
+//        //判断上传的文件后缀名是否正确
+//        //专家信息文件后缀名的判断
+//        List<String> expertSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".zip", ".rar", ".7z"));
+//        //获取文件名
+//        String expertFileName = expertFile.getOriginalFilename();
+//        Boolean aBoolean = FileSuffixJudgeUtil.SuffixJudge(expertFileName, expertSuffixList);
+//        if (aBoolean == false) {
+//            return resultMap.fail().message("请上传正确的专家信息文件格式");
+//        }
 
         //判断登陆名是否存在
         Integer uid1 = null;

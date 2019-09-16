@@ -419,10 +419,10 @@ public class ExtranetAcceptApplyController {
     @PostMapping("newQueryTopicNameAndNumber")
     @ResponseBody
     public  ResultMap newQueryTopicNumberAndTopicName(@RequestParam(value = "topicName",required = false)String topicName,     //课题名称
-                                                       @RequestParam(value = "topicNumber",required = false)String topicNumber, //课题编号
-                                                       @CookieValue(value = "token",required = false)String token,HttpServletResponse response,
-                                                       @RequestParam("Page") Integer page,      //页数
-                                                       @RequestParam("total") Integer total     ){  //每页显示条数
+                                                      @RequestParam(value = "topicNumber",required = false)String topicNumber, //课题编号
+                                                      @CookieValue(value = "token",required = false)String token,HttpServletResponse response,
+                                                      @RequestParam("Page") Integer page,      //页数
+                                                      @RequestParam("total") Integer total){  //每页显示条数
         if(StringUtils.isEmpty(token)){
             return resultMap.fail().message("请先登录");
         }

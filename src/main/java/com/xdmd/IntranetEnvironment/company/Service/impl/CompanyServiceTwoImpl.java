@@ -48,30 +48,30 @@ public class CompanyServiceTwoImpl implements CompanyServiceTwo {
         //判断上传文件的类型是否正确
 
 
-        //营业执照的格式判断
-        List<String> businessSuffixList = new ArrayList<String>(Arrays.asList(".jpg", ".png", ".jpeg", ".pdf"));
-        //获取文件名
-        String businessName = businessFile.getOriginalFilename();
-        Boolean aBoolean = FileSuffixJudgeUtil.SuffixJudge(businessName, businessSuffixList);
-        if (aBoolean == false) {
-            return resultMap.fail().message("请上传正确的营业执照格式");
-        }
-
-        //法人身份证文件格式的判断
-        List<String> legalCardIdSuffixList = new ArrayList<String>(Arrays.asList(".doc", ".docx", ".zip", ".rar", ".7z"));
-        String legalName = legalCardIdFile.getOriginalFilename();
-        Boolean aBoolean1 = FileSuffixJudgeUtil.SuffixJudge(legalName, legalCardIdSuffixList);
-        if (aBoolean1 == false) {
-            return resultMap.fail().message("请上传正确的法人身份证文件格式");
-        }
-
-        //联系人身份证的格式判断
-        List<String> contactCardSuffixList = new ArrayList<String>(Arrays.asList(".doc", ".docx", ".zip", ".rar", ".7z"));
-        String originalName = contactCardFile.getOriginalFilename();
-        Boolean aBoolean2 = FileSuffixJudgeUtil.SuffixJudge(originalName, contactCardSuffixList);
-        if (aBoolean2 == false) {
-            return resultMap.fail().message("请上传正确的联系人身份证格式");
-        }
+//        //营业执照的格式判断
+//        List<String> businessSuffixList = new ArrayList<String>(Arrays.asList(".jpg", ".png", ".jpeg", ".pdf"));
+//        //获取文件名
+//        String businessName = businessFile.getOriginalFilename();
+//        Boolean aBoolean = FileSuffixJudgeUtil.SuffixJudge(businessName, businessSuffixList);
+//        if (aBoolean == false) {
+//            return resultMap.fail().message("请上传正确的营业执照格式");
+//        }
+//
+//        //法人身份证文件格式的判断
+//        List<String> legalCardIdSuffixList = new ArrayList<String>(Arrays.asList(".doc", ".docx", ".zip", ".rar", ".7z"));
+//        String legalName = legalCardIdFile.getOriginalFilename();
+//        Boolean aBoolean1 = FileSuffixJudgeUtil.SuffixJudge(legalName, legalCardIdSuffixList);
+//        if (aBoolean1 == false) {
+//            return resultMap.fail().message("请上传正确的法人身份证文件格式");
+//        }
+//
+//        //联系人身份证的格式判断
+//        List<String> contactCardSuffixList = new ArrayList<String>(Arrays.asList(".doc", ".docx", ".zip", ".rar", ".7z"));
+//        String originalName = contactCardFile.getOriginalFilename();
+//        Boolean aBoolean2 = FileSuffixJudgeUtil.SuffixJudge(originalName, contactCardSuffixList);
+//        if (aBoolean2 == false) {
+//            return resultMap.fail().message("请上传正确的联系人身份证格式");
+//        }
 
         //判断该公司是否已经存在
         Integer cid = null;
