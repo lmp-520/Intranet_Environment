@@ -47,12 +47,12 @@ public class CompanyControllerTwo {
 //            return resultMap.fail().message("输入的验证码有误");
 //        }
 
-        //用于判断用户传输的参数是否有误
-        if (result.hasErrors()) {
-            List<ObjectError> ls = result.getAllErrors();
-            String errorMessage = ls.get(0).getDefaultMessage();
-            return resultMap.fail().message(errorMessage);
-        }
+//        //用于判断用户传输的参数是否有误
+//        if (result.hasErrors()) {
+//            List<ObjectError> ls = result.getAllErrors();
+//            String errorMessage = ls.get(0).getDefaultMessage();
+//            return resultMap.fail().message(errorMessage);
+//        }
 
         //判断输入的社会信用代码格式
         String socialCreditCode = userInformation.getAdministratorInformation().getSocialCreditCode();

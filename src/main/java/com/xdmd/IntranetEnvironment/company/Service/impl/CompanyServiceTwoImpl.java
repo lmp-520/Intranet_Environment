@@ -77,6 +77,13 @@ public class CompanyServiceTwoImpl implements CompanyServiceTwo {
         Integer cid = null;
         cid = companyMapper.queryCidByCname(userInformation.getAdministratorInformation().getCompanyName());
 
+        //判断社会信用代码是否存在
+        int num = companyMapper.querySocialCreditCode(userInformation.getAdministratorInformation().getSocialCreditCode());
+        if(num == 1){
+            //此时这个社会信用账号已存在
+            return resultMap.fail().message("该公司已经被注册，请找公司管理员分配账号");
+        }
+
         if(cid != null){
             //此时意味着 该公司已经被注册过
             return resultMap.fail().message("该公司已经被注册，请找公司管理员分配账号");
@@ -134,7 +141,7 @@ public class CompanyServiceTwoImpl implements CompanyServiceTwo {
         }
 
         //把新注册的公司的名称存入公司表中
-        companyMapper.addCompanyName(userInformation.getAdministratorInformation().getCompanyName());
+        companyMapper.addCompanyName(userInformation.getAdministratorInformation().getCompanyName(),userInformation.getAdministratorInformation().getSocialCreditCode());
 
         //获取新注册的公司的id
         Integer cid3 = companyMapper.queryCidByCname(userInformation.getAdministratorInformation().getCompanyName());
@@ -169,6 +176,9 @@ public class CompanyServiceTwoImpl implements CompanyServiceTwo {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String nowTime = sdf.format(date);
         administratorInformation.setCreateTime(nowTime);
+
+        //第一次注册的时候，所有的企业都是白名单
+        administratorInformation.setCreditRoster("0");
 
         //把公司管理员的具体信息填入数据库中
         companyMapper.addAdministratorInformation(administratorInformation);

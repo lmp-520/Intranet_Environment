@@ -72,7 +72,7 @@ public class CreditCodeRegex {
      * @param creditCode
      */
     private  static void  pre17(String creditCode){
-    	 System.out.println(creditCode);
+   // 	 System.out.println(creditCode);
     	 
         String pre17 = creditCode.substring(0,17);
        
