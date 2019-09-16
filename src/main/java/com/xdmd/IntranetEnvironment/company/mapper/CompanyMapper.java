@@ -20,8 +20,8 @@ public interface CompanyMapper {
     void uploadFile(@Param("uploadFile") UploadFile uploadBusinessFile);
 
     //把新注册的公司的名称存入公司表中
-    @Insert("insert into shiro_company_name(company_name) values (#{companyName})")
-    void addCompanyName(@Param("companyName") String companyName);
+    @Insert("insert into shiro_company_name(company_name,social_credit_code) values (#{companyName},#{socialCreditCode})")
+    void addCompanyName(@Param("companyName") String companyName,@Param("socialCreditCode") String socialCreditCode);
 
     //把公司注册的基本信息存入到基本信息表中
     void addCompanyInformation(@Param("userInformation") UserInformation userInformation);
@@ -82,4 +82,8 @@ public interface CompanyMapper {
 
     @Select("select reason from expert_information where aid = #{uid}")
     String queryReasonByUid(@Param("uid") Integer uid);
+
+    //判断社会信用代码是否存在
+    @Select("SELECT count(id) FROM shiro_company_name where social_credit_code = #{socialCreditCode}")
+    int querySocialCreditCode(@Param("socialCreditCode") String socialCreditCode);
 }

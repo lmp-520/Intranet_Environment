@@ -11,7 +11,7 @@
  Target Server Version : 80016
  File Encoding         : 65001
 
- Date: 11/09/2019 18:04:53
+ Date: 16/09/2019 19:41:00
 */
 
 SET NAMES utf8mb4;
@@ -80,7 +80,7 @@ CREATE TABLE `acceptance_certificate`  (
   `acceptance_certificate_url` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '验收证书url',
   `total_expenditure` decimal(9, 2) NULL DEFAULT NULL COMMENT '课题经费支出合计',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 17 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of acceptance_certificate
@@ -110,7 +110,7 @@ CREATE TABLE `acceptance_certificate_patent`  (
   `new_device` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '建成新装置',
   `new_technology` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '新工艺',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 29 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 28 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of acceptance_certificate_patent
@@ -132,7 +132,7 @@ CREATE TABLE `acceptance_certificate_principal_personnel`  (
   `participant_work_unit` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '主要参与人员工作单位',
   `task_taking` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '主要参与人员承担的主要研究任务',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 17 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of acceptance_certificate_principal_personnel
@@ -154,7 +154,7 @@ CREATE TABLE `acceptance_certificate_subject_people`  (
   `title` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '课题责任人职称',
   `phone` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '课题责任人联系方式',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of acceptance_certificate_subject_people
@@ -169,7 +169,7 @@ CREATE TABLE `acceptance_phase`  (
   `ap_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `ap_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '审核状态名称',
   PRIMARY KEY (`ap_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 100 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 99 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of acceptance_phase
@@ -195,7 +195,7 @@ CREATE TABLE `adjust_type`  (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '调整类型主键id',
   `adjust_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '调整类型',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of adjust_type
@@ -212,7 +212,7 @@ CREATE TABLE `adjustment_matters`  (
   `adjustment_matters` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '调整事项',
   `adjust_type_id` int(11) NOT NULL COMMENT '调整原因id',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of adjustment_matters
@@ -239,6 +239,7 @@ CREATE TABLE `administrator_information`  (
   `unit_nature` varchar(5) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '单位性质',
   `social_credit_code` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '社会信用号',
   `legal_person` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '法人姓名',
+  `legal_person_id_card` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '法人身份证号',
   `contact_id_card` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '联系人身份证号',
   `contact_phone` varchar(15) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '联系人手机号',
   `email` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '电子邮件',
@@ -246,31 +247,19 @@ CREATE TABLE `administrator_information`  (
   `legal_card_id_url_id` int(11) NULL DEFAULT NULL COMMENT '法人身份证url的id',
   `contact_card_url_id` int(11) NULL DEFAULT NULL COMMENT '联系人身份证url的id',
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '注册时间',
+  `credit_roster` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '信用名单（0：为白名单 默认  1：为黑名单）',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 22 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 21 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of administrator_information
 -- ----------------------------
-INSERT INTO `administrator_information` VALUES (1, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-07-22 00:00:00');
-INSERT INTO `administrator_information` VALUES (2, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-07-22 00:00:00');
-INSERT INTO `administrator_information` VALUES (4, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-07-22 00:00:00');
-INSERT INTO `administrator_information` VALUES (5, NULL, NULL, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-07-22 00:00:00');
-INSERT INTO `administrator_information` VALUES (6, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-07-22 00:00:00');
-INSERT INTO `administrator_information` VALUES (7, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-07-22 00:00:00');
-INSERT INTO `administrator_information` VALUES (8, NULL, NULL, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-07-22 00:00:00');
-INSERT INTO `administrator_information` VALUES (9, NULL, NULL, 4, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-07-22 16:32:44');
-INSERT INTO `administrator_information` VALUES (10, NULL, NULL, 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-07-22 16:34:03');
-INSERT INTO `administrator_information` VALUES (11, NULL, NULL, 12, '公司地址1', '1', '52123654AAAAAAAAAA', '法人1', '340303199702150432', '18855532979', '123456987@qq.com', 1, 1, 1, '2019-07-23 11:22:32');
-INSERT INTO `administrator_information` VALUES (12, NULL, NULL, 13, '公司地址1', '1', '52123654AAAAAAAAAA', '法人1', '340303199702150432', '18855532979', '123456987@qq.com', 1, 1, 1, '2019-07-23 11:24:47');
-INSERT INTO `administrator_information` VALUES (13, NULL, NULL, 14, '公司地址1', '1', '111111112222222222', '法人姓名1', '340333666575623145', '18855532979', '8433455@qq.com', 1, 1, 1, '2019-07-26 14:10:17');
-INSERT INTO `administrator_information` VALUES (14, NULL, NULL, 15, '公司地址1', '1', '111111112222222222', '法人姓名1', '340333655555555555', '18855532565', '8433456@11.com', 1, 1, 1, '2019-07-26 16:06:19');
-INSERT INTO `administrator_information` VALUES (15, NULL, NULL, 16, '公司地址呀', '2', '91370105MA3D5P8C9U', '法人姓名1', '340303199609280455', '18855532656', '85463221@qq.com', 1, 1, 1, '2019-08-05 14:43:25');
-INSERT INTO `administrator_information` VALUES (16, NULL, NULL, 20, '公司地址呀6666', '2', '91370105MA3D5P8C9U', '法人姓名1', '340303199609280455', '18855532656', '85463221@qq.com', 88, 89, 90, '2019-08-05 16:21:50');
-INSERT INTO `administrator_information` VALUES (17, 2, '公司名称1221', 25, '公司地址11', '2', '12100000425010757A', '法人姓名', '340303119609280415', '18855532979', '12345687@qq.com', 146, 147, 148, '2019-08-09 14:56:01');
-INSERT INTO `administrator_information` VALUES (19, 18, '公司名称12212', 16, '公司地址11', '2', '12100000425010757A', '法人姓名', '340303119609280415', '18855532979', '12345687@qq.com', 97, 98, 99, '2019-08-13 15:05:17');
-INSERT INTO `administrator_information` VALUES (20, 57, '4', 18, '5', '3', '91210200317986672Y', '8', '9', '10', '11', 169, 170, 171, '2019-08-20 18:49:58');
-INSERT INTO `administrator_information` VALUES (21, 59, '12', 19, '3123', '4', '91210200317986672Y', '我', '333333333333333333', '13777777777', '123@qq.com', 173, 174, 175, '2019-08-23 09:33:04');
+INSERT INTO `administrator_information` VALUES (17, 2, '公司名称1221', 25, '公司地址11', '2', '12100000425010757A', '法人姓名', NULL, '340303119609280415', '18855532979', '12345687@qq.com', 146, 147, 148, '2019-08-09 14:56:01', '0');
+INSERT INTO `administrator_information` VALUES (19, 18, '公司名称12212', 16, '公司地址11', '2', '12100000425010757A', '法人姓名', NULL, '340303119609280415', '18855532979', '12345687@qq.com', 97, 98, 99, '2019-08-13 15:05:17', '0');
+INSERT INTO `administrator_information` VALUES (20, 57, '4', 18, '5', '3', '91210200317986672Y', '8', NULL, '9', '10', '11', 169, 170, 171, '2019-08-20 18:49:58', '0');
+INSERT INTO `administrator_information` VALUES (21, 59, '12', 19, '3123', '4', '91210200317986672Y', '我', NULL, '333333333333333333', '13777777777', '123@qq.com', 173, 174, 175, '2019-08-23 09:33:04', '0');
+INSERT INTO `administrator_information` VALUES (22, 63, '公司名称', 20, '公司地址', '2', '91210200317986672Y', '法人姓名', NULL, '340303199609280415', '18855532979', '843183340@qq.com', 403, 404, 405, '2019-09-16 14:03:44', '0');
+INSERT INTO `administrator_information` VALUES (23, 64, '公司名称qw', 21, '公司地址', '3', '91210200317986672Y', '法人姓名', NULL, '340303199609280415', '18855532979', '843183340@qq.com', 406, 407, 408, '2019-09-16 14:06:08', '0');
 
 -- ----------------------------
 -- Table structure for check_apply
@@ -316,7 +305,7 @@ CREATE TABLE `check_apply`  (
   `acceptance_final_result_id` int(5) NULL DEFAULT NULL COMMENT '最终验收结果id',
   `is_outcome` varchar(5) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '是否已经加入过成果库\r\n0：还没有加入到成果库 （默认为 0）\r\n1:  已经加入到成果库',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 95 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 94 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of check_apply
@@ -339,7 +328,7 @@ CREATE TABLE `check_apply_state`  (
   `handle_content` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '处理内容',
   `second_handle_time` datetime(0) NULL DEFAULT NULL COMMENT '处理时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 155 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 154 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of check_apply_state
@@ -361,7 +350,7 @@ CREATE TABLE `content_indicators`  (
   `time` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '日期',
   `program_content_assessment_indicators` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '计划内容及考核指标',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 52 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 51 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of content_indicators
@@ -461,22 +450,30 @@ CREATE TABLE `contract_manage`  (
   `approval_status` int(11) NOT NULL DEFAULT 2 COMMENT '合同审批状态(0-单位员工待提交  1-单位管理员待审批 2-评估中心员工待审批 3-法规科技处待审批  4-法规科技处已审批)',
   `mid_record_id` int(11) NULL DEFAULT 0 COMMENT '中期检查记录id（关联表）',
   `contract_annex_id` int(11) NULL DEFAULT NULL COMMENT '合同附件id',
-  `mid_check_annex_id` int(11) NULL DEFAULT NULL COMMENT '中期检查表附件id',
+  `mid_check_template_id` int(11) NULL DEFAULT NULL COMMENT '中期检查模板id',
   `expert_assessment_annex_id` int(11) NULL DEFAULT NULL COMMENT '专家评估表附件id',
   `subject_suggest_annex_id` int(11) NULL DEFAULT NULL COMMENT '课题意见附件id',
+  `contract_weizhi_annex_id` int(11) NULL DEFAULT 0 COMMENT '未知类型附件',
+  `mid_check_status` int(11) NULL DEFAULT NULL COMMENT '中期检查状态\r\n【0-单位未上传完材料 1-单位上传完材料但评估中心未上传所需材料  2-评估中心上传完所需材料中期检查结束】',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 17 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of contract_manage
 -- ----------------------------
-INSERT INTO `contract_manage` VALUES (1, '77', 'xdmd20190007', '凄凄切切', '2019-09-03', '2019-09-08', '啊啊啊啊', '13777777777', '7', '17777777777', '4', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '32', '31', '33', '34', '35', '1', 2, 0, NULL, NULL, NULL, NULL);
-INSERT INTO `contract_manage` VALUES (5, '77', 'xdmd20190001', '课题名课题名', '2019-09-09', '2019-09-10', '负责人', '13777777777', '7', '17777777777', '4', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '32', '31', '33', '34', '35', '0', 0, 0, NULL, NULL, NULL, NULL);
-INSERT INTO `contract_manage` VALUES (6, '77', 'xdmd20190005', '课题dfsfwsefw课题名', '2019-09-09', '2019-09-04', 'DFSEFWS', '15000000000', '7', '18700000000', '4', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '32', '31', '33', '34', '35', '1', 3, 0, NULL, NULL, NULL, NULL);
-INSERT INTO `contract_manage` VALUES (7, '78', 'xdmd20190005', '课题fgkjcpass课题名', '2019-09-09', '2019-09-03', 'DFSEFWS', '15000000000', '7', '18700000000', '4', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '32', '31', '33', '34', '35', '0', 4, 0, NULL, NULL, NULL, NULL);
-INSERT INTO `contract_manage` VALUES (8, '77', 'xdmd20190008', 'hftvyfvuyg', '2019-09-03', '2019-09-09', 'hggfvuygu', '13777777777', '7', '13900000000', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '32', '31', '33', '34', '35', '0', 3, 0, NULL, NULL, NULL, NULL);
-INSERT INTO `contract_manage` VALUES (9, '77', 'xdmd20190008', 'fgkjcpass', '2019-09-03', '2019-09-09', 'hggfvuygu', '13777777777', '7', '13900000000', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '32', '31', '33', '34', '35', '0', 4, 0, NULL, NULL, NULL, NULL);
-INSERT INTO `contract_manage` VALUES (10, '78', 'xdmd20190010', 'sefafwef名', '2019-09-09', '2019-09-10', 'sdfrtert', '15000000000', '7', '18700000000', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '32', '31', '33', '34', '35', '0', 2, 0, NULL, NULL, NULL, NULL);
+INSERT INTO `contract_manage` VALUES (1, '77', 'xdmd20190007', '凄凄切切', '2019-09-03', '2019-09-08', '啊啊啊啊', '13777777777', '7', '17777777777', '4', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '32', '31', '33', '34', '35', '1', 2, 1, NULL, NULL, NULL, NULL, 0, NULL);
+INSERT INTO `contract_manage` VALUES (5, '77', 'xdmd20190001', '课题名课题名', '2019-09-09', '2019-09-10', '负责人', '13777777777', '7', '17777777777', '4', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '32', '31', '33', '34', '35', '0', 0, 1, NULL, 2, NULL, NULL, 0, NULL);
+INSERT INTO `contract_manage` VALUES (6, '77', 'xdmd20190005', 'fgre5ttxfgde4re', '2019-09-09', '2019-09-04', 'DFSEFWS', '15000000000', '7', '18700000000', '4', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '32', '31', '33', '34', '35', '1', 3, 1, NULL, NULL, NULL, NULL, 0, NULL);
+INSERT INTO `contract_manage` VALUES (7, '78', 'xdmd20190005', '课题名', '2019-09-09', '2019-09-03', 'DFSEFWS', '15000000000', '7', '18700000000', '4', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '32', '31', '33', '34', '35', '0', 4, 1, NULL, NULL, NULL, NULL, 0, NULL);
+INSERT INTO `contract_manage` VALUES (8, '77', 'xdmd20190008', '购房入户他依然', '2019-09-03', '2019-09-09', 'hggfvuygu', '13777777777', '7', '13900000000', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '32', '31', '33', '34', '35', '0', 3, 1, NULL, 2, NULL, NULL, 0, NULL);
+INSERT INTO `contract_manage` VALUES (9, '77', 'xdmd20190008', '发的退役人员', '2019-09-03', '2019-09-09', 'hggfvuygu', '13777777777', '7', '13900000000', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '32', '31', '33', '34', '35', '0', 4, 19, NULL, NULL, NULL, NULL, 0, 0);
+INSERT INTO `contract_manage` VALUES (10, '78', 'xdmd20190010', 'dftgedre', '2019-09-09', '2019-09-10', 'sdfrtert', '15000000000', '7', '18700000000', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '32', '31', '33', '34', '35', '0', 2, 1, NULL, NULL, NULL, NULL, 0, NULL);
+INSERT INTO `contract_manage` VALUES (11, '76', 'xdmd20190053', '课题测试1', '2019-09-29', '2019-09-30', '课题负责', '13777566544', 'asda', '15062114931', '4', 'xfgre56y', '123321', 'fgrte6y', 'drtg5y76', 'fghtr7u', 'gfhrt67u', 'fghtr67ufg', 'hytr7ift', '15000000000', 'gdfrw54', 'sdfewr56', 'sdfre536', '12321', 'dszfewr5', 'dfety', 'fgtrtu', '123453', 'xdfgdfety', '15000000000', 'fcx@qq.com', 'xdfsrzd', 'fwersdfert', 'dfgdse', '123456', 'fcgsdth', 'fdgert6ygfh', 'reuyf', '0', 2, 1, NULL, NULL, NULL, NULL, 0, NULL);
+INSERT INTO `contract_manage` VALUES (12, '76', 'xdmd20190053', '课题测试1', '2019-09-02', '2019-09-30', '课题负责', '13777566544', '打死他如果为', '15000000000', '4', '陈v不过乳房', '123234', '我的方式', '幸福v广东省', '除非个人沸腾鱼', 'qwe@qq.com', 'qq.comx\'d\'g\'re\'r', 'xdgrerc\'f\'b\'h', '15000000000', 'dxfgdtg', 'cghyt', 'cfhrty', '123456', 'fghtr6u', 'gfhyt7', 'fghtrhy', '456789', 'cvnb', '15000000000', 'fgftrtg', 'cvfbgfdyth', 'vbgfyu', 'cvvfbgetty', '123456', 'cvbgftyh', 'cvbgfuy', 'fghrfet6uy', '0', 2, 1, NULL, NULL, NULL, NULL, 0, NULL);
+INSERT INTO `contract_manage` VALUES (13, '76', 'xdmd20190053', '课题测试1', '2019-09-02', '2019-09-30', '课题负责', '13777566544', '打死他如果为', '15000000000', '4', '陈v不过乳房', '123234', '我的方式', '幸福v广东省', '除非个人沸腾鱼', 'qwe@qq.com', 'qq.comx\'d\'g\'re\'r', 'xdgrerc\'f\'b\'h', '15000000000', 'dxfgdtg', 'cghyt', 'cfhrty', '123456', 'fghtr6u', 'gfhyt7', 'fghtrhy', '456789', 'cvnb', '15000000000', 'fgftrtg', 'cvfbgfdyth', 'vbgfyu', 'cvvfbgetty', '123456', 'cvbgftyh', 'cvbgfuy', 'fghrfet6uy', '0', 2, 1, NULL, NULL, NULL, NULL, 0, NULL);
+INSERT INTO `contract_manage` VALUES (14, '76', 'xdmd20190053', '课题测试1', '2019-09-02', '2019-09-30', '课题负责', '13777566544', '打死他如果为', '15000000000', '4', '复合体热油 ', '123234', '地方人格dewy ', '幸福v广东省', '发光的于台湾商人', 'qwe@qq.com', 'qq.comx\'d\'g\'re\'r', 'xdgrerc\'f\'b\'h', '15000000000', 'dxfgdtg', 'cghyt', 'cfhrty', '123456', 'fghtr6u', '电费瑞特', 'fghtrhy', '456789', 'cvnb', '15000000000', 'fgftrtg', 'cvfbgfdyth', 'vbgfyu', 'cvvfbgetty', '123456', 'cvbgftyh', 'cvbgfuy', 'fghrfet6uy', '0', 2, 1, 454, NULL, NULL, NULL, 0, NULL);
+INSERT INTO `contract_manage` VALUES (15, '76', 'xdmd20190053', '课题测试1', '2019-09-16', '2019-09-17', '课题负责', '13777566544', '题联系人', '13777755555', '4', '承担单位地承担单位地', '221000', '课题主管', '开户银行', '555666655555', '12@qq.com', '保证单位保证单位', '保证单位联系', '13546555555', '托单位', '托单位法', '托单位', '222222', '担单位', '担单位法定代', '承担单位承担单位', '221000', '承担单位课题', '13666666666', '123@qq.com', '保证单', '门负', '保证单位地', '222333', '课题签订说', '课题的目标和主课题的目标和主', '课题验收内容和考', '0', 2, 1, 453, NULL, NULL, NULL, 0, NULL);
+INSERT INTO `contract_manage` VALUES (16, '76', 'xdmd20190053', '小地方给的退役人员', '2019-09-03', '2019-09-04', '课题负责', '18855532979', '21', '18855532979', '4', '21', '21', '21', '12', '21', '21', '12', '12', '18855532979', '12', '12', '12', '12', '12', '21', '21', '12', '21', '18855532979', '21', '21', '21', '12', '2112', '12', '12', '21', '0', 4, 19, 455, NULL, NULL, NULL, 0, 0);
 
 -- ----------------------------
 -- Table structure for contract_midcheck_annexs
@@ -492,7 +489,7 @@ CREATE TABLE `contract_midcheck_annexs`  (
   `contract_annex_id` int(11) NULL DEFAULT NULL COMMENT '合同附件id',
   `expert_suggest_annex_id` int(11) NULL DEFAULT NULL COMMENT '专家意见附件id',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of contract_midcheck_annexs
@@ -508,7 +505,7 @@ CREATE TABLE `contract_research_development_tasks`  (
   `progress_id` int(11) NOT NULL COMMENT '课题进展id',
   `require_stodd_task_content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '要求研发任务内容',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of contract_research_development_tasks
@@ -528,7 +525,7 @@ CREATE TABLE `current_progress`  (
   `progress_id` int(11) NOT NULL COMMENT '课题进展id',
   `current_progress_content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '目前进展情况内容',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of current_progress
@@ -551,7 +548,7 @@ CREATE TABLE `dictionary`  (
   `content_id` int(11) NOT NULL COMMENT '内容id',
   `state` int(5) NOT NULL COMMENT '启用（0:逻辑删除  1：启用）',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 95 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 94 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of dictionary
@@ -677,7 +674,7 @@ CREATE TABLE `expert_acceptance_review`  (
   `create_author` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建人',
   `create_time` datetime(6) NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`ar_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of expert_acceptance_review
@@ -709,7 +706,7 @@ CREATE TABLE `expert_assessment`  (
   `fill_date` date NOT NULL COMMENT '填写日期',
   `expert_assessment_annex_id` int(11) NOT NULL COMMENT '专家评估附件',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of expert_assessment
@@ -745,7 +742,7 @@ CREATE TABLE `expert_group_comments`  (
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
   `create_author` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建人',
   PRIMARY KEY (`egc_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 17 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of expert_group_comments
@@ -764,7 +761,7 @@ CREATE TABLE `expert_group_comments_name`  (
   `major` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '专业',
   `job` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '职务',
   PRIMARY KEY (`egc_nid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 33 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 32 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of expert_group_comments_name
@@ -801,7 +798,7 @@ CREATE TABLE `expert_information`  (
   `reason` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '审核未通过的原因',
   `expert_information_url_id` int(10) NULL DEFAULT NULL COMMENT '专家信息的文件id',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 46 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 45 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of expert_information
@@ -847,7 +844,7 @@ CREATE TABLE `expert_information_article`  (
   `title_articles_periodicals` varchar(40) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '文章期刊名',
   `articles_publication_time` date NOT NULL COMMENT '文章发布时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 61 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 60 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of expert_information_article
@@ -906,7 +903,7 @@ CREATE TABLE `expert_information_book`  (
   `book_publishing_house` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '著作出版社',
   `writing_time` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '著作时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 40 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 39 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of expert_information_book
@@ -953,7 +950,7 @@ CREATE TABLE `expert_information_patent`  (
   `patent_no` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '专利号',
   `patent_time` date NOT NULL COMMENT '专利时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 34 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 33 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of expert_information_patent
@@ -997,7 +994,7 @@ CREATE TABLE `expert_information_prize_winning`  (
   `prize_winning_department` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '获奖部门',
   `prize_winning_time` date NOT NULL COMMENT '获奖时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 32 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 31 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of expert_information_prize_winning
@@ -1037,7 +1034,7 @@ CREATE TABLE `expert_information_research_direction`  (
   `expert_id` int(11) NULL DEFAULT NULL COMMENT '专家信息表id',
   `main_research_directions` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '主要研究方向',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 55 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 54 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of expert_information_research_direction
@@ -1101,7 +1098,7 @@ CREATE TABLE `extranet_login_log`  (
   `identity` int(5) NULL DEFAULT NULL COMMENT '身份( 0：管理员 1：员工 2：专家)',
   `login_time` datetime(0) NULL DEFAULT NULL COMMENT '登录时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 269 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 268 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of extranet_login_log
@@ -1161,6 +1158,8 @@ INSERT INTO `extranet_login_log` VALUES (265, '1', 1, '2019-09-09 17:49:48');
 INSERT INTO `extranet_login_log` VALUES (266, '12', 0, '2019-09-11 09:13:13');
 INSERT INTO `extranet_login_log` VALUES (267, '12', 0, '2019-09-11 09:19:24');
 INSERT INTO `extranet_login_log` VALUES (268, '12', 0, '2019-09-11 09:19:25');
+INSERT INTO `extranet_login_log` VALUES (269, '12', 0, '2019-09-16 09:20:14');
+INSERT INTO `extranet_login_log` VALUES (270, '登录名', 0, '2019-09-16 14:04:37');
 
 -- ----------------------------
 -- Table structure for extranet_menu
@@ -1172,7 +1171,7 @@ CREATE TABLE `extranet_menu`  (
   `is_father` int(11) NULL DEFAULT NULL COMMENT '是否是一级菜单 0：一级 1：二级菜单',
   `father_id` int(11) NULL DEFAULT NULL COMMENT '父级的id',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 25 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 24 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of extranet_menu
@@ -1228,7 +1227,7 @@ CREATE TABLE `guide_collection`  (
   `is_select` int(11) NULL DEFAULT 0 COMMENT '是否选中(0-未选中；1-已选中)',
   `declaration_status` int(11) NULL DEFAULT 0 COMMENT '0- 未审核 1-审核通过 2-审核未通过',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 66 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 65 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of guide_collection
@@ -1307,7 +1306,7 @@ CREATE TABLE `guide_collection_limit_time`  (
   `guide_collection_start_time` date NOT NULL COMMENT '指南征集开始时间',
   `guide_collection_end_time` date NOT NULL COMMENT '指南征集结束时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of guide_collection_limit_time
@@ -1346,7 +1345,7 @@ CREATE TABLE `guide_summary`  (
   `creator` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '创建者',
   `create_time` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 84 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of guide_summary
@@ -1380,7 +1379,7 @@ CREATE TABLE `intranet_login_log`  (
   `identity` int(5) NULL DEFAULT NULL COMMENT '身份( 0：管理员 1：员工 2：专家)',
   `login_time` datetime(0) NULL DEFAULT NULL COMMENT '登录时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 255 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 254 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of intranet_login_log
@@ -1427,6 +1426,8 @@ INSERT INTO `intranet_login_log` VALUES (251, 'admin', 3, '2019-09-11 10:32:42')
 INSERT INTO `intranet_login_log` VALUES (252, 'admin', 3, '2019-09-11 10:37:42');
 INSERT INTO `intranet_login_log` VALUES (253, 'admin', 3, '2019-09-11 15:04:17');
 INSERT INTO `intranet_login_log` VALUES (254, 'admin', 3, '2019-09-11 15:54:58');
+INSERT INTO `intranet_login_log` VALUES (255, 'admin', 3, '2019-09-16 09:22:21');
+INSERT INTO `intranet_login_log` VALUES (256, 'admin', 3, '2019-09-16 18:12:25');
 
 -- ----------------------------
 -- Table structure for key_research_developers
@@ -1444,7 +1445,7 @@ CREATE TABLE `key_research_developers`  (
   `work_task` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '本课题中承担工作',
   `working_time` int(25) NOT NULL COMMENT '为本课题工作时间（%）',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 17 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of key_research_developers
@@ -1484,7 +1485,7 @@ CREATE TABLE `major_matters_filing`  (
   `approval_documents_attachment_id` int(11) NULL DEFAULT NULL COMMENT '批准文件附件id',
   `shenhe_status` int(11) NOT NULL DEFAULT 0 COMMENT '审批状态【0-未审批 1-已审批】',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of major_matters_filing
@@ -1512,7 +1513,7 @@ CREATE TABLE `menu`  (
   `is_father` int(10) NULL DEFAULT NULL COMMENT '是否是一级菜单 0：一级 1：二级菜单',
   `father_id` int(11) NULL DEFAULT NULL COMMENT '父id',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 40 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 39 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of menu
@@ -1628,7 +1629,7 @@ CREATE TABLE `mid_check`  (
   `bear_contaact_phone` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '承担单位联系人电话',
   `mid_inspection_annex` int(11) NULL DEFAULT NULL COMMENT '中期检查附件id',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of mid_check
@@ -1645,17 +1646,110 @@ CREATE TABLE `mid_check_record`  (
   `mid_check_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '中期检查名称',
   `mid_check_initinate_time` date NOT NULL COMMENT '中期检查发起时间',
   `mid_check_state` int(11) NOT NULL DEFAULT 0 COMMENT '中期检查发起状态',
+  `mid_check_expert_opinion_id` int(11) NULL DEFAULT 0 COMMENT '中期检查专家总意见附件id',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 19 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of mid_check_record
 -- ----------------------------
-INSERT INTO `mid_check_record` VALUES (1, 'xcfghtreth', '2019-08-12', 1);
-INSERT INTO `mid_check_record` VALUES (2, 'frdgtewy', '2019-08-12', 0);
-INSERT INTO `mid_check_record` VALUES (3, '风格风格', '2019-08-05', 0);
-INSERT INTO `mid_check_record` VALUES (4, '2019zhonhgqilnxldns', '2019-08-04', 0);
-INSERT INTO `mid_check_record` VALUES (5, 'fgtry6yye', '2019-05-02', 0);
+INSERT INTO `mid_check_record` VALUES (1, 'one', '2019-09-10', 0, 0);
+INSERT INTO `mid_check_record` VALUES (2, '测试1', '2019-09-11', 0, 0);
+INSERT INTO `mid_check_record` VALUES (3, '测试2', '2019-09-11', 0, 0);
+INSERT INTO `mid_check_record` VALUES (4, '测试2', '2019-09-11', 0, 0);
+INSERT INTO `mid_check_record` VALUES (5, '测试3', '2019-09-11', 0, 0);
+INSERT INTO `mid_check_record` VALUES (6, '测试3', '2019-09-11', 0, 0);
+INSERT INTO `mid_check_record` VALUES (7, '测试4', '2019-09-11', 0, 0);
+INSERT INTO `mid_check_record` VALUES (8, '测试4', '2019-09-11', 0, 0);
+INSERT INTO `mid_check_record` VALUES (9, '测试5', '2019-09-11', 0, 0);
+INSERT INTO `mid_check_record` VALUES (10, '', '2019-09-11', 0, 0);
+INSERT INTO `mid_check_record` VALUES (11, '', '2019-09-11', 0, 0);
+INSERT INTO `mid_check_record` VALUES (12, '测试6', '2019-09-11', 0, 0);
+INSERT INTO `mid_check_record` VALUES (13, '0303测试', '2019-09-11', 0, 0);
+INSERT INTO `mid_check_record` VALUES (14, '0303测试', '2019-09-11', 0, 0);
+INSERT INTO `mid_check_record` VALUES (15, '测试8', '2019-09-11', 0, 0);
+INSERT INTO `mid_check_record` VALUES (16, '测试9', '2019-09-11', 0, 0);
+INSERT INTO `mid_check_record` VALUES (17, '20190911测试', '2019-09-11', 0, 0);
+INSERT INTO `mid_check_record` VALUES (18, 'ssssss', '2019-09-11', 0, 0);
+
+-- ----------------------------
+-- Table structure for mid_check_template
+-- ----------------------------
+DROP TABLE IF EXISTS `mid_check_template`;
+CREATE TABLE `mid_check_template`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `subject_no` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '课题编号',
+  `subject_name` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '课题名称',
+  `subject_start_time` date NOT NULL COMMENT '课题开始时间',
+  `subject_end_time` date NOT NULL COMMENT '课题结束时间',
+  `commitment_unit` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '承担单位',
+  `topic_contact` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '课题联系人',
+  `subject_contact_phone` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '课题联系人电话',
+  `subject_leader` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '课题负责人',
+  `leader_phone` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '课题负责人电话',
+  `contract_plan_crogress_execution` int(11) NOT NULL COMMENT '课题按合同计划进度执行情况(字典id/41-44)',
+  `not_completing_reason` int(11) NOT NULL COMMENT '课题未按时完成原因(字典id/48-52)',
+  `total_budget` decimal(10, 2) NOT NULL COMMENT '预算总经费（万元）',
+  `provincial_subject_budget` decimal(10, 2) NOT NULL COMMENT '省环保课题预算',
+  `unit_financing_budget` decimal(10, 2) NOT NULL COMMENT '单位自筹预算',
+  `other_budgets` decimal(10, 2) NOT NULL COMMENT '其他预算',
+  `total_expenditure` decimal(10, 2) NOT NULL COMMENT '经费使用总支出（万元）',
+  `provincial_subject_expenditure_budget` decimal(10, 2) NOT NULL COMMENT '省环保课题支出预算',
+  `unit_inancing_expenditure_budget` decimal(10, 2) NOT NULL COMMENT '单位自筹支出预算',
+  `other_expenditure_budget` decimal(10, 2) NOT NULL COMMENT '其他支出预算',
+  `equipment_usage` decimal(10, 2) NOT NULL COMMENT '设备费使用情况',
+  `material_usage` decimal(10, 2) NOT NULL COMMENT '材料费使用情况',
+  `test_ingy_use` decimal(10, 2) NOT NULL COMMENT '测试化验使用情况',
+  `processing_fee_usage` decimal(10, 2) NOT NULL COMMENT '加工费使用情况',
+  `fuel_usage` decimal(10, 2) NOT NULL COMMENT '燃料动力费使用情况',
+  `travel_expenses` decimal(10, 2) NOT NULL COMMENT '差旅费使用情况',
+  `meeting_fee_usage` decimal(10, 2) NOT NULL COMMENT '会议费使用情况',
+  `expert_consultation_fees_usage` decimal(10, 2) NOT NULL COMMENT '专家咨询费使用情况',
+  `publication_documentation_news_intellectualproperty` decimal(10, 2) NOT NULL COMMENT '出版/文献/信息传播/知识产权事务费使用情况',
+  `labour_costs_usage` decimal(10, 2) NOT NULL COMMENT '劳务费（或管理及人员费中人员费）使用情况',
+  `other_expense_usage` decimal(10, 2) NOT NULL COMMENT '其他费用使用情况',
+  `indirect_costs_usage` decimal(10, 2) NOT NULL COMMENT '间接费用（水、电、气消耗及管理费等）使用情况',
+  `external_cooperation_fees` decimal(10, 2) NOT NULL COMMENT '外部合作费使用情况',
+  `new_sales` decimal(10, 2) NOT NULL COMMENT '新增销售额（万元）',
+  `new_profit` decimal(10, 2) NOT NULL COMMENT '新增利润（万元）',
+  `new_tax` decimal(10, 2) NOT NULL COMMENT '新增税金（万元）',
+  `foreign_exchange` decimal(10, 2) NOT NULL COMMENT '创汇（万美元）',
+  `new_products` int(255) NOT NULL COMMENT '新产品（个）',
+  `new_equipment` int(255) NOT NULL COMMENT '新装备（装置）（台）',
+  `new_materials` int(255) NOT NULL COMMENT '新材料(件）',
+  `new_process` int(255) NOT NULL COMMENT '新工艺（项）',
+  `new_varieties` int(255) NOT NULL COMMENT '新品种（个）',
+  `invention_patents` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '发明专利',
+  `utility_model` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '实用新型',
+  `design` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '外观设计',
+  `foreign_patents` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '国外专利',
+  `total_number_papers` int(255) NOT NULL COMMENT '论文总数（篇）',
+  `core_journals` int(255) NOT NULL COMMENT '核心期刊（篇）',
+  `sci_index` int(255) NOT NULL COMMENT 'sci索引（篇）',
+  `ei_index` int(255) NOT NULL COMMENT 'ei索引（篇）',
+  `publication_monograph` int(255) NOT NULL COMMENT '出版专著（部）',
+  `research` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '研究（咨询）',
+  `report` int(255) NOT NULL COMMENT '报告（份）',
+  `develop_technical_standards` int(11) NOT NULL COMMENT '制定技术标准（个）',
+  `release_documents` int(11) NOT NULL COMMENT '出台文件（个）',
+  `senior_talent` int(11) NOT NULL COMMENT '高级人才（人）',
+  `national_outstanding_young_people` int(11) NOT NULL COMMENT '其中，国家杰出青年（长江学者、千人计划或其他）人数（分别列出）',
+  `graduate_students_number` int(11) NOT NULL COMMENT '培养研究生人数',
+  `participating_units` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '参加单位',
+  `actual_progress_project` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '项目实际进度情况（包括经济、技术等指标完成情况，重点介绍课题进展、重大突破及工作成效等）（限300字以内）',
+  `project_funds_usage` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '课题资金使用情况（包括资金落实、使用及存在问题）（限200字以内）',
+  `recommendations_problems_solutions` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '项目执行过程中存在的问题、解决措施及有关建议（限200字以内）',
+  `bear_contaacter` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '承担单位联系人',
+  `bear_contaact_phone` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '承担单位联系人电话',
+  `mid_inspection_annex` int(11) NULL DEFAULT NULL COMMENT '中期检查附件id',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of mid_check_template
+-- ----------------------------
+INSERT INTO `mid_check_template` VALUES (1, 'subjectNo', 'subjectName', '2102-08-05', '2015-09-01', 'commitmentUnit', 'topicContact', 'subjectContactPhone', 'subjectLeader', 'leaderPhone', 41, 48, 58.59, 12.65, 45.64, 36.69, 89.46, 12.64, 25.68, 33.64, 20.36, 78.53, 15.64, 239.56, 45.64, 85.64, 85.25, 363.69, 45.21, 23.58, 78.69, 45.61, 32.13, 56.20, 32.25, 36.32, 45.65, 50, 32, 78, 63, 78, 'foreignPatents', 'utilityModel', 'design', 'foreignPatents', 36, 56, 32, 23, 71, 'research', 30, 74, 47, 789, 987, 3698, 'participatingUnits', 'actualProgressProject', 'projectFundsUsage', 'recommendationsProblemsSolutions', 'bearContaacter', 'bearContaactPhone', 20);
+INSERT INTO `mid_check_template` VALUES (2, 'cgfhtft', 'rfgedrye', '2019-08-07', '2018-09-01', 'xfgver', 'fghrsthr', 'fgbshgsrt', 'rgegey', 'fghrfsh', 41, 49, 52346.00, 43453.00, 254854.00, 1241.00, 23439678.00, 342342.00, 25458.00, 21525.00, 4547.00, 15486.00, 453453.00, 15245.00, 3453.00, 4548548.00, 45486.00, 345.00, 453423.00, 563.00, 21541.00, 3564.00, 345.00, 21451.00, 23145.00, 12145.00, 356.00, 21, 121, 544, 45, 5458, 'fgedsgre', 'fgdgdsr', 'dgrfsre', 'fgdshtr', 541, 20, 42545, 48, 23, 'rfgeywy', 24154, 23, 4545, 45484, 15455, 743, 'fdgdg', 'htr5tyrwy', 'fdsgrteterr', 'frerte', 'dssggrewg', 'dswset', 10);
 
 -- ----------------------------
 -- Table structure for next_work_plan
@@ -1666,7 +1760,7 @@ CREATE TABLE `next_work_plan`  (
   `progress_id` int(255) NOT NULL COMMENT '课题进展id',
   `next_work_plan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '下一步工作计划',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of next_work_plan
@@ -1688,7 +1782,7 @@ CREATE TABLE `notification`  (
   `end_time` date NULL DEFAULT NULL COMMENT '结束时间',
   `is_delete` int(20) NULL DEFAULT NULL COMMENT '0:启用  1：逻辑删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of notification
@@ -1733,7 +1827,7 @@ CREATE TABLE `open_tender`  (
   `response_file_attachment_id` int(11) NULL DEFAULT 0 COMMENT '响应文件附件id',
   `other_attachments_id` int(11) NULL DEFAULT NULL COMMENT '其他附件id',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 53 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 52 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of open_tender
@@ -1809,7 +1903,7 @@ CREATE TABLE `outcome_information`  (
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
   `check_apply_id` int(11) NULL DEFAULT NULL COMMENT '对应验收申请表id',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 35 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 34 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of outcome_information
@@ -1831,7 +1925,7 @@ CREATE TABLE `outcome_information_paper`  (
   `author` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '作者',
   `paper_level` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '论文级别（SCI/EI/核心等）',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 20 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 19 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of outcome_information_paper
@@ -1852,7 +1946,7 @@ CREATE TABLE `outcome_information_patent`  (
   `patent_application_time` date NOT NULL COMMENT '专利申请时间',
   `patent_application_number` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '专利申请号/专利号',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 20 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 19 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of outcome_information_patent
@@ -1871,7 +1965,7 @@ CREATE TABLE `project_main_problems`  (
   `progress_id` int(11) NOT NULL COMMENT '课题进展id',
   `main_problems` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '课题实施中存在的主要问题（研究遇到的困难及技术、方案、人员等变动情况)',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of project_main_problems
@@ -1910,7 +2004,7 @@ CREATE TABLE `project_progress`  (
   `fund_progress_annex_id` int(11) NULL DEFAULT NULL COMMENT '进度情况经费使用情况附件id',
   `commit_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP(0) ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '进展提交时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of project_progress
@@ -1932,27 +2026,29 @@ DROP TABLE IF EXISTS `shiro_company_name`;
 CREATE TABLE `shiro_company_name`  (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '公司id',
   `company_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '公司名称',
+  `social_credit_code` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '社会信用代码',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 20 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 19 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of shiro_company_name
 -- ----------------------------
-INSERT INTO `shiro_company_name` VALUES (1, '希11');
-INSERT INTO `shiro_company_name` VALUES (2, '希1122');
-INSERT INTO `shiro_company_name` VALUES (3, '小溪迈德');
-INSERT INTO `shiro_company_name` VALUES (4, '小溪迈德2');
-INSERT INTO `shiro_company_name` VALUES (5, '小溪迈德888');
-INSERT INTO `shiro_company_name` VALUES (6, '小溪迈德8889');
-INSERT INTO `shiro_company_name` VALUES (7, '小溪迈德88891');
-INSERT INTO `shiro_company_name` VALUES (8, '小溪迈德888912');
-INSERT INTO `shiro_company_name` VALUES (9, '小溪迈德888912333');
-INSERT INTO `shiro_company_name` VALUES (12, '新溪卖得');
-INSERT INTO `shiro_company_name` VALUES (13, '新溪卖得1');
-INSERT INTO `shiro_company_name` VALUES (14, 'xdmd');
-INSERT INTO `shiro_company_name` VALUES (16, '公司名称1221');
-INSERT INTO `shiro_company_name` VALUES (18, '4');
-INSERT INTO `shiro_company_name` VALUES (19, '12');
+INSERT INTO `shiro_company_name` VALUES (1, '希11', '');
+INSERT INTO `shiro_company_name` VALUES (2, '希1122', '');
+INSERT INTO `shiro_company_name` VALUES (3, '小溪迈德', '');
+INSERT INTO `shiro_company_name` VALUES (4, '小溪迈德2', '');
+INSERT INTO `shiro_company_name` VALUES (5, '小溪迈德888', '');
+INSERT INTO `shiro_company_name` VALUES (6, '小溪迈德8889', '');
+INSERT INTO `shiro_company_name` VALUES (7, '小溪迈德88891', '');
+INSERT INTO `shiro_company_name` VALUES (8, '小溪迈德888912', '');
+INSERT INTO `shiro_company_name` VALUES (9, '小溪迈德888912333', '');
+INSERT INTO `shiro_company_name` VALUES (12, '新溪卖得', '');
+INSERT INTO `shiro_company_name` VALUES (13, '新溪卖得1', '');
+INSERT INTO `shiro_company_name` VALUES (14, 'xdmd', '');
+INSERT INTO `shiro_company_name` VALUES (16, '公司名称1221', '');
+INSERT INTO `shiro_company_name` VALUES (18, '4', '');
+INSERT INTO `shiro_company_name` VALUES (19, '12', '');
+INSERT INTO `shiro_company_name` VALUES (20, '公司名称', '91210200317986672Y');
 
 -- ----------------------------
 -- Table structure for shiro_permission
@@ -1963,7 +2059,7 @@ CREATE TABLE `shiro_permission`  (
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `explain` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '权限的解释',
   PRIMARY KEY (`pid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 48 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 47 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of shiro_permission
@@ -2093,7 +2189,7 @@ CREATE TABLE `shiro_role`  (
   `rid` int(11) NOT NULL AUTO_INCREMENT,
   `rname` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`rid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of shiro_role
@@ -2144,7 +2240,7 @@ CREATE TABLE `shiro_user`  (
   `status` int(5) NULL DEFAULT NULL COMMENT '身份判断 0：管理员 1：部长 2：员工',
   `modify` int(5) NULL DEFAULT NULL COMMENT '员工修改登陆名次数 默认是1',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of shiro_user
@@ -2165,7 +2261,7 @@ CREATE TABLE `shiro_user_information`  (
   `is_first` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '是否第一次登陆（0：是第一次登陆  1：多次登陆）',
   `is_state` varchar(5) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '是否审核通过  （1：审核通过 2：等待审核  3：审核未通过）\r\n内网分配账号时，默认为审核通过\r\n只有当外网注册专家时，才需要内网进行审核',
   PRIMARY KEY (`uid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 63 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 62 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of shiro_user_information
@@ -2195,8 +2291,10 @@ INSERT INTO `shiro_user_information` VALUES (57, '张三', '12', 'e4da3b7fbbce23
 INSERT INTO `shiro_user_information` VALUES (58, '李四', '1', 'e4da3b7fbbce2345d7772b0674a318d5', '1', '0', '1', '1');
 INSERT INTO `shiro_user_information` VALUES (59, '我', 'wch', 'e10adc3949ba59abbe56e057f20f883e', '0', '0', '1', '1');
 INSERT INTO `shiro_user_information` VALUES (60, '内网管理员', 'admin', '21232f297a57a5a743894a0e4a801fc3', '3', '0', '1', '1');
-INSERT INTO `shiro_user_information` VALUES (61, 'df', 'fd', 'd926d7bb9ccf46fc04a61bd65d87b9b3', '2', '0', '0', '1');
+INSERT INTO `shiro_user_information` VALUES (61, '真实专家姓名11', 'fd', 'd926d7bb9ccf46fc04a61bd65d87b9b3', '2', '0', '0', '1');
 INSERT INTO `shiro_user_information` VALUES (62, '法规科技处', 'fgkjc', 'e4da3b7fbbce2345d7772b0674a318d5', '5', '0', '1', '1');
+INSERT INTO `shiro_user_information` VALUES (63, '真实姓名', '登录名', '25f9e794323b453885f5181f1b624d0b', '0', '0', '1', '1');
+INSERT INTO `shiro_user_information` VALUES (64, '真实姓名', '登录名11', '25f9e794323b453885f5181f1b624d0b', '0', '0', '1', '1');
 
 -- ----------------------------
 -- Table structure for shiro_user_role
@@ -2236,6 +2334,8 @@ INSERT INTO `shiro_user_role` VALUES (57, 1);
 INSERT INTO `shiro_user_role` VALUES (58, 3);
 INSERT INTO `shiro_user_role` VALUES (59, 1);
 INSERT INTO `shiro_user_role` VALUES (61, 3);
+INSERT INTO `shiro_user_role` VALUES (63, 1);
+INSERT INTO `shiro_user_role` VALUES (64, 1);
 
 -- ----------------------------
 -- Table structure for staff_information
@@ -2253,7 +2353,7 @@ CREATE TABLE `staff_information`  (
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
   `create_name` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建人',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of staff_information
@@ -2351,7 +2451,7 @@ CREATE TABLE `subject_funds_budget`  (
   `daily_supporting_budget` decimal(10, 2) NOT NULL COMMENT '日常水、电、气、暖消耗等支出自筹配套经费预算',
   `daily_note_budget` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '日常水、电、气、暖消耗等支出预算备注',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of subject_funds_budget
@@ -2388,9 +2488,9 @@ CREATE TABLE `subject_participating_unit`  (
   `professional_title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '职称',
   `professional` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '从事专业',
   `work_task` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '本课题中承担工作',
-  `working_time` int(11) NOT NULL COMMENT '为本课题工作时间（%）',
+  `working_time` double(11, 0) NOT NULL COMMENT '为本课题工作时间（%）',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 19 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 23 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of subject_participating_unit
@@ -2413,6 +2513,10 @@ INSERT INTO `subject_participating_unit` VALUES (15, 33, '1', '2', '3', '4', '5'
 INSERT INTO `subject_participating_unit` VALUES (16, 34, '1', '2', '3', '4', '5', '6', '7', 8, '9', '10', '11', 12);
 INSERT INTO `subject_participating_unit` VALUES (17, 35, '1', '2', '3', '4', '5', '6', '7', 8, '9', '10', '11', 12);
 INSERT INTO `subject_participating_unit` VALUES (18, 36, '1', '2', '3', '4', '5', '6', '7', 8, '9', '10', '11', 12);
+INSERT INTO `subject_participating_unit` VALUES (19, 13, 'cfhgfdyutg', 'huy', 'ghyuj', 'cfgbfyrujt', 'xfdgfty', 'fgrety', '男', 23, 'fgrt', 'fghrftc', 'cvgbtguy', 32);
+INSERT INTO `subject_participating_unit` VALUES (20, 14, 'cfhgfdyutg', 'huy', 'ghyuj', 'cfgbfyrujt', 'xfdgfty', 'fgrety', '男', 23, 'fgrt', 'fghrftc', 'cvgbtguy', 32);
+INSERT INTO `subject_participating_unit` VALUES (21, 15, '课题验收内容和考', '课题验收内容和考', '课题验收内容和考', '课题验收内容和考', '课和考', '课和考', '男', 2, '课和考', '课和考', '课和考', 2);
+INSERT INTO `subject_participating_unit` VALUES (22, 16, '21', '21', '21', '21', '12', '21', '男', 12, '21', '2121', '21', 2121);
 
 -- ----------------------------
 -- Table structure for tender_contract_shenhe_record
@@ -2429,7 +2533,7 @@ CREATE TABLE `tender_contract_shenhe_record`  (
   `handle_content` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '处理内容',
   `second_handle_time` datetime(0) NULL DEFAULT NULL COMMENT '处理时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tender_contract_shenhe_record
@@ -2453,7 +2557,7 @@ CREATE TABLE `unit_contract`  (
   `unit_id` int(11) NOT NULL COMMENT '单位id',
   `contract_id` int(11) NOT NULL COMMENT '合同主表id',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of unit_contract
@@ -2474,7 +2578,7 @@ CREATE TABLE `unit_guide_collection`  (
   `unit_id` int(11) NOT NULL,
   `collection_id` int(11) NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of unit_guide_collection
@@ -2502,7 +2606,7 @@ CREATE TABLE `unit_major`  (
   `unit_id` int(11) NOT NULL COMMENT '单位id',
   `major_id` int(11) NOT NULL COMMENT '重大id',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of unit_major
@@ -2523,7 +2627,7 @@ CREATE TABLE `unit_project_progress`  (
   `unit_id` int(11) NOT NULL COMMENT '单位id',
   `subject_progress_id` int(11) NOT NULL COMMENT '课题进展id',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of unit_project_progress
@@ -2541,7 +2645,7 @@ CREATE TABLE `unit_tender`  (
   `unit_id` int(11) NOT NULL COMMENT '单位id',
   `tender_id` int(11) NOT NULL COMMENT '公开招标报名表id',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of unit_tender
@@ -2566,7 +2670,7 @@ CREATE TABLE `upload_file`  (
   `create_time` datetime(0) NOT NULL COMMENT '创建时间',
   `create_author` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '创建者',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 403 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of upload_file
@@ -2654,5 +2758,11 @@ INSERT INTO `upload_file` VALUES (399, 'D:/xdmd_environment/4/初审报告/2019-
 INSERT INTO `upload_file` VALUES (400, 'D:/xdmd_environment/4/专家组意见/2019-09-09提交清单3.zip', '提交清单3.zip', '专家组意见', 'zip', '22', '2019-09-09 17:16:12', '内网管理员');
 INSERT INTO `upload_file` VALUES (401, 'D:/xdmd_environment/4/专家组评议/2019-09-09法人身份证.zip', '法人身份证.zip', '专家组评议', 'zip', '22', '2019-09-09 17:16:12', '内网管理员');
 INSERT INTO `upload_file` VALUES (402, 'D:/xdmd_environment/4/验收证书/2019-09-09法人身份证.zip', '法人身份证.zip', '验收证书', 'zip', '22', '2019-09-09 17:20:06', '李四');
+INSERT INTO `upload_file` VALUES (403, 'D:/xdmd_environment/公司名称/营业执照/2019-09-16捕获.PNG', '捕获.PNG', '营业执照', 'PNG', '26115', '2019-09-16 14:03:44', '真实姓名');
+INSERT INTO `upload_file` VALUES (404, 'D:/xdmd_environment/公司名称/法人身份证文件/2019-09-16捕获.PNG', '捕获.PNG', '法人身份证文件', 'PNG', '26115', '2019-09-16 14:03:44', '真实姓名');
+INSERT INTO `upload_file` VALUES (405, 'D:/xdmd_environment/公司名称/联系人身份证文件/2019-09-16捕获.PNG', '捕获.PNG', '联系人身份证文件', 'PNG', '26115', '2019-09-16 14:03:44', '真实姓名');
+INSERT INTO `upload_file` VALUES (406, 'D:/xdmd_environment/公司名称qw/营业执照/2019-09-16捕获2.PNG', '捕获2.PNG', '营业执照', 'PNG', '17754', '2019-09-16 14:06:09', '真实姓名');
+INSERT INTO `upload_file` VALUES (407, 'D:/xdmd_environment/公司名称qw/法人身份证文件/2019-09-16捕获2.PNG', '捕获2.PNG', '法人身份证文件', 'PNG', '17754', '2019-09-16 14:06:09', '真实姓名');
+INSERT INTO `upload_file` VALUES (408, 'D:/xdmd_environment/公司名称qw/联系人身份证文件/2019-09-16捕获2.PNG', '捕获2.PNG', '联系人身份证文件', 'PNG', '17754', '2019-09-16 14:06:09', '真实姓名');
 
 SET FOREIGN_KEY_CHECKS = 1;
