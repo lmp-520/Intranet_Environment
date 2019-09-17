@@ -171,6 +171,15 @@ private static final Logger log = LoggerFactory.getLogger(MajorMattersFilingCont
     }
 
 
+
+
+
+
+
+
+
+
+
     /**
      * 获取重大事项文件路径和文件名
      * @param id
@@ -181,6 +190,5 @@ private static final Logger log = LoggerFactory.getLogger(MajorMattersFilingCont
     public ResultMap getfileInfo(int id) {
         return  resultMap=majorMattersFilingService.getfileInfo(id);
     }
-
 
 }

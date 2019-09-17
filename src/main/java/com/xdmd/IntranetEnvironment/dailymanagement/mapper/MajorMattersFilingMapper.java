@@ -207,4 +207,27 @@ public interface MajorMattersFilingMapper {
             ")\n" +
             "GROUP BY uf.id")
     List<Map> getfileInfo(int id);
+
+    @Select("select change_application_attachment_id from major_matters_filing where id = #{id}")
+    int querychangeApplicationAttachmentFileId(@Param("id") int id);
+
+
+    @Select("select upload_file_name from upload_file where id = #{changeApplicationAttachmentFileId}")
+    String queryFileName(@Param("changeApplicationAttachmentFileId") int changeApplicationAttachmentFileId);
+
+
+    @Select("select upload_file_address from upload_file where id = #{changeApplicationAttachmentFileId}")
+    String queryFileUrl(@Param("changeApplicationAttachmentFileId") int changeApplicationAttachmentFileId);
+
+    @Select("select expert_argumentation_attachment_id from major_matters_filing where id = #{id}")
+    int queryExpertArgumentationAttachmentFileId(@Param("id") int id);
+
+    @Select("select filing_application_attachment_id from major_matters_filing where id = #{id}")
+    int queryFilingApplicationAttachmentFileId(@Param("id") int id);
+
+    @Select("select approval_documents_attachment_id from major_matters_filing where id = #{id}")
+    int queryApprovalDocumentsAttachmentFileId(@Param("id") int id);
+
+    @Select("SELECT count(change_application_attachment_id) FROM major_matters_filing where id=#{id}")
+    int compareExist(@Param("id") int id);
 }
