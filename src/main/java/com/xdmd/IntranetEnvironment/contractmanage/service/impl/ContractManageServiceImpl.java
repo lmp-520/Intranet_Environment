@@ -443,9 +443,6 @@ public class ContractManageServiceImpl implements ContractManageService {
 
 
 
-
-
-
     /**
      *  [查詢] 根据中期检查记录查詢相应合同主表
      * @return

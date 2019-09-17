@@ -197,7 +197,7 @@ public class ProjectProgressController {
      * @param Pid
      * @return
      */
-    @ApiOperation(value = "根据id查詢【课题进展第五部分      -- 外网】")
+    @ApiOperation(value = "根据id查詢【课题进展第五部分 -- 外网】")
     @GetMapping ("getNWPByPid")
     public ResultMap getNWPByPid(Integer Pid){
         return  resultMap=projectProgressService.getNWPByPid(Pid);
@@ -259,19 +259,6 @@ public class ProjectProgressController {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
     /**
      * 获取课题进展附件文件路径和文件名
      * @param pid
@@ -282,4 +269,6 @@ public class ProjectProgressController {
     public ResultMap getfileInfo(int pid) {
         return  resultMap=projectProgressService.getfileInfo(pid);
     }
+
+
 }

@@ -68,31 +68,4 @@ public class ExpertAssessmentController {
     }
 
 
-    /**
-     * 专家评估附件上传
-     * @param token
-     * @param response
-     * @param expertAssessmentAnnex
-     * @return
-
-    @ApiOperation(value = "专家评估附件上传【外网】")
-    @PostMapping("EAFileUpload")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "expertAssessmentAnnex", value = "专家评估附件"),
-            @ApiImplicitParam(name = "eid", value = "专家评估表id")
-    })
-    public ResultMap EAFileUpload(@CookieValue(value = "token", required = false) String token, HttpServletResponse response,
-                                  MultipartFile expertAssessmentAnnex, int eid) throws IOException, FileUploadException {
-        try {
-            if (StringUtils.isEmpty(token)) {
-                return resultMap.fail().message("请先登录");
-            }
-            resultMap = expertAssessmentService.EAFileUpload(token,response,expertAssessmentAnnex,eid);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return resultMap;
-    }*/
-
-
 }

@@ -313,7 +313,7 @@ public interface ProjectProgressMapper {
      * 获取重大事项文件路径和文件名
      * @param pid
      * @return
-     */
+
     @Select("SELECT\n" +
             "uf.id,\n" +
             "uf.upload_file_name,\n" +
@@ -330,6 +330,7 @@ public interface ProjectProgressMapper {
             ")\n" +
             "GROUP BY uf.id")
     List<Map> getfileInfo(int pid);
+     */
 
     @Select("select subject_progress_annex_id from project_progress where id = #{pid}")
     int querySubjectProgressAnnex(@Param("pid") int pid);
@@ -351,4 +352,5 @@ public interface ProjectProgressMapper {
 
     @Select("select expert_suggest_annex_id from project_progress where id = #{pid}")
     int queryExpertSuggestAnnex(@Param("pid") int pid);
+
 }

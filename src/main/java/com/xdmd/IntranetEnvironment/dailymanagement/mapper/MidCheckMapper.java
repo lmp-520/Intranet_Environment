@@ -335,4 +335,24 @@ public interface MidCheckMapper {
      */
     @Update(value = "update contract_manage set contract_weizhi_annex_id=#{contractWeizhiAnnexId} where id=#{cid}")
     int updateContractWeiZhiAnnexIdByCid(int contractWeizhiAnnexId, int cid);
+
+
+    /**
+     * 在提交时回显通过最终审核的常用的关联合同信息
+     * @param unitId
+     * @return
+     */
+    @Select("SELECT\n" +
+            "cm.id,\n" +
+            "cm.subject_name as subjectName,\n" +
+            "cm.project_no as projectNo,\n" +
+            "cm.subject_leader as subjectLeader,\n" +
+            "cm.subject_contact as subjectContact,\n" +
+            "cm.commitment_unit as commitmentUnit,\n" +
+            "cm.approval_status AS approvalStatus\n" +
+            "FROM\n" +
+            "contract_manage cm,unit_contract uc\n" +
+            "where cm.id=uc.contract_id and cm.approval_status =4 and uc.unit_id=#{unitId}")
+    List<Map> queryAllEndContractInfo(Integer unitId);
+
 }

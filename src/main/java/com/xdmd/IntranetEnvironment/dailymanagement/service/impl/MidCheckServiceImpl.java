@@ -57,28 +57,6 @@ public class MidCheckServiceImpl implements MidCheckService {
     ResultMap resultMap=new ResultMap();
 
 
-    /**
-     * 新增中期检查表[回显id]
-     * @param midCheckTemplateDTO
-     * @return
-
-    @Override
-    public ResultMap insertMidCheckTemplate(MidCheckTemplateDTO midCheckTemplateDTO) {
-        try{
-            int midchecktemplate= midCheckMapper.insertMidCheckTemplate(midCheckTemplateDTO);
-            if(midchecktemplate>0){
-                resultMap.success().message(midCheckTemplateDTO.getId());
-            }else if(midchecktemplate<0){
-                resultMap.success().message("新增失败");
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-            resultMap.success().message("系统异常");
-        }
-        return resultMap;
-    }
-     */
-
 
     /**
      * 外网提交中期检查文件材料
@@ -672,6 +650,51 @@ public class MidCheckServiceImpl implements MidCheckService {
         }
         return resultMap;
     }
+
+
+    /**
+     * 在提交回显通过最终审核的关联常用的合同信息
+     * @param token
+     * @param response
+     * @return
+     */
+    @Override
+    public ResultMap queryAllEndContractInfo(String token, HttpServletResponse response) {
+        //解析token中的数据
+        JwtInformation jwtInformation = new JwtInformation();
+        try {
+            jwtInformation = extranetTokenService.compare(response, token);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (UserNameNotExistentException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (ClaimsNullException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("MenuServiceImpl 中 TokenService 出现问题");
+            return resultMap.message("系统异常");
+        }
+        //根据登陆信息获取单位id
+        Integer unitId = jwtInformation.getCid();
+        try {
+            //获取该公司所有审核通过的招标id
+            List<Map> queryAllEndContractInfo = midCheckMapper.queryAllEndContractInfo(unitId);
+            if (queryAllEndContractInfo.size() > 0) {
+                resultMap.success().message(queryAllEndContractInfo);
+            } else {
+                resultMap.fail().message("没有查到相关信息");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
+
 
 
     /**
