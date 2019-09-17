@@ -133,14 +133,15 @@ private static final Logger log = LoggerFactory.getLogger(MajorMattersFilingCont
     @ApiOperation(value = "重大事项的附件上传【外网】")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "majorid", value = "重大事项", required = true),
+            @ApiImplicitParam(name = "typeid", value = "类型id", required = true),
             @ApiImplicitParam(name = "changeApplicationAttachment", value = "变更申请表附件", dataType = "file", paramType = "form", allowMultiple = true),
             @ApiImplicitParam(name = "expertArgumentationAttachment", value = "专家论证意见附件", dataType = "file", paramType = "form", allowMultiple = true),
             @ApiImplicitParam(name = "filingApplicationAttachment", value = "备案申请表附件", dataType = "file", paramType = "form", allowMultiple = true),
-            @ApiImplicitParam(name = "filingApplicationAttachment", value = "批准文件附件", dataType = "file", paramType = "form", allowMultiple = true)
+            @ApiImplicitParam(name = "approvalDocumentsAttachment", value = "批准文件附件", dataType = "file", paramType = "form", allowMultiple = true)
 
     })
     public ResultMap majorFileUpload(@CookieValue(value = "token", required = false) String token, HttpServletResponse response,
-                                      int majorid,
+                                      Integer majorid,Integer typeid,
                                       MultipartFile changeApplicationAttachment,
                                       MultipartFile expertArgumentationAttachment,
                                       MultipartFile filingApplicationAttachment,
@@ -149,13 +150,12 @@ private static final Logger log = LoggerFactory.getLogger(MajorMattersFilingCont
             return resultMap.fail().message("请先登录");
         }
         try {
-            resultMap = majorMattersFilingService.majorFileUpload(token,response,majorid,changeApplicationAttachment,expertArgumentationAttachment,filingApplicationAttachment,approvalDocumentsAttachment);
+            resultMap = majorMattersFilingService.majorFileUpload(token,response,majorid,typeid,changeApplicationAttachment,expertArgumentationAttachment,filingApplicationAttachment,approvalDocumentsAttachment);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (FileUploadException e) {
             e.printStackTrace();
         }
-
         return resultMap;
     }
 
@@ -169,4 +169,18 @@ private static final Logger log = LoggerFactory.getLogger(MajorMattersFilingCont
     public ResultMap updateMajorStatus(int id) {
         return resultMap=majorMattersFilingService.updateMajorStatus(id);
     }
+
+
+    /**
+     * 获取重大事项文件路径和文件名
+     * @param id
+     * @return
+     */
+    @GetMapping(value = "getMajorFileInfo")
+    @ApiOperation(value = "根据重大事项表id获取文件路径和文件名【内外网】")
+    public ResultMap getfileInfo(int id) {
+        return  resultMap=majorMattersFilingService.getfileInfo(id);
+    }
+
+
 }

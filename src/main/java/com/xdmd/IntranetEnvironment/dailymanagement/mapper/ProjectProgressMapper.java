@@ -307,4 +307,27 @@ public interface ProjectProgressMapper {
      */
     @Update(value = "UPDATE project_progress SET fund_progress_annex_id = #{fundProgressAnnexId} WHERE id = #{pid}")
     int updateFundProgressAnnexIdByPid(Integer fundProgressAnnexId, Integer pid);
+
+
+    /**
+     * 获取重大事项文件路径和文件名
+     * @param pid
+     * @return
+     */
+    @Select("SELECT\n" +
+            "uf.id,\n" +
+            "uf.upload_file_name,\n" +
+            "uf.upload_file_address\n" +
+            "FROM\n" +
+            "upload_file uf,\n" +
+            "project_progress pp\n" +
+            "WHERE\n" +
+            "uf.id in(\n" +
+            "(select uf.id from project_progress pp,upload_file uf where uf.id=pp.open_report_annex_id and pp.id=#{pid}),\n" +
+            "(select uf.id from project_progress pp,upload_file uf where uf.id=pp.expert_suggest_annex_id and pp.id=#{pid}),\n" +
+            "(select uf.id from project_progress pp,upload_file uf where uf.id=pp.subject_progress_annex_id and pp.id=#{pid}),\n" +
+            "(select uf.id from project_progress pp,upload_file uf where uf.id=pp.fund_progress_annex_id and pp.id=#{pid})\n" +
+            ")\n" +
+            "GROUP BY uf.id")
+    List<Map> getfileInfo(int pid);
 }

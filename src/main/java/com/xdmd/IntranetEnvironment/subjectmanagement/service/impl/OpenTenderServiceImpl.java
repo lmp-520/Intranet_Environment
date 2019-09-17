@@ -9,6 +9,7 @@ import com.xdmd.IntranetEnvironment.subjectmanagement.exception.InsertSqlExcepti
 import com.xdmd.IntranetEnvironment.subjectmanagement.exception.UpdateSqlException;
 import com.xdmd.IntranetEnvironment.subjectmanagement.exception.UpdateStatusException;
 import com.xdmd.IntranetEnvironment.subjectmanagement.mapper.OpenTenderMapper;
+import com.xdmd.IntranetEnvironment.subjectmanagement.pojo.AttachmentAttribute;
 import com.xdmd.IntranetEnvironment.subjectmanagement.pojo.OpenTender;
 import com.xdmd.IntranetEnvironment.subjectmanagement.service.OpenTenderService;
 import com.xdmd.IntranetEnvironment.user.exception.ClaimsNullException;
@@ -1003,32 +1004,71 @@ public class OpenTenderServiceImpl implements OpenTenderService {
         return resultMap;
     }
 
+
+
     /**
-     * 根据招标备案表id获取文件路径和文件名
+     * 根据招标备案表id获取中标文件路径和文件名
      *
-     * @param id
+     * @param oid
      * @return
      */
     @Override
-    public ResultMap getfileInfo(int id) {
-        try {
-            List<Map> fileInfoMap = openTenderMapper.getfileInfo(id);
-            if (fileInfoMap.size() > 0) {
-                resultMap.success().message(fileInfoMap);
-            } else if (fileInfoMap.size() == 0) {
-                resultMap.fail().message("没有找到");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            resultMap.fail().message("系统异常");
-        }
-        return resultMap;
+    public ResultMap getfileInfo(int oid) {
+        AttachmentAttribute attachmentAttribute = new AttachmentAttribute();
+
+        int winningFileId = openTenderMapper.queryWinningFileIdByOid(oid);
+        String winningDocumentFileName = openTenderMapper.queryFileNameByOid(winningFileId);
+        String winningDocumentFileUrl = openTenderMapper.queryFileUrlOid(winningFileId);
+        attachmentAttribute.setWinningDocumentFileName(winningDocumentFileName);
+        attachmentAttribute.setWinningDocumentFileUrl(winningDocumentFileUrl);
+
+        int transactionAnnouncementFileId = openTenderMapper.queryTransactionAnnouncementIdByOid(oid);
+        String transactionAnnouncementName = openTenderMapper.queryFileNameByOid(transactionAnnouncementFileId);
+        String transactionAnnouncementUrl = openTenderMapper.queryFileUrlOid(transactionAnnouncementFileId);
+        attachmentAttribute.setTransactionAnnouncementName(transactionAnnouncementName);
+        attachmentAttribute.setTransactionAnnouncementUrl(transactionAnnouncementUrl);
+
+        int noticeTransactionFileId = openTenderMapper.queryNoticeTransactionIdByOid(oid);
+        String noticeTransactionName = openTenderMapper.queryFileNameByOid(noticeTransactionFileId);
+        String noticeTransactionUrl = openTenderMapper.queryFileUrlOid(noticeTransactionFileId);
+        attachmentAttribute.setNoticeTransactionName(noticeTransactionName);
+        attachmentAttribute.setNoticeTransactionUrl(noticeTransactionUrl);
+
+        int responseFileId = openTenderMapper.queryResponseIdByOid(oid);
+        String responseFileName = openTenderMapper.queryFileNameByOid(responseFileId);
+        String responseFiletUrl = openTenderMapper.queryFileUrlOid(responseFileId);
+        attachmentAttribute.setResponseFileName(responseFileName);
+        attachmentAttribute.setResponseFiletUrl(responseFiletUrl);
+
+        int otherAttachmentsFileId = openTenderMapper.queryOtherAttachmentIdByOid(oid);
+        String otherAttachmentsName = openTenderMapper.queryFileNameByOid(otherAttachmentsFileId);
+        String otherAttachmentsUrl = openTenderMapper.queryFileUrlOid(otherAttachmentsFileId);
+        attachmentAttribute.setOtherAttachmentsName(otherAttachmentsName);
+        attachmentAttribute.setOtherAttachmentsUrl(otherAttachmentsUrl);
+
+        return resultMap.success().message(attachmentAttribute);
+
+
+//
+//        try {
+//            //AttachmentAttribute attachmentAttribute=new AttachmentAttribute();
+//            List<Map> uploadFileList = openTenderMapper.getfileInfo(oid);
+//            uploadFileList.forEach(fileinfo-> System.out.println(fileinfo));
+//            if (uploadFileList!=null) {
+//                resultMap.success().message(uploadFileList);
+//            } else if (uploadFileList == null) {
+//                resultMap.fail().message("没有查到相关信息");
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            resultMap.fail().message("系统异常");
+//        }
+//        return resultMap;
     }
 
 
     /**
-     * 根据合同主表id查询审核记录
-     *
+     * 根据招标表id查询审核记录
      * @param oid
      * @return
      */
@@ -1039,7 +1079,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
             if (shenHeInfo.size() > 0) {
                 resultMap.success().message(shenHeInfo);
             } else if (shenHeInfo.size() == 0) {
-                resultMap.fail().message("没有找到");
+                resultMap.fail().message("没有查到相关信息");
             }
         } catch (Exception e) {
             e.printStackTrace();

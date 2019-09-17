@@ -138,4 +138,12 @@ public interface ProjectProgressService {
      * @return
      */
     ResultMap insertPidAndUid(int uid, int pid);
+
+
+    /**
+     * 获取课题进展附件文件路径和文件名
+     * @param pid
+     * @return
+     */
+    ResultMap getfileInfo(int pid);
 }

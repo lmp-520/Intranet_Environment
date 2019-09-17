@@ -98,9 +98,10 @@ public class ContractManageServiceImpl implements ContractManageService {
             //Integer userid = jwtInformation.getUid();
             String username = jwtInformation.getUsername();
             Integer cid = jwtInformation.getCid();
-            //String cname = jwtInformation.getCompanyName();
+            String cname = jwtInformation.getCompanyName();
 
             //执行新增操作
+            contractManageDTO.setCommitmentUnit(cname);
             int insertNo = contractManageMapper.insert(contractManageDTO);
             //单位关联合同主表
             insertContractidAndUnitid(cid, contractManageDTO.getId());
@@ -251,6 +252,28 @@ public class ContractManageServiceImpl implements ContractManageService {
         return resultMap;
     }
 
+
+    /**
+     * 根据勾选的合同主表id修改相应的中期检查状态【内网中检】
+     * @param ids
+     * @return
+     */
+    @Override
+    public ResultMap updateContractByIds(int mid, List<Long> ids) {
+        try {
+            int updateNum=contractManageMapper.updateContractByIds(mid,ids);
+            if (updateNum > 0) {
+                resultMap.success().message("OK");
+            } else if (updateNum == 0) {
+                resultMap.fail().message("没有查到相关信息");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
+
     /**
      * 根据合同id更新合同附件id
      *
@@ -293,9 +316,9 @@ public class ContractManageServiceImpl implements ContractManageService {
         //用户id
         //Integer userid = jwtInformation.getUid();
         //用户名
-        //String username = jwtInformation.getUsername();
+        String username = jwtInformation.getUsername();
         //单位id
-        Integer uid = jwtInformation.getCid();
+        //Integer uid = jwtInformation.getCid();
         //单位名称
         String unitName = jwtInformation.getCompanyName();
 
@@ -334,12 +357,12 @@ public class ContractManageServiceImpl implements ContractManageService {
             // 获取文件大小
             String fileSize = String.valueOf(dest.length());
             //封装对象
-            AnnexUpload annexUpload = new AnnexUpload(0, filePath, fileName, "合同附件", suffixName, fileSize, null, "提交者");
+            AnnexUpload annexUpload = new AnnexUpload(0, filePath, fileName, "合同附件", suffixName, fileSize, null, username);
             //保存到数据库中
             int insertNum = uploadFileMapper.insertUpload(annexUpload);
             //更改相应合同附件id
             contractManageMapper.updateContractAnnexIdByCid(annexUpload.getId(), contractId);
-            resultMap.success().message("上传成功");
+            resultMap.success().message("上传合同附件成功");
         } catch (Exception e) {
             e.printStackTrace();
             resultMap.fail().message("上传失败");
@@ -347,47 +370,93 @@ public class ContractManageServiceImpl implements ContractManageService {
         return resultMap;
     }
 
-    /////////////中期检查//////////////
-
-
     /**
-     * 根据勾选的合同主表id修改相应的中期检查记录【内网中检】
-     *
-     * @param ids
+     * 课题意见附件上传
+     * @param token
+     * @param response
+     * @param subjectSuggestAnnex
      * @return
+     * @throws IOException
+     * @throws FileUploadException
      */
     @Override
-    public ResultMap updateContractByIds(int mid, List<Long> ids) {
+    public ResultMap SubjectSuggestFileUpload(String token, HttpServletResponse response, MultipartFile subjectSuggestAnnex, int cid) throws IOException, FileUploadException {
+        JwtInformation jwtInformation = new JwtInformation();
         try {
-            if (contractManageMapper.updateContractByIds(mid, ids) > 0) {
-                resultMap.success().message("OK");
-            } else if (contractManageMapper.updateContractByIds(mid, ids) == 0) {
-                resultMap.fail().message("没有查到相关信息");
-            }
+            jwtInformation = extranetTokenService.compare(response, token);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (UserNameNotExistentException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
+        } catch (ClaimsNullException e) {
+            e.printStackTrace();
+            return resultMap.fail().message("请先登录");
         } catch (Exception e) {
             e.printStackTrace();
-            resultMap.fail().message("系统异常");
+            log.error("MenuServiceImpl 中 TokenService 出现问题");
+            return resultMap.message("系统异常");
+        }
+        //Integer userid = jwtInformation.getUid();
+        String username = jwtInformation.getUsername();
+       // Integer uid = jwtInformation.getCid();
+        String unitname = jwtInformation.getCompanyName();
+
+        try {
+            /**
+             * 课题意见附件
+             */
+            //判断上传课题意见附件的后缀名是否正确
+            String subjectSuggestAnnexName = subjectSuggestAnnex.getOriginalFilename();
+            Boolean cBoolean = FileSuffixJudge.suffixJudge(subjectSuggestAnnexName);
+            if (cBoolean == false) {
+                resultMap.fail().message("课题意见附件的文件格式不正确,请上传正确的文件格式");
+            }
+            //获取课题意见附件的地址
+            String subjectSuggestAnnexUrl = new OpenTenderServiceImpl().fileUploadUntil(subjectSuggestAnnex, unitname, "课题意见附件");
+            //获取文件后缀名
+            String subjectSuggestAnnexSuffixName = subjectSuggestAnnexName.substring(subjectSuggestAnnexName.lastIndexOf(".") + 1);
+            // 获取文件大小
+            File subjectSuggestAnnexFile = new File(subjectSuggestAnnexUrl);
+            String subjectSuggestAnnexFileSize = String.valueOf(subjectSuggestAnnexFile.length());
+            AnnexUpload subjectSuggestFileAnnexData = new AnnexUpload(0, subjectSuggestAnnexUrl, subjectSuggestAnnexName, "课题意见附件", subjectSuggestAnnexSuffixName, subjectSuggestAnnexFileSize, null, username);
+            //把该文件上传到文件表中
+            uploadFileMapper.insertUpload(subjectSuggestFileAnnexData);
+            contractManageMapper.updateSubjectSuggestAnnexIdByCid(subjectSuggestFileAnnexData.getId(),cid);
+            resultMap.success().message("上传课题意见附件成功");
+        } catch (IOException e) {
+            e.printStackTrace();
+            log.error("附件上传出错:" + e.getMessage());
+            throw new FileUploadException("附件上传失败");
+        } catch (FileUploadException e) {
+            e.printStackTrace();
+            log.error("附件上传出错:" + e.getMessage());
+            throw new FileUploadException("附件上传失败");
         }
         return resultMap;
     }
 
 
+    /////////////中期检查//////////////
+
+
+
+
+
+
     /**
      *  [查詢] 根据中期检查记录查詢相应合同主表
-     * @param mid
-     * @param pageNum
-     * @param pageSize
      * @return
+     * @param mid
      */
     @Override
-    public ResultMap getInfoByMidRecord(int mid, int pageNum, int pageSize) {
+    public ResultMap getInfoByMidCheckStatus(int mid) {
         try {
             String orderby="id desc";
-            PageHelper.startPage(pageNum,pageSize,orderby);
-            List<Map> getInfoByMidRecordList = contractManageMapper.getInfoByMidRecord(mid);
-            PageInfo pageInfo=new PageInfo(getInfoByMidRecordList);
+            List<Map> getInfoByMidRecordList = contractManageMapper.getInfoByMidCheckStatus(mid);
             if (getInfoByMidRecordList.size() > 0) {
-                resultMap.success().message(pageInfo);
+                resultMap.success().message(getInfoByMidRecordList);
             } else if (getInfoByMidRecordList.size() == 0) {
                 resultMap.fail().message("没有查到相关信息");
             }
@@ -400,20 +469,39 @@ public class ContractManageServiceImpl implements ContractManageService {
 
 
     /**
-     * [查詢] 根据单位id和中检记录id 查詢本单位的课题合同
-     * @param uid
-     * @param mid
+     * [查詢] 根据单位id和中检状态查詢本单位的课题合同
      * @param pageNum
      * @param pageSize
      * @return
      */
         @Override
-        public ResultMap getContractByUid(int uid, int mid, int pageNum, int pageSize){
+        public ResultMap getContractByUid(String token, HttpServletResponse response, int pageNum, int pageSize){
+            JwtInformation jwtInformation = new JwtInformation();
+            try {
+                jwtInformation = extranetTokenService.compare(response, token);
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+                return resultMap.fail().message("请先登录");
+            } catch (UserNameNotExistentException e) {
+                e.printStackTrace();
+                return resultMap.fail().message("请先登录");
+            } catch (ClaimsNullException e) {
+                e.printStackTrace();
+                return resultMap.fail().message("请先登录");
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.error("MenuServiceImpl 中 TokenService 出现问题");
+                return resultMap.message("系统异常");
+            }
+            //Integer userid = jwtInformation.getUid();
+            //String username = jwtInformation.getUsername();
+            Integer uid = jwtInformation.getCid();
+            //String unitname = jwtInformation.getCompanyName();
 
             try {
                 String orderby="cm.id desc";
                 PageHelper.startPage(pageNum,pageSize,orderby);
-                List<Map> getContractByUidList = contractManageMapper.getContractByUid(uid,mid);
+                List<Map> getContractByUidList = contractManageMapper.getContractByUid(uid);
                 PageInfo pageInfo=new PageInfo(getContractByUidList);
                 if (getContractByUidList.size() > 0) {
                     resultMap.success().message(pageInfo);
@@ -441,127 +529,6 @@ public class ContractManageServiceImpl implements ContractManageService {
         int cid){
             int num = contractManageMapper.updateMidCheckAnnextByCid(midCheckAnnexId, expertAssessmentAnnexId, subjectSuggestAnnexId, cid);
             return num;
-        }
-
-
-        /**
-         * 中期检查附件上传
-         *
-         * @param token
-         * @param response
-         * @param midCheckAnnex
-         * @param expertAssessmentAnnex
-         * @param subjectSuggestAnnex
-         * @return
-         * @throws IOException
-         * @throws FileUploadException
-         */
-        @Override
-        public ResultMap midCheckFileUpload (String token, HttpServletResponse response, MultipartFile
-        midCheckAnnex, MultipartFile expertAssessmentAnnex, MultipartFile subjectSuggestAnnex) throws
-        IOException, FileUploadException {
-            JwtInformation jwtInformation = new JwtInformation();
-            try {
-                jwtInformation = extranetTokenService.compare(response, token);
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-                return resultMap.fail().message("请先登录");
-            } catch (UserNameNotExistentException e) {
-                e.printStackTrace();
-                return resultMap.fail().message("请先登录");
-            } catch (ClaimsNullException e) {
-                e.printStackTrace();
-                return resultMap.fail().message("请先登录");
-            } catch (Exception e) {
-                e.printStackTrace();
-                log.error("MenuServiceImpl 中 TokenService 出现问题");
-                return resultMap.message("系统异常");
-            }
-            //Integer userid = jwtInformation.getUid();
-            String username = jwtInformation.getUsername();
-            Integer cid = jwtInformation.getCid();
-            String cname = jwtInformation.getCompanyName();
-
-
-            //String username = "测试人员";
-            //根据招标备案表的id 获取该公司的名字
-            //ContractManageDTO contractManageDTO=new ContractManageDTO();
-            //int cid=contractManageDTO.getId();
-            //String unitName = contractManageMapper.queryUnitNameBycid(cid);
-            OpenTenderServiceImpl openTenderServiceImpl = new OpenTenderServiceImpl();
-            try {
-                /**
-                 * 中期检查附件
-                 */
-                //判断上传中标文件附件的后缀名是否正确
-                String midCheckAnnexName = midCheckAnnex.getOriginalFilename();
-                Boolean aBoolean = FileSuffixJudge.suffixJudge(midCheckAnnexName);
-                if (aBoolean == false) {
-                    resultMap.fail().message("中期检查附件的文件格式不正确,请上传正确的文件格式");
-                }
-                //获取中标文件附件的地址
-                String midCheckAnnexUrl = openTenderServiceImpl.fileUploadUntil(midCheckAnnex, cname, "中期检查附件");
-                //获取文件后缀名
-                String midCheckAnnexSuffixName = midCheckAnnexName.substring(midCheckAnnexName.lastIndexOf(".") + 1);
-                // 获取文件大小
-                File midCheckAnnexFile = new File(midCheckAnnexUrl);
-                String winningDocumentFileSize = String.valueOf(midCheckAnnexFile.length());
-                AnnexUpload midCheckFileAnnex = new AnnexUpload(0, midCheckAnnexUrl, midCheckAnnexName, "中标文件附件", midCheckAnnexSuffixName, winningDocumentFileSize, null, username);
-                //把该文件上传到文件表中
-                uploadFileMapper.insertUpload(midCheckFileAnnex);
-                /**
-                 * 专家评估附件
-                 */
-                //判断上传成交公告附件的后缀名是否正确
-                String expertAssessmentAnnexName = expertAssessmentAnnex.getOriginalFilename();
-                Boolean bBoolean = FileSuffixJudge.suffixJudge(expertAssessmentAnnexName);
-                if (bBoolean == false) {
-                    resultMap.fail().message("专家评估附件的文件格式不正确,请上传正确的文件格式");
-                }
-                //获取成交公告附件的地址
-                String expertAssessmentAnnexUrl = openTenderServiceImpl.fileUploadUntil(expertAssessmentAnnex, cname, "专家评估附件");
-                //获取文件后缀名
-                String expertAssessmentAnnexSuffixName = expertAssessmentAnnexName.substring(expertAssessmentAnnexName.lastIndexOf(".") + 1);
-                // 获取文件大小
-                File expertAssessmentAnnexFile = new File(expertAssessmentAnnexUrl);
-                String expertAssessmentAnnexFileSize = String.valueOf(expertAssessmentAnnexFile.length());
-                AnnexUpload expertAssessmentFileAnnex = new AnnexUpload(0, expertAssessmentAnnexUrl, expertAssessmentAnnexName, "专家评估附件", expertAssessmentAnnexSuffixName, expertAssessmentAnnexFileSize, null, username);
-                //把该文件上传到文件表中
-                uploadFileMapper.insertUpload(expertAssessmentFileAnnex);
-                /**
-                 * 课题建议附件
-                 */
-                //判断上传成交通知书附件的后缀名是否正确
-                String subjectSuggestAnnexName = subjectSuggestAnnex.getOriginalFilename();
-                Boolean cBoolean = FileSuffixJudge.suffixJudge(subjectSuggestAnnexName);
-                if (cBoolean == false) {
-                    resultMap.fail().message("成交通知书附件的文件格式不正确,请上传正确的文件格式");
-                }
-                //获取成交通知书附件的地址
-                String subjectSuggestAnnexUrl = openTenderServiceImpl.fileUploadUntil(subjectSuggestAnnex, cname, "课题建议附件");
-                //获取文件后缀名
-                String subjectSuggestAnnexSuffixName = subjectSuggestAnnexName.substring(subjectSuggestAnnexName.lastIndexOf(".") + 1);
-                // 获取文件大小
-                File subjectSuggestAnnexFile = new File(subjectSuggestAnnexUrl);
-                String subjectSuggestAnnexFileSize = String.valueOf(subjectSuggestAnnexFile.length());
-                AnnexUpload subjectSuggestFileAnnex = new AnnexUpload(0, subjectSuggestAnnexUrl, subjectSuggestAnnexName, "课题建议附件", subjectSuggestAnnexSuffixName, subjectSuggestAnnexFileSize, null, username);
-                //把该文件上传到文件表中
-                uploadFileMapper.insertUpload(subjectSuggestFileAnnex);
-
-                /**
-                 * 把上传附件的id取出，存到合同主表中
-                 */
-                contractManageMapper.updateMidCheckAnnextByCid(midCheckFileAnnex.getId(), expertAssessmentFileAnnex.getId(), subjectSuggestFileAnnex.getId(), cid);
-                return resultMap.success().message("多个附件上传成功");
-            } catch (IOException e) {
-                e.printStackTrace();
-                log.error("附件上传出错:" + e.getMessage());
-                throw new FileUploadException("附件上传失败");
-            } catch (FileUploadException e) {
-                e.printStackTrace();
-                resultMap.success().message("附件上传失败");
-            }
-            return resultMap;
         }
 
 
@@ -980,7 +947,7 @@ public class ContractManageServiceImpl implements ContractManageService {
             System.out.println(updateNum6);
             //更新合同附件
             if (oldcontractAnnexUrl != null) {
-                //判断上传中标文件附件的后缀名是否正确
+                //判断上传合同附件的后缀名是否正确
                 String contractAnnexName = contractAnnex.getOriginalFilename();
                 Boolean aBoolean = FileSuffixJudge.suffixJudge(contractAnnexName);
                 if (aBoolean == false) {
@@ -1034,7 +1001,52 @@ public class ContractManageServiceImpl implements ContractManageService {
         }
 
 
-        /**
+    /**
+     * 根据合同主表id查询审核记录
+     * @param cid
+     * @return
+     */
+    @Override
+    public ResultMap getAllShenHeTableRecordInfoByContractId(int cid) {
+        try {
+            List<TenderContractShenheRecordDTO> shenHeInfo = contractManageMapper.getAllShenHeTableRecordInfoByContractId(cid);
+            if (shenHeInfo.size() > 0) {
+                resultMap.success().message(shenHeInfo);
+            } else if (shenHeInfo.size() == 0) {
+                resultMap.fail().message("没有查到相关信息");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
+
+
+    /**
+     * 获取合同附件的路径和文件名
+     * @param cid
+     * @return
+     */
+    @Override
+    public ResultMap getContractAnnexInfo(int cid) {
+        try {
+            List<Map> fileinfo = contractManageMapper.getContractAnnexInfo(cid);
+            if (fileinfo.size() > 0) {
+                resultMap.success().message(fileinfo);
+            } else if (fileinfo.size() == 0) {
+                resultMap.fail().message("没有查到相关信息");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
+
+
+
+    /**
          * 展示所有通过单位管理员审批的 【外网】
          * @param pageNum
          * @param pageSize
@@ -1149,7 +1161,7 @@ public class ContractManageServiceImpl implements ContractManageService {
         int pageNum, int pageSize){
             try {
                 PageHelper.startPage(pageNum, pageSize, true);
-                List<ContractManageDTO> contractMap = contractManageMapper.showAllPassContractReviewByFaGui(subjectCategory, subjectName, subjectContact, subjectContactPhone, commitmentUnit, subjectSupervisorDepartmentint);
+                List<Map> contractMap = contractManageMapper.showAllPassContractReviewByFaGui(subjectCategory, subjectName, subjectContact, subjectContactPhone, commitmentUnit, subjectSupervisorDepartmentint);
                 PageInfo pageInfo = new PageInfo(contractMap);
                 if (contractMap.size() > 0) {
                     resultMap.success().message(pageInfo);
@@ -1177,7 +1189,7 @@ public class ContractManageServiceImpl implements ContractManageService {
         int pageNum, int pageSize){
             try {
                 PageHelper.startPage(pageNum, pageSize, true);
-                List<ContractManageDTO> contractMap = contractManageMapper.showAllNoPassReviewContractByFaGui(subjectCategory, subjectName, subjectContact, subjectContactPhone, commitmentUnit, subjectSupervisorDepartmentint);
+                List<Map> contractMap = contractManageMapper.showAllNoPassReviewContractByFaGui(subjectCategory, subjectName, subjectContact, subjectContactPhone, commitmentUnit, subjectSupervisorDepartmentint);
                 PageInfo pageInfo = new PageInfo(contractMap);
                 if (contractMap.size() > 0) {
                     resultMap.success().message(pageInfo);

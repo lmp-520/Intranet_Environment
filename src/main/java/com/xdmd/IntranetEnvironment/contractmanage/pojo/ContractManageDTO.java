@@ -131,7 +131,8 @@ public class ContractManageDTO {
     @ApiModelProperty("其他条件")
     private String otherConditions;
 
-
+    @ApiModelProperty("中期检查状态【0-单位未上传完材料 1-单位上传完材料但评估中心未上传所需材料  2-评估中心上传完所需材料中期检查结束】")
+    private Integer midCheckStatus;
 
     @ApiModelProperty("合同审批状态【0-单位员工待提交 1-单位管理员待审批 2-评估中心员工待审批 3-法规科技处待审批 4-法规科技处已审批】")
     private Integer approvalStatus;
@@ -139,11 +140,11 @@ public class ContractManageDTO {
     @ApiModelProperty("中期检查记录（关联表）")
     private Integer midRecordId;
 
-    @ApiModelProperty("中期检查表附件id")
-    private Integer midCheckAnnexId;
+    @ApiModelProperty("中期检查模板表id")
+    private Integer midCheckTemplateId;
 
-    @ApiModelProperty("专家评估表附件id")
-    private Integer expertAssessmentAnnexId;
+    @ApiModelProperty("专家评估表id")
+    private Integer expertAssessmentTableId;
 
     @ApiModelProperty("合同附件id")
     private Integer contractAnnexId;
@@ -153,6 +154,9 @@ public class ContractManageDTO {
 
     @ApiModelProperty("此条数据是否已经加入验收申请（0：未加入，1：已加入）")
     private String isCheckApply;
+
+    @ApiModelProperty("未知类型附件")
+    private String contractWeizhiAnnexId;
 
     public ContractManageDTO() {
     }

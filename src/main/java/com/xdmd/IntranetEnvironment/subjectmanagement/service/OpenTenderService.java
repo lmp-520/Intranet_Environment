@@ -128,14 +128,13 @@ public interface OpenTenderService {
 
     /**
      * 根据招标备案表id获取文件路径和文件名
-     * @param id
+     * @param oid
      * @return
      */
-    ResultMap getfileInfo( int id);
-
+    ResultMap getfileInfo(int oid);
 
     /**
-     * 根据合同主表id查询审核记录
+     * 根据招标主表id查询审核记录
      * @param oid
      * @return
      */

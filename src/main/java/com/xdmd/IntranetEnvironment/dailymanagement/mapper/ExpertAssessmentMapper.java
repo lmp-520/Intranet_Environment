@@ -1,9 +1,8 @@
 package com.xdmd.IntranetEnvironment.dailymanagement.mapper;
 
 import com.xdmd.IntranetEnvironment.dailymanagement.pojo.ExpertAssessmentDTO;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,7 +17,8 @@ public interface ExpertAssessmentMapper {
      * [新增]
      * @author Kong
      * @date 2019/08/17
-     **/
+     *
+     *
     @Options(useGeneratedKeys = true,keyProperty = "id",keyColumn = "id")
     @Insert(value = "insert into expert_assessment\n" +
             "VALUES(\n" +
@@ -42,6 +42,7 @@ public interface ExpertAssessmentMapper {
             "#{fillDate},\n" +
             "#{expertAssessmentAnnexId})")
     int insertEA(ExpertAssessmentDTO expertAssessment);
+     */
 
     /**
      * [查詢] 根據主鍵 id 查詢
@@ -66,4 +67,17 @@ public interface ExpertAssessmentMapper {
      **/
     @Select(value = "select id,classification,content from dictionary where id BETWEEN 53 and 75")
     List<Map> getAllEvaluationContent();
+
+
+    /**
+     * 根据专家评估id更新专家评估附件id【修改】
+     * @param expertAssessmentAnnexId
+     * @param eid
+     * @return
+     */
+    @Update(value = "update expert_assessment_annex_id set expert_assessment_annex_id=#{expertAssessmentAnnexId} where id=#{eid}")
+    int updateExpertAssessmentAnnexIdByCid(int expertAssessmentAnnexId, int eid);
+
+
+
 }

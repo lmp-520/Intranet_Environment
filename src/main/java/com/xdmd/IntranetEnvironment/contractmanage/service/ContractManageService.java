@@ -6,7 +6,6 @@ import com.xdmd.IntranetEnvironment.contractmanage.pojo.ContractManageDTO;
 import com.xdmd.IntranetEnvironment.contractmanage.pojo.TotalContract;
 import com.xdmd.IntranetEnvironment.subjectmanagement.exception.UpdateSqlException;
 import com.xdmd.IntranetEnvironment.subjectmanagement.exception.UpdateStatusException;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -53,19 +52,18 @@ public interface ContractManageService {
     ResultMap ContractFileUpload(String token, HttpServletResponse response, MultipartFile file, int contractId) throws IOException;
 
 
-
     /**
-     *中期检查附件上传
+     *课题意见附件上传
      * @param token
      * @param response
-     * @param midCheckAnnex
-     * @param expertAssessmentAnnex
      * @param subjectSuggestAnnex
      * @return
      * @throws IOException
      * @throws FileUploadException
-     */
-    ResultMap midCheckFileUpload(String token, HttpServletResponse response,MultipartFile midCheckAnnex, MultipartFile expertAssessmentAnnex, MultipartFile subjectSuggestAnnex) throws IOException, FileUploadException;
+    */
+    ResultMap SubjectSuggestFileUpload(String token, HttpServletResponse response, MultipartFile subjectSuggestAnnex, int cid) throws IOException, FileUploadException;
+
+
 
     /**
      * [查詢] 根據单位id查詢本单位合同
@@ -84,31 +82,30 @@ public interface ContractManageService {
 
 
 
-
-
-
-
     ///////////////////////////以下是中期检查///////////////////////////////////
+
 
     /**
      * 根据勾选的合同主表id修改相应的中期检查记录【内网中检】
+     *
      * @param ids
      * @return
      */
+//  ResultMap updateContractByIds(List<Long> ids);
     ResultMap updateContractByIds(int mid, List<Long> ids);
 
     /**
      * [查詢] 根据中期检查记录id查詢相应合同主表
      * @return
+     * @param mid
      */
-    ResultMap getInfoByMidRecord(@Param("mid") int mid,int pageNum,int pageSize);
+    ResultMap getInfoByMidCheckStatus(int mid);
 
     /**
      * [查詢] 根据单位id & 中检记录id查詢本单位的课题合同
-     * @param Uid
      * @return
      */
-    ResultMap getContractByUid(int Uid, int Mid, int pageNum, int pageSize);
+    ResultMap getContractByUid(String token, HttpServletResponse response, int pageNum, int pageSize);
 
     /**
      * 根据合同id更新相应的附件id【外网上传】
@@ -163,12 +160,6 @@ public interface ContractManageService {
      */
     ResultMap contractShenHeByFaGui(String token, HttpServletResponse response,Boolean type, String reason, Integer cid);
 
-    /**
-     * 不通过被退回时重新提交[修改]
-     * @param contractManageDTO
-     * @return
-     */
-//    ResultMap updateContractStatusByReturnCommit(String token, HttpServletResponse response, ContractManageDTO contractManageDTO, String oldcontractAnnexUrl, MultipartFile contractAnnex) throws UpdateSqlException, UpdateStatusException, IOException, FileUploadException;
 
     /**
      * 展示所有通过单位管理员审批的 【外网】
@@ -278,5 +269,24 @@ public interface ContractManageService {
      * @return
      */
     ResultMap updateContractStatusByReturnCommit(String token, HttpServletResponse response, TotalContract totalContract, String oldcontractAnnexUrl, MultipartFile contractAnnex) throws UpdateSqlException, UpdateStatusException, IOException, FileUploadException;
+
+
+    /**
+     * 根据合同主表id查询审核记录
+     * @param cid
+     * @return
+     */
+    ResultMap getAllShenHeTableRecordInfoByContractId(int cid);
+
+
+    /**
+     * 获取合同附件的路径和文件名
+     * @param cid
+     * @return
+     */
+    ResultMap getContractAnnexInfo(int cid);
+
+
+
 }
 

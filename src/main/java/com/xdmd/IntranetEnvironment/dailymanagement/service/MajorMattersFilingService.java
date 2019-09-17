@@ -71,13 +71,14 @@ public interface MajorMattersFilingService {
      * @param token
      * @param response
      * @param majorid
+     * @param typeid
      * @param changeApplicationAttachment
      * @param expertArgumentationAttachment
      * @param filingApplicationAttachment
      * @param approvalDocumentsAttachment
      * @return
      */
-    ResultMap majorFileUpload(String token, HttpServletResponse response, int majorid, MultipartFile changeApplicationAttachment, MultipartFile expertArgumentationAttachment, MultipartFile filingApplicationAttachment, MultipartFile approvalDocumentsAttachment) throws IOException, FileUploadException;
+    ResultMap majorFileUpload(String token, HttpServletResponse response, Integer majorid, Integer typeid, MultipartFile changeApplicationAttachment, MultipartFile expertArgumentationAttachment, MultipartFile filingApplicationAttachment, MultipartFile approvalDocumentsAttachment) throws IOException, FileUploadException;
 
 
 
@@ -88,11 +89,10 @@ public interface MajorMattersFilingService {
      */
     ResultMap updateMajorStatus(@Param("id") int id);
 
-
-
-
-
-
-
-
+    /**
+     * 获取重大事项文件路径和文件名
+     * @param id
+     * @return
+     */
+    ResultMap getfileInfo(int id);
 }

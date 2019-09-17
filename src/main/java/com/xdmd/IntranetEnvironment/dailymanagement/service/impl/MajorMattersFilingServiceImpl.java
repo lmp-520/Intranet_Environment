@@ -76,7 +76,7 @@ private static final Logger log = LoggerFactory.getLogger(MajorMattersFilingServ
             int insertNo = majorMattersFilingMapper.insert(majorMattersFiling);
             insertMidAndUid(cid,majorMattersFiling.getId());
             if (insertNo > 0) {
-                resultMap.success().message("新增" + insertNo + "条数据");
+                resultMap.success().message(majorMattersFiling.getId());
             } else if (insertNo == 0) {
                 resultMap.fail().message("新增失败");
             }
@@ -254,6 +254,7 @@ private static final Logger log = LoggerFactory.getLogger(MajorMattersFilingServ
      *重大事项的附件上传
      * @param token
      * @param response
+     * @param typeid
      * @param changeApplicationAttachment 变更申请表附件
      * @param expertArgumentationAttachment 专家论证意见附件
      * @param filingApplicationAttachment 备案申请表附件
@@ -263,7 +264,7 @@ private static final Logger log = LoggerFactory.getLogger(MajorMattersFilingServ
      * @throws FileUploadException
      */
     @Override
-    public ResultMap majorFileUpload(String token, HttpServletResponse response, int majorid, MultipartFile changeApplicationAttachment, MultipartFile expertArgumentationAttachment, MultipartFile filingApplicationAttachment, MultipartFile approvalDocumentsAttachment) throws IOException, FileUploadException{
+    public ResultMap majorFileUpload(String token, HttpServletResponse response, Integer majorid, Integer typeid, MultipartFile changeApplicationAttachment, MultipartFile expertArgumentationAttachment, MultipartFile filingApplicationAttachment, MultipartFile approvalDocumentsAttachment) throws IOException, FileUploadException{
         JwtInformation jwtInformation = new JwtInformation();
         try {
             jwtInformation = extranetTokenService.compare(response, token);
@@ -286,32 +287,60 @@ private static final Logger log = LoggerFactory.getLogger(MajorMattersFilingServ
         Integer uid = jwtInformation.getCid();
         String unitName = jwtInformation.getCompanyName();
         try {
-            /**
-             * 变更申请表附件
-             */
-            //判断上传中标文件附件的后缀名是否正确
-            String changeApplicationAttachmentName = changeApplicationAttachment.getOriginalFilename();
-            Boolean aBoolean = FileSuffixJudge.suffixJudge(changeApplicationAttachmentName);
-            if (aBoolean == false) {
-                resultMap.fail().message("变更申请表附件的文件格式不正确,请上传正确的文件格式");
+
+            if(typeid==1){
+                /**
+                 * 变更申请表附件
+                 */
+                //判断上传中标文件附件的后缀名是否正确
+                String changeApplicationAttachmentName = changeApplicationAttachment.getOriginalFilename();
+                Boolean aBoolean = FileSuffixJudge.suffixJudge(changeApplicationAttachmentName);
+                if (aBoolean == false) {
+                    resultMap.fail().message("变更申请表附件的文件格式不正确,请上传正确的文件格式");
+                }
+                //获取变更申请表附件的地址
+                String midCheckAnnexUrl = new OpenTenderServiceImpl().fileUploadUntil(changeApplicationAttachment, unitName, "变更申请表附件");
+                //获取文件后缀名
+                String changeApplicationAttachmentSuffixName = changeApplicationAttachmentName.substring(changeApplicationAttachmentName.lastIndexOf(".") + 1);
+                // 获取文件大小
+                File changeApplicationAttachmentFile = new File(midCheckAnnexUrl);
+                String changeApplicationAttachmentFileSize = String.valueOf(changeApplicationAttachmentFile.length());
+                AnnexUpload changeApplicationAttachmentData = new AnnexUpload(0, midCheckAnnexUrl,changeApplicationAttachmentName, "变更申请表附件", changeApplicationAttachmentSuffixName, changeApplicationAttachmentFileSize, null, username);
+                //把该文件上传到文件表中
+                uploadFileMapper.insertUpload(changeApplicationAttachmentData);
+                //更新变更附件id
+                majorMattersFilingMapper.updateChangeAnnexId(changeApplicationAttachmentData.getId(),majorid);
             }
-            //获取变更申请表附件的地址
-            String midCheckAnnexUrl = new OpenTenderServiceImpl().fileUploadUntil(changeApplicationAttachment, unitName, "变更申请表附件");
-            //获取文件后缀名
-            String changeApplicationAttachmentSuffixName = changeApplicationAttachmentName.substring(changeApplicationAttachmentName.lastIndexOf(".") + 1);
-            // 获取文件大小
-            File changeApplicationAttachmentFile = new File(midCheckAnnexUrl);
-            String changeApplicationAttachmentFileSize = String.valueOf(changeApplicationAttachmentFile.length());
-            AnnexUpload changeApplicationAttachmentData = new AnnexUpload(0, midCheckAnnexUrl,changeApplicationAttachmentName, "变更申请表附件", changeApplicationAttachmentSuffixName, changeApplicationAttachmentFileSize, null, username);
-            //把该文件上传到文件表中
-            uploadFileMapper.insertUpload(changeApplicationAttachmentData);
+            else if(typeid==2){
+                /**
+                 * 备案申请表附件
+                 */
+                //判断上传备案申请表附件的后缀名是否正确
+                String filingApplicationAttachmentName = filingApplicationAttachment.getOriginalFilename();
+                Boolean bBoolean = FileSuffixJudge.suffixJudge(filingApplicationAttachmentName);
+                if (bBoolean == false) {
+                    resultMap.fail().message("备案申请表附件的文件格式不正确,请上传正确的文件格式");
+                }
+                //获取备案申请表附件的地址
+                String filingApplicationAttachmentUrl = new OpenTenderServiceImpl().fileUploadUntil(filingApplicationAttachment, unitName, "备案申请表附件");
+                //获取文件后缀名
+                String filingApplicationAttachmentSuffixName = filingApplicationAttachmentName.substring(filingApplicationAttachmentName.lastIndexOf(".") + 1);
+                // 获取文件大小
+                File filingApplicationAttachmentFile = new File(filingApplicationAttachmentUrl);
+                String filingApplicationAttachmentFileSize = String.valueOf(filingApplicationAttachmentFile.length());
+                AnnexUpload filingApplicationAttachmentData = new AnnexUpload(0, filingApplicationAttachmentUrl, filingApplicationAttachmentName, "备案申请表附件", filingApplicationAttachmentSuffixName, filingApplicationAttachmentFileSize, null, username);
+                //把该文件上传到文件表中
+                uploadFileMapper.insertUpload(filingApplicationAttachmentData);
+                //更新备案附件id
+                majorMattersFilingMapper.updateFilingAnnexId(filingApplicationAttachmentData.getId(),majorid);
+            }
             /**
              * 专家论证意见附件
              */
             //判断上传专家论证意见附件的后缀名是否正确
             String expertArgumentationAttachmentName = expertArgumentationAttachment.getOriginalFilename();
-            Boolean bBoolean = FileSuffixJudge.suffixJudge(expertArgumentationAttachmentName);
-            if (bBoolean == false) {
+            Boolean cBoolean = FileSuffixJudge.suffixJudge(expertArgumentationAttachmentName);
+            if (cBoolean == false) {
                 resultMap.fail().message("专家论证意见附件附件的文件格式不正确,请上传正确的文件格式");
             }
             //获取专家论证意见附件的地址
@@ -325,32 +354,12 @@ private static final Logger log = LoggerFactory.getLogger(MajorMattersFilingServ
             //把该文件上传到文件表中
             uploadFileMapper.insertUpload(expertArgumentationAttachmentData);
             /**
-             * 备案申请表附件
-             */
-            //判断上传备案申请表附件的后缀名是否正确
-            String filingApplicationAttachmentName = filingApplicationAttachment.getOriginalFilename();
-            Boolean cBoolean = FileSuffixJudge.suffixJudge(filingApplicationAttachmentName);
-            if (cBoolean == false) {
-                resultMap.fail().message("备案申请表附件的文件格式不正确,请上传正确的文件格式");
-            }
-            //获取备案申请表附件的地址
-            String filingApplicationAttachmentUrl = new OpenTenderServiceImpl().fileUploadUntil(filingApplicationAttachment, unitName, "备案申请表附件");
-            //获取文件后缀名
-            String filingApplicationAttachmentSuffixName = filingApplicationAttachmentName.substring(filingApplicationAttachmentName.lastIndexOf(".") + 1);
-            // 获取文件大小
-            File filingApplicationAttachmentFile = new File(filingApplicationAttachmentUrl);
-            String filingApplicationAttachmentFileSize = String.valueOf(filingApplicationAttachmentFile.length());
-            AnnexUpload filingApplicationAttachmentData = new AnnexUpload(0, filingApplicationAttachmentUrl, filingApplicationAttachmentName, "备案申请表附件", filingApplicationAttachmentSuffixName, filingApplicationAttachmentFileSize, null, username);
-            //把该文件上传到文件表中
-            uploadFileMapper.insertUpload(filingApplicationAttachmentData);
-
-            /**
              * 批准文件附件
              */
             //判断上传批准文件附件的后缀名是否正确
             String approvalDocumentsAttachmentName = approvalDocumentsAttachment.getOriginalFilename();
             Boolean dBoolean = FileSuffixJudge.suffixJudge(approvalDocumentsAttachmentName);
-            if (cBoolean == false) {
+            if (dBoolean == false) {
                 resultMap.fail().message("批准文件附件的文件格式不正确,请上传正确的文件格式");
             }
             //获取批准文件附件的地址
@@ -365,9 +374,9 @@ private static final Logger log = LoggerFactory.getLogger(MajorMattersFilingServ
             uploadFileMapper.insertUpload(approvalDocumentsAttachmentData);
 
             /**
-             * 把上传附件的id取出，存到招标备案表中
+             * 把上传附件的id取出，存到重大事项表中
              */
-            majorMattersFilingMapper.updateMajorAnnexId(changeApplicationAttachmentData.getId(),expertArgumentationAttachmentData.getId(),filingApplicationAttachmentData.getId(),approvalDocumentsAttachmentData.getId(),majorid);
+            majorMattersFilingMapper.updateMajorAnnexId(expertArgumentationAttachmentData.getId(),approvalDocumentsAttachmentData.getId(),majorid);
             return resultMap.success().message("多个附件上传成功");
         } catch (IOException e) {
             e.printStackTrace();
@@ -396,6 +405,28 @@ private static final Logger log = LoggerFactory.getLogger(MajorMattersFilingServ
                 resultMap.fail().message("审核失败");
             }
             return resultMap;
+    }
+
+
+    /**
+     * 获取重大事项文件路径和文件名
+     * @param id
+     * @return
+     */
+    @Override
+    public ResultMap getfileInfo(int id) {
+        try {
+            List<Map> fileInfoMap = majorMattersFilingMapper.getfileInfo(id);
+            if (fileInfoMap.size() > 0) {
+                resultMap.success().message(fileInfoMap);
+            } else if (fileInfoMap.size() == 0) {
+                resultMap.fail().message("没有查到相关信息");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultMap.fail().message("系统异常");
+        }
+        return resultMap;
     }
 
 }

@@ -70,6 +70,7 @@ public interface MajorMattersFilingMapper {
             "<if test ='null != adjustmentMattersId'>" +
             "AND mmf.adjustment_matters_id =#{adjustmentMattersId}" +
             "</if></where>" +
+            "group by mmf.id\t" +
             "order by mmf.id desc" +
             "</script>")
     List<Map> getAllMajorInfoByUid(@Param("uid") int uid, @Param("subjectName") String subjectName, @Param("commitmentUnit")String commitmentUnit,
@@ -77,17 +78,34 @@ public interface MajorMattersFilingMapper {
 
 
     /**
-     * [更新]重大事项附件id【外网】
+     * [更新]专家论证附件id和批准文件id【外网】
      * @author Kong
      * @date 2019/08/19
      **/
-    @Update("UPDATE major_matters_filing\t" +
-            "SET change_application_attachment_id = #{changeApplicationAttachmentId}," +
+    @Update("UPDATE major_matters_filing SET\t" +
             "expert_argumentation_attachment_id = #{expertArgumentationAttachmentId}," +
-            "filing_application_attachment_id = #{filingApplicationAttachmentId}," +
             "approval_documents_attachment_id = #{approvalDocumentsAttachmentId}\t" +
-            "WHERE id=#{id}")
-    int updateMajorAnnexId(int changeApplicationAttachmentId, int expertArgumentationAttachmentId, int filingApplicationAttachmentId, int approvalDocumentsAttachmentId, int id);
+            "WHERE id=#{majorid}")
+    int updateMajorAnnexId(@Param("expertArgumentationAttachmentId") int expertArgumentationAttachmentId,@Param("approvalDocumentsAttachmentId") int approvalDocumentsAttachmentId,@Param("majorid") int majorid);
+
+    /**
+     * [更新] 变更附件id【外网】
+     * @author Kong
+     * @date 2019/08/19
+     **/
+    @Update("UPDATE major_matters_filing SET change_application_attachment_id = #{changeApplicationAttachmentId} WHERE id=#{majorid}")
+    int updateChangeAnnexId(@Param("changeApplicationAttachmentId") int changeApplicationAttachmentId,@Param("majorid") int majorid);
+
+
+
+    /**
+     * [更新] 备案附件id【外网】
+     * @author Kong
+     * @date 2019/08/19
+     **/
+    @Update("UPDATE major_matters_filing SET filing_application_attachment_id = #{filingApplicationAttachmentId} WHERE id=#{majorid}")
+    int updateFilingAnnexId(@Param("filingApplicationAttachmentId") int filingApplicationAttachmentId, @Param("majorid")int majorid);
+
 
     /**
      * [查詢] 根據主鍵 id 查詢【内外网】
@@ -134,8 +152,6 @@ public interface MajorMattersFilingMapper {
                               @Param("adjustTypeId") Integer adjustTypeId, @Param("adjustmentMattersId") Integer adjustmentMattersId);
 
 
-
-
     /**
      * 更新重大事项的审核状态【内网】
      * @param id
@@ -168,4 +184,27 @@ public interface MajorMattersFilingMapper {
      */
     @Insert(value = "INSERT INTO unit_major(unit_id,major_id)VALUES(#{unitId},#{majorId})")
     int insertMidAndUid(@Param("unitId") int unitId, @Param("majorId") int majorId);
+
+
+    /**
+     * 获取重大事项文件路径和文件名
+     * @param id
+     * @return
+     */
+    @Select("SELECT\n" +
+            "uf.id,\n" +
+            "uf.upload_file_name,\n" +
+            "uf.upload_file_address\n" +
+            "FROM\n" +
+            "upload_file uf,\n" +
+            "major_matters_filing mmf\n" +
+            "WHERE\n" +
+            "uf.id in(\n" +
+            "(select uf.id from major_matters_filing mmf,upload_file uf where uf.id=mmf.change_application_attachment_id and mmf.id=#{id}),\n" +
+            "(select uf.id from major_matters_filing mmf,upload_file uf where uf.id=mmf.expert_argumentation_attachment_id and mmf.id=#{id}),\n" +
+            "(select uf.id from major_matters_filing mmf,upload_file uf where uf.id=mmf.filing_application_attachment_id and mmf.id=#{id}),\n" +
+            "(select uf.id from major_matters_filing mmf,upload_file uf where uf.id=mmf.approval_documents_attachment_id and mmf.id=#{id})\n" +
+            ")\n" +
+            "GROUP BY uf.id")
+    List<Map> getfileInfo(int id);
 }

@@ -537,7 +537,6 @@ public class ProjectProgressServiceImpl implements ProjectProgressService {
 
     /**
      * 单位关联课题进度主表
-     *
      * @param uid
      * @param pid
      */
@@ -553,6 +552,28 @@ public class ProjectProgressServiceImpl implements ProjectProgressService {
         } catch (Exception e) {
             e.printStackTrace();
             resultMap.success().message("系统异常");
+        }
+        return resultMap;
+    }
+
+
+    /**
+     * 获取课题进展文件路径和文件名
+     * @param pid
+     * @return
+     */
+    @Override
+    public ResultMap getfileInfo(int pid) {
+        try {
+            List<Map> fileInfoMap = projectProgressMapper.getfileInfo(pid);
+            if (fileInfoMap.size() > 0) {
+                resultMap.success().message(fileInfoMap);
+            } else if (fileInfoMap.size() == 0) {
+                resultMap.fail().message("没有查到相关信息");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultMap.fail().message("系统异常");
         }
         return resultMap;
     }
@@ -596,7 +617,7 @@ public class ProjectProgressServiceImpl implements ProjectProgressService {
             //定期更新课题进展信息
             int updateNum = projectProgressMapper.regularUpdateProgressInfo(projectProgressDTO);
             /**
-             * 判断五个旧文件是否为空
+             * 判断旧文件是否为空
              * 课题进展附件
              */
             if (oldSubjectProgressAnnexUrl != null) {

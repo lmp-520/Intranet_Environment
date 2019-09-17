@@ -293,56 +293,26 @@ public class OpenTenderController {
         return resultMap = openTenderService.showAllNoPassReviewTenderByPingGu(projectName,subjectName,subjectLeader,leaderContact,pageNum, pageSize);
     }
 
-    /**
-     * 不通过被退回时重新提交[即修改]【外网】
-     * @return
-
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "projectNo",value = "课题编号"),
-            @ApiImplicitParam(name = "projectName",value = "项目名称"),
-            @ApiImplicitParam(name = "tenderNo",value = "标书标号"),
-            @ApiImplicitParam(name = "subcontractingNo",value = "分包号"),
-            @ApiImplicitParam(name = "subjectName",value = "课题名称"),
-            @ApiImplicitParam(name = "responsibleUnit",value = "责任单位"),
-            @ApiImplicitParam(name = "bidders",value = "投标人"),
-            @ApiImplicitParam(name = "subjectLeader",value = "课题负责人"),
-            @ApiImplicitParam(name = "leaderContact",value = "课题负责人联系方式"),
-            @ApiImplicitParam(name = "joinTenderUnits",value = "课题联合投标单位"),
-            @ApiImplicitParam(name = "operator",value = "经办人"),
-            @ApiImplicitParam(name = "operatorContact",value = "经办人联系方式"),
-            @ApiImplicitParam(name = "winningAmount",value = "中标（成交）金额"),
-            @ApiImplicitParam(name = "supportingFunds",value = "配套经费"),
-            @ApiImplicitParam(name = "remark",value = "备注"),
-            @ApiImplicitParam(name = "oid",value = "招标备案id",required = true)
-
-    })
-    @PostMapping(value = "updateTenderStatusByReturnCommit")
-    @ApiOperation(value = "不通过被退回时重新提交[即修改]【外网】")
-    public ResultMap updateTenderStatusByReturnCommit(@CookieValue(value = "token", required = false) String token, HttpServletResponse response,@RequestBody OpenTender openTender) {
-        if (StringUtils.isEmpty(token)) {
-            return resultMap.fail().message("请先登录");
-        }
-        return resultMap = openTenderService.updateTenderStatusByReturnCommit(token, response,openTender);
-    }  */
 
     /**
      * 根据招标备案表id获取文件路径和文件名
-     * @param id
+     * @param oid
      * @return
      */
-    @GetMapping(value = "updateTenderStatusByReturnCommit")
+    @ResponseBody
+    @GetMapping(value = "getTenderFileInfo")
     @ApiOperation(value = "根据招标备案表id获取文件路径和文件名【内外网】")
-    public ResultMap getfileInfo(int id) {
-        return  resultMap=openTenderService.getfileInfo(id);
+    public  ResultMap getfileInfo(int oid) {
+        return  resultMap=openTenderService.getfileInfo(oid);
     }
 
     /**
-     * 根据合同主表id查询审核记录【内网】
+     * 根据招标主表id查询审核记录【内网】
      * @param oid
      * @return
      */
     @GetMapping(value = "getAllShenHeTableRecordInfoByContractId")
-    @ApiOperation(value = "根据合同主表id查询审核记录【内网】")
+    @ApiOperation(value = "根据招标备案表id查询审核记录【内网】")
     public ResultMap getAllShenHeTableRecordInfoByContractId(int oid) {
         return resultMap=openTenderService.getAllShenHeTableRecordInfoByContractId(oid);
     }
