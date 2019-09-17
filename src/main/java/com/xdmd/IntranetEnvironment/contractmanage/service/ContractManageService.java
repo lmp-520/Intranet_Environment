@@ -287,6 +287,13 @@ public interface ContractManageService {
     ResultMap getContractAnnexInfo(int cid);
 
 
+    /**
+     * 获取课题意见附件的路径和文件名
+     * @param cid
+     * @return
+     */
+    ResultMap getSubjectSuggestAnnexInfo( int cid);
+
 
 }
 

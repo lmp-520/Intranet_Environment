@@ -340,31 +340,32 @@ public class OpenTenderController {
     @ResponseBody
     @PostMapping("updateTenderStatusByReturnCommit")
     @ApiOperation("不通过被退回时重新提交[即修改]【外网】")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name="oldWinningDocumentFileUrl",value = "旧的中标文件附件url"),
-            @ApiImplicitParam(name="oldTransactionAnnouncementFileUrl",value = "旧的成交通告附件附件url"),
-            @ApiImplicitParam(name="oldNoticeTransactionFileUrl",value = "旧的成交通知书附件附件url"),
-            @ApiImplicitParam(name="oldResponseFileFileUrl",value = "旧的响应附件附件url"),
-            @ApiImplicitParam(name="oldOtherAttachmentsFileUrl",value = "旧的其他文件附件url"),
-            @ApiImplicitParam(name="winningDocument",value = "新的中标附件"),
-            @ApiImplicitParam(name="transactionAnnouncement",value = "新的成交公告附件"),
-            @ApiImplicitParam(name="noticeTransaction",value = "新的成交通知书附件"),
-            @ApiImplicitParam(name="responseFile",value = "新的响应文件附件"),
-            @ApiImplicitParam(name="otherAttachments",value = "新的其他文件附件"),
-            @ApiImplicitParam(name="openTender",value = "招标实体类")
-    })
+    //@ApiImplicitParams({
+    //        @ApiImplicitParam(name="oldWinningDocumentFileUrl",value = "旧的中标文件附件url"),
+    //        @ApiImplicitParam(name="oldTransactionAnnouncementFileUrl",value = "旧的成交通告附件url"),
+    //        @ApiImplicitParam(name="oldNoticeTransactionFileUrl",value = "旧的成交通知书附件url"),
+    //        @ApiImplicitParam(name="oldResponseFileFileUrl",value = "旧的响应附件url"),
+    //        @ApiImplicitParam(name="oldOtherAttachmentsFileUrl",value = "旧的其他文件附件url"),
+    //        @ApiImplicitParam(name="winningDocument",value = "新的中标附件"),
+    //        @ApiImplicitParam(name="transactionAnnouncement",value = "新的成交公告附件"),
+    //        @ApiImplicitParam(name="noticeTransaction",value = "新的成交通知书附件"),
+    //        @ApiImplicitParam(name="responseFile",value = "新的响应文件附件"),
+    //        @ApiImplicitParam(name="otherAttachments",value = "新的其他文件附件"),
+    //        @ApiImplicitParam(name="openTender",value = "招标实体类")
+    //})
     public ResultMap updateTenderStatusByReturnCommit(@CookieValue(value = "token",required = false) String token, HttpServletResponse response,
-                                 @RequestPart(value = "oldWinningDocumentFileUrl",required = false) String oldWinningDocumentFileUrl,
-                                 @RequestPart(value = "oldTransactionAnnouncementFileUrl",required = false) String oldTransactionAnnouncementFileUrl,
-                                 @RequestPart(value = "oldNoticeTransactionFileUrl",required = false)String oldNoticeTransactionFileUrl,
-                                 @RequestPart(value = "oldResponseFileFileUrl",required = false)String oldResponseFileFileUrl,
-                                 @RequestPart(value = "oldOtherAttachmentsFileUrl",required = false)String oldOtherAttachmentsFileUrl,
-                                 @RequestPart(value = "winningDocument",required = false) MultipartFile winningDocument,
-                                 @RequestPart(value = "transactionAnnouncement",required = false) MultipartFile transactionAnnouncement,
-                                 @RequestPart(value = "responseFile",required = false) MultipartFile responseFile,
-                                 @RequestPart(value = "noticeTransaction",required = false) MultipartFile noticeTransaction,
-                                 @RequestPart(value = "otherAttachments",required = false) MultipartFile otherAttachments,
-                                 @RequestPart OpenTender openTender){
+                                 @RequestPart(value = "oldWinningDocumentFileUrl",required = false) String oldWinningDocumentFileUrl, //旧的中标文件附件url
+                                 @RequestPart(value = "oldTransactionAnnouncementFileUrl",required = false) String oldTransactionAnnouncementFileUrl,//旧的成交通告附件url
+                                 @RequestPart(value = "oldNoticeTransactionFileUrl",required = false)String oldNoticeTransactionFileUrl,//旧的成交通知书附件url
+                                 @RequestPart(value = "oldResponseFileFileUrl",required = false)String oldResponseFileFileUrl,//旧的响应附件url
+                                 @RequestPart(value = "oldOtherAttachmentsFileUrl",required = false)String oldOtherAttachmentsFileUrl,//旧的其他文件附件url
+                                 @RequestPart(value = "winningDocument",required = false) MultipartFile winningDocument,//新的中标附件
+                                 @RequestPart(value = "transactionAnnouncement",required = false) MultipartFile transactionAnnouncement,//新的成交公告附件
+                                 @RequestPart(value = "noticeTransaction",required = false) MultipartFile noticeTransaction,//新的成交通知书附件
+                                 @RequestPart(value = "responseFile",required = false) MultipartFile responseFile,//新的响应文件附件
+                                 @RequestPart(value = "otherAttachments",required = false) MultipartFile otherAttachments,//新的其他文件附件
+                                 @RequestPart OpenTender openTender  //招标实体类
+                                 ){
         if(StringUtils.isEmpty(token)){
             return resultMap.fail().message("请先登录");
         }

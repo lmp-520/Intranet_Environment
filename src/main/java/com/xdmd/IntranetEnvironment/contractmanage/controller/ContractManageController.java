@@ -514,4 +514,18 @@ public class ContractManageController {
    }
 
 
+
+    /**
+     * 获取课题意见附件的路径和文件名
+     * @param cid
+     * @return
+     */
+    @GetMapping(value = "getSubjectSuggestAnnexInfo")
+    @ApiOperation(value = "获取课题意见附件的路径和文件名")
+    @ApiImplicitParam(name = "cid",value = "合同主表id")
+    public ResultMap getSubjectSuggestAnnexInfo(int cid) {
+        return resultMap=contractManageService.getSubjectSuggestAnnexInfo(cid);
+    }
+
+
 }
