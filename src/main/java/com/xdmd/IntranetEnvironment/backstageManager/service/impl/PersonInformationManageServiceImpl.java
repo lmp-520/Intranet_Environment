@@ -115,7 +115,6 @@ public class PersonInformationManageServiceImpl implements PersonInformationMana
             return resultMap.fail().message("登录名已存在");
         }
 
-
         Subaccount subaccount = userInformation.getSubaccount();
 
         //对身份证扫描件进行上传
