@@ -44,28 +44,6 @@ public class ExpertAssessmentServiceImpl implements ExpertAssessmentService {
 
 
     /**
-     * 新增
-     * @param expertAssessment
-     * @return
-
-    @Override
-    public ResultMap insert(ExpertAssessmentDTO expertAssessment) {
-        try{
-            int insertNo=expertAssessmentMapper.insertEA(expertAssessment);
-            if(insertNo>0){
-                resultMap.success().message(expertAssessment.getId());
-            }else if(insertNo==0){
-                resultMap.fail().message("新增失败");
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-            resultMap.success().message("系统异常");
-        }
-        return resultMap;
-    }*/
-
-
-    /**
      * 根据id查询专家评估
      * @param id
      * @return

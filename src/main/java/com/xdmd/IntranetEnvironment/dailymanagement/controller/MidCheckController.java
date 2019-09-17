@@ -32,17 +32,6 @@ public class MidCheckController {
     MidCheckService midCheckService;
     ResultMap resultMap=new ResultMap();
 
-    /**
-     * 新增中期检查表
-     * @param midCheckTemplateDTO
-     * @return
-
-    @ApiOperation(value = "新增中期检查表【外网】")
-    @PostMapping("insertmidchecktemplate")
-    public ResultMap insert(MidCheckTemplateDTO midCheckTemplateDTO) {
-        return resultMap= midCheckService.insertMidCheckTemplate(midCheckTemplateDTO);
-    } */
-
 
     /**
      * 根据中期检查表id查询详情
@@ -171,7 +160,9 @@ public class MidCheckController {
         }
         return resultMap;
 
-    };
+    }
+
+
 
 
     /**
@@ -305,7 +296,20 @@ public class MidCheckController {
     }
 
 
-
-
+    /**
+     * 在提交时回显通过最终审核的常用的关联合同信息
+     *
+     * @return
+     * @throws Exception
+     */
+    @PostMapping(value = "queryAllEndContractInfo")
+    @ApiOperation(value = "在提交时回显通过最终审核的常用的关联合同信息【外网】")
+    public ResultMap queryAllEndContractInfo(@CookieValue(value = "token", required = false) String token, HttpServletResponse response
+    ) throws Exception {
+        if (StringUtils.isEmpty(token)) {
+            return resultMap.fail().message("请先登录");
+        }
+        return resultMap = midCheckService.queryAllEndContractInfo(token, response);
+    }
 
 }
