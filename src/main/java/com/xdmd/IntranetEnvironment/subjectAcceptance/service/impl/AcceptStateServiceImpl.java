@@ -71,18 +71,18 @@ public class AcceptStateServiceImpl implements AcceptStateService {
         if (type) {
             //此时为审核通过时
             //判断上传文件的后缀名是否正确
-            String specialAuditFileName = specialAuditFile.getOriginalFilename();
-            List<String> specialAuditSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".xlsx", ".zip", ".7z", ".rar"));
-            Boolean aBoolean = FileSuffixJudgeUtil.SuffixJudge(specialAuditFileName, specialAuditSuffixList);
-
-            String firstInspectionFileName = firstInspectionFile.getOriginalFilename();
-            List<String> firstInspectionSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".xlsx", ".zip", ".7z", ".rar"));
-            Boolean bBoolean = FileSuffixJudgeUtil.SuffixJudge(firstInspectionFileName, firstInspectionSuffixList);
-
-            if(aBoolean == false || bBoolean == false){
-                //两个文件中存在有一个错误，意味着有文件上传的格式不正确
-                return resultMap.fail().message("请上传正确的文件格式");
-            }
+//            String specialAuditFileName = specialAuditFile.getOriginalFilename();
+//            List<String> specialAuditSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".xlsx", ".zip", ".7z", ".rar"));
+//            Boolean aBoolean = FileSuffixJudgeUtil.SuffixJudge(specialAuditFileName, specialAuditSuffixList);
+//
+//            String firstInspectionFileName = firstInspectionFile.getOriginalFilename();
+//            List<String> firstInspectionSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".xlsx", ".zip", ".7z", ".rar"));
+//            Boolean bBoolean = FileSuffixJudgeUtil.SuffixJudge(firstInspectionFileName, firstInspectionSuffixList);
+//
+//            if(aBoolean == false || bBoolean == false){
+//                //两个文件中存在有一个错误，意味着有文件上传的格式不正确
+//                return resultMap.fail().message("请上传正确的文件格式");
+//            }
 
             //根据验收申请表的id 获取该公司的名字
             String cname = acceptStateMapper.queryCompanyNameByCid(id);

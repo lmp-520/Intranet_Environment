@@ -170,16 +170,6 @@ private static final Logger log = LoggerFactory.getLogger(MajorMattersFilingCont
         return resultMap=majorMattersFilingService.updateMajorStatus(id);
     }
 
-
-
-
-
-
-
-
-
-
-
     /**
      * 获取重大事项文件路径和文件名
      * @param id

@@ -21,41 +21,33 @@ public class AdministratorInformation {
     private  Integer aid;
 
     //公司名称
-    @NotNull(message = "公司名称不能为空")
     private  String companyName;
 
     //公司id
     private  Integer companyId;
 
     //公司地址
-    @NotNull(message = "公司地址不能为空")
     private  String companyAddress;
 
     //单位性质
-    @NotNull(message = "单位性质不能为空")
     private  String unitNature;
 
     //社会信用号
-    @NotNull(message = "社会信用号不能为空")
     private  String socialCreditCode;
 
     //法人姓名
-    @NotNull(message = "法人姓名不能为空")
     private  String legalPerson;
 
+    //法人身份证号
+    private String legalPersonIdCard;
+
     //联系人身份证号
-    @NotNull(message = "联系人身份证号不能为空")
-    @Pattern(regexp = "(^\\d{15}$)|(^\\d{18}$)|(^\\d{17}(\\d|X|x)$)",message ="联系人身份证号码不符合规范")
     private  String contactIdCard;
 
     //联系人手机号
-    @NotNull(message = "联系人手机号不能为空")
-    @Pattern(regexp = "^1([38]\\d|5[0-35-9]|7[3678])\\d{8}$",message = "联系人手机号不符合规范")
     private  String contactPhone;
 
     //电子邮件
-    @NotNull(message = "电子邮件不能为空")
-    @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@(?!.*\\.\\..*)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$",message = "电子邮件不符合规范")
     private  String email;
 
     //营业执照url的id
@@ -66,6 +58,9 @@ public class AdministratorInformation {
 
     //联系人身份证url的id
     private  Integer contactCardUrlId;
+
+    //信用名单 （0：为白名单 默认 1：为黑名单）
+    private String creditRoster;
 
     //注册时间
     private  String createTime;
