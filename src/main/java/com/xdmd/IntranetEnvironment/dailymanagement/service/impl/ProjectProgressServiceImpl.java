@@ -564,18 +564,51 @@ public class ProjectProgressServiceImpl implements ProjectProgressService {
      */
     @Override
     public ResultMap getfileInfo(int pid) {
-        try {
-            List<Map> fileInfoMap = projectProgressMapper.getfileInfo(pid);
-            if (fileInfoMap.size() > 0) {
-                resultMap.success().message(fileInfoMap);
-            } else if (fileInfoMap.size() == 0) {
-                resultMap.fail().message("没有查到相关信息");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            resultMap.fail().message("系统异常");
-        }
-        return resultMap;
+        ProjectProgressFile projectProgressFile = new ProjectProgressFile();
+
+        int subjectProgressAnnexId = projectProgressMapper.querySubjectProgressAnnex(pid);
+        String subjectProgressFileName = projectProgressMapper.queryFileName(subjectProgressAnnexId);
+        String subjectProgressFileUrl = projectProgressMapper.queryFileUrl(subjectProgressAnnexId);
+        projectProgressFile.setSubjectProgressAnnexFileName(subjectProgressFileName);
+        projectProgressFile.setSubjectProgressAnnexFileUrl(subjectProgressFileUrl);
+
+        int fundProgressAnnexId = projectProgressMapper.queryFundProgressAnnex(pid);
+        String fundProgressAnnexFileName = projectProgressMapper.queryFileName(fundProgressAnnexId);
+        String fundProgressAnnexFileUrl = projectProgressMapper.queryFileUrl(fundProgressAnnexId);
+        projectProgressFile.setFundProgressAnnexFileName(fundProgressAnnexFileName);
+        projectProgressFile.setFundProgressAnnexFileUrl(fundProgressAnnexFileUrl);
+
+
+        int openReportAnnexId = projectProgressMapper.queryopenReportAnnex(pid);
+        String openReportAnnexFileName = projectProgressMapper.queryFileName(openReportAnnexId);
+        String openReportAnnexFileUrl = projectProgressMapper.queryFileUrl(openReportAnnexId);
+        projectProgressFile.setOpenReportAnnexFileName(openReportAnnexFileName);
+        projectProgressFile.setOpenReportAnnexFileUrl(openReportAnnexFileUrl);
+
+
+        int expertSuggestAnnexId = projectProgressMapper.queryExpertSuggestAnnex(pid);
+        String expertSuggestAnnexFileName = projectProgressMapper.queryFileName(expertSuggestAnnexId);
+        String expertSuggestAnnexFileUrl = projectProgressMapper.queryFileUrl(expertSuggestAnnexId);
+        projectProgressFile.setExpertSuggestAnnexFileName(expertSuggestAnnexFileName);
+        projectProgressFile.setExpertSuggestAnnexFileUrl(expertSuggestAnnexFileUrl);
+
+        return resultMap.success().message(projectProgressFile);
+
+
+
+//
+//        try {
+//            List<Map> fileInfoMap = projectProgressMapper.getfileInfo(pid);
+//            if (fileInfoMap.size() > 0) {
+//                resultMap.success().message(fileInfoMap);
+//            } else if (fileInfoMap.size() == 0) {
+//                resultMap.fail().message("没有查到相关信息");
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            resultMap.fail().message("系统异常");
+//        }
+//        return resultMap;
     }
 
 

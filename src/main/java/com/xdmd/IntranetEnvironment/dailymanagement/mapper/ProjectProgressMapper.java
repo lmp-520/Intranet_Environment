@@ -330,4 +330,25 @@ public interface ProjectProgressMapper {
             ")\n" +
             "GROUP BY uf.id")
     List<Map> getfileInfo(int pid);
+
+    @Select("select subject_progress_annex_id from project_progress where id = #{pid}")
+    int querySubjectProgressAnnex(@Param("pid") int pid);
+
+
+    @Select("select upload_file_name from upload_file where id = #{subjectProgressAnnexId}")
+    String queryFileName(@Param("subjectProgressAnnexId") int subjectProgressAnnexId);
+
+
+    @Select("select upload_file_address from upload_file where id = #{subjectProgressAnnexId}")
+    String queryFileUrl(@Param("subjectProgressAnnexId") int subjectProgressAnnexId);
+
+
+    @Select("select fund_progress_annex_id from project_progress where id = #{pid}")
+    int queryFundProgressAnnex(@Param("pid") int pid);
+
+    @Select("select open_report_annex_id from project_progress where id = #{pid}")
+    int queryopenReportAnnex(@Param("pid") int pid);
+
+    @Select("select expert_suggest_annex_id from project_progress where id = #{pid}")
+    int queryExpertSuggestAnnex(@Param("pid") int pid);
 }
