@@ -33,7 +33,6 @@ public class PersonInformationManageController {
     public ResultMap changePassword(@RequestParam("uid") Integer uid,   //登录用户的id
                                     @RequestParam("oldPassword") String oldPassword,    //旧密码
                                     @RequestParam("newPassword") String newPassword) {    //新密码
-
         try {
             resultMap = personInformationManageService.changePassword(uid, oldPassword, newPassword);
         } catch (Exception e) {
@@ -41,7 +40,6 @@ public class PersonInformationManageController {
             log.error("PersonInformationManageController 中 changePassword --" + e.getMessage());
             return resultMap.fail().message("系统异常");
         }
-
         return resultMap;
     }
 
@@ -55,7 +53,6 @@ public class PersonInformationManageController {
         if (StringUtils.isEmpty(token)) {
             return resultMap.fail().message("请先登录");
         }
-
         //用于判断传输的子账号参数是否有误
         if (result.hasErrors()) {
             List<ObjectError> ls = result.getAllErrors();

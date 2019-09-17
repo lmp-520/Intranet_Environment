@@ -1,14 +1,13 @@
 package com.xdmd.IntranetEnvironment.administerBusiness.controller;
 
+import com.xdmd.IntranetEnvironment.administerBusiness.pojo.AdministerInformation;
 import com.xdmd.IntranetEnvironment.administerBusiness.service.AdministerService;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Controller
@@ -44,6 +43,41 @@ public class AdministerController {
         } catch (Exception e) {
             e.printStackTrace();
             log.error("AdministerController 中 queryInformation 方法出错 --"+e.getMessage());
+            return resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
+
+    //修改企业账号的状态  0：启用 1：停用
+    @ResponseBody
+    @PostMapping("changeState")
+    public ResultMap changeState(@RequestParam("id") Integer id,
+                                 @RequestParam("state")Boolean state){  //状态 true 启用 , false 停用
+        try {
+            resultMap = administerService.changeState(id,state);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("AdministerController 中 changeState 方法出错 --"+e.getMessage());
+            return resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
+
+    //修改企业账号的信息
+    @ResponseBody
+    @PostMapping("modify")
+    public ResultMap modify(@RequestPart AdministerInformation administerInformation,
+                            @RequestPart(value = "oldBusinessFilUrl",required = false) String oldBusinessFilUrl,
+                            @RequestPart(value = "businessFile",required = false) MultipartFile businessFile,
+                            @RequestPart(value = "oldLegalCardIdFileUrl",required = false) String oldLegalCardIdFileUrl,
+                            @RequestPart(value = "legalCardIdFile",required = false)MultipartFile  legalCardIdFile,
+                            @RequestPart(value = "oldContactCardFileUrl",required = false) String oldContactCardFileUrl,
+                            @RequestPart(value = "contactCardFileUrl",required = false) MultipartFile contactCardFile){
+        try {
+            resultMap = administerService.modify(administerInformation,oldBusinessFilUrl,businessFile,oldLegalCardIdFileUrl,legalCardIdFile,oldContactCardFileUrl,contactCardFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("administerController 中 modify方法出错 -- "+e.getMessage());
             return resultMap.fail().message("系统异常");
         }
         return resultMap;
