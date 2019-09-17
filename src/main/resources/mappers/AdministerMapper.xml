@@ -32,4 +32,26 @@
         </where>
         limit #{newPage},#{total}
     </select>
+
+    <insert id="uploadFile" useGeneratedKeys="true" keyProperty="id">
+         insert into upload_file(
+            id,
+            upload_file_address,
+            upload_file_name,
+            upload_file_type,
+            upload_suffix_name,
+            file_size,
+            create_time,
+            create_author)
+            values(
+            #{uploadFile.id},
+            #{uploadFile.uploadFileAddress},
+            #{uploadFile.uploadFileName},
+            #{uploadFile.uploadFileType},
+            #{uploadFile.uploadSuffixName},
+            #{uploadFile.fileSize},
+            #{uploadFile.createTime},
+            #{uploadFile.createAuthor}
+            )
+    </insert>
 </mapper>

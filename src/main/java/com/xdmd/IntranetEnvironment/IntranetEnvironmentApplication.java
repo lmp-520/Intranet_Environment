@@ -15,7 +15,6 @@ public class IntranetEnvironmentApplication extends SpringBootServletInitializer
         SpringApplication.run(IntranetEnvironmentApplication.class, args);
     }
 
-
    //打jar包时注释这个方法和【extends SpringBootServletInitializer】
    @Override
    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {

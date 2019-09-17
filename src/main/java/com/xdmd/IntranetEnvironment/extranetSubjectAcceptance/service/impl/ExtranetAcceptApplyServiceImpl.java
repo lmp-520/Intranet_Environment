@@ -955,8 +955,8 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
         String cname = jwtInformation.getCompanyName();
 
         if (lastReportFile != null) {
-            //此时专家组意见文件不为空，则意味着上传了新的专家组意见
-            //判断上传的专家组意见文件是否后缀名正确
+            //此时最终验收报告文件不为空，则意味着上传了新的最终验收报告文件
+            //判断上传的最终验收报告文件是否后缀名正确
 //            ArrayList<String> idCardFileSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".rar", ".zip", ".7z"));
 //            String lastReportFileName = lastReportFile.getOriginalFilename();
 //            Boolean aBoolean = FileSuffixJudgeUtil.SuffixJudge(lastReportFileName, idCardFileSuffixList);
