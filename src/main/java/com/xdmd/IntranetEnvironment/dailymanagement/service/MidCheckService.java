@@ -102,14 +102,14 @@ public interface MidCheckService {
      * 更新合同中期检查状态【当外网提交完所有材料但内网未审核】
      * @return
      */
-    ResultMap updateContractMidCheckStateOne();
+    ResultMap updateContractMidCheckStateOne(int cid);
 
     /**
      * 更新合同中期检查状态【当外网提交完所有材料且内网已审核并提交相应材料】
      * @return
      */
-    ResultMap updateContractMidCheckStateTwo();
 
+    ResultMap updateContractMidCheckStateTwo(int cid);
 
     /**
      * 根据合同id查询关联的中期检查模板表
@@ -156,8 +156,12 @@ public interface MidCheckService {
     ResultMap getWeizhiFileInfo(int cid);
 
 
-
-
+    /**
+     * 获取课题意见附件的路径和文件名
+     * @param cid
+     * @return
+     */
+    ResultMap getSubjectSuggestAnnexInfo(int cid);
 
 
 }

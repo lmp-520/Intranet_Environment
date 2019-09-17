@@ -2,6 +2,7 @@ package com.xdmd.IntranetEnvironment.contractmanage.mapper;
 
 import com.xdmd.IntranetEnvironment.common.TenderContractShenheRecordDTO;
 import com.xdmd.IntranetEnvironment.contractmanage.pojo.ContractManageDTO;
+import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.UploadFile;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
@@ -645,6 +646,24 @@ public interface ContractManageMapper {
             "WHERE\n" +
             "cm.contract_annex_id=uf.id and cm.id=#{cid}")
     List<Map> getContractAnnexInfo(@Param("cid") int cid);
+
+
+    /**
+     * 获取课题意见附件的路径和文件名
+     * @param cid
+     * @return
+     */
+    @Select("SELECT\n" +
+            "uf.id,\n" +
+            "uf.upload_file_name,\n" +
+            "uf.upload_file_address\n" +
+            "FROM\n" +
+            "upload_file uf,\n" +
+            "contract_manage cm\n" +
+            "WHERE\n" +
+            "cm.subject_suggest_annex_id=uf.id and cm.id=#{cid}")
+    UploadFile getSubjectSuggestAnnexInfo(@Param("cid") int cid);
+
 
 
     int updateContractMidCheckStateOne();

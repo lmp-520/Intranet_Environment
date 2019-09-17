@@ -145,8 +145,8 @@ public interface MidCheckMapper {
      * @author Kong
      * @date 2019/08/14
      **/
-    @Update(value = "UPDATE contract_manage set mid_record_id=1 where mid_record_id=0 ")
-    int updateContractMidCheckStateOne();
+    @Update(value = "UPDATE contract_manage set mid_check_status=1 where mid_check_status=0 and id=#{cid}")
+    int updateContractMidCheckStateOne(int cid);
 
 
 
@@ -155,8 +155,8 @@ public interface MidCheckMapper {
      * @author Kong
      * @date 2019/08/14
      **/
-    @Update(value = "UPDATE contract_manage set mid_record_id=2 where mid_record_id=1")
-    int updateContractMidCheckStateTwo();
+    @Update(value = "UPDATE contract_manage set mid_check_status=2 where mid_check_status=1 and id=#{cid}")
+    int updateContractMidCheckStateTwo(int cid);
 
 
     /**
@@ -164,7 +164,7 @@ public interface MidCheckMapper {
      * @author Kong
      * @date 2019/08/14
      **/
-    @Update(value = "UPDATE mid_check_record set mid_check_state=1 where mid_check_state=1")
+    @Update(value = "UPDATE mid_check_record set mid_check_state=1 where mid_check_state=0 and id=(select mid_record_id from contract_manage where mid_check_status=2)")
     int updateMidCheckRecord();
 
 
@@ -172,7 +172,7 @@ public interface MidCheckMapper {
 
 
     /**
-     * [查询] 中期检查记录状态
+     * [查询] 全部中期检查记录
      * @return
      */
     @Select("select * from mid_check_record")
@@ -283,10 +283,14 @@ public interface MidCheckMapper {
      * @param cid
      * @return
      */
-    @Select("select ea.* \n" +
-            "from expert_assessment ea,contract_manage cm\n" +
-            "where cm.expert_assessment_table_id=ea.id\n" +
-            "and cm.id=#{cid}")
+    @Select("SELECT" +
+            "\tea.*" +
+            "FROM\n" +
+            "\texpert_assessment ea,\n" +
+            "\tcontract_manage cm \n" +
+            "WHERE\n" +
+            "\tcm.expert_assessment_table_id = ea.id \n" +
+            "\tAND cm.id =#{cid}")
     ExpertAssessmentDTO getExpertAssessmentByCid(@Param("cid") int cid);
 
     /**
@@ -320,7 +324,7 @@ public interface MidCheckMapper {
             "contract_manage cm\n" +
             "WHERE\n" +
             "cm.contract_weizhi_annex_id=uf.id and cm.id=#{cid}")
-    List<Map> getWeizhiFileInfo(int cid);
+    List<UploadFile> getWeizhiFileInfo(int cid);
 
 
     /**

@@ -404,9 +404,9 @@ public class MidCheckServiceImpl implements MidCheckService {
      * @return
      */
     @Override
-    public ResultMap updateContractMidCheckStateOne() {
+    public ResultMap updateContractMidCheckStateOne(int oid) {
         try {
-            int updateNum = midCheckMapper.updateContractMidCheckStateOne();
+            int updateNum = midCheckMapper.updateContractMidCheckStateOne(oid);
             if (updateNum > 0) {
                 resultMap.success().message("更新成功");
             } else if (updateNum== 0) {
@@ -424,9 +424,9 @@ public class MidCheckServiceImpl implements MidCheckService {
      * @return
      */
     @Override
-    public ResultMap updateContractMidCheckStateTwo() {
+    public ResultMap updateContractMidCheckStateTwo(int oid) {
         try {
-            int updateNum = midCheckMapper.updateContractMidCheckStateTwo();
+            int updateNum = midCheckMapper.updateContractMidCheckStateTwo(oid);
             if (updateNum > 0) {
                 resultMap.success().message("更新成功");
             } else if (updateNum== 0) {
@@ -526,6 +526,7 @@ public class MidCheckServiceImpl implements MidCheckService {
         }
         return resultMap;
     }
+
 
 
     /**
@@ -637,6 +638,27 @@ public class MidCheckServiceImpl implements MidCheckService {
      */
     @Override
     public ResultMap getWeizhiFileInfo(int cid) {
+        try {
+            List<Map> fileinfo = midCheckMapper.getEAFileInfo(cid);
+            if (fileinfo.size() > 0) {
+                resultMap.success().message(fileinfo);
+            } else if (fileinfo.size() == 0) {
+                resultMap.fail().message("没有查到相关信息");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
+
+    /**
+     * 获取课题意见附件的路径和文件名
+     * @param cid
+     * @return
+     */
+    @Override
+    public ResultMap getSubjectSuggestAnnexInfo(int cid) {
         try{
             int midcheckrecord= midCheckMapper.updateMidCheckRecord();
             if(midcheckrecord>0){

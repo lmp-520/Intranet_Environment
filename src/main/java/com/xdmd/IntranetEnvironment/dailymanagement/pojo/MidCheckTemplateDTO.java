@@ -17,6 +17,7 @@ public class MidCheckTemplateDTO {
 
     @ApiModelProperty("主键【注:系统默认生成,新增时不用填】")
     private Integer id;
+
     @ApiModelProperty("课题编号")
     private String subjectNo;
 
@@ -182,8 +183,8 @@ public class MidCheckTemplateDTO {
     @ApiModelProperty("高级人才（人）")
     private Integer seniorTalent;
 
-    @ApiModelProperty("其中，国家杰出青年（长江学者、千人计划或其他）人数（分别列出）")
-    private Integer nationalOutstandingYoungPeople;
+   //@ApiModelProperty("其中，国家杰出青年（长江学者、千人计划或其他）人数（分别列出）")
+   //private Integer nationalOutstandingYoungPeople;
 
     @ApiModelProperty("培养研究生人数")
     private Integer graduateStudentsNumber;

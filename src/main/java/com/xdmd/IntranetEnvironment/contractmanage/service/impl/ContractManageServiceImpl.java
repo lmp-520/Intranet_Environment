@@ -8,6 +8,7 @@ import com.xdmd.IntranetEnvironment.contractmanage.mapper.ContractManageMapper;
 import com.xdmd.IntranetEnvironment.contractmanage.pojo.*;
 import com.xdmd.IntranetEnvironment.contractmanage.service.*;
 import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.JwtInformation;
+import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.UploadFile;
 import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.service.impl.ExtranetTokenService;
 import com.xdmd.IntranetEnvironment.subjectmanagement.exception.InsertSqlException;
 import com.xdmd.IntranetEnvironment.subjectmanagement.exception.UpdateSqlException;
@@ -1044,6 +1045,27 @@ public class ContractManageServiceImpl implements ContractManageService {
         return resultMap;
     }
 
+
+    /**
+     * 获取课题意见附件的路径和文件名
+     * @param cid
+     * @return
+     */
+    @Override
+    public ResultMap getSubjectSuggestAnnexInfo(int cid) {
+        try {
+            UploadFile uploadFile = contractManageMapper.getSubjectSuggestAnnexInfo(cid);
+            if (uploadFile!=null) {
+                resultMap.success().message(uploadFile);
+            } else if (uploadFile==null) {
+                resultMap.fail().message("没有查到相关信息");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
 
 
     /**

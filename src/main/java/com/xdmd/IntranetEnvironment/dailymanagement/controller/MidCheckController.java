@@ -181,8 +181,8 @@ public class MidCheckController {
      **/
     @PostMapping(value = "updateContractMidCheckStateOne")
     @ApiOperation(value = "更新合同中期检查状态【当外网提交完所有材料但内网未审核】")
-    public ResultMap updateContractMidCheckStateOne(){
-        return resultMap=midCheckService.updateContractMidCheckStateOne();
+    public ResultMap updateContractMidCheckStateOne(int cid){
+        return resultMap=midCheckService.updateContractMidCheckStateOne(cid);
 
     }
 
@@ -195,8 +195,8 @@ public class MidCheckController {
      **/
     @PostMapping(value = "updateContractMidCheckStateTwo")
     @ApiOperation(value = "更新合同中期检查状态【当外网提交完所有材料且内网已审核并提交相应材料】")
-    public ResultMap updateContractMidCheckStateTwo(){
-        return resultMap=midCheckService.updateContractMidCheckStateTwo();
+    public ResultMap updateContractMidCheckStateTwo(int cid){
+        return resultMap=midCheckService.updateContractMidCheckStateTwo(cid);
     }
 
 
