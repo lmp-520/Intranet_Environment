@@ -79,13 +79,13 @@ public interface MidCheckMapper {
             "#{developTechnicalStandards},\n" +
             "#{releaseDocuments},\n" +
             "#{seniorTalent},\n" +
-            "#{nationalOutstandingYoungPeople},\n" +
             "#{graduateStudentsNumber},\n" +
             "#{participatingUnits},\n" +
             "#{actualProgressProject},\n" +
             "#{projectFundsUsage},\n" +
             "#{recommendationsProblemsSolutions},\n" +
-            "#{midCheckAnnexId})")
+            "#{projectUndertakerReviewOpinion},\n" +
+            "DEFAULT)")
     int insertMidCheckTemplate(MidCheckTemplateDTO midCheckTemplateDTO);
 
 
@@ -117,10 +117,10 @@ public interface MidCheckMapper {
      */
     @Update("UPDATE contract_manage \n" +
             "SET\t" +
-            "mid_check_template_id = #{midCheckTemplateId},\n" +
+            "mid_check_template_id =#{midCheckTemplateId},\n" +
             "expert_assessment_table_id=#{expertAssessmentTableId}\n" +
             "where id=#{cid}")
-    int updateContractMidCheckUpLoadFileIdByCid(int midCheckTemplateId,int expertAssessmentTableId, int cid);
+    int updateContractMidCheckUpLoadFileIdByCid(@Param("midCheckTemplateId") int midCheckTemplateId,@Param("expertAssessmentTableId") int expertAssessmentTableId, @Param("cid") Integer cid);
 
 
     /**
@@ -164,9 +164,9 @@ public interface MidCheckMapper {
      * @author Kong
      * @date 2019/08/14
      **/
-    @Update(value = "UPDATE mid_check_record set mid_check_state=1 where mid_check_state=0 and id=(select mid_record_id from contract_manage where mid_check_status=2)")
-    int updateMidCheckRecord();
-
+    //@Update(value = "UPDATE mid_check_record set mid_check_state=1 where mid_check_state=0 and id=(select mid_record_id from contract_manage where mid_check_status=2)")
+    @Update(value = "UPDATE mid_check_record set mid_check_state=1 where mid_check_state=0 AND id =#{mid}")
+    int updateMidCheckRecord(@Param("mid") int mid);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -235,7 +235,7 @@ public interface MidCheckMapper {
      "#{expert},\n" +
      "#{expertName},\n" +
      "#{fillDate},\n" +
-     "#{expertAssessmentAnnexId})")
+     "DEFAULT)")
      int insertEA(ExpertAssessmentDTO expertAssessment);
 
     /**
@@ -346,13 +346,30 @@ public interface MidCheckMapper {
             "cm.id,\n" +
             "cm.subject_name as subjectName,\n" +
             "cm.project_no as projectNo,\n" +
-            "cm.subject_leader as subjectLeader,\n" +
+            "cm.subjece_leader as subjeceLeader,\n" +
             "cm.subject_contact as subjectContact,\n" +
             "cm.commitment_unit as commitmentUnit,\n" +
-            "cm.approval_status AS approvalStatus\n" +
+            "cm.approval_status as approvalStatus\n" +
             "FROM\n" +
             "contract_manage cm,unit_contract uc\n" +
             "where cm.id=uc.contract_id and cm.approval_status =4 and uc.unit_id=#{unitId}")
     List<Map> queryAllEndContractInfo(Integer unitId);
+
+
+    /**
+     * 判断中期检查状态
+     * @param cid
+     * @return
+     */
+    @Select("SELECT\n" +
+            "\tmcr.mid_check_state,\n" +
+            "\tmcr.id\n" +
+            "FROM\n" +
+            "\tcontract_manage cm,mid_check_record mcr\n" +
+            "\twhere\n" +
+            "\tcm.mid_record_id=mcr.id\n" +
+            "\tand\n" +
+            "\tcm.id=#{cid}")
+    String getMidRecordState(@Param("cid") int cid);
 
 }

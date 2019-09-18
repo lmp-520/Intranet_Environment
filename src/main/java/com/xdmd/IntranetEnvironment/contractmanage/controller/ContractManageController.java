@@ -225,7 +225,7 @@ public class ContractManageController {
 
 
     /**
-     * [查詢] 根据单位id & 中检记录状态查詢本单位的课题【外网中检】
+     * [查詢] 根据单位id && 中检记录状态查詢本单位的课题【外网中检】
      * @param pageNum
      * @param pageSize
      * @return

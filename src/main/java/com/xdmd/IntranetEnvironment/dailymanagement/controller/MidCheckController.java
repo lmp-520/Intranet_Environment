@@ -111,7 +111,7 @@ public class MidCheckController {
     @PostMapping("midCheckExpertOpinionFileUpload")
     @ApiOperation(value = "专家总意见附件上传")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "midCheckAnnex", value = "专家总意见附件"),
+            @ApiImplicitParam(name = "midCheckExpertOpinion", value = "专家总意见附件"),
             @ApiImplicitParam(name = "mid", value = "中期检查记录表id")
     })
     public ResultMap midCheckExpertOpinionFileUpload(@CookieValue(value = "token", required = false) String token, HttpServletResponse response,
@@ -142,8 +142,7 @@ public class MidCheckController {
     @ApiOperation(value = "外网提交中期检查文件材料【包括：中期检查表,专家评估表,中期检查附件,专家评估附件,课题意见附件】")
     @ApiImplicitParam(name = "mid",value = "中期检查表id")
     public ResultMap WaiCommitFile(@CookieValue(value = "token", required = false) String token, HttpServletResponse response,
-//                                   @RequestPart("midCheckTemplateDTO")  MidCheckTemplateDTO midCheckTemplateDTO,
-//                                   @RequestPart("expertAssessmentDTO") ExpertAssessmentDTO expertAssessmentDTO,
+                                   @RequestParam Integer cid,
                                    @RequestPart MidCheckTemplateDtoAndExpertAssessmentDto midCheckTemplateDtoAndExpertAssessmentDto,
                                    @RequestPart MultipartFile midCheckAnnex,
                                    @RequestPart MultipartFile expertAssessmentAnnex){
@@ -153,53 +152,13 @@ public class MidCheckController {
             }
             ExpertAssessmentDTO expertAssessmentDTO = midCheckTemplateDtoAndExpertAssessmentDto.getExpertAssessmentDTO();
             MidCheckTemplateDTO midCheckTemplateDTO = midCheckTemplateDtoAndExpertAssessmentDto.getMidCheckTemplateDTO();
-            resultMap = midCheckService.WaiCommitFile(token,response,midCheckTemplateDTO,expertAssessmentDTO,midCheckAnnex,expertAssessmentAnnex);
+            resultMap = midCheckService.WaiCommitFile(token,response,cid,midCheckTemplateDTO,expertAssessmentDTO,midCheckAnnex,expertAssessmentAnnex);
         } catch (Exception e) {
             e.printStackTrace();
 
         }
         return resultMap;
 
-    }
-
-
-
-
-    /**
-     * 更新合同中期检查状态【当外网提交完所有材料但内网未审核】
-     * @author Kong
-     * @date 2019/08/14
-     **/
-    @PostMapping(value = "updateContractMidCheckStateOne")
-    @ApiOperation(value = "更新合同中期检查状态【当外网提交完所有材料但内网未审核】")
-    public ResultMap updateContractMidCheckStateOne(int cid){
-        return resultMap=midCheckService.updateContractMidCheckStateOne(cid);
-
-    }
-
-
-
-    /**
-     * 更新合同中期检查状态【当外网提交完所有材料且内网已审核并提交相应材料】
-     * @author Kong
-     * @date 2019/08/14
-     **/
-    @PostMapping(value = "updateContractMidCheckStateTwo")
-    @ApiOperation(value = "更新合同中期检查状态【当外网提交完所有材料且内网已审核并提交相应材料】")
-    public ResultMap updateContractMidCheckStateTwo(int cid){
-        return resultMap=midCheckService.updateContractMidCheckStateTwo(cid);
-    }
-
-
-    /**
-     * [更新] 中期检察记录状态【中检最后一步】
-     * @author Kong
-     * @date 2019/08/14
-     **/
-    @PostMapping(value = "updateMidCheckRecord")
-    @ApiOperation(value = "更新中期检察记录最终状态【中检最后一步】")
-    public ResultMap updateMidCheckRecord(){
-        return resultMap=midCheckService.updateMidCheckRecord();
     }
 
 
@@ -264,7 +223,7 @@ public class MidCheckController {
 
 
     /**
-     *
+     *未知类型附件上传【不确定什么类型的文件，备用】
      * @param file
      * @return
      */
@@ -310,6 +269,18 @@ public class MidCheckController {
             return resultMap.fail().message("请先登录");
         }
         return resultMap = midCheckService.queryAllEndContractInfo(token, response);
+    }
+
+
+    /**
+     * 判断中期检查状态
+     * @param cid
+     * @return
+     */
+    @PostMapping(value = "getMidRecordState")
+    @ApiOperation(value = "判断中期检查是否完成[0--未完成   1--已完成]【外网】")
+    public ResultMap getMidRecordState(int cid){
+        return resultMap=midCheckService.getMidRecordState(cid);
     }
 
 }

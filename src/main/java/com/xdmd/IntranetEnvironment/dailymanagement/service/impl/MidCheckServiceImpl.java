@@ -69,7 +69,7 @@ public class MidCheckServiceImpl implements MidCheckService {
      * @return
      */
     @Override
-    public ResultMap WaiCommitFile(String token, HttpServletResponse response, MidCheckTemplateDTO midCheckTemplateDTO, ExpertAssessmentDTO expertAssessmentDTO, MultipartFile midCheckAnnex, MultipartFile expertAssessmentAnnex) {
+    public ResultMap WaiCommitFile(String token, HttpServletResponse response, Integer cid, MidCheckTemplateDTO midCheckTemplateDTO, ExpertAssessmentDTO expertAssessmentDTO, MultipartFile midCheckAnnex, MultipartFile expertAssessmentAnnex) {
         JwtInformation jwtInformation = new JwtInformation();
         try {
             jwtInformation = extranetTokenService.compare(response, token);
@@ -89,17 +89,18 @@ public class MidCheckServiceImpl implements MidCheckService {
         }
         //Integer userid = jwtInformation.getUid();
         String username = jwtInformation.getUsername();
-        Integer cid = jwtInformation.getCid();
+        //Integer cid = jwtInformation.getCid();
         String cname = jwtInformation.getCompanyName();
 
         try{
             //中期检查表模板
             int mctNum= midCheckMapper.insertMidCheckTemplate(midCheckTemplateDTO);
-
+            System.out.println(mctNum);
             int eaNum=midCheckMapper.insertEA(expertAssessmentDTO);
-            //把中期检查表的id和专家评估表的id更新到合同表对应字段
+            System.out.println(mctNum);
+            //把中期检查模板表的id和专家评估表的id更新到合同表对应字段
             int updateNum=midCheckMapper.updateContractMidCheckUpLoadFileIdByCid(midCheckTemplateDTO.getId(),expertAssessmentDTO.getId(),cid);
-
+            System.out.println(updateNum);
             /**
              * 中期检查附件
              */
@@ -148,12 +149,14 @@ public class MidCheckServiceImpl implements MidCheckService {
                 //resultMap.success().message(midCheckTemplateDTO.getId());
                 //resultMap.success().message(expertAssessmentDTO.getId());
                 resultMap.success().message("提交成功");
+                int num= midCheckMapper.updateContractMidCheckStateOne(cid);
+                System.out.println(num);
             }else if(mctNum==0 && eaNum==0){
-                resultMap.success().message("新增失败");
+                resultMap.fail().message("新增失败");
             }
         }catch (Exception e){
             e.printStackTrace();
-            resultMap.success().message("系统异常");
+            resultMap.fail().message("系统异常");
         }
         return resultMap;
 
@@ -366,6 +369,9 @@ public class MidCheckServiceImpl implements MidCheckService {
             uploadFileMapper.insertUpload(annexUpload);
             //更改专家总意见附件的id
             midCheckMapper.updateMidCheckExpertOpinionAnnexIdByCid(annexUpload.getId(),mid);
+            //当上传完专家意见表后修改中期检查发起状态
+            int midcheckrecord=midCheckMapper.updateMidCheckRecord(mid);
+            System.out.println(midcheckrecord);
             resultMap.success().message("专家总意见附件上传成功");
         } catch (Exception e) {
             e.printStackTrace();
@@ -376,46 +382,6 @@ public class MidCheckServiceImpl implements MidCheckService {
     }
 
 
-
-    /**
-     * 更新合同中期检查状态【当外网提交完所有材料但内网未审核】
-     * @return
-     */
-    @Override
-    public ResultMap updateContractMidCheckStateOne(int oid) {
-        try {
-            int updateNum = midCheckMapper.updateContractMidCheckStateOne(oid);
-            if (updateNum > 0) {
-                resultMap.success().message("更新成功");
-            } else if (updateNum== 0) {
-                resultMap.fail().message("没有查到相关信息");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            resultMap.fail().message("系统异常");
-        }
-        return resultMap;
-    }
-
-    /**
-     * 更新合同中期检查状态【当外网提交完所有材料且内网已审核并提交相应材料】
-     * @return
-     */
-    @Override
-    public ResultMap updateContractMidCheckStateTwo(int oid) {
-        try {
-            int updateNum = midCheckMapper.updateContractMidCheckStateTwo(oid);
-            if (updateNum > 0) {
-                resultMap.success().message("更新成功");
-            } else if (updateNum== 0) {
-                resultMap.fail().message("没有查到相关信息");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            resultMap.fail().message("系统异常");
-        }
-        return resultMap;
-    }
 
 
     /**
@@ -600,6 +566,9 @@ public class MidCheckServiceImpl implements MidCheckService {
             int insertNum = uploadFileMapper.insertUpload(annexUpload);
             //更改相应合同附件id
             midCheckMapper.updateContractWeiZhiAnnexIdByCid(annexUpload.getId(), cid);
+            //当前合同上传完未知附件后修改合同中期检查状态
+            int updateNum = midCheckMapper.updateContractMidCheckStateTwo(cid);
+            System.out.println(updateNum);
             resultMap.success().message("上传合同附件成功");
         } catch (Exception e) {
             e.printStackTrace();
@@ -630,26 +599,6 @@ public class MidCheckServiceImpl implements MidCheckService {
         return resultMap;
     }
 
-    /**
-     * 获取课题意见附件的路径和文件名
-     * @param cid
-     * @return
-     */
-    @Override
-    public ResultMap getSubjectSuggestAnnexInfo(int cid) {
-        try{
-            int midcheckrecord= midCheckMapper.updateMidCheckRecord();
-            if(midcheckrecord>0){
-                resultMap.success().message("更新成功");
-            }else if(midcheckrecord<0){
-                resultMap.success().message("更新失败");
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-            resultMap.success().message("系统异常");
-        }
-        return resultMap;
-    }
 
 
     /**
@@ -695,25 +644,25 @@ public class MidCheckServiceImpl implements MidCheckService {
         return resultMap;
     }
 
-
-
     /**
-     * [更新] 中期检察记录状态
+     * 判断中期检查状态
+     * @param cid
      * @return
      */
     @Override
-    public ResultMap updateMidCheckRecord() {
+    public ResultMap getMidRecordState(int cid) {
         try{
-            int midcheckrecord= midCheckMapper.updateMidCheckRecord();
-            if(midcheckrecord>0){
-                resultMap.success().message("更新成功");
-            }else if(midcheckrecord<0){
-                resultMap.success().message("更新失败");
+            String midcheckrecordstate= midCheckMapper.getMidRecordState(cid);
+            if(midcheckrecordstate!=null){
+                resultMap.success().message(midcheckrecordstate);
+            }else if(midcheckrecordstate==null){
+                resultMap.fail().message("没有查到相关信息");
             }
         }catch (Exception e){
             e.printStackTrace();
-            resultMap.success().message("系统异常");
+            resultMap.fail().message("系统异常");
         }
         return resultMap;
     }
+
 }

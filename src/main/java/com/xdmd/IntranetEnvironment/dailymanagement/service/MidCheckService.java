@@ -27,7 +27,7 @@ public interface MidCheckService {
      * @param midCheckTemplateDTO
      * @return
      */
-    ResultMap WaiCommitFile(String token, HttpServletResponse response, MidCheckTemplateDTO midCheckTemplateDTO, ExpertAssessmentDTO expertAssessmentDTO, MultipartFile midCheckAnnex, MultipartFile expertAssessmentAnnex);
+    ResultMap WaiCommitFile(String token, HttpServletResponse response,Integer cid, MidCheckTemplateDTO midCheckTemplateDTO, ExpertAssessmentDTO expertAssessmentDTO, MultipartFile midCheckAnnex, MultipartFile expertAssessmentAnnex);
 
     /**
      * 根据中期检查表id查询详情
@@ -57,15 +57,6 @@ public interface MidCheckService {
      **/
     ResultMap insertMidCheckRecord(MidCheckRecordDTO midCheckRecordDTO);
 
-
-    /**
-     * [更新] 中期检察记录状态
-     *
-     * @return
-     */
-    ResultMap updateMidCheckRecord();
-
-
     /**
      * [查询] 中期检察记录状态
      *
@@ -93,20 +84,6 @@ public interface MidCheckService {
      */
     ResultMap getMidCheckExpertOpinionInfo(int mid);
 
-    /**
-     * 更新合同中期检查状态【当外网提交完所有材料但内网未审核】
-     *
-     * @return
-     */
-    ResultMap updateContractMidCheckStateOne(int cid);
-
-    /**
-     * 更新合同中期检查状态【当外网提交完所有材料且内网已审核并提交相应材料】
-     *
-     * @return
-     */
-
-    ResultMap updateContractMidCheckStateTwo(int cid);
 
     /**
      * 根据合同id查询关联的中期检查模板表
@@ -115,6 +92,7 @@ public interface MidCheckService {
      * @return
      */
     ResultMap getMidCheckTemplateByCid(int cid);
+
 
     /**
      * 获取中期检查表附件的路径和文件名
@@ -159,15 +137,6 @@ public interface MidCheckService {
 
 
     /**
-     * 获取课题意见附件的路径和文件名
-     *
-     * @param cid
-     * @return
-     */
-    ResultMap getSubjectSuggestAnnexInfo(int cid);
-
-
-    /**
      * 在提交回显通过最终审核的关联常用的合同信息
      *
      * @param token
@@ -175,4 +144,12 @@ public interface MidCheckService {
      * @return
      */
     ResultMap queryAllEndContractInfo(String token, HttpServletResponse response);
+
+
+    /**
+     * 判断中期检查状态
+     * @param cid
+     * @return
+     */
+    ResultMap getMidRecordState(int cid);
 }
