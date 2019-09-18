@@ -1047,23 +1047,6 @@ public class OpenTenderServiceImpl implements OpenTenderService {
         attachmentAttribute.setOtherAttachmentsUrl(otherAttachmentsUrl);
 
         return resultMap.success().message(attachmentAttribute);
-
-
-//
-//        try {
-//            //AttachmentAttribute attachmentAttribute=new AttachmentAttribute();
-//            List<Map> uploadFileList = openTenderMapper.getfileInfo(oid);
-//            uploadFileList.forEach(fileinfo-> System.out.println(fileinfo));
-//            if (uploadFileList!=null) {
-//                resultMap.success().message(uploadFileList);
-//            } else if (uploadFileList == null) {
-//                resultMap.fail().message("没有查到相关信息");
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            resultMap.fail().message("系统异常");
-//        }
-//        return resultMap;
     }
 
 

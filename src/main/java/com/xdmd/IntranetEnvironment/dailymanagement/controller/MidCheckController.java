@@ -114,7 +114,7 @@ public class MidCheckController {
             @ApiImplicitParam(name = "midCheckExpertOpinion", value = "专家总意见附件"),
             @ApiImplicitParam(name = "mid", value = "中期检查记录表id")
     })
-    public ResultMap midCheckExpertOpinionFileUpload(@CookieValue(value = "token", required = false) String token, HttpServletResponse response,
+    public ResultMap midCheckExpertOpinionFileUpload(@CookieValue(value = "IntranecToken", required = false) String token, HttpServletResponse response,
             MultipartFile midCheckExpertOpinion, int mid){
         try {
             if (StringUtils.isEmpty(token)) {
@@ -229,7 +229,7 @@ public class MidCheckController {
      */
     @PostMapping("contractFileUpload")
     @ApiOperation(value = "未知类型附件上传【不确定什么类型的文件，备用】")
-    public ResultMap AnnexUpload(@CookieValue(value = "token", required = false) String token, HttpServletResponse response,
+    public ResultMap AnnexUpload(@CookieValue(value = "IntranecToken", required = false) String token, HttpServletResponse response,
                                  MultipartFile file, int cid) throws IOException{
         try {
             if (StringUtils.isEmpty(token)) {
@@ -249,7 +249,7 @@ public class MidCheckController {
      */
     @GetMapping(value = "getWeizhiFileInfo")
     @ApiOperation(value = "获取未知类型附件的路径和文件名【不确定什么类型的文件，备用】")
-    @ApiImplicitParam(name = "mid",value = "中期检查表id")
+    @ApiImplicitParam(name = "cid",value = "合同id")
     public ResultMap getWeizhiFileInfo(int cid){
         return resultMap=midCheckService.getWeizhiFileInfo(cid);
     }

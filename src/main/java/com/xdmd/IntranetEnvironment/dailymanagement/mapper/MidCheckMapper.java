@@ -204,7 +204,7 @@ public interface MidCheckMapper {
             "mid_check_record mcr\n" +
             "WHERE\n" +
             "mcr.mid_check_expert_opinion_id=uf.id and mcr.id=#{mid}")
-    List<UploadFile> getMidCheckExpertOpinionInfo(@Param("mid")int mid);
+    UploadFile getMidCheckExpertOpinionInfo(@Param("mid")int mid);
 
 
     //////////////////////////////专家评估表//////////////
@@ -324,7 +324,7 @@ public interface MidCheckMapper {
             "contract_manage cm\n" +
             "WHERE\n" +
             "cm.contract_weizhi_annex_id=uf.id and cm.id=#{cid}")
-    List<UploadFile> getWeizhiFileInfo(int cid);
+    UploadFile getWeizhiFileInfo(int cid);
 
 
     /**

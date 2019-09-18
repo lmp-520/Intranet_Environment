@@ -7,7 +7,8 @@ spring:
     url: jdbc:mysql://localhost:3306/newenvironment6?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true
     username: root
     password: 123456
-    # 解决post请求乱码
+    #password: hodesSft@123.com
+  # 解决post请求乱码
   http:
     encoding:
       charset: utf-8

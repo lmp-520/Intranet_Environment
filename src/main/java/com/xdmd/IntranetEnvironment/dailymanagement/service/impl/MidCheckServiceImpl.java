@@ -371,7 +371,7 @@ public class MidCheckServiceImpl implements MidCheckService {
             midCheckMapper.updateMidCheckExpertOpinionAnnexIdByCid(annexUpload.getId(),mid);
             //当上传完专家意见表后修改中期检查发起状态
             int midcheckrecord=midCheckMapper.updateMidCheckRecord(mid);
-            System.out.println(midcheckrecord);
+            //System.out.println(midcheckrecord);
             resultMap.success().message("专家总意见附件上传成功");
         } catch (Exception e) {
             e.printStackTrace();
@@ -458,10 +458,10 @@ public class MidCheckServiceImpl implements MidCheckService {
     @Override
     public ResultMap getMidCheckExpertOpinionInfo(int mid) {
         try {
-            List<UploadFile> fileinfo = midCheckMapper.getMidCheckExpertOpinionInfo(mid);
-            if (fileinfo.size() > 0) {
+            UploadFile fileinfo = midCheckMapper.getMidCheckExpertOpinionInfo(mid);
+            if (fileinfo!=null) {
                 resultMap.success().message(fileinfo);
-            } else if (fileinfo.size() == 0) {
+            } else if (fileinfo==null) {
                 resultMap.fail().message("没有查到相关信息");
             }
         } catch (Exception e) {
@@ -568,8 +568,8 @@ public class MidCheckServiceImpl implements MidCheckService {
             midCheckMapper.updateContractWeiZhiAnnexIdByCid(annexUpload.getId(), cid);
             //当前合同上传完未知附件后修改合同中期检查状态
             int updateNum = midCheckMapper.updateContractMidCheckStateTwo(cid);
-            System.out.println(updateNum);
-            resultMap.success().message("上传合同附件成功");
+            //System.out.println(updateNum);
+            resultMap.success().message("上传未知类型附件成功");
         } catch (Exception e) {
             e.printStackTrace();
             resultMap.fail().message("上传失败");
@@ -586,10 +586,10 @@ public class MidCheckServiceImpl implements MidCheckService {
     @Override
     public ResultMap getWeizhiFileInfo(int cid) {
         try {
-            List<Map> fileinfo = midCheckMapper.getEAFileInfo(cid);
-            if (fileinfo.size() > 0) {
+            UploadFile fileinfo = midCheckMapper.getWeizhiFileInfo(cid);
+            if (fileinfo!=null) {
                 resultMap.success().message(fileinfo);
-            } else if (fileinfo.size() == 0) {
+            } else if (fileinfo==null) {
                 resultMap.fail().message("没有查到相关信息");
             }
         } catch (Exception e) {
