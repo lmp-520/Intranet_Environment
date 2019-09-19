@@ -467,7 +467,7 @@ public class ContractManageServiceImpl implements ContractManageService {
 
 
     /**
-     * [查詢] 根据单位id和中检状态查詢本单位的课题合同
+     * [查詢] 根据单位id && 中检id查詢本单位的课题合同
      * @param pageNum
      * @param pageSize
      * @return

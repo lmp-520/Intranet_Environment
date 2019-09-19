@@ -179,7 +179,16 @@ public interface ContractManageMapper {
      * @param
      * @return
      */
-    @Select(value = "select id subject_name,contract_start_time,subject_objectives_research,mid_check_status from contract_manage where mid_record_id=#{mid} ")
+    @Select("SELECT\n" +
+            "\tid, subject_name,\n" +
+            "\tcontract_start_time,\n" +
+            "\tsubject_objectives_research,\n" +
+            "\tmid_check_status,\n" +
+            "\tmid_record_id\n" +
+            "FROM\n" +
+            "\tcontract_manage \n" +
+            "WHERE\n" +
+            "\tmid_record_id = #{mid}")
     List<Map> getInfoByMidCheckStatus(int mid);
 
 
@@ -193,13 +202,15 @@ public interface ContractManageMapper {
             "cm.subject_name AS subjectName,\n" +
             "cm.contract_start_time AS contractStartTime,\n" +
             "cm.subject_objectives_research AS subjectObjectivesResearch,\n" +
-            "cm.mid_check_status AS midCheckStatus\n" +
+            "cm.mid_check_status AS midCheckStatus,\n" +
+            "cm.mid_record_id\n" +
             "FROM\n" +
-            "contract_manage cm,unit_contract uc\n" +
-            "where \n" +
+            "contract_manage cm,unit_contract uc,mid_check_record mcr\n" +
+            "where\n" +
             "cm.id=uc.contract_id\n" +
+            "and cm.mid_record_id=mcr.id\n" +
             "and cm.mid_check_status between 0 and 2\n" +
-            "and uc.unit_id=#{uid}\n")
+            "and uc.unit_id=#{uid}")
     List<Map> getContractByUid(@Param("uid") int uid);
 
     /**

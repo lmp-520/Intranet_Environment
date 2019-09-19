@@ -49,7 +49,7 @@ public class GuideCollection {
     private String standardsSpecificationsRegulatory;
 
     @ApiModelProperty("研究期限")
-    private String researchPeriod;
+    private Double researchPeriod;
 
     @ApiModelProperty("研究经费测算（万元）")
     private BigDecimal researchFund;
