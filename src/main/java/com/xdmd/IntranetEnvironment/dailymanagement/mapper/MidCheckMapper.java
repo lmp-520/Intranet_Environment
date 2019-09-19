@@ -186,7 +186,7 @@ public interface MidCheckMapper {
      * @return
      */
     @Update(value = "update mid_check_record set mid_check_expert_opinion_id=#{midCheckExpertOpinionAnnexId} where id=#{recordId}")
-    int updateMidCheckExpertOpinionAnnexIdByCid(int midCheckExpertOpinionAnnexId, int recordId);
+    int updateMidCheckExpertOpinionAnnexIdByCid(@Param("midCheckExpertOpinionAnnexId") int midCheckExpertOpinionAnnexId,@Param("recordId") int recordId);
 
 
 
@@ -336,13 +336,15 @@ public interface MidCheckMapper {
     @Update(value = "update contract_manage set contract_weizhi_annex_id=#{contractWeizhiAnnexId} where id=#{cid}")
     int updateContractWeiZhiAnnexIdByCid(int contractWeizhiAnnexId, int cid);
 
-
     /**
-     * 在提交时回显通过最终审核的常用的关联合同信息
-     * @param unitId
+     * 在提交时回显通过最终审核的常用的关联合同信息[仅适用重大事项变更和中期检查两个表]
+     * @param unitid
+     * @param cid
+     * @param approvalStatus
      * @return
      */
-    @Select("SELECT\n" +
+    @Select("<script>" +
+            "SELECT\n" +
             "cm.id,\n" +
             "cm.subject_name as subjectName,\n" +
             "cm.project_no as projectNo,\n" +
@@ -352,8 +354,13 @@ public interface MidCheckMapper {
             "cm.approval_status as approvalStatus\n" +
             "FROM\n" +
             "contract_manage cm,unit_contract uc\n" +
-            "where cm.id=uc.contract_id and cm.approval_status =4 and uc.unit_id=#{unitId}")
-    List<Map> queryAllEndContractInfo(Integer unitId);
+            "where \n" +
+            "cm.id=uc.contract_id\n" +
+            "and cm.approval_status =#{approvalStatus}\n" +
+            "and cm.id=#{cid}\n" +
+            "and uc.unit_id=#{unitid}" +
+            "<script>")
+    List<Map> queryAllEndContractInfo(@Param("unitid") int unitid,@Param("cid") int cid,@Param("approvalStatus") int approvalStatus);
 
 
     /**

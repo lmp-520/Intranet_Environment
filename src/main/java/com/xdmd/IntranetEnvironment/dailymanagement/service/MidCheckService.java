@@ -73,7 +73,7 @@ public interface MidCheckService {
      * @return
      * @throws IOException
      */
-    ResultMap midCheckExpertOpinionFileUpload(String token, HttpServletResponse response, MultipartFile midCheckAnnex, int mid) throws IOException, FileUploadException;
+    ResultMap midCheckExpertOpinionFileUpload(String token, HttpServletResponse response, MultipartFile midCheckAnnex, int mid) throws IOException, FileUploadException, com.xdmd.IntranetEnvironment.common.FileUploadException;
 
 
     /**
@@ -141,9 +141,11 @@ public interface MidCheckService {
      *
      * @param token
      * @param response
+     * @param cid
+     * @param approvalStatus
      * @return
      */
-    ResultMap queryAllEndContractInfo(String token, HttpServletResponse response);
+    ResultMap queryAllEndContractInfo(String token, HttpServletResponse response, int cid, int approvalStatus);
 
 
     /**

@@ -263,12 +263,17 @@ public class MidCheckController {
      */
     @PostMapping(value = "queryAllEndContractInfo")
     @ApiOperation(value = "在提交时回显通过最终审核的常用的关联合同信息【外网】")
-    public ResultMap queryAllEndContractInfo(@CookieValue(value = "token", required = false) String token, HttpServletResponse response
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="cid",value = "合同id"),
+            @ApiImplicitParam(name="approvalStatus",value = "合同审核状态【4-法规科技处已审批】")
+    })
+    public ResultMap queryAllEndContractInfo(@CookieValue(value = "token", required = false) String token, HttpServletResponse response,
+                                             int cid,int approvalStatus
     ) throws Exception {
         if (StringUtils.isEmpty(token)) {
             return resultMap.fail().message("请先登录");
         }
-        return resultMap = midCheckService.queryAllEndContractInfo(token, response);
+        return resultMap = midCheckService.queryAllEndContractInfo(token, response,cid,approvalStatus);
     }
 
 
