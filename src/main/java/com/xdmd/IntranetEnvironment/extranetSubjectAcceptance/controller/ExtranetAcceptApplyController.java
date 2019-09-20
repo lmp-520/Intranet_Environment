@@ -81,29 +81,29 @@ public class ExtranetAcceptApplyController {
             return resultMap.fail().message(errorMessage);
         }
 
-        //判断验收申请表文件的后缀名
-        ArrayList<String> applicationAcceptanceFileSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".zip", ".rar", ".7z"));
-        String applicationFileName = applicationAcceptanceFile.getOriginalFilename();
-        Boolean aBoolean = FileSuffixJudgeUtil.SuffixJudge(applicationFileName, applicationAcceptanceFileSuffixList);
-        if(aBoolean == false){
-            return resultMap.fail().message("请上传正确的验收申请表格式");
-        }
+//        //判断验收申请表文件的后缀名
+//        ArrayList<String> applicationAcceptanceFileSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".zip", ".rar", ".7z"));
+//        String applicationFileName = applicationAcceptanceFile.getOriginalFilename();
+//        Boolean aBoolean = FileSuffixJudgeUtil.SuffixJudge(applicationFileName, applicationAcceptanceFileSuffixList);
+//        if(aBoolean == false){
+//            return resultMap.fail().message("请上传正确的验收申请表格式");
+//        }
 
-        //判断成果附件文件的后缀名
-        ArrayList<String> achievementsFileSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".zip", ".rar", ".7z"));
-        String achievementFileName = achievementsFile.getOriginalFilename();
-        Boolean bBoolean = FileSuffixJudgeUtil.SuffixJudge(achievementFileName, achievementsFileSuffixList);
-        if(bBoolean == false){
-            return resultMap.fail().message("请上传正确成果附件格式");
-        }
+//        //判断成果附件文件的后缀名
+//        ArrayList<String> achievementsFileSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".zip", ".rar", ".7z"));
+//        String achievementFileName = achievementsFile.getOriginalFilename();
+//        Boolean bBoolean = FileSuffixJudgeUtil.SuffixJudge(achievementFileName, achievementsFileSuffixList);
+//        if(bBoolean == false){
+//            return resultMap.fail().message("请上传正确成果附件格式");
+//        }
 
-        //判断提交清单附件文件的后缀名
-        ArrayList<String> submitInventoryFileSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".zip", ".rar", ".7z"));
-        String submitInventoryFileName = submitInventoryFile.getOriginalFilename();
-        Boolean cBoolean = FileSuffixJudgeUtil.SuffixJudge(submitInventoryFileName, submitInventoryFileSuffixList);
-        if(cBoolean == false){
-            return resultMap.fail().message("请上传正确提交附件格式");
-        }
+//        //判断提交清单附件文件的后缀名
+//        ArrayList<String> submitInventoryFileSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".zip", ".rar", ".7z"));
+//        String submitInventoryFileName = submitInventoryFile.getOriginalFilename();
+//        Boolean cBoolean = FileSuffixJudgeUtil.SuffixJudge(submitInventoryFileName, submitInventoryFileSuffixList);
+//        if(cBoolean == false){
+//            return resultMap.fail().message("请上传正确提交附件格式");
+//        }
 
         //根据公司的id，查询公司的名字
         String comapnyName = extranetAcceptApplyService.queryCompanyNameByCid(cid);

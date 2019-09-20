@@ -11,5 +11,5 @@ public interface AdministerService {
 
     ResultMap changeState(Integer id, Boolean state);
 
-    ResultMap modify(AdministerInformation administerInformation, String oldBusinessFilUrl, MultipartFile businessFile, String oldLegalCardIdFileUrl, MultipartFile legalCardIdFile, String oldContactCardFileUrl, MultipartFile contactCardFile);
+    ResultMap modify(AdministerInformation administerInformation, String oldBusinessFilUrl, MultipartFile businessFile, String oldLegalCardIdFileUrl, MultipartFile legalCardIdFile, String oldContactCardFileUrl, MultipartFile contactCardFile) throws Exception;
 }
