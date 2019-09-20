@@ -7,7 +7,7 @@ import lombok.Data;
  */
 @Data
 public class AdministerInformation {
-    private Integer id;
+    private Integer id;     //administrator_information 中的 id
     private String realName;
     private String loginName;
     private String companyName;
@@ -35,4 +35,7 @@ public class AdministerInformation {
 
     //联系人身份证文件id
     private Integer contactCardUrlId;
+
+    //旧的公司名称
+    private String oldCompanyName;
 }
