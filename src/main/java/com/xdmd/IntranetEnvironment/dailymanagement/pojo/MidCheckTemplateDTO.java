@@ -81,8 +81,6 @@ public class MidCheckTemplateDTO {
     @ApiModelProperty("材料费")
     private BigDecimal materialUsage;
 
-    //@ApiModelProperty("测试化验使用情况")
-   // private BigDecimal testIngyUse;
 
     @ApiModelProperty("测试化验加工费")
     private BigDecimal processingFeeUsage;
@@ -168,9 +166,6 @@ public class MidCheckTemplateDTO {
     @ApiModelProperty("出版专著（部）")
     private Integer publicationMonograph;
 
-    //@ApiModelProperty("研究（咨询）")
-    //private String research;
-
     @ApiModelProperty("研究（咨询）报告（份）")
     private Integer report;
 
@@ -201,11 +196,8 @@ public class MidCheckTemplateDTO {
     @ApiModelProperty("项目执行过程中存在的问题、解决措施及有关建议（限200字以内）")
     private String recommendationsProblemsSolutions;
 
-    //@ApiModelProperty("承担单位联系人")
-    //private String bearContaacter;
-
-   // @ApiModelProperty("承担单位联系人电话")
-   // private String bearContaactPhone;
+    @ApiModelProperty("项目承担单位审核意见（限200字以内）")
+    private String projectUndertakerReviewOpinion;
 
     @ApiModelProperty("中期检查附件")
     private Integer midCheckAnnexId;

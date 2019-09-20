@@ -102,7 +102,7 @@ public interface ContractManageService {
     ResultMap getInfoByMidCheckStatus(int mid);
 
     /**
-     * [查詢] 根据单位id & 中检记录id查詢本单位的课题合同
+     * [查詢] 根据单位id && 中检记录id查詢本单位的课题合同
      * @return
      */
     ResultMap getContractByUid(String token, HttpServletResponse response, int pageNum, int pageSize);
