@@ -141,11 +141,9 @@ public interface MidCheckService {
      *
      * @param token
      * @param response
-     * @param cid
-     * @param approvalStatus
      * @return
      */
-    ResultMap queryAllEndContractInfo(String token, HttpServletResponse response, int cid, int approvalStatus);
+    ResultMap queryAllEndContractInfo(String token, HttpServletResponse response);
 
 
     /**

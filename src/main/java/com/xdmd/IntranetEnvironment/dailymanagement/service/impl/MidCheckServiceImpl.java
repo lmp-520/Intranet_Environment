@@ -532,13 +532,13 @@ public class MidCheckServiceImpl implements MidCheckService {
             //获取文件后缀名
             String fileSuffixName = fileName.substring(fileName.lastIndexOf(".") + 1);
             // 获取文件大小
-            File contractFile = new File(fileUrl);
-            String contractFileSize = String.valueOf(contractFile.length());
-            AnnexUpload contractFileData = new AnnexUpload(0, fileUrl, fileName, "未知类型附件", fileSuffixName, contractFileSize, null, username);
+            File weizhiFile = new File(fileUrl);
+            String weizhiFileSize = String.valueOf(weizhiFile.length());
+            AnnexUpload weizhiFileData = new AnnexUpload(0, fileUrl, fileName, "未知类型附件", fileSuffixName, weizhiFileSize, null, username);
             //把该文件上传到文件表中
-            uploadFileMapper.insertUpload(contractFileData);
+            uploadFileMapper.insertUpload(weizhiFileData);
             //更改合同中相应未知类型附件id
-            midCheckMapper.updateContractWeiZhiAnnexIdByCid(contractFileData.getId(), cid);
+            midCheckMapper.updateContractWeiZhiAnnexIdByCid(weizhiFileData.getId(), cid);
             //当前合同上传完未知附件后修改合同中期检查状态
             int updateNum = midCheckMapper.updateContractMidCheckStateTwo(cid);
             resultMap.success().message("未知类型附件上传成功");
@@ -576,12 +576,10 @@ public class MidCheckServiceImpl implements MidCheckService {
      * 在提交回显通过最终审核的关联常用的合同信息
      * @param token
      * @param response
-     * @param cid
-     * @param approvalStatus
      * @return
      */
     @Override
-    public ResultMap queryAllEndContractInfo(String token, HttpServletResponse response, int cid, int approvalStatus) {
+    public ResultMap queryAllEndContractInfo(String token, HttpServletResponse response) {
         //解析token中的数据
         JwtInformation jwtInformation = new JwtInformation();
         try {
@@ -604,7 +602,7 @@ public class MidCheckServiceImpl implements MidCheckService {
         Integer unitId = jwtInformation.getCid();
         try {
             //获取该公司所有审核通过的招标id
-            List<Map> queryAllEndContractInfo = midCheckMapper.queryAllEndContractInfo(cid,approvalStatus,unitId);
+            List<Map> queryAllEndContractInfo = midCheckMapper.queryAllEndContractInfo();
             if (queryAllEndContractInfo.size() > 0) {
                 resultMap.success().message(queryAllEndContractInfo);
             } else {
