@@ -333,7 +333,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
             File winningDocumentFile = new File(winningDocumentUrl);
             String winningDocumentFileSize = String.valueOf(winningDocumentFile.length());
             AnnexUpload winningDocumentData = new AnnexUpload(0, winningDocumentUrl, winningDocumentName, "中标文件附件", winningDocumentSuffixName, winningDocumentFileSize, null, username);
-            //把该文件上传到文件表中
+            //把该文件上传到文件记录表中
             uploadFileMapper.insertUpload(winningDocumentData);
             /**
              * 成交公告附件

@@ -3,8 +3,6 @@ package com.xdmd.IntranetEnvironment.subjectmanagement.controller;
 
 import com.xdmd.IntranetEnvironment.common.FileUploadException;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
-import com.xdmd.IntranetEnvironment.subjectAcceptance.exception.UpdateSqlException;
-import com.xdmd.IntranetEnvironment.subjectmanagement.exception.InsertSqlException;
 import com.xdmd.IntranetEnvironment.subjectmanagement.pojo.OpenTender;
 import com.xdmd.IntranetEnvironment.subjectmanagement.service.OpenTenderService;
 import io.swagger.annotations.Api;
@@ -135,8 +133,6 @@ public class OpenTenderController {
                                       MultipartFile noticeTransaction,
                                       MultipartFile responseFile,
                                       MultipartFile otherAttachments) {
-        //String token="aaa";
-        //HttpServletResponse response = null;
         if (StringUtils.isEmpty(token)) {
             return resultMap.fail().message("请先登录");
         }
@@ -162,7 +158,7 @@ public class OpenTenderController {
      * @param reason 审核不通过原因
      * @param oid    审核表id
      * @return
-     */
+
     @PostMapping(value = "tenderShenHeByUnitManager")
     @ApiOperation(value = "单位管理员审核【外网】")
     @ApiImplicitParams({
@@ -190,10 +186,10 @@ public class OpenTenderController {
         }
         return resultMap;
     }
+     */
 
     /**
      * 评估中心审核
-     *
      * @param type   审核状态
      * @param reason 审核不通过原因
      * @param oid    审核表id
@@ -218,7 +214,7 @@ public class OpenTenderController {
     }
 
     /**
-     * 展示所有通过单位管理员审批的 【外网】
+     * 展示所有通过单位管理员审批的 【外网-暂不用】
      *
      * @return
      */
@@ -237,12 +233,12 @@ public class OpenTenderController {
     }
 
     /**
-     * 展示所有未通过单位管理员审批的【外网】
+     * 展示所有单位管理员未审批的【外网】
      *
      * @return
      */
     @GetMapping(value = "showAllNoPassTenderReviewByUnitManager")
-    @ApiOperation(value = "展示所有未通过单位管理员审批的")
+    @ApiOperation(value = "展示所有单位管理员未审批的")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "projectName", value = "项目名称"),
             @ApiImplicitParam(name = "subjectName", value = "课题名称"),
@@ -256,8 +252,7 @@ public class OpenTenderController {
     }
 
     /**
-     * 展示所有通过评估中心审批的【内网】
-     *
+     * 展示所有评估中心已审批的【内网】
      * @return
      */
     @GetMapping(value = "showAllPassTenderReviewByPingGu")
@@ -275,12 +270,11 @@ public class OpenTenderController {
     }
 
     /**
-     * 展示所有未通过评估中心审批的【内网】
-     *
+     * 展示所有评估中心未审批的【内网】
      * @return
      */
     @GetMapping(value = "showAllNoPassReviewTenderByPingGu")
-    @ApiOperation(value = "展示所有未通过评估中心审批的")
+    @ApiOperation(value = "展示所有评估中心未审批的")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "projectName", value = "项目名称"),
             @ApiImplicitParam(name = "subjectName", value = "课题名称"),
@@ -340,19 +334,6 @@ public class OpenTenderController {
     @ResponseBody
     @PostMapping("updateTenderStatusByReturnCommit")
     @ApiOperation("不通过被退回时重新提交[即修改]【外网】")
-    //@ApiImplicitParams({
-    //        @ApiImplicitParam(name="oldWinningDocumentFileUrl",value = "旧的中标文件附件url"),
-    //        @ApiImplicitParam(name="oldTransactionAnnouncementFileUrl",value = "旧的成交通告附件url"),
-    //        @ApiImplicitParam(name="oldNoticeTransactionFileUrl",value = "旧的成交通知书附件url"),
-    //        @ApiImplicitParam(name="oldResponseFileFileUrl",value = "旧的响应附件url"),
-    //        @ApiImplicitParam(name="oldOtherAttachmentsFileUrl",value = "旧的其他文件附件url"),
-    //        @ApiImplicitParam(name="winningDocument",value = "新的中标附件"),
-    //        @ApiImplicitParam(name="transactionAnnouncement",value = "新的成交公告附件"),
-    //        @ApiImplicitParam(name="noticeTransaction",value = "新的成交通知书附件"),
-    //        @ApiImplicitParam(name="responseFile",value = "新的响应文件附件"),
-    //        @ApiImplicitParam(name="otherAttachments",value = "新的其他文件附件"),
-    //        @ApiImplicitParam(name="openTender",value = "招标实体类")
-    //})
     public ResultMap updateTenderStatusByReturnCommit(@CookieValue(value = "token",required = false) String token, HttpServletResponse response,
                                  @RequestPart(value = "oldWinningDocumentFileUrl",required = false) String oldWinningDocumentFileUrl, //旧的中标文件附件url
                                  @RequestPart(value = "oldTransactionAnnouncementFileUrl",required = false) String oldTransactionAnnouncementFileUrl,//旧的成交通告附件url

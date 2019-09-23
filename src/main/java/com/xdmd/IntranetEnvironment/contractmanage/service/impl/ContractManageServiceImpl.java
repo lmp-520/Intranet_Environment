@@ -327,46 +327,78 @@ public class ContractManageServiceImpl implements ContractManageService {
         if (file.isEmpty()) {
             resultMap.fail().message("上传文件不可为空");
         }
-        // 获取文件名拼接当前系统时间作为新文件名
-        String nowtime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-        StringBuilder pinjiefileName = new StringBuilder(nowtime).append(file.getOriginalFilename());
-        String fileName = pinjiefileName.toString();
+     //   // 获取文件名拼接当前系统时间作为新文件名
+     //   String nowtime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+     //   StringBuilder pinjiefileName = new StringBuilder(nowtime).append(file.getOriginalFilename());
+     //   String fileName = pinjiefileName.toString();
+//
+     //   //根据合同主表的id 获取该公司的名字
+     //   //String unitName = contractManageMapper.queryUnitNameBycid(uid);
+//
+     //   //获取文件上传绝对路径
+     //   String path = "D:/xdmd/environment/" + unitName + "/" + "合同附件" + "/";
+     //   StringBuilder initPath = new StringBuilder(path);
+     //   String filePath = initPath.append(fileName).toString();
+     //   File dest = new File(filePath);
+//
+     //   //获取文件后缀名
+     //   String suffixName = fileName.substring(fileName.lastIndexOf(".") + 1);
+     //   //判断上传文件类型是否符合要求
+     //   Boolean typeIsOK = FileSuffixJudge.suffixJudge(file.getOriginalFilename());
+     //   if (typeIsOK == false) {
+     //       resultMap.fail().message("上传的文件类型不符合要求");
+     //   }
+     //   //判断文件父目录是否存在
+     //   if (!dest.getParentFile().exists()) {
+     //       dest.getParentFile().mkdirs();
+     //   }
+     //   try {
+     //       //保存文件
+     //       file.transferTo(dest);
+     //       // 获取文件大小
+     //       String fileSize = String.valueOf(dest.length());
+     //       //封装对象
+     //       AnnexUpload annexUpload = new AnnexUpload(0, filePath, fileName, "合同附件", suffixName, fileSize, null, username);
+     //       //保存到数据库中
+     //       int insertNum = uploadFileMapper.insertUpload(annexUpload);
+     //       //更改相应合同附件id
+     //       contractManageMapper.updateContractAnnexIdByCid(annexUpload.getId(), contractId);
+     //       resultMap.success().message("上传合同附件成功");
+     //   } catch (Exception e) {
+     //       e.printStackTrace();
+     //       resultMap.fail().message("上传失败");
+     //   }
+     //   return resultMap;
 
-        //根据合同主表的id 获取该公司的名字
-        //String unitName = contractManageMapper.queryUnitNameBycid(uid);
-
-        //获取文件上传绝对路径
-        String path = "D:/xdmd/environment/" + unitName + "/" + "合同附件" + "/";
-        StringBuilder initPath = new StringBuilder(path);
-        String filePath = initPath.append(fileName).toString();
-        File dest = new File(filePath);
-
-        //获取文件后缀名
-        String suffixName = fileName.substring(fileName.lastIndexOf(".") + 1);
-        //判断上传文件类型是否符合要求
-        Boolean typeIsOK = FileSuffixJudge.suffixJudge(file.getOriginalFilename());
-        if (typeIsOK == false) {
-            resultMap.fail().message("上传的文件类型不符合要求");
-        }
-        //判断文件父目录是否存在
-        if (!dest.getParentFile().exists()) {
-            dest.getParentFile().mkdirs();
-        }
         try {
-            //保存文件
-            file.transferTo(dest);
+            /**
+             * 合同附件
+             */
+            //判断文件是否为空
+            if (file.isEmpty()) {
+                resultMap.fail().message("上传文件不可为空");
+            }
+            //判断上传中标文件附件的后缀名是否正确
+            String fileName = file.getOriginalFilename();
+            Boolean aBoolean = FileSuffixJudge.suffixJudge(fileName);
+            if (aBoolean == false) {
+                resultMap.fail().message("合同附件的文件格式不正确,请上传正确的文件格式");
+            }
+            //获取中标文件附件的地址
+            String fileUrl = new OpenTenderServiceImpl().fileUploadUntil(file, unitName, "合同附件");
+            //获取文件后缀名
+            String fileSuffixName = fileName.substring(fileName.lastIndexOf(".") + 1);
             // 获取文件大小
-            String fileSize = String.valueOf(dest.length());
-            //封装对象
-            AnnexUpload annexUpload = new AnnexUpload(0, filePath, fileName, "合同附件", suffixName, fileSize, null, username);
-            //保存到数据库中
-            int insertNum = uploadFileMapper.insertUpload(annexUpload);
+            File contractFile = new File(fileUrl);
+            String contractFileSize = String.valueOf(contractFile.length());
+            AnnexUpload contractFileData = new AnnexUpload(0, fileUrl, fileName, "合同附件", fileSuffixName, contractFileSize, null, username);
+            //把该文件上传到文件表中
+            uploadFileMapper.insertUpload(contractFileData);
             //更改相应合同附件id
-            contractManageMapper.updateContractAnnexIdByCid(annexUpload.getId(), contractId);
-            resultMap.success().message("上传合同附件成功");
-        } catch (Exception e) {
+            contractManageMapper.updateContractAnnexIdByCid(contractFileData.getId(), contractId);
+            resultMap.success().message("合同附件上传成功");
+        } catch (com.xdmd.IntranetEnvironment.common.FileUploadException e) {
             e.printStackTrace();
-            resultMap.fail().message("上传失败");
         }
         return resultMap;
     }
@@ -1088,7 +1120,7 @@ public class ContractManageServiceImpl implements ContractManageService {
          return resultMap;
          } */
 
-        /**
+    /**
          * 展示所有未通过单位管理员审批的 【外网】
          * @param pageNum
          * @param pageSize

@@ -30,8 +30,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -309,7 +307,7 @@ public class MidCheckServiceImpl implements MidCheckService {
      * @throws FileUploadException
      */
     @Override
-    public ResultMap midCheckExpertOpinionFileUpload(String token, HttpServletResponse response, MultipartFile midCheckExpertOpinion, int mid) throws IOException, FileUploadException {
+    public ResultMap midCheckExpertOpinionFileUpload(String token, HttpServletResponse response, MultipartFile midCheckExpertOpinion, int mid){
         User user = new User();
         try {
             user = tokenService.compare(response, token);
@@ -332,50 +330,40 @@ public class MidCheckServiceImpl implements MidCheckService {
         //Integer uid = user.getId();
         String username = user.getUsername();
 
-        //判断文件是否为空
-        if (midCheckExpertOpinion.isEmpty()) {
-            resultMap.fail().message("上传文件不可为空");
-        }
-        // 获取文件名拼接当前系统时间作为新文件名
-        String nowtime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-        StringBuilder pinjiefileName = new StringBuilder(nowtime).append(midCheckExpertOpinion.getOriginalFilename());
-        String fileName = pinjiefileName.toString();
-
-        //获取文件上传绝对路径
-        String path = "D:/xdmd/environment/" +"第"+mid+"次中期检查记录"+"/"+ "专家总意见附件" + "/";
-        StringBuilder initPath = new StringBuilder(path);
-        String filePath = initPath.append(fileName).toString();
-        File dest = new File(filePath);
-
-        //获取文件后缀名
-        String suffixName = fileName.substring(fileName.lastIndexOf(".") + 1);
-        //判断上传文件类型是否符合要求
-        Boolean typeIsOK = FileSuffixJudge.suffixJudge(midCheckExpertOpinion.getOriginalFilename());
-        if (typeIsOK == false) {
-            resultMap.fail().message("上传的文件类型不符合要求");
-        }
-        //判断文件父目录是否存在
-        if (!dest.getParentFile().exists()) {
-            dest.getParentFile().mkdirs();
-        }
         try {
-            //保存文件
-            midCheckExpertOpinion.transferTo(dest);
+            /**
+             * 专家总意见附件
+             */
+            //判断文件是否为空
+             if (midCheckExpertOpinion.isEmpty()) {
+                 resultMap.fail().message("上传文件不可为空");
+             }
+            //判断上传中标文件附件的后缀名是否正确
+            String midCheckExpertOpinionName = midCheckExpertOpinion.getOriginalFilename();
+            Boolean aBoolean = FileSuffixJudge.suffixJudge(midCheckExpertOpinionName);
+            if (aBoolean == false) {
+                resultMap.fail().message("专家总意见附件的文件格式不正确,请上传正确的文件格式");
+            }
+            //获取中标文件附件的地址
+            String midCheckExpertOpinionUrl = new OpenTenderServiceImpl().fileUploadUntil(midCheckExpertOpinion, "环保评估中心", "专家总意见附件");
+            //获取文件后缀名
+            String midCheckExpertOpinionSuffixName = midCheckExpertOpinionName.substring(midCheckExpertOpinionName.lastIndexOf(".") + 1);
             // 获取文件大小
-            String fileSize = String.valueOf(dest.length());
-            //封装对象
-            AnnexUpload annexUpload = new AnnexUpload(0, filePath, fileName, "专家总意见附件", suffixName, fileSize, null, username);
-            //保存到数据库中
-            uploadFileMapper.insertUpload(annexUpload);
+            File midCheckExpertOpinionFile = new File(midCheckExpertOpinionUrl);
+            String midCheckExpertOpinionFileSize = String.valueOf(midCheckExpertOpinionFile.length());
+            AnnexUpload midCheckExpertOpinionData = new AnnexUpload(0, midCheckExpertOpinionUrl, midCheckExpertOpinionName, "专家总意见附件", midCheckExpertOpinionSuffixName, midCheckExpertOpinionFileSize, null, username);
+            //把该文件上传到文件表中
+            uploadFileMapper.insertUpload(midCheckExpertOpinionData);
             //更改专家总意见附件的id
-            midCheckMapper.updateMidCheckExpertOpinionAnnexIdByCid(annexUpload.getId(),mid);
+            midCheckMapper.updateMidCheckExpertOpinionAnnexIdByCid(midCheckExpertOpinionData.getId(),mid);
             //当上传完专家意见表后修改中期检查发起状态
-            int midcheckrecord=midCheckMapper.updateMidCheckRecord(mid);
-            //System.out.println(midcheckrecord);
+            int midcheckrecordNum=midCheckMapper.updateMidCheckRecord(mid);
+            System.out.println(midcheckrecordNum);
             resultMap.success().message("专家总意见附件上传成功");
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
-            resultMap.fail().message("专家总意见附件上传失败");
+        } catch (com.xdmd.IntranetEnvironment.common.FileUploadException e) {
+            e.printStackTrace();
         }
         return resultMap;
 
@@ -525,54 +513,37 @@ public class MidCheckServiceImpl implements MidCheckService {
         //Integer uid = user.getId();
         String username = user.getUsername();
 
-
-        //判断文件是否为空
-        if (file.isEmpty()) {
-            resultMap.fail().message("上传文件不可为空");
-        }
-        // 获取文件名拼接当前系统时间作为新文件名
-        String nowtime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-        StringBuilder pinjiefileName = new StringBuilder(nowtime).append(file.getOriginalFilename());
-        String fileName = pinjiefileName.toString();
-
-        //根据合同主表的id 获取该公司的名字
-        //String unitName = contractManageMapper.queryUnitNameBycid(uid);
-
-        //获取文件上传绝对路径
-        String path = "D:/xdmd/environment/+" + "未知类型附件/";
-        StringBuilder initPath = new StringBuilder(path);
-        String filePath = initPath.append(fileName).toString();
-        File dest = new File(filePath);
-
-        //获取文件后缀名
-        String suffixName = fileName.substring(fileName.lastIndexOf(".") + 1);
-        //判断上传文件类型是否符合要求
-        Boolean typeIsOK = FileSuffixJudge.suffixJudge(file.getOriginalFilename());
-        if (typeIsOK == false) {
-            resultMap.fail().message("上传的文件类型不符合要求");
-        }
-        //判断文件父目录是否存在
-        if (!dest.getParentFile().exists()) {
-            dest.getParentFile().mkdirs();
-        }
         try {
-            //保存文件
-            file.transferTo(dest);
+            /**
+             * 未知类型附件
+             */
+            //判断文件是否为空
+            if (file.isEmpty()) {
+                resultMap.fail().message("上传文件不可为空");
+            }
+            //判断上传中标文件附件的后缀名是否正确
+            String fileName = file.getOriginalFilename();
+            Boolean aBoolean = FileSuffixJudge.suffixJudge(fileName);
+            if (aBoolean == false) {
+                resultMap.fail().message("未知类型附件的文件格式不正确,请上传正确的文件格式");
+            }
+            //获取中标文件附件的地址
+            String fileUrl = new OpenTenderServiceImpl().fileUploadUntil(file, "单位名称", "未知类型附件");
+            //获取文件后缀名
+            String fileSuffixName = fileName.substring(fileName.lastIndexOf(".") + 1);
             // 获取文件大小
-            String fileSize = String.valueOf(dest.length());
-            //封装对象
-            AnnexUpload annexUpload = new AnnexUpload(0, filePath, fileName, "未知类型附件", suffixName, fileSize, null, username);
-            //保存到数据库中
-            int insertNum = uploadFileMapper.insertUpload(annexUpload);
-            //更改相应合同附件id
-            midCheckMapper.updateContractWeiZhiAnnexIdByCid(annexUpload.getId(), cid);
+            File weizhiFile = new File(fileUrl);
+            String weizhiFileSize = String.valueOf(weizhiFile.length());
+            AnnexUpload weizhiFileData = new AnnexUpload(0, fileUrl, fileName, "未知类型附件", fileSuffixName, weizhiFileSize, null, username);
+            //把该文件上传到文件表中
+            uploadFileMapper.insertUpload(weizhiFileData);
+            //更改合同中相应未知类型附件id
+            midCheckMapper.updateContractWeiZhiAnnexIdByCid(weizhiFileData.getId(), cid);
             //当前合同上传完未知附件后修改合同中期检查状态
             int updateNum = midCheckMapper.updateContractMidCheckStateTwo(cid);
-            //System.out.println(updateNum);
-            resultMap.success().message("上传未知类型附件成功");
-        } catch (Exception e) {
+            resultMap.success().message("未知类型附件上传成功");
+        } catch (com.xdmd.IntranetEnvironment.common.FileUploadException e) {
             e.printStackTrace();
-            resultMap.fail().message("上传失败");
         }
         return resultMap;
     }
@@ -631,7 +602,7 @@ public class MidCheckServiceImpl implements MidCheckService {
         Integer unitId = jwtInformation.getCid();
         try {
             //获取该公司所有审核通过的招标id
-            List<Map> queryAllEndContractInfo = midCheckMapper.queryAllEndContractInfo(unitId);
+            List<Map> queryAllEndContractInfo = midCheckMapper.queryAllEndContractInfo();
             if (queryAllEndContractInfo.size() > 0) {
                 resultMap.success().message(queryAllEndContractInfo);
             } else {

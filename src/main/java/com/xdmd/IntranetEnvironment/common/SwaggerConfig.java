@@ -59,7 +59,7 @@ public class SwaggerConfig {
     }
 
 
-    ///////////////配置token
+    //////// 配置token //////
     private List<ApiKey> securitySchemes() {
         List<ApiKey> apiKeyList= new ArrayList();
         apiKeyList.add(new ApiKey("x-auth-token", "x-auth-token", "header"));

@@ -202,10 +202,6 @@ public class ContractManageController {
      */
     @ApiOperation(value = "根据勾选的合同主表id修改相应的中期检查状态【内网中检】")
     @PostMapping(value = "updateContractByIds")
-    //public ResultMap updateContractByIds(int mid,@RequestBody List<Long> ids) {
-
-    //     return    resultMap = contractManageService.updateContractByIds(ids);
-    //}
     public ResultMap updateContractByIds(@RequestBody ContractByIds contractByIds) {
         List<Long> ids = contractByIds.getIds();
         int mid = contractByIds.getMid();
@@ -246,50 +242,6 @@ public class ContractManageController {
         return resultMap;
 
     }
-
-
-    /**
-     * 中期检查附件上传【外网】
-     *
-     * @param midCheckAnnex         中期检查附件
-     * @param expertAssessmentAnnex 专家评估附件
-     * @param subjectSuggestAnnex    课题建议附件
-     * @return
-
-     @PostMapping(value = "MidCheckFileUpload", headers = "content-type=multipart/form-data")
-     @ApiOperation(value = "中期检查附件上传【外网】")
-     @ApiImplicitParams({
-     @ApiImplicitParam(name = "cid", value = "合同主表id", required = true),
-     @ApiImplicitParam(name = "midCheckAnnex", value = "中期检查附件", dataType = "file", paramType = "form", allowMultiple = true),
-     @ApiImplicitParam(name = "expertAssessmentAnnex", value = "专家评估附件", dataType = "file", paramType = "form", allowMultiple = true),
-     @ApiImplicitParam(name = "subjectSuggestAnnex", value = "课题建议附件", dataType = "file", paramType = "form", allowMultiple = true)
-
-     })
-     public ResultMap tenderFileUpload(@CookieValue(value = "token", required = false) String token, HttpServletResponse response,
-     MultipartFile midCheckAnnex,
-     MultipartFile expertAssessmentAnnex,
-     MultipartFile subjectSuggestAnnex) {
-
-     if (StringUtils.isEmpty(token)) {
-     return resultMap.fail().message("请先登录");
-     }
-     try {
-     resultMap = contractManageService.midCheckFileUpload(token, response,midCheckAnnex, expertAssessmentAnnex, subjectSuggestAnnex);
-
-     } catch (IOException e) {
-     e.printStackTrace();
-     log.error("ContractManageController 中 MidCheckFileUpload 方法 -- " + e.getMessage());
-     return resultMap.fail().message("系统异常");
-     } catch (FileUploadException e) {
-     e.printStackTrace();
-     log.error("ContractManageController 中 MidCheckFileUpload 方法 -- " + e.getMessage());
-     return resultMap.fail().message("系统异常");
-     }
-     return resultMap;
-     }*/
-
-
-///////////////////审核流程////////////////////
 
 
     /**
@@ -405,7 +357,6 @@ public class ContractManageController {
 
     /**
      * 展示所有通过评估中心审批的【内网】
-     *
      * @return
      */
     @GetMapping(value = "showAllPassContractReviewByPingGu")
@@ -449,7 +400,6 @@ public class ContractManageController {
 
     /**
      * 不通过被退回时重新提交[即修改]【外网】
-     *
      * @return
      * @throws UpdateStatusException
      * @throws UpdateSqlException

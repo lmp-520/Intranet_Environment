@@ -4,8 +4,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.util.Date;
-
 /**
  * @author: Kong
  * @createDate: 2019/09/01
@@ -31,7 +29,7 @@ public class TenderContractShenheRecordDTO {
     private String auditStep;
 
     @ApiModelProperty("交办时间")
-    private Date firstHandleTime;
+    private String firstHandleTime;
 
     @ApiModelProperty("状态")
     private String state;
@@ -40,7 +38,7 @@ public class TenderContractShenheRecordDTO {
     private String handleContent;
 
     @ApiModelProperty("处理时间")
-    private Date secondHandleTime;
+    private String secondHandleTime;
 
     public TenderContractShenheRecordDTO() {
     }
