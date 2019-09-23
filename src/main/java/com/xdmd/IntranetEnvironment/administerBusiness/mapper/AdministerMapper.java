@@ -46,4 +46,27 @@ public interface AdministerMapper {
     int changeStateStop(@Param("id") Integer id);
 
     void uploadFile(@Param("uploadFile") UploadFile uploadLastReportFile);
+
+    //对旧的营业执照id进行更新
+    @Update("update check_apply set business_url_id = #{fileId} where id = #{id}")
+    void uploadBusinessFileIdById(@Param("id") Integer id, @Param("fileId") Integer id1);
+
+    @Update("update check_apply set legal_card_id_url_id = #{fileId} where id = #{id}")
+    void uploadLegalCardFileIdById(@Param("id") Integer id, @Param("fileId") Integer id1);
+
+    @Update("update check_apply set contact_card_url_id = #{fileId} where id = #{id}")
+    void uploadContactFileIdById(@Param("id") Integer id, @Param("fileId") Integer id1);
+
+    @Select("SELECT count(id) FROM shiro_company_name where company_name = #{companyName}")
+    int queryCompanyNameExist(@Param("companyName") String companyName);
+
+    @Update("update shiro_company_name set company_name = #{companyName} where company_name = #{oldCompanyName} ")
+    void updateCompanyName(@Param("oldCompanyName") String oldCompanyName, @Param("companyName") String companyName);
+
+    //更新administrator_information中公司名称
+    @Update("update administrator_information set company_name = #{companyName} where company_name = #{oldCompanyName}")
+    void updateCompanyNameFromAdministratorInformation(@Param("oldCompanyName") String oldCompanyName, @Param("companyName") String companyName);
+
+    @Update("update staff_information set company_name = #{companyName} where company_name = #{oldCompanyName}")
+    void updateCompanyNameFromStaffInformation(@Param("oldCompanyName") String oldCompanyName, @Param("companyName") String companyName);
 }

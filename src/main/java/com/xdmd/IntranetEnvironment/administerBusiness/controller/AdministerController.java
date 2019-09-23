@@ -68,11 +68,11 @@ public class AdministerController {
     @PostMapping("modify")
     public ResultMap modify(@RequestPart AdministerInformation administerInformation,
                             @RequestPart(value = "oldBusinessFilUrl",required = false) String oldBusinessFilUrl,
-                            @RequestPart(value = "businessFile",required = false) MultipartFile businessFile,
+                            @RequestPart(value = "businessFile",required = false) MultipartFile businessFile,   //营业执照文件
                             @RequestPart(value = "oldLegalCardIdFileUrl",required = false) String oldLegalCardIdFileUrl,
-                            @RequestPart(value = "legalCardIdFile",required = false)MultipartFile  legalCardIdFile,
+                            @RequestPart(value = "legalCardIdFile",required = false)MultipartFile  legalCardIdFile, //法人身份证文件
                             @RequestPart(value = "oldContactCardFileUrl",required = false) String oldContactCardFileUrl,
-                            @RequestPart(value = "contactCardFileUrl",required = false) MultipartFile contactCardFile){
+                            @RequestPart(value = "contactCardFileUrl",required = false) MultipartFile contactCardFile){     //联系人身份证文件
         try {
             resultMap = administerService.modify(administerInformation,oldBusinessFilUrl,businessFile,oldLegalCardIdFileUrl,legalCardIdFile,oldContactCardFileUrl,contactCardFile);
         } catch (Exception e) {

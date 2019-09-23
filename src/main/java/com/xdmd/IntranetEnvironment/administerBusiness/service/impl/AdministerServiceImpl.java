@@ -103,7 +103,31 @@ public class AdministerServiceImpl implements AdministerService {
     }
 
     @Override
-    public ResultMap modify(AdministerInformation administerInformation, String oldBusinessFilUrl, MultipartFile businessFile, String oldLegalCardIdFileUrl, MultipartFile legalCardIdFile, String oldContactCardFileUrl, MultipartFile contactCardFile) {
+    public ResultMap modify(AdministerInformation administerInformation, String oldBusinessFilUrl, MultipartFile businessFile, String oldLegalCardIdFileUrl, MultipartFile legalCardIdFile, String oldContactCardFileUrl, MultipartFile contactCardFile) throws Exception {
+
+        //判断公司名称是否有发生修改
+        if(administerInformation.getCompanyName() == null){
+            //此时公司名称没有发生修改
+
+        }else{
+            //此时公司名称已经发生修改
+            //判断修改后的公司名称是否已经存在
+            int num = administerMapper.queryCompanyNameExist(administerInformation.getCompanyName());
+            if(num != 0){
+                //此时意味着已经存在这个公司的名称
+                return resultMap.fail().message("该公司名称已经存在");
+            }else {
+                //该公司修改后的名称可以使用
+                //更新shiro_company_name表中 公司名称
+                administerMapper.updateCompanyName(administerInformation.getOldCompanyName(),administerInformation.getCompanyName());
+                //更新administrator_information中公司名称
+                administerMapper.updateCompanyNameFromAdministratorInformation(administerInformation.getOldCompanyName(),administerInformation.getCompanyName());
+                //更新staff_information中的公司名称
+                administerMapper.updateCompanyNameFromStaffInformation(administerInformation.getOldCompanyName(),administerInformation.getCompanyName());
+
+            }
+        }
+
         //判断是否有修改这三个文件
         if(oldBusinessFilUrl != null){
             //此时意味着 营业执照已经被修改了
@@ -111,15 +135,48 @@ public class AdministerServiceImpl implements AdministerService {
             File file = new File(oldBusinessFilUrl);
             file.delete();
 
-//            //再把新的营业执照文件进行上传
-//            String lastReportFileUrl = FileUploadUtil.fileUpload(businessFile, "xdmd", "最终验收证书文件");
-//            //把最终验收文件上传到upload_file中
-//            UploadFile uploadLastReportFile = IntegrationFile.IntegrationFile(businessFile, lastReportFileUrl, "最终验收证书文件", "xdmdAdmin");
-//            administerMapper.uploadFile(uploadLastReportFile);//对文件进行上传
-//
-//            //对旧的最终验收证书文件id进行更新
-//            administerMapper.uploadLastReportFileIdById(caId, uploadLastReportFile.getId());
+            //再把新的营业执照文件进行上传
+            String businessFileUrl = FileUploadUtil.fileUpload(businessFile, "xdmd", "营业执照");
+            //把营业执照文件上传到upload_file中
+            UploadFile uploadBusinessFile = IntegrationFile.IntegrationFile(businessFile, businessFileUrl, "营业执照", "xdmdAdmin");
+            administerMapper.uploadFile(uploadBusinessFile);//对文件进行上传
+
+            //对旧的营业执照文件id进行更新
+            administerMapper.uploadBusinessFileIdById(administerInformation.getId(), uploadBusinessFile.getId());
         }
+
+
+        if(oldLegalCardIdFileUrl !=null){
+            //此时意味着 法人身份证文件被修改
+            File file = new File(oldLegalCardIdFileUrl);
+            file.delete();
+
+            //把新的法人身份证文件进行上传
+            String legalCardIdFileUrl = FileUploadUtil.fileUpload(legalCardIdFile, "xdmd", "法人身份证文件");
+            //把法人身份证文件上传到upload_file中
+            UploadFile uploadLegalCardFile = IntegrationFile.IntegrationFile(legalCardIdFile, legalCardIdFileUrl, "法人身份证文件", "xdmdAdmin");
+            administerMapper.uploadFile(uploadLegalCardFile);//对文件进行上传
+
+            //对旧的法人身份证文件id进行更新
+            administerMapper.uploadLegalCardFileIdById(administerInformation.getId(), uploadLegalCardFile.getId());
+        }
+
+        if(oldContactCardFileUrl != null){
+            File file = new File(oldContactCardFileUrl);
+            file.delete();
+
+            //把新的联系人身份证文件进行上传
+            String contactCardFileUrl = FileUploadUtil.fileUpload(contactCardFile,"xdmd","联系人身份证文件");
+            //把联系人身份证文件上传到upload_file中
+            UploadFile uploadContactFile = IntegrationFile.IntegrationFile(contactCardFile, contactCardFileUrl, "法人身份证文件", "xdmdAdmin");
+            administerMapper.uploadFile(uploadContactFile);//对文件进行上传
+
+            //对旧的联系人身份证文件id进行上传
+            administerMapper.uploadContactFileIdById(administerInformation.getId(), uploadContactFile.getId());
+        }
+
+
+
         return resultMap;
     }
 }
