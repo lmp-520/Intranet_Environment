@@ -670,7 +670,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
 
                 //新增下一条数据的处理
                 String auditStep = "等待单位员工重新提交";
-                String newState = "等待处理";
+                String newState = "已处理";
                 int num2 = 0;
                 num2 = openTenderMapper.insertNewOpenTenderStateRecord(oid, username, auditStep, nowtime, newState);
                 System.out.println(num2);
