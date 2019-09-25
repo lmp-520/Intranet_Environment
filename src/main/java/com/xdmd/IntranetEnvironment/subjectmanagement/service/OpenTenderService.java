@@ -2,8 +2,6 @@ package com.xdmd.IntranetEnvironment.subjectmanagement.service;
 
 import com.xdmd.IntranetEnvironment.common.FileUploadException;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
-import com.xdmd.IntranetEnvironment.subjectAcceptance.exception.UpdateSqlException;
-import com.xdmd.IntranetEnvironment.subjectmanagement.exception.InsertSqlException;
 import com.xdmd.IntranetEnvironment.subjectmanagement.pojo.OpenTender;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -69,20 +67,6 @@ public interface OpenTenderService {
      * @throws FileUploadException
      */
     ResultMap tenderMultiUpload(String token, HttpServletResponse response,int oid,MultipartFile winningDocument, MultipartFile transactionAnnouncement, MultipartFile noticeTransaction, MultipartFile responseFile, MultipartFile otherAttachments) throws IOException, FileUploadException;
-
-
-
-    /**
-     * 单位管理员审核
-     *
-     * @param token
-     * @param response
-     * @param type 审核状态
-     * @param reason 审核不通过原因
-     * @param oid 审核表id
-     * @return
-     */
-    ResultMap tenderShenHeByUnitManager(String token, HttpServletResponse response, Boolean type, String reason, Integer oid) throws UpdateSqlException, InsertSqlException;
 
     /**
      * 评估中心审核

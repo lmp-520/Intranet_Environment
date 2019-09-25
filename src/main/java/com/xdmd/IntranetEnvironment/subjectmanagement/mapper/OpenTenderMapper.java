@@ -264,7 +264,7 @@ public interface OpenTenderMapper {
      * @param nowTime
      * @return
      */
-    @Update("update tender_contract_shenhe_record set state =#{state},second_handler =#{uname} ,handle_content = #{handleContent} ,second_handle_time = #{nowTime} where shenhe_table_id = #{oid} order by first_handle_time desc limit 1")
+    @Update("update tender_shenhe_record set state =#{state},second_handler =#{uname} ,handle_content = #{handleContent} ,second_handle_time = #{nowTime} where shenhe_table_id = #{oid} order by first_handle_time desc limit 1")
     int updateOpenTenderStateRecord(@Param("oid") Integer oid, @Param("uname") String uname, @Param("state") String state, @Param("handleContent") String handleContent, @Param("nowTime") String nowTime);
 
     /**
@@ -276,7 +276,7 @@ public interface OpenTenderMapper {
      * @param newState
      * @return
      */
-    @Insert("INSERT INTO tender_contract_shenhe_record(shenhe_table_id, fist_handler, audit_step, first_handle_time, state) VALUES (#{oid},#{uname},#{auditStep},#{nowTime},#{newState});")
+    @Insert("INSERT INTO tender_shenhe_record(shenhe_table_id, fist_handler, audit_step, first_handle_time, state) VALUES (#{oid},#{uname},#{auditStep},#{nowTime},#{newState});")
     int insertNewOpenTenderStateRecord(@Param("oid") Integer oid, @Param("uname") String uname, @Param("auditStep") String auditStep, @Param("nowTime") String nowTime, @Param("newState") String newState);
 
 
@@ -497,7 +497,7 @@ public interface OpenTenderMapper {
      * @param oid
      * @return
      */
-    @Select("select * from tender_contract_shenhe_record where shenhe_table_id=#{oid}")
+    @Select("select * from tender_shenhe_record where shenhe_table_id=#{oid}")
     List<TenderContractShenheRecordDTO> getAllShenHeTableRecordInfoByContractId(@Param("oid") int oid);
 
 

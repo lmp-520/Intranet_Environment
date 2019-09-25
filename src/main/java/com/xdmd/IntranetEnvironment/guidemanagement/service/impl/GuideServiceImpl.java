@@ -295,11 +295,11 @@ public class GuideServiceImpl implements GuideService {
             if(mapList.size()>0){
                 resultMap.success().message(pageInfo);
             }else if(mapList.size()==0){
-                resultMap.success().message("没有查到相关信息");
+                resultMap.fail().message("没有查到相关信息");
             }
         }catch (Exception e){
             e.printStackTrace();
-            resultMap.success().message("系统异常");
+            resultMap.fail().message("系统异常");
         }
         return resultMap;
     }
