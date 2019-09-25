@@ -275,7 +275,7 @@ public interface ContractManageMapper {
      * @param nowTime
      * @return
      */
-    @Update("update tender_contract_shenhe_record set state =#{state},second_handler =#{uname} ,handle_content = #{handleContent} ,second_handle_time = #{nowTime} where shenhe_table_id = #{cid} order by first_handle_time desc limit 1")
+    @Update("update contract_shenhe_record set state =#{state},second_handler =#{uname} ,handle_content = #{handleContent} ,second_handle_time = #{nowTime} where shenhe_table_id = #{cid} order by first_handle_time desc limit 1")
     int updateContractStateRecord(@Param("cid") Integer cid, @Param("uname") String uname, @Param("state") String state, @Param("handleContent") String handleContent, @Param("nowTime") String nowTime);
 
     /**
@@ -287,7 +287,7 @@ public interface ContractManageMapper {
      * @param newState
      * @return
      */
-    @Insert("INSERT INTO tender_contract_shenhe_record(shenhe_table_id, fist_handler, audit_step, first_handle_time, state) VALUES (#{cid},#{uname},#{auditStep},#{nowTime},#{newState});")
+    @Insert("INSERT INTO contract_shenhe_record(shenhe_table_id, fist_handler, audit_step, first_handle_time, state) VALUES (#{cid},#{uname},#{auditStep},#{nowTime},#{newState});")
     int insertNewContractStateRecord(@Param("cid") Integer cid, @Param("uname") String uname, @Param("auditStep") String auditStep, @Param("nowTime") String nowTime, @Param("newState") String newState);
 
 
@@ -352,84 +352,6 @@ public interface ContractManageMapper {
             "subject_acceptance_assessment = #{subjectAcceptanceAssessment}\t" +
             "where id=#{id}")
     int updateContractStatusByReturnCommit(ContractManageDTO contractManageDTO);
-
-
-
-
-
-
-
-    /**
-     * 展示所有通过单位管理员审批的 【外网】
-     * @return
-
-    @Select("SELECT \n" +
-            "id,\n" +
-            "subject_category as subjectCategory,\n" +
-            "subject_name as subjectName,\n" +
-            "subject_objectives_research as subjectObjectivesResearch,\n" +
-            "subject_contact as subjectContact,\n" +
-            "subject_contact_phone as subjectContactPhone,\n" +
-            "commitment_unit as commitmentUnit,\n" +
-            "subject_supervisor_department as subjectSupervisorDepartment,\n" +
-            "approval_status as approvalStatus\n" +
-            "FROM\n" +
-            "contract_manage\n" +
-            "<where>\n" +
-            "approval_status = 2\t" +
-            "<if test ='null != subjectCategory'>\n" +
-            "AND subject_category like CONCAT('%',#{subjectCategory},'%')\n" +
-            "</if>\n" +
-            "<if test ='null != subjectName'>\n" +
-            "AND subject_name like CONCAT('%',#{subjectName},'%')\n" +
-            "</if>\n" +
-            "<if test ='null != subjectContact'>\n" +
-            "AND subject_contact like CONCAT('%',#{subjectContact},'%')\n" +
-            "</if>\n" +
-            "<if test ='null != subjectContactPhone'>\n" +
-            "AND subject_contact_phone like CONCAT('%',#{subjectContactPhone},'%')\n" +
-            "</if>\n" +
-            "<if test ='null != commitmentUnit'>\n" +
-            "AND commitment_Unit like CONCAT('%',#{commitmentUnit},'%')\n" +
-            "</if>\n" +
-            "<if test ='null != subjectSupervisorDepartment'>\n" +
-            "AND subject_supervisor_department like CONCAT('%',#{subjectSupervisorDepartment},'%')\n" +
-            "</if>\n" +
-            "</where>\n" +
-            "ORDER BY id DESC")
-    List<Map> showAllPassContractReviewByUnitManager(@Param("subjectCategory") String subjectCategory,@Param("subjectName")String subjectName,
-                                                     @Param("subjectContact")String subjectContact,@Param("subjectContactPhone")String subjectContactPhone,@Param("commitmentUnit")String commitmentUnit,
-                                                     @Param("subjectSupervisorDepartment")String subjectSupervisorDepartment);
-     */
-
-    /**
-     * 展示所有未通过单位管理员审批的 【外网】
-     * @return
-
-    @Select("SELECT \n" +
-            "id,\n" +
-            "subject_category as subjectCategory,\n" +
-            "subject_name as subjectName,\n" +
-            "subject_objectives_research as subjectObjectivesResearch,\n" +
-            "subject_contact as subjectContact,\n" +
-            "subject_contact_phone as subjectContactPhone,\n" +
-            "commitment_unit as commitmentUnit,\n" +
-            "subject_supervisor_department as subjectSupervisorDepartment,\n" +
-            "approval_status as approvalStatus\n" +
-            "FROM\n" +
-            "contract_manage\n" +
-            "WHERE\n" +
-            "approval_status < 2 \n" +
-            "ORDER BY id DESC")
-    List<Map> showAllNoPassContractReviewByUnitManager(@Param("subjectCategory") String subjectCategory,@Param("subjectName")String subjectName,
-                                                       @Param("subjectContact")String subjectContact,@Param("subjectContactPhone")String subjectContactPhone,@Param("commitmentUnit")String commitmentUnit,
-                                                       @Param("subjectSupervisorDepartment")String subjectSupervisorDepartment);
-     */
-
-
-
-
-
 
 
     /**
@@ -639,7 +561,7 @@ public interface ContractManageMapper {
      * @param cid
      * @return
      */
-    @Select("select * from tender_contract_shenhe_record where shenhe_table_id=#{cid}")
+    @Select("select * from contract_shenhe_record where shenhe_table_id=#{cid}")
     List<TenderContractShenheRecordDTO> getAllShenHeTableRecordInfoByContractId(@Param("cid") int cid);
 
     /**
