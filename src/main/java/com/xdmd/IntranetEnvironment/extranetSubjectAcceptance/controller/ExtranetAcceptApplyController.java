@@ -1,8 +1,10 @@
 package com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.controller;
 
+import com.google.common.io.Files;
 import com.xdmd.IntranetEnvironment.common.FileSuffixJudgeUtil;
 import com.xdmd.IntranetEnvironment.common.FileUploadUtil;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
+import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.exception.MysqlErrorException;
 import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.*;
 import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.service.ExtranetAcceptApplyService;
 import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.service.impl.ExtranetTokenService;
@@ -19,6 +21,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,149 +39,60 @@ public class ExtranetAcceptApplyController {
     @Autowired
     private ExtranetTokenService extranetTokenService;
 
+    //上传验收申请表文件
+    @PostMapping("uploadFile")
+    @ResponseBody
+    public ResultMap uploadFile(@RequestParam("checkApplyFile") MultipartFile checkApplyFile){      //验收申请附件
+        try {
+            long l = System.currentTimeMillis();
+            resultMap = extranetAcceptApplyService.uploadCheckApplyFile(checkApplyFile);
+            long l1 = System.currentTimeMillis();
+            System.out.println(l1-l);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("ExtranetAcceptApplyController 中 uploadFile方法错误 -- "+e.getMessage());
+            return resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
+
+    //传输文件
+    @ResponseBody
+    @PostMapping("transfer")
+    public ResultMap transferFile(@RequestParam("FileUrl") String FileUrl){
+        File file = new File(FileUrl);
+        File file1 = new File("D:/xdmd_environment/111/aaa.zip");
+        try {
+            long l = System.currentTimeMillis();
+            Files.move(file,file1);
+            long l1 = System.currentTimeMillis();
+            System.out.println(l1-l);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return resultMap.success().message("aaa");
+    }
+
+
     //员工填写验收申请表
     @ResponseBody
     @PostMapping("addAcceptApply")
-    public ResultMap AddAcceptApply(@CookieValue(value = "token",required = false) String token, HttpServletResponse response,
+    public ResultMap AddAcceptApply(@RequestParam("uid") Integer uid,  //用户的id,
+                                    @RequestParam("uname")String uname,//用户的姓名，
+                                    @RequestParam("cid") Integer cid,   //公司的id
+                                    @RequestParam("cname")String cname,//公司的名称
                                     @RequestParam("contractId") Integer contractId,  //合同id
-                                    @RequestPart("submitInventoryFile") MultipartFile submitInventoryFile,     //提交清单文件
-                                    @RequestPart("applicationAcceptanceFile") MultipartFile applicationAcceptanceFile,     //验收申请表文件
-                                    @RequestPart("achievementsFile") MultipartFile achievementsFile,   //成果附件文件
-                                    @Valid @RequestPart ExtranetCheckApply extranetCheckApply, BindingResult result) {
-        if (StringUtils.isEmpty(token)) {
-            return resultMap.fail().message("请先登陆");
-        }
+                                    @RequestParam("checkApplyFile")MultipartFile checkApplyFile,  //验收申请附件
+                                    @Valid @RequestPart ExtranetCheckApply extranetCheckApply) {    //验收申请表信息
 
-        JwtInformation jwtInformation = new JwtInformation();
         try {
-            jwtInformation = extranetTokenService.compare(response, token);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            return resultMap.fail().message("请先登录");
-        } catch (UserNameNotExistentException e) {
-            e.printStackTrace();
-            return resultMap.fail().message("请先登录");
-        } catch (ClaimsNullException e) {
-            e.printStackTrace();
-            return resultMap.fail().message("请先登录");
+            resultMap = extranetAcceptApplyService.AddAcceptApply(uid,uname,cid,cname,contractId,checkApplyFile,extranetCheckApply);
         } catch (Exception e) {
             e.printStackTrace();
-            log.error("MenuServiceImpl 中 TokenService 出现问题");
-            return resultMap.message("系统异常");
-        }
-        Integer uid = jwtInformation.getUid();
-        String uname = jwtInformation.getUsername();
-        Integer cid = jwtInformation.getCid();
-        String cname = jwtInformation.getCompanyName();
-
-        if (!submitInventoryFile.getOriginalFilename().contains(".") || !applicationAcceptanceFile.getOriginalFilename().contains(".") || !achievementsFile.getOriginalFilename().contains(".")) {
-            return resultMap.fail().message("上传的文件不可以为空");
-        }
-
-        //用于判断用户传输的参数是否有误
-        if (result.hasErrors()) {
-            List<ObjectError> ls = result.getAllErrors();
-            String errorMessage = ls.get(0).getDefaultMessage();
-            return resultMap.fail().message(errorMessage);
-        }
-
-//        //判断验收申请表文件的后缀名
-//        ArrayList<String> applicationAcceptanceFileSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".zip", ".rar", ".7z"));
-//        String applicationFileName = applicationAcceptanceFile.getOriginalFilename();
-//        Boolean aBoolean = FileSuffixJudgeUtil.SuffixJudge(applicationFileName, applicationAcceptanceFileSuffixList);
-//        if(aBoolean == false){
-//            return resultMap.fail().message("请上传正确的验收申请表格式");
-//        }
-
-//        //判断成果附件文件的后缀名
-//        ArrayList<String> achievementsFileSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".zip", ".rar", ".7z"));
-//        String achievementFileName = achievementsFile.getOriginalFilename();
-//        Boolean bBoolean = FileSuffixJudgeUtil.SuffixJudge(achievementFileName, achievementsFileSuffixList);
-//        if(bBoolean == false){
-//            return resultMap.fail().message("请上传正确成果附件格式");
-//        }
-
-//        //判断提交清单附件文件的后缀名
-//        ArrayList<String> submitInventoryFileSuffixList = new ArrayList<>(Arrays.asList(".doc", ".docx", ".zip", ".rar", ".7z"));
-//        String submitInventoryFileName = submitInventoryFile.getOriginalFilename();
-//        Boolean cBoolean = FileSuffixJudgeUtil.SuffixJudge(submitInventoryFileName, submitInventoryFileSuffixList);
-//        if(cBoolean == false){
-//            return resultMap.fail().message("请上传正确提交附件格式");
-//        }
-
-        //根据公司的id，查询公司的名字
-        String comapnyName = extranetAcceptApplyService.queryCompanyNameByCid(cid);
-
-        //对验收申请表文件进行上传
-        try {
-            String applicationAcceptanceFileUrl = FileUploadUtil.fileUpload(applicationAcceptanceFile, comapnyName, "验收申请");
-            //把营业执照文件上传到upload_file中
-            UploadFile uploadApplicationFile = IntegrationFile.IntegrationFile(applicationAcceptanceFile, applicationAcceptanceFileUrl, "验收申请", uname);
-            extranetAcceptApplyService.uploadFile(uploadApplicationFile);   //对文件进行上传
-            extranetCheckApply.setApplicationUrlId(uploadApplicationFile.getId());
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.error("AcceptApplyController AddAcceptApply 方法 验收申请上传失败");
+            log.error("ExtranetAcceptApplyController 中 AddAcceptApply 方法出错 -- "+e.getMessage());
             return resultMap.fail().message("系统异常");
         }
-
-
-        //成果附件进行上传
-        try {
-            String achievementFileUrl = FileUploadUtil.fileUpload(achievementsFile, comapnyName, "成果附件");
-            //把营业执照文件上传到upload_file中
-            UploadFile uploadAchievementFile = IntegrationFile.IntegrationFile(achievementsFile, achievementFileUrl, "成果附件", uname);
-            extranetAcceptApplyService.uploadFile(uploadAchievementFile);   //对文件进行上传
-            extranetCheckApply.setAchievementUrlId(uploadAchievementFile.getId());
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.error("AcceptApplyController AddAcceptApply 方法 成果附件上传失败");
-            return resultMap.fail().message("系统异常");
-        }
-
-
-        //提交清单进行上传
-        try {
-            String submitFileUrl = FileUploadUtil.fileUpload(submitInventoryFile, comapnyName, "提交清单");
-            //把营业执照文件上传到upload_file中
-            UploadFile uploadSubmitFile = IntegrationFile.IntegrationFile(submitInventoryFile, submitFileUrl, "提交清单", uname);
-            extranetAcceptApplyService.uploadFile(uploadSubmitFile);   //对文件进行上传
-            extranetCheckApply.setSubmitUrlId(uploadSubmitFile.getId());
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.error("AcceptApplyController AddAcceptApply 方法 提交清单上传失败");
-            return resultMap.fail().message("系统异常");
-        }
-
-        //获取创建新增该表时间
-        Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String nowTime = sdf.format(date);
-
-        extranetCheckApply.setCreateTime(nowTime);
-        //获取创建人
-        extranetCheckApply.setCreateAuthor(uname);
-
-        //此时为公司的员工进行提交 审核状态应该为2 下一个步骤需要等待公司管理员审核
-        extranetCheckApply.setAcceptancePhaseId(2);
-
-        //把公司的id存在checkApply
-        extranetCheckApply.setSubjectUndertakingUnitId(cid);
-
-        extranetCheckApply.setIsOutcome("0");   //设置该验收申请还未加入成果库
-
-
-        try {
-            resultMap = extranetAcceptApplyService.AddAcceptApply(extranetCheckApply, submitInventoryFile, applicationAcceptanceFile, achievementsFile, uname,contractId);
-
-            /**
-             * 再新增一个验收申请与公司的关联表
-             */
-        } catch (Exception e) {
-            e.printStackTrace();
-            return resultMap.fail().message("系统异常");
-        }
-        return resultMap.success().message("新增成功");
+        return resultMap;
     }
 
     //公司管理员进行验收审核查询     其中查询的是，正在审核过程中的内容

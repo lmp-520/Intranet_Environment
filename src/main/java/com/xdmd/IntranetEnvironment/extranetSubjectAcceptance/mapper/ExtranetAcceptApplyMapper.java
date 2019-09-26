@@ -220,4 +220,7 @@ public interface ExtranetAcceptApplyMapper<T> extends MyBaseMapper<ExtranetCheck
 
     @Update("update check_apply set create_time = #{nowTime} where id = #{id}")
     void updateCreateTime(@Param("id") Integer id, @Param("nowTime") String nowTime);
+
+    //查询符合条件的合同信息
+    List<SubjectInformation> queryCompanyContractManageInformation(@Param("cname") String cname, @Param("nowTime") String nowTime, @Param("newPage") Integer newPage, @Param("total") Integer total);
 }

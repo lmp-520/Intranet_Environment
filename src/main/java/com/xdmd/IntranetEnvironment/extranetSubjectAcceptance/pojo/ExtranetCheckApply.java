@@ -74,53 +74,35 @@ public class ExtranetCheckApply implements Serializable {
     private String applicationAcceptanceTime;
 
     //申请验收方式
-    @NotNull(message = "申请验收方式不能为空")
     private Integer applicationAcceptanceMode;
 
-    //申请验收地点
-    @NotNull(message = "申请验收地点不能为空")
-    private String applicationAcceptancePlace;
+//    //申请验收地点
+//    private String applicationAcceptancePlace;
 
     //验收联系人
-    @NotNull(message = "验收联系人不能为空")
     private String acceptanceContact;
 
     //验收联系人联系电话
-//    @Pattern(regexp = "^1[34578]\\d{9}$", message = "验收联系人手机号格式不正确")
-    @NotNull(message = "验收联系人联系电话不能为空")
     private String acceptanceContactPhone;
 
     //主要研究内容完成情况
-    @Size(min = 1, max = 500, message = "请输入范围内字数")
-    @NotNull(message = "主要研究内容完成情况不能为空")
     private String mainContentSituation;
 
     //提交成果情况
-    @NotNull(message = "提交成果情况不能为空")
-    @Size(min = 1, max = 500, message = "请输入范围内字数")
     private String submissionAchievementsSituation;
 
     //课题承担单位意见
-    @NotNull(message = "课题承担单位意见不能为空")
-    @Size(min = 1, max = 500, message = "请输入范围内字数")
     private String subjectUndertakingUnitOpinion;
 
     //所在环保部门意见
-    @NotNull(message = "所在环保部门意见不能为空")
-    @Size(min = 1, max = 500, message = "请输入范围内字数")
     private String environmentalDepartmentsOpinion;
 
     //省生态环境评估中心初审意见
-    @NotNull(message = "省生态环境评估中心初审意见不能为空")
-    @Size(min = 1, max = 500, message = "请输入范围内字数")
     private String provinceAssessmentCenterOpinion;
 
     //省环保厅主管部门意见
-    @NotNull(message = "省环保厅主管部门意见不能为空")
-    @Size(min = 1, max = 500, message = "请输入范围内字数")
     private String competentDepartmentOinion;
 
-    @NotNull(message = "提交资料清单不能为空")
     //提交资料清单
     private String submitInventory;
 
@@ -180,7 +162,8 @@ public class ExtranetCheckApply implements Serializable {
 
     private String createTime;
 
-    private String createAuthor;
+    //创建人的id
+    private Integer createAuthor;
 
     //成果附件上传文件的id
     private Integer achievementUrlId;
@@ -225,7 +208,7 @@ public class ExtranetCheckApply implements Serializable {
     //专家组意见主表
     private ExtranetExpertGroupComment extranetExpertGroupComment;
 
-    public ExtranetCheckApply(@NotNull(message = "课题名称不能为空") String topicName, @NotNull(message = "课题编号不能为空") String topicNumber, @NotNull(message = "课题承担单位不能为空") String subjectUndertakingUnit, Integer subjectUndertakingUnitId, @NotNull(message = "单位性质不能为空") Integer unitNature, @NotNull(message = "单位负责人不能为空") String projectLeader, @NotNull(message = "课题负责人联系电话不能为空") String projectLeaderPhone, @NotNull(message = "课题负责人联系邮箱") String projectLeaderMail, @NotNull(message = "通讯地址不能为空") String postalAddress, String agreementStartTime, String agreementEndTime, String applicationAcceptanceTime, @NotNull(message = "申请验收方式不能为空") Integer applicationAcceptanceMode, @NotNull(message = "申请验收地点不能为空") String applicationAcceptancePlace, @NotNull(message = "验收联系人不能为空") String acceptanceContact, @NotNull(message = "验收联系人联系电话不能为空") String acceptanceContactPhone, @Size(min = 1, max = 500, message = "请输入范围内字数") @NotNull(message = "主要研究内容完成情况不能为空") String mainContentSituation, @NotNull(message = "提交成果情况不能为空") @Size(min = 1, max = 500, message = "请输入范围内字数") String submissionAchievementsSituation, @NotNull(message = "课题承担单位意见不能为空") @Size(min = 1, max = 500, message = "请输入范围内字数") String subjectUndertakingUnitOpinion, @NotNull(message = "所在环保部门意见不能为空") @Size(min = 1, max = 500, message = "请输入范围内字数") String environmentalDepartmentsOpinion, @NotNull(message = "省生态环境评估中心初审意见不能为空") @Size(min = 1, max = 500, message = "请输入范围内字数") String provinceAssessmentCenterOpinion, @NotNull(message = "省环保厅主管部门意见不能为空") @Size(min = 1, max = 500, message = "请输入范围内字数") String competentDepartmentOinion, @NotNull(message = "提交资料清单不能为空") String submitInventory, String submitInventoryUrl, String submitInventoryUrlName, String applicationAcceptanceUrl, String applicationAcceptanceUrlName, String achievementsUrl, String achievementsName, String auditReportUrl, String auditReportUrlName, String firstInspectionReportUrl, String firstInspectionReportUrlName, String expertGroupCommentsUrl, String expertGroupCommentsUrlName, String expertAcceptanceFormUrl, String expertAcceptanceFormUrlName, String acceptanceCertificateUrl, String acceptanceCertificateUrlName, Integer acceptancePhaseId, String acceptancePhaseName, String createTime, String createAuthor, Integer achievementUrlId, Integer submitUrlId, Integer auditReportUrlId, Integer firstInspectionReportUrlId, Integer expertGroupCommentsUrlId, Integer expertAcceptanceFormId, Integer applicationUrlId, Integer acceptanceConclusionId, Integer acceptanceCertificateId, Integer acceptanceFinalResultId, String isOutcome, List<ExtranetCheckApplyState> extranetCheckApplyStateList) {
+    public ExtranetCheckApply(@NotNull(message = "课题名称不能为空") String topicName, @NotNull(message = "课题编号不能为空") String topicNumber, @NotNull(message = "课题承担单位不能为空") String subjectUndertakingUnit, Integer subjectUndertakingUnitId, @NotNull(message = "单位性质不能为空") Integer unitNature, @NotNull(message = "单位负责人不能为空") String projectLeader, @NotNull(message = "课题负责人联系电话不能为空") String projectLeaderPhone, @NotNull(message = "课题负责人联系邮箱") String projectLeaderMail, @NotNull(message = "通讯地址不能为空") String postalAddress, String agreementStartTime, String agreementEndTime, String applicationAcceptanceTime, Integer applicationAcceptanceMode, String acceptanceContact, String acceptanceContactPhone, String mainContentSituation, String submissionAchievementsSituation, String subjectUndertakingUnitOpinion, String environmentalDepartmentsOpinion, String provinceAssessmentCenterOpinion, String competentDepartmentOinion, String submitInventory, String submitInventoryUrl, String submitInventoryUrlName, String applicationAcceptanceUrl, String applicationAcceptanceUrlName, String achievementsUrl, String achievementsName, String auditReportUrl, String auditReportUrlName, String firstInspectionReportUrl, String firstInspectionReportUrlName, String expertGroupCommentsUrl, String expertGroupCommentsUrlName, String expertAcceptanceFormUrl, String expertAcceptanceFormUrlName, String acceptanceCertificateUrl, String acceptanceCertificateUrlName, Integer acceptancePhaseId, String acceptancePhaseName, String createTime, Integer createAuthor, Integer achievementUrlId, Integer submitUrlId, Integer auditReportUrlId, Integer firstInspectionReportUrlId, Integer expertGroupCommentsUrlId, Integer expertAcceptanceFormId, Integer applicationUrlId, Integer acceptanceConclusionId, Integer acceptanceCertificateId, Integer acceptanceFinalResultId, String isOutcome, List<ExtranetCheckApplyState> extranetCheckApplyStateList, AcceptanceCertificate acceptanceCertificate, ExtranetExpertGroupComment extranetExpertGroupComment) {
         this.topicName = topicName;
         this.topicNumber = topicNumber;
         this.subjectUndertakingUnit = subjectUndertakingUnit;
@@ -239,7 +222,6 @@ public class ExtranetCheckApply implements Serializable {
         this.agreementEndTime = agreementEndTime;
         this.applicationAcceptanceTime = applicationAcceptanceTime;
         this.applicationAcceptanceMode = applicationAcceptanceMode;
-        this.applicationAcceptancePlace = applicationAcceptancePlace;
         this.acceptanceContact = acceptanceContact;
         this.acceptanceContactPhone = acceptanceContactPhone;
         this.mainContentSituation = mainContentSituation;
@@ -281,6 +263,8 @@ public class ExtranetCheckApply implements Serializable {
         this.acceptanceFinalResultId = acceptanceFinalResultId;
         this.isOutcome = isOutcome;
         this.extranetCheckApplyStateList = extranetCheckApplyStateList;
+        this.acceptanceCertificate = acceptanceCertificate;
+        this.extranetExpertGroupComment = extranetExpertGroupComment;
     }
 
     public ExtranetCheckApply() {

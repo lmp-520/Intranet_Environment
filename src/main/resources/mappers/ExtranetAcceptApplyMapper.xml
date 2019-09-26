@@ -105,8 +105,6 @@
             acceptance_phase_id,
             create_time,
             create_author,
-            achievement_url_id,
-            submit_url_id,
             application_url_id,
             is_outcome
         )VALUES
@@ -138,8 +136,6 @@
           #{extranetCheckApply.acceptancePhaseId},
           #{extranetCheckApply.createTime},
           #{extranetCheckApply.createAuthor},
-          #{extranetCheckApply.achievementUrlId},
-          #{extranetCheckApply.submitUrlId},
           #{extranetCheckApply.applicationUrlId},
           #{extranetCheckApply.isOutcome}
         );
@@ -640,5 +636,25 @@
                 and #{nowTime} >contract_end_time and commitment_Unit = #{cname} and is_check_apply = 0
             </if>
         </where>
+    </select>
+
+    <select id="queryCompanyContractManageInformation" resultType="com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.SubjectInformation">
+        SELECT
+            id,
+            project_no,
+            subject_name,
+            contract_start_time,
+            contract_end_time,
+            subjece_leader,
+            subject_leader_phone,
+            email,
+            commitment_Unit,
+            commitment_unit_address
+        FROM contract_manage
+        where
+            #{nowTime} >contract_end_time
+            and commitment_Unit = #{cname}
+            and is_check_apply = 0
+        limit #{newPage},#{total}
     </select>
 </mapper>

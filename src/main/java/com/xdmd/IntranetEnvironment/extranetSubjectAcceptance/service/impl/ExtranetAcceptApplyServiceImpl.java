@@ -1,15 +1,17 @@
 package com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.service.impl;
 
-import com.xdmd.IntranetEnvironment.common.FileSuffixJudgeUtil;
+import com.xdmd.IntranetEnvironment.common.FileUploadException;
 import com.xdmd.IntranetEnvironment.common.FileUploadUtil;
 import com.xdmd.IntranetEnvironment.common.ResultMap;
 import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.exception.MysqlErrorException;
 import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.mapper.ExtranetAcceptApplyMapper;
 import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.pojo.*;
 import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.service.ExtranetAcceptApplyService;
+import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.utils.FileUpload;
 import com.xdmd.IntranetEnvironment.extranetSubjectAcceptance.utils.IntegrationFile;
 import com.xdmd.IntranetEnvironment.user.exception.ClaimsNullException;
 import com.xdmd.IntranetEnvironment.user.exception.UserNameNotExistentException;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +21,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-
+@Slf4j
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyService {
@@ -31,28 +34,75 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
     private ExtranetTokenService extranetTokenService;
     @Autowired
     private ExtranetAcceptApplyMapper acceptApplyMapper;
+    @Autowired
+    private ExtranetAcceptApplyService extranetAcceptApplyService;
+
     ResultMap resultMap = new ResultMap();
     PageBean pageBean = new PageBean();
     ExtranetCheckApplyState extranetCheckApplyState = new ExtranetCheckApplyState();
-    //打印日志
-    private static Logger log = LoggerFactory.getLogger(ExtranetAcceptApplyServiceImpl.class);
+
+    //上传验收申请文件
+    @Override
+    public ResultMap uploadCheckApplyFile(MultipartFile checkApplyFile) throws Exception{
+        String checkApplyFileName = checkApplyFile.getOriginalFilename();
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String nowTime = sdf.format(date);
+
+        String newOriginFileName = nowTime+checkApplyFileName;
+
+        //文件临时保存的路径
+        String FilePath = "D:/xdmd_environment/临时文件目录/";
+        File dest = new File(FilePath + newOriginFileName);
+
+        //获取文件的大小
+        long length = dest.length();
+        String fileSize = String.valueOf(length);
+
+        //检测是否存在目录
+        if (!dest.getParentFile().exists()) {
+            dest.getParentFile().mkdirs();
+        }
+        //文件上传
+        checkApplyFile.transferTo(dest);
+
+        UploadFileInformation uploadFileInformation = new UploadFileInformation();
+        uploadFileInformation.setFileUrl(FilePath + newOriginFileName);
+        uploadFileInformation.setFileSize(fileSize);
+
+        return resultMap.success().message(uploadFileInformation);
+    }
 
     //企业填写验收申请表
     @Transactional(rollbackFor = Exception.class)
-    public ResultMap AddAcceptApply(ExtranetCheckApply extranetCheckApply, MultipartFile submitInventoryFile, MultipartFile applicationAcceptanceFile, MultipartFile achievementsFile, String createname, Integer contractId) throws MysqlErrorException {
+    public ResultMap AddAcceptApply(Integer uid, String uname, Integer cid, String cname, Integer contractId, MultipartFile checkApplyFile, ExtranetCheckApply extranetCheckApply) throws Exception {
+
+        //根据公司的id，查询公司的名字
+        String comapnyName = extranetAcceptApplyService.queryCompanyNameByCid(cid);
+
+        //对验收申请文件进行上传
+        String checkApplyFileUrl = FileUploadUtil.fileUpload(checkApplyFile, comapnyName, "验收申请附件");
+        //把验收申请文件上传到upload_file中
+        UploadFile uploadCheckApplyFile = IntegrationFile.IntegrationFile(checkApplyFile, checkApplyFileUrl, "验收申请附件", uname);
+        extranetAcceptApplyService.uploadFile(uploadCheckApplyFile);   //对文件进行上传
+        extranetCheckApply.setApplicationUrlId(uploadCheckApplyFile.getId());
+
+        extranetCheckApply.setCreateAuthor(uid);    //创建人的id
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String nowTime = sdf.format(date);
+        extranetCheckApply.setCreateTime(nowTime);  //创建时间
+        extranetCheckApply.setIsOutcome("0");   //  是否已经加入过成果库 0：还没有加入到成果库 （默认为 0）1:  已经加入到成果库'
+
         //新增验收申请表
         acceptApplyMapper.addAcceptApply(extranetCheckApply);
 
         //更新验收申请表的状态
         //新增第一条验收数据
-        int cid = extranetCheckApply.getId();//获取验收申请表的id
-        String firstHandler = createname;   //提交的人名
-        Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String nowTime = sdf.format(date);
-        String state = "待处理";
+        int checkApplyId = extranetCheckApply.getId();//获取验收申请表的id
+        String firstHandler = uname;   //提交的人名
 
-        extranetCheckApplyState.setCheckApplyId(cid);
+        extranetCheckApplyState.setCheckApplyId(checkApplyId);
         extranetCheckApplyState.setFistHandler(firstHandler);
         extranetCheckApplyState.setAuditStep("公司审批");
         extranetCheckApplyState.setFirstHandleTime(nowTime);
@@ -1186,53 +1236,65 @@ public class ExtranetAcceptApplyServiceImpl implements ExtranetAcceptApplyServic
         String nowTime = sdf.format(date);
 
         List<SubjectInformation> subjectInformationList = acceptApplyMapper.queryCompanyContractManage(cname, nowTime);
-        List<Integer> resultIds = new ArrayList<Integer>();
+//        List<Integer> resultIds = new ArrayList<Integer>();
 
-        //遍历该公司下的，已经结束的合同
-        for (SubjectInformation subjectInformation : subjectInformationList) {
-            String contractEndTime = subjectInformation.getContractEndTime();
-            //把日期字符串进行Date
-            Date sqlTimeParse = sdf.parse(contractEndTime);
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(sqlTimeParse);
-            cal.add(Calendar.MONTH, 3);  //对月份加3
-            String dateOver = sdf.format(cal.getTime());
+        //查询出符合条件的合同总数
+        Integer allTotal = subjectInformationList.size();
 
-            if (sdf.parse(dateOver).getTime() > sdf.parse(nowTime).getTime()) {
-                //此时该合同符合要求
-                resultIds.add(subjectInformation.getId());
-            }
-        }
 
-        Integer allTotal = resultIds.size();
-
-        Integer newPage = (page - 1) * total;
-
-        List<SubjectInformation> subjectInformationList1 = new ArrayList<SubjectInformation>();
-        int num = total;
-        if(total>allTotal){
-            num = allTotal;
-        }else {
-            num = newPage+num;
-            if(num>allTotal){
-                num = allTotal;
-            }
-        }
-
-        for (int i = newPage; i < num; i++) {
-            Integer rid = resultIds.get(i);
-            //通过id，获取课题信息
-            SubjectInformation subjectInformation = acceptApplyMapper.querySubjectInformation(rid);
-            //从单位名称查询单位性质
-            Integer unitNature = acceptApplyMapper.queryUnitNatureByCompanyName(subjectInformation.getCommitmentUnit());
-            subjectInformation.setUnitNature(unitNature);
-            subjectInformationList1.add(subjectInformation);
-        }
+        Integer newPage = (page-1)*total;
+        //查询符合条件的的合同信息
+        List<SubjectInformation> subjectContractInformation = acceptApplyMapper.queryCompanyContractManageInformation(cname,nowTime,newPage,total);
 
         PageBean pageBean = new PageBean();
         pageBean.setCount(allTotal);
-        pageBean.setData(subjectInformationList1);
+        pageBean.setData(subjectContractInformation);
 
+
+//        //遍历该公司下的，已经结束的合同
+//        for (SubjectInformation subjectInformation : subjectInformationList) {
+//            String contractEndTime = subjectInformation.getContractEndTime();
+//            //把日期字符串进行Date
+//            Date sqlTimeParse = sdf.parse(contractEndTime);
+//            Calendar cal = Calendar.getInstance();
+//            cal.setTime(sqlTimeParse);
+//            cal.add(Calendar.MONTH, 3);  //对月份加3
+//            String dateOver = sdf.format(cal.getTime());
+//
+//            if (sdf.parse(dateOver).getTime() > sdf.parse(nowTime).getTime()) {
+//                //此时该合同符合要求
+//                resultIds.add(subjectInformation.getId());
+//            }
+//        }
+//
+//        Integer allTotal = resultIds.size();
+//
+//        Integer newPage = (page - 1) * total;
+//
+//        List<SubjectInformation> subjectInformationList1 = new ArrayList<SubjectInformation>();
+//        int num = total;
+//        if(total>allTotal){
+//            num = allTotal;
+//        }else {
+//            num = newPage+num;
+//            if(num>allTotal){
+//                num = allTotal;
+//            }
+//        }
+//
+//        for (int i = newPage; i < num; i++) {
+//            Integer rid = resultIds.get(i);
+//            //通过id，获取课题信息
+//            SubjectInformation subjectInformation = acceptApplyMapper.querySubjectInformation(rid);
+//            //从单位名称查询单位性质
+//            Integer unitNature = acceptApplyMapper.queryUnitNatureByCompanyName(subjectInformation.getCommitmentUnit());
+//            subjectInformation.setUnitNature(unitNature);
+//            subjectInformationList1.add(subjectInformation);
+//        }
+//
+//        PageBean pageBean = new PageBean();
+//        pageBean.setCount(allTotal);
+//        pageBean.setData(subjectInformationList1);
 
         return resultMap.success().message(pageBean);
     }
