@@ -20,14 +20,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.jws.WebService;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
+
 import java.util.Date;
-import java.util.List;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -370,6 +367,8 @@ public class CompanyServiceTwoImpl implements CompanyServiceTwo {
             loginReturnContent.setRealName(realName);
             JSONObject jsonObject = JSON.parseObject(loginReturnContent.toString());
             jsonObject.put("isFirst",1);    //设置为多次登陆
+            jsonObject.put("cid",cid);  //公司的id
+            jsonObject.put("companyName",companyName);  //公司的名称
 
             //把登陆信息插入到外网登陆日志表中
             ExtranetLoginLog extranetLoginLog = new ExtranetLoginLog();
@@ -387,8 +386,8 @@ public class CompanyServiceTwoImpl implements CompanyServiceTwo {
         }else if(identity.equals("1")){
             //此时为员工登陆
             //获取公司名 公司id
-            String companyName = companyMapper.queryCompanyName(uid);
-            Integer cid = companyMapper.queryCompanyId(uid);
+            String companyName = companyMapper.queryStaffCompanyName(uid);
+            Integer cid = companyMapper.queryStaffCompanyId(uid);
 
             //根据uid获取真实姓名
             String realName = companyMapper.queryRealNameByUid(uid);
@@ -413,6 +412,8 @@ public class CompanyServiceTwoImpl implements CompanyServiceTwo {
             loginReturnContent.setIdentity(1);
             loginReturnContent.setRealName(realName);
             JSONObject jsonObject = JSON.parseObject(loginReturnContent.toString());
+            jsonObject.put("cid",cid);  //公司的id
+            jsonObject.put("companyName",companyName);  //公司的名称
 
             //判断该员工是不是第一次登陆
             String isFirst = companyMapper.queryIsFirst(uid);
