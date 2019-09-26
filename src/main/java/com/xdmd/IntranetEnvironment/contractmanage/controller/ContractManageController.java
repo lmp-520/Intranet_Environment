@@ -48,7 +48,8 @@ public class ContractManageController {
     @ApiOperation(value = "新增合同信息【外网提交】")
     @PostMapping(value = "addContractInfo")
     public ResultMap insertContractInfo(@CookieValue(value = "token", required = false) String token, HttpServletResponse response,
-                                        @RequestBody ContractManageDTO contractManageDTO) {
+                                        @RequestBody ContractManageDTO contractManageDTO
+                                        ) {
         if (StringUtils.isEmpty(token)) {
             return resultMap.fail().message("请先登录");
         }
@@ -70,7 +71,6 @@ public class ContractManageController {
 
     /**
      * 根据单位id查询本单位的合同
-     *
      * @return
      */
     @ApiOperation(value = "根据单位id查询本单位的合同【外网查看】")
@@ -244,42 +244,6 @@ public class ContractManageController {
     }
 
 
-    /**
-     * 单位管理员审核【外网】
-     *
-     * @param type   审核状态
-     * @param reason 审核不通过原因
-     * @param cid    审核表id
-     * @return
-
-     @PostMapping(value = "contractShenHeByUnitManager")
-     @ApiOperation(value = "单位管理员审核【外网】")
-     @ApiImplicitParams({
-     @ApiImplicitParam(name = "type", value = "审核状态", required = true),
-     @ApiImplicitParam(name = "reason", value = "审核不通过原因", required = false),
-     @ApiImplicitParam(name = "cid", value = "审核表id", required = true),
-     })
-     public ResultMap contractShenHeByUnitManager(//@CookieValue(value = "IntranecToken", required = false) String token, HttpServletResponse response,
-     Boolean type, String reason, Integer cid) {
-     String token = "aaa";
-     HttpServletResponse response = null;
-     if (StringUtils.isEmpty(token)) {
-     resultMap.fail().message("请先登录");
-     }
-     try {
-     resultMap = contractManageService.contractShenHeByUnitManager(token, response, type, reason, cid);
-     } catch (UpdateSqlException e) {
-     e.printStackTrace();
-     log.error("ContractManageController 中 contractShenHeByUnitManager 方法 -- " + e.getMessage());
-     resultMap.fail().message("系统异常");
-     } catch (InsertSqlException e) {
-     e.printStackTrace();
-     log.error("ContractManageController 中 contractShenHeByUnitManager 方法 -- " + e.getMessage());
-     resultMap.fail().message("系统异常");
-     }
-     return resultMap;
-     }    */
-
 
     /**
      * 评估中心审核【内网】
@@ -332,28 +296,6 @@ public class ContractManageController {
         resultMap = contractManageService.contractShenHeByFaGui(token, response, type, reason, cid);
         return resultMap;
     }
-
-
-    /**
-     * 展示所有通过单位管理员审批的 【外网】
-     * @return
-
-     @GetMapping(value = "showAllPassContractReviewByUnitManager")
-     @ApiOperation(value = "展示所有通过单位管理员审批的【外网】")
-     public ResultMap showAllPassContractReviewByUnitManager(String subjectCategory,String subjectName, String subjectContact,String subjectContactPhone,String commitmentUnit, String subjectSupervisorDepartmentint, int pageNum, int pageSize) {
-     return resultMap = contractManageService.showAllPassContractReviewByUnitManager(subjectCategory,subjectName,subjectContact,subjectContactPhone,commitmentUnit,subjectSupervisorDepartmentint,pageNum,pageSize);
-     }    */
-
-    /**
-     * 展示所有未通过单位管理员审批的【外网】
-     *
-     * @return
-
-     @GetMapping(value = "showAllNoPassContractReviewByUnitManager")
-     @ApiOperation(value = "展示所有未通过单位管理员审批的")
-     public ResultMap showAllNoPassContractReviewByUnitManager(String subjectCategory,String subjectName, String subjectContact,String subjectContactPhone,String commitmentUnit, String subjectSupervisorDepartmentint, int pageNum, int pageSize) {
-     return resultMap = contractManageService.showAllNoPassContractReviewByUnitManager(subjectCategory,subjectName,subjectContact,subjectContactPhone,commitmentUnit,subjectSupervisorDepartmentint,pageNum,pageSize);
-     }  */
 
     /**
      * 展示所有通过评估中心审批的【内网】
@@ -475,6 +417,18 @@ public class ContractManageController {
     @ApiImplicitParam(name = "cid",value = "合同主表id")
     public ResultMap getSubjectSuggestAnnexInfo(int cid) {
         return resultMap=contractManageService.getSubjectSuggestAnnexInfo(cid);
+    }
+
+
+    /**
+     * 根据勾选的课题申报id更新是否被合同选中状态
+     * @param oid
+     * @return
+     */
+    @PostMapping(value = "updateIsContractSelectByOid")
+    @ApiOperation(value = "根据勾选的课题申报id更新是否被合同选中状态")
+    public ResultMap updateIsContractSelectByOid(@RequestParam("oid") Integer oid){
+        return resultMap=contractManageService.updateIsContractSelectByOid(oid);
     }
 
 

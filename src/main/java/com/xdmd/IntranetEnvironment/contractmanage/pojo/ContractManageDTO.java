@@ -158,6 +158,9 @@ public class ContractManageDTO {
     @ApiModelProperty("未知类型附件")
     private String contractWeizhiAnnexId;
 
+    @ApiModelProperty("课题申报id【备用】")
+    private Integer oid;
+
     public ContractManageDTO() {
     }
 }

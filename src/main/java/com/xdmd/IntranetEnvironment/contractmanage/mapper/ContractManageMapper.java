@@ -542,7 +542,7 @@ public interface ContractManageMapper {
             "ot.audit_status\n" +
             "FROM\n" +
             "open_tender ot,unit_tender ut\n" +
-            "where ot.id=ut.tender_id and ot.audit_status =3 and ut.unit_id=#{unitId}")
+            "where ot.id=ut.tender_id and ot.audit_status =3 and is_contract_select = 1 and ut.unit_id=#{unitId}")
     List<Map> queryAllEndTenderInfo(@Param("unitId")int unitId);
 
 
@@ -598,6 +598,11 @@ public interface ContractManageMapper {
     UploadFile getSubjectSuggestAnnexInfo(@Param("cid") int cid);
 
 
-
-    int updateContractMidCheckStateOne();
+    /**
+     * 根据勾选的课题申报id更新是否被合同选中状态
+     * @param oid
+     * @return
+     */
+    @Update("update open_tender set is_contract_select=2 where id=#{oid}")
+    int updateIsContractSelectByOid(@Param("oid") Integer oid);
 }

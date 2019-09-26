@@ -514,11 +514,10 @@ public class OpenTenderServiceImpl implements OpenTenderService {
                 //此时为审核通过时
                 //审核通过时,先把上一条数据进行更新，再新增下一条数据
                 String state = "已处理";
-                String handleContent = "评估中心审核通过";
+                String handleContent = "审核通过";
                 //根据数据的id 把处理人，审核状态，审核内容，处理时间更新
                 int num = 0;
                 num = openTenderMapper.updateOpenTenderStateRecord(oid, username, state, handleContent, nowtime);
-                //System.out.println(num);
                 if (num == 0) {
                     throw new UpdateSqlException("在更新审核状态，更新上一条数据时出错");
                 }
@@ -528,7 +527,7 @@ public class OpenTenderServiceImpl implements OpenTenderService {
                 int num3 = 0;
                 int auditStatus = 3;
                 num3 = openTenderMapper.updateTenderStatus(auditStatus, oid);
-                //System.out.println(num3);
+
                 if (num3 == 0) {
                     throw new UpdateStatusException("更新招标备案表中审核状态出错");
                 }
@@ -849,9 +848,9 @@ public class OpenTenderServiceImpl implements OpenTenderService {
             //获取当前系统时间
             String nowtime = new SimpleDateFormat("yyyy-MM-dd:HH:mm:ss").format(new Date());
             //审核不通过重新修改数据提交时,先把上一条数据进行更新，再新增下一条数据
-            String state = "等待处理";
+            String state = "已处理";
             //String handleContent = "等待单位管理员审核";
-            String handleContent = "等待评估中心审核";
+            String handleContent = "审核通过";
             //根据数据的id 把处理人，审核状态，审核内容，处理时间更新
             int num0 = 0;
             num0 = openTenderMapper.updateOpenTenderStateRecord(openTender.getId(), username, state, handleContent, nowtime);
