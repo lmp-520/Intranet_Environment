@@ -86,4 +86,10 @@ public interface CompanyMapper {
     //判断社会信用代码是否存在
     @Select("SELECT count(id) FROM shiro_company_name where social_credit_code = #{socialCreditCode}")
     int querySocialCreditCode(@Param("socialCreditCode") String socialCreditCode);
+
+    @Select("select company_name from staff_information where aid = #{aid}")
+    String queryStaffCompanyName(@Param("aid") Integer uid);
+
+    @Select("select company_id from staff_information where aid = #{aid}")
+    Integer queryStaffCompanyId(@Param("aid") Integer uid);
 }

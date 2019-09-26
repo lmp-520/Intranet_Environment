@@ -26,7 +26,6 @@ public class PersonInformationManageController {
     ResultMap resultMap = new ResultMap();
     private static Logger log = LoggerFactory.getLogger(PersonInformationManageController.class);
 
-
     //修改自己的密码
     @ResponseBody
     @PostMapping("changePassword")
@@ -42,7 +41,6 @@ public class PersonInformationManageController {
         }
         return resultMap;
     }
-
 
     //给单位用户分配子账号
     @ResponseBody
