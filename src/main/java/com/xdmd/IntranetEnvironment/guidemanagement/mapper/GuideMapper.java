@@ -124,7 +124,7 @@ public interface GuideMapper {
      * 根据勾选的指南id更新相应指南的选中状态--汇总2
      * @param ids
      * @return
-     */
+     *
     @Update(value ="<script>" +
             "update guide_collection set is_select=1 where id in " +
             "<foreach collection='ids' item='id' open='(' separator=',' close=')'>" +
@@ -133,6 +133,7 @@ public interface GuideMapper {
             "</script>")
     @Results(value = {@Result(column = "id", property = "id") })
     int updateIsSelectByIds(@Param("ids") List<Long> ids);
+    */
 
 
     /**

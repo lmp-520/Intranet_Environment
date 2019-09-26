@@ -106,6 +106,12 @@ public class ContractManageServiceImpl implements ContractManageService {
             int insertNo = contractManageMapper.insert(contractManageDTO);
             //单位关联合同主表
             insertContractidAndUnitid(cid, contractManageDTO.getId());
+
+            //更新课题申报中被合同选中的状态
+            int updateNum = contractManageMapper.updateIsContractSelectByOid(contractManageDTO.getOid());
+            System.out.println(updateNum);
+
+
             //获取当前系统时间
             String nowtime = new SimpleDateFormat("yyyy-MM-dd:HH:mm:ss").format(new Date());
             //新增员工提交信息
@@ -935,52 +941,27 @@ public class ContractManageServiceImpl implements ContractManageService {
 
 
     /**
-         * 展示所有通过单位管理员审批的 【外网】
-         * @param pageNum
-         * @param pageSize
-         * @return
-
-         @Override public ResultMap showAllPassContractReviewByUnitManager(String subjectCategory,String subjectName, String subjectContact,String subjectContactPhone,String commitmentUnit, String subjectSupervisorDepartmentint, int pageNum, int pageSize) {
-         try {
-         PageHelper.startPage(pageNum, pageSize, true);
-         List<Map> contractMap= contractManageMapper.showAllPassContractReviewByUnitManager(subjectCategory,subjectName,subjectContact,subjectContactPhone,commitmentUnit,subjectSupervisorDepartmentint);
-         PageInfo pageInfo = new PageInfo(contractMap);
-         if (contractMap.size() > 0) {
-         resultMap.success().message(pageInfo);
-         } else if (contractMap.size() == 0) {
-         resultMap.fail().message("没有查到相关信息");
-         }
-         } catch (Exception e) {
-         e.printStackTrace();
-         resultMap.fail().message("系统异常");
-         }
-         return resultMap;
-         } */
+     * 根据勾选的课题申报id更新是否被合同选中状态
+     * @param oid
+     * @return
+     */
+    @Override
+    public ResultMap updateIsContractSelectByOid(Integer oid) {
+        try {
+            int updateNum = contractManageMapper.updateIsContractSelectByOid(oid);
+            if (updateNum>0) {
+                resultMap.success().message("更新成功");
+            } else if (updateNum==0) {
+                resultMap.fail().message("更新失败");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultMap.fail().message("系统异常");
+        }
+        return resultMap;
+    }
 
     /**
-         * 展示所有未通过单位管理员审批的 【外网】
-         * @param pageNum
-         * @param pageSize
-         * @return
-
-         @Override public ResultMap showAllNoPassContractReviewByUnitManager(String subjectCategory,String subjectName, String subjectContact,String subjectContactPhone,String commitmentUnit, String subjectSupervisorDepartmentint, int pageNum, int pageSize) {
-         try {
-         PageHelper.startPage(pageNum, pageSize, true);
-         List<Map> contractMap= contractManageMapper.showAllNoPassContractReviewByUnitManager(subjectCategory,subjectName,subjectContact,subjectContactPhone,commitmentUnit,subjectSupervisorDepartmentint);
-         PageInfo pageInfo = new PageInfo(contractMap);
-         if (contractMap.size() > 0) {
-         resultMap.success().message(pageInfo);
-         } else if (contractMap.size() == 0) {
-         resultMap.fail().message("没有查到相关信息");
-         }
-         } catch (Exception e) {
-         e.printStackTrace();
-         resultMap.fail().message("系统异常");
-         }
-         return resultMap;
-         }   */
-
-        /**
          * 展示所有通过评估中心审批的 【内网】
          *
          * @param pageNum
@@ -1125,7 +1106,7 @@ public class ContractManageServiceImpl implements ContractManageService {
             try {
                 //获取该公司所有审核通过的招标id
                 List<Map> queryAllEndTenderInfo = contractManageMapper.queryAllEndTenderInfo(unitId);
-                //queryAllEndTenderInfo.forEach(info-> System.out.println(info));
+               // queryAllEndTenderInfo.forEach(info-> System.out.println(info));
                 if (queryAllEndTenderInfo.size() > 0) {
                     resultMap.success().message(queryAllEndTenderInfo);
                 } else {

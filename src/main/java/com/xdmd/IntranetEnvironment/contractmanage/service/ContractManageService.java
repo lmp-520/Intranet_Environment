@@ -295,5 +295,12 @@ public interface ContractManageService {
     ResultMap getSubjectSuggestAnnexInfo( int cid);
 
 
+    /**
+     * 根据勾选的课题申报id更新是否被合同选中状态
+     * @param oid
+     * @return
+     */
+    ResultMap updateIsContractSelectByOid(Integer oid);
+
 }
 

@@ -286,7 +286,7 @@ public interface OpenTenderMapper {
      * 招标备案审核状态【0-单位员工待提交(或不通过被退回时重新提交) 1-单位管理员待审批 2-评估中心员工待审批 3-评估中心员工已审批】
      * @return
      */
-    @Update(value = "update open_tender set audit_status=#{auditStatus} where id=#{id}")
+    @Update(value = "update open_tender set audit_status=#{auditStatus},is_contract_select=1 where id=#{id}")
     int updateTenderStatus(@Param("auditStatus") int auditStatus,@Param("id") int id);
 
     /**

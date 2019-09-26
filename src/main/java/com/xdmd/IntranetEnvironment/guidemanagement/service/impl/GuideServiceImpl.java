@@ -330,7 +330,7 @@ public class GuideServiceImpl implements GuideService {
      * 根据勾选的指南id更新相应指南申报选中状态【内网】
      * @param ids
      * @return
-     */
+
     @Override
     public ResultMap updateIsSelectByIds(List<Long> ids) {
         try{
@@ -348,6 +348,7 @@ public class GuideServiceImpl implements GuideService {
         }
         return resultMap;
     }
+    */
 
 
 
