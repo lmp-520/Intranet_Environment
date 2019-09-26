@@ -68,15 +68,14 @@ public class ExpertController {
     //专家账号的审核
     @ResponseBody
     @PostMapping("examine")
-    public ResultMap expertState(@CookieValue(value = "IntranecToken") String token, HttpServletResponse response,
-                                 @RequestParam("type") Boolean type,//审核的状态.   true为审核通过  false为审核未通过
+    public ResultMap expertState(@RequestParam("type") Boolean type,//审核的状态.   true为审核通过  false为审核未通过
                                  @RequestParam(value = "reason", required = false) String reason,//审核未通过原因
                                  @RequestParam("id") Integer id) {
-        if (StringUtils.isEmpty(token)) {
-            return resultMap.fail().message("请先登录");
-        }
+//        if (StringUtils.isEmpty(token)) {
+//            return resultMap.fail().message("请先登录");
+//        }
         try {
-            resultMap = expertService.expertState(token, response, type, reason, id);
+            resultMap = expertService.expertState(type, reason, id);
         } catch (Exception e) {
             e.printStackTrace();
             log.error("ExpertController 中 expertState方法 出错 -- " + e.getMessage());
@@ -108,14 +107,10 @@ public class ExpertController {
     //修改专家的启用或者停用状态
     @PostMapping("changeState")
     @ResponseBody
-    public ResultMap changeState(@CookieValue("IntranecToken") String token, HttpServletResponse response,
-                                 @RequestParam("id") Integer id,         //专家的id
+    public ResultMap changeState(@RequestParam("id") Integer id,         //专家的id
                                  @RequestParam("type") Boolean type){    //类型  true 启用  false 停用
-        if(StringUtils.isEmpty(token)){
-            return resultMap.fail().message("请先登录");
-        }
         try {
-            resultMap = expertService.changeState(token,response,id,type);
+            resultMap = expertService.changeState(id,type);
         } catch (Exception e) {
             e.printStackTrace();
             log.error("ExpertController中 changeState方法错误 -- "+e.getMessage());

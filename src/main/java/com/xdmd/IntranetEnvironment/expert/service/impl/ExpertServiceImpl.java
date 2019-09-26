@@ -315,26 +315,26 @@ public class ExpertServiceImpl implements ExpertService {
 
     //修改专家的启用或者停用状态
     @Override
-    public ResultMap changeState(String token, HttpServletResponse response, Integer id, Boolean type) {
-        User user = new User();
-        try {
-            user = tokenService.compare(response, token);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            return resultMap.fail().message("请先登录");
-        } catch (UserNameNotExistentException e) {
-            e.printStackTrace();
-            return resultMap.fail().message("请先登录");
-        } catch (ClaimsNullException e) {
-            e.printStackTrace();
-            return resultMap.fail().message("请先登录");
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.error("MenuServiceImpl 中 TokenService 出现问题");
-            return resultMap.message("系统异常");
-        }
-        Integer uid = user.getId();
-        String username = user.getUsername();
+    public ResultMap changeState(Integer id, Boolean type) {
+//        User user = new User();
+//        try {
+//            user = tokenService.compare(response, token);
+//        } catch (NullPointerException e) {
+//            e.printStackTrace();
+//            return resultMap.fail().message("请先登录");
+//        } catch (UserNameNotExistentException e) {
+//            e.printStackTrace();
+//            return resultMap.fail().message("请先登录");
+//        } catch (ClaimsNullException e) {
+//            e.printStackTrace();
+//            return resultMap.fail().message("请先登录");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            log.error("MenuServiceImpl 中 TokenService 出现问题");
+//            return resultMap.message("系统异常");
+//        }
+//        Integer uid = user.getId();
+//        String username = user.getUsername();
 
         //修改这个账号的启用状态
         if (type) {
@@ -421,26 +421,26 @@ public class ExpertServiceImpl implements ExpertService {
 
     //专家账号的审核
     @Override
-    public ResultMap expertState(String token, HttpServletResponse response, Boolean type, String reason, Integer id) throws updateSqlException {
-        User user = new User();
-        try {
-            user = tokenService.compare(response, token);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            return resultMap.fail().message("请先登录");
-        } catch (UserNameNotExistentException e) {
-            e.printStackTrace();
-            return resultMap.fail().message("请先登录");
-        } catch (ClaimsNullException e) {
-            e.printStackTrace();
-            return resultMap.fail().message("请先登录");
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.error("MenuServiceImpl 中 TokenService 出现问题");
-            return resultMap.message("系统异常");
-        }
-        Integer uid = user.getId();
-        String username = user.getUsername();
+    public ResultMap expertState(Boolean type, String reason, Integer id) throws updateSqlException {
+//        User user = new User();
+//        try {
+//            user = tokenService.compare(response, token);
+//        } catch (NullPointerException e) {
+//            e.printStackTrace();
+//            return resultMap.fail().message("请先登录");
+//        } catch (UserNameNotExistentException e) {
+//            e.printStackTrace();
+//            return resultMap.fail().message("请先登录");
+//        } catch (ClaimsNullException e) {
+//            e.printStackTrace();
+//            return resultMap.fail().message("请先登录");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            log.error("MenuServiceImpl 中 TokenService 出现问题");
+//            return resultMap.message("系统异常");
+//        }
+//        Integer uid = user.getId();
+//        String username = user.getUsername();
 
         //两种情况，审核通过与审核不通过
         if(type){
