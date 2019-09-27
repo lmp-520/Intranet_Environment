@@ -579,7 +579,7 @@ public class MidCheckServiceImpl implements MidCheckService {
      * @return
      */
     @Override
-    public ResultMap queryAllEndContractInfo(String token, HttpServletResponse response,Integer cid) {
+    public ResultMap queryAllEndContractInfo(String token, HttpServletResponse response, Integer cid) {
         //解析token中的数据
         JwtInformation jwtInformation = new JwtInformation();
         try {
@@ -601,8 +601,13 @@ public class MidCheckServiceImpl implements MidCheckService {
         //根据登陆信息获取单位id
         Integer unitId = jwtInformation.getCid();
         try {
-            //获取该公司所有审核通过的招标id
-            List<Map> queryAllEndContractInfo = midCheckMapper.queryAllEndContractInfo(cid);
+            List<Map> queryAllEndContractInfo=null;
+            if (cid!=null){
+               queryAllEndContractInfo = midCheckMapper.queryAllEndContractInfoByCid(cid);
+            }else {
+                queryAllEndContractInfo = midCheckMapper.queryAllEndContractInfo();
+            }
+            //queryAllEndContractInfo.forEach(info-> System.out.println(info));
             if (queryAllEndContractInfo.size() > 0) {
                 resultMap.success().message(queryAllEndContractInfo);
             } else {
