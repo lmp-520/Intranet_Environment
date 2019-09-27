@@ -70,7 +70,7 @@ public interface ContractManageMapper {
             "#{subjectSigningDescription},\n" +
             "#{subjectObjectivesResearch},\n" +
             "#{subjectAcceptanceAssessment},\n" +
-            "DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT)")
+            "DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT)")
     int insert(ContractManageDTO contractManageDTO);
 
     /**
@@ -203,7 +203,9 @@ public interface ContractManageMapper {
             "cm.contract_start_time AS contractStartTime,\n" +
             "cm.subject_objectives_research AS subjectObjectivesResearch,\n" +
             "cm.mid_check_status AS midCheckStatus,\n" +
-            "cm.mid_record_id\n" +
+            "cm.mid_record_id AS midRecordId,\n" +
+            "mcr.mid_check_name AS midCheckName,\n" +
+            "mcr.mid_check_initinate_time AS midCheckInitinateTime\n" +
             "FROM\n" +
             "contract_manage cm,unit_contract uc,mid_check_record mcr\n" +
             "where\n" +
@@ -215,13 +217,12 @@ public interface ContractManageMapper {
 
     /**
      * 根据勾选的合同主表id修改相应的中期检查状态【内网中检】
-     *
      * @param mid
      * @param ids
      * @return
      */
     @Update("<script> UPDATE contract_manage\t" +
-            "SET mid_record_id = #{mid},mid_check_status=0\t" +
+            "SET mid_record_id = #{mid},mid_check_status=0,is_midcheck_select=2\t" +
             "WHERE id IN" +
             "<foreach\tcollection='ids'\titem='id'\topen='(' separator=',' close=')'>" +
             "#{id}" +
@@ -458,7 +459,7 @@ public interface ContractManageMapper {
             "FROM\n" +
             "contract_manage\n" +
             "<where>\n" +
-            "approval_status=4\t" +
+            "approval_status=4 and is_midcheck_select=1\t" +
             "<if test ='null != subjectCategory'>\n" +
             "AND subject_category like CONCAT('%',#{subjectCategory},'%')\n" +
             "</if>\n" +

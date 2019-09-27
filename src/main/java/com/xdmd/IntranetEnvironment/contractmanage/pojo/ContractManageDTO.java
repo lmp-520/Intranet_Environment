@@ -161,6 +161,10 @@ public class ContractManageDTO {
     @ApiModelProperty("课题申报id【备用】")
     private Integer oid;
 
+
+    @ApiModelProperty("是否被中期检查选中【1-未选中 2-已选中】")
+    private Integer isMidcheckSelect;
+
     public ContractManageDTO() {
     }
 }
