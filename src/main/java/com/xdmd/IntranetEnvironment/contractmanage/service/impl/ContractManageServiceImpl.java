@@ -221,24 +221,24 @@ public class ContractManageServiceImpl implements ContractManageService {
      * @return
      */
     @Override
-    public ResultMap getAllInfo(String token, HttpServletResponse response, String subjectCategory, String subjectName, String subjectContact, String subjectContactPhone, String commitmentUnit, String subjectSupervisorDepartment, int pageNum, int pageSize) {
-        User user = new User();
-        try {
-            user = tokenService.compare(response, token);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            return resultMap.fail().message("请先登录");
-        } catch (UserNameNotExistentException e) {
-            e.printStackTrace();
-            return resultMap.fail().message("请先登录");
-        } catch (ClaimsNullException e) {
-            e.printStackTrace();
-            return resultMap.fail().message("请先登录");
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.error("MenuServiceImpl 中 TokenService 出现问题");
-            return resultMap.message("系统异常");
-        }
+    public ResultMap getAllInfo(String subjectCategory, String subjectName, String subjectContact, String subjectContactPhone, String commitmentUnit, String subjectSupervisorDepartment, int pageNum, int pageSize) {
+      //  User user = new User();
+      //  try {
+      //      user = tokenService.compare(response, token);
+      //  } catch (NullPointerException e) {
+      //      e.printStackTrace();
+      //      return resultMap.fail().message("请先登录");
+      //  } catch (UserNameNotExistentException e) {
+      //      e.printStackTrace();
+      //      return resultMap.fail().message("请先登录");
+      //  } catch (ClaimsNullException e) {
+      //      e.printStackTrace();
+      //      return resultMap.fail().message("请先登录");
+      //  } catch (Exception e) {
+      //      e.printStackTrace();
+      //      log.error("MenuServiceImpl 中 TokenService 出现问题");
+      //      return resultMap.message("系统异常");
+      //  }
         //当前登录者
         //Integer uid = user.getId();
         //String username = user.getUsername();
@@ -931,28 +931,6 @@ public class ContractManageServiceImpl implements ContractManageService {
                 resultMap.success().message(uploadFile);
             } else if (uploadFile==null) {
                 resultMap.fail().message("没有查到相关信息");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            resultMap.fail().message("系统异常");
-        }
-        return resultMap;
-    }
-
-
-    /**
-     * 根据勾选的课题申报id更新是否被合同选中状态
-     * @param oid
-     * @return
-     */
-    @Override
-    public ResultMap updateIsContractSelectByOid(Integer oid) {
-        try {
-            int updateNum = contractManageMapper.updateIsContractSelectByOid(oid);
-            if (updateNum>0) {
-                resultMap.success().message("更新成功");
-            } else if (updateNum==0) {
-                resultMap.fail().message("更新失败");
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -350,8 +350,36 @@ public interface MidCheckMapper {
             "cm.commitment_unit as commitmentUnit,\n" +
             "cm.approval_status as approvalStatus\n" +
             "FROM\n" +
-            "contract_manage cm,unit_contract uc")
-    List<Map> queryAllEndContractInfo();
+            "contract_manage cm,unit_contract uc" +
+            "<where>" +
+            "<if test ='null != id'>" +
+            "\tcm.id =#{cid}" +
+            "</where></script>")
+    List<Map> queryAllEndContractInfo(@Param("cid") Integer cid);
+
+    /**
+     * 回显通过最终审核的常用的关联合同信息【】
+     * @return
+
+    @Select("<script>" +
+            "SELECT\n" +
+            "DISTINCT\n" +
+            "cm.id,\n" +
+            "cm.subject_name as subjectName,\n" +
+            "cm.project_no as projectNo,\n" +
+            "cm.subjece_leader as subjeceLeader,\n" +
+            "cm.subject_contact as subjectContact,\n" +
+            "cm.commitment_unit as commitmentUnit,\n" +
+            "cm.approval_status as approvalStatus\n" +
+            "FROM\n" +
+            "contract_manage cm,unit_contract uc" +
+            "<where>" +
+            "<if test ='null != id'>" +
+            "\tcm.id =#{cid}" +
+            "</where></script>")
+    List<Map> queryAllEndContractInfoByCid(@Param("cid") Integer cid);
+     */
+
 
 
     /**

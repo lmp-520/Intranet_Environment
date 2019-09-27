@@ -113,13 +113,13 @@ public class ContractManageController {
     })
     @ApiOperation(value = "查询合同主表信息")
     @GetMapping(value = "getAllInfo")
-    public ResultMap getAllInfo(@CookieValue(value = "IntranecToken", required = false) String token, HttpServletResponse response,
+    public ResultMap getAllInfo(//@CookieValue(value = "IntranecToken", required = false) String token, HttpServletResponse response,
                                 String subjectCategory, String subjectName, String subjectContact, String subjectContactPhone, String commitmentUnit,
                                 String subjectSupervisorDepartment, int pageNum, int pageSize) {
-        if (StringUtils.isEmpty(token)) {
-            return resultMap.fail().message("请先登录");
-        }
-        return resultMap = contractManageService.getAllInfo(token, response, subjectCategory, subjectName, subjectContact, subjectContactPhone, commitmentUnit, subjectSupervisorDepartment, pageNum, pageSize);
+      //  if (StringUtils.isEmpty(token)) {
+      //      return resultMap.fail().message("请先登录");
+      //  }
+        return resultMap = contractManageService.getAllInfo(subjectCategory, subjectName, subjectContact, subjectContactPhone, commitmentUnit, subjectSupervisorDepartment, pageNum, pageSize);
     }
 
     /**
@@ -417,18 +417,6 @@ public class ContractManageController {
     @ApiImplicitParam(name = "cid",value = "合同主表id")
     public ResultMap getSubjectSuggestAnnexInfo(int cid) {
         return resultMap=contractManageService.getSubjectSuggestAnnexInfo(cid);
-    }
-
-
-    /**
-     * 根据勾选的课题申报id更新是否被合同选中状态
-     * @param oid
-     * @return
-     */
-    @PostMapping(value = "updateIsContractSelectByOid")
-    @ApiOperation(value = "根据勾选的课题申报id更新是否被合同选中状态")
-    public ResultMap updateIsContractSelectByOid(@RequestParam("oid") Integer oid){
-        return resultMap=contractManageService.updateIsContractSelectByOid(oid);
     }
 
 

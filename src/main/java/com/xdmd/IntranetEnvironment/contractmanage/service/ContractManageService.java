@@ -78,7 +78,7 @@ public interface ContractManageService {
      * 查詢主表全部
      * @return
      */
-    ResultMap getAllInfo(String token,HttpServletResponse response,String subjectCategory, String subjectName, String subjectContact, String subjectContactPhone, String commitmentUnit, String subjectSupervisorDepartment, int pageNum, int pageSize);
+    ResultMap getAllInfo(String category, String subjectCategory, String subjectName, String subjectContact, String subjectContactPhone, String commitmentUnit, int pageNum, int pageSize);
 
 
 
@@ -91,7 +91,6 @@ public interface ContractManageService {
      * @param ids
      * @return
      */
-//  ResultMap updateContractByIds(List<Long> ids);
     ResultMap updateContractByIds(int mid, List<Long> ids);
 
     /**
@@ -127,19 +126,7 @@ public interface ContractManageService {
     int updateContractAnnexIdByCid(int contractAnnexId, int cid);
 
 
-    ///////////////////////////以下是合同审批///////////////////////////////////
-
-    /**
-     * 单位管理员审核
-     * @param token
-     * @param response
-     * @param type 审核状态
-     * @param reason 审核不通过原因
-     * @param cid 审核表id
-     * @return
-
-    ResultMap contractShenHeByUnitManager(String token, HttpServletResponse response, Boolean type, String reason, Integer cid) throws UpdateSqlException, InsertSqlException;
-     */
+    ///////////////////////////以下是合同审批//////////////////////////////////
 
 
     /**
@@ -161,27 +148,6 @@ public interface ContractManageService {
     ResultMap contractShenHeByFaGui(String token, HttpServletResponse response,Boolean type, String reason, Integer cid);
 
 
-    /**
-     * 展示所有通过单位管理员审批的 【外网】
-     * @param subjectCategory
-     * @param subjectName
-     * @param subjectContact
-     * @param subjectContactPhone
-     * @param commitmentUnit
-     * @param subjectSupervisorDepartmentint
-     * @param pageNum
-     * @param pageSize
-     * @return
-
-    ResultMap showAllPassContractReviewByUnitManager(String subjectCategory,String subjectName, String subjectContact,String subjectContactPhone,String commitmentUnit, String subjectSupervisorDepartmentint, int pageNum, int pageSize);
-     */
-
-
-    /**
-     * 展示所有未通过单位管理员审批的 【外网】
-     * @return
-    ResultMap showAllNoPassContractReviewByUnitManager(String subjectCategory,String subjectName, String subjectContact,String subjectContactPhone,String commitmentUnit, String subjectSupervisorDepartmentint, int pageNum, int pageSize);
-     */
 
 
     /**
@@ -294,13 +260,6 @@ public interface ContractManageService {
      */
     ResultMap getSubjectSuggestAnnexInfo( int cid);
 
-
-    /**
-     * 根据勾选的课题申报id更新是否被合同选中状态
-     * @param oid
-     * @return
-     */
-    ResultMap updateIsContractSelectByOid(Integer oid);
 
 }
 
