@@ -295,11 +295,11 @@ public class GuideServiceImpl implements GuideService {
             if(mapList.size()>0){
                 resultMap.success().message(pageInfo);
             }else if(mapList.size()==0){
-                resultMap.success().message("没有查到相关信息");
+                resultMap.fail().message("没有查到相关信息");
             }
         }catch (Exception e){
             e.printStackTrace();
-            resultMap.success().message("系统异常");
+            resultMap.fail().message("系统异常");
         }
         return resultMap;
     }
@@ -330,7 +330,7 @@ public class GuideServiceImpl implements GuideService {
      * 根据勾选的指南id更新相应指南申报选中状态【内网】
      * @param ids
      * @return
-     */
+
     @Override
     public ResultMap updateIsSelectByIds(List<Long> ids) {
         try{
@@ -348,6 +348,7 @@ public class GuideServiceImpl implements GuideService {
         }
         return resultMap;
     }
+    */
 
 
 

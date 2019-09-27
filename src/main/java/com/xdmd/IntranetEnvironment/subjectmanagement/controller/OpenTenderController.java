@@ -152,43 +152,6 @@ public class OpenTenderController {
 
 
     /**
-     * 单位管理员审核
-     *
-     * @param type   审核状态
-     * @param reason 审核不通过原因
-     * @param oid    审核表id
-     * @return
-
-    @PostMapping(value = "tenderShenHeByUnitManager")
-    @ApiOperation(value = "单位管理员审核【外网】")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "type", value = "审核状态", required = true),
-            @ApiImplicitParam(name = "reason", value = "审核不通过原因", required = false),
-            @ApiImplicitParam(name = "oid", value = "审核表id", required = true),
-    })
-    public ResultMap tenderShenHeByUnitManager(@CookieValue(value = "IntranecToken", required = false) String token, HttpServletResponse response,
-                                               Boolean type, String reason, Integer oid) {
-        //String token = "aaa";
-        //HttpServletResponse response = null;
-        if (StringUtils.isEmpty(token)) {
-            resultMap.fail().message("请先登录");
-        }
-        try {
-            resultMap = openTenderService.tenderShenHeByUnitManager(token, response, type, reason, oid);
-        } catch (UpdateSqlException e) {
-            e.printStackTrace();
-            log.error("OpenTenderController 中 tenderFileUpload 方法 -- " + e.getMessage());
-            resultMap.fail().message("系统异常");
-        } catch (InsertSqlException e) {
-            e.printStackTrace();
-            log.error("OpenTenderController 中 tenderFileUpload 方法 -- " + e.getMessage());
-            resultMap.fail().message("系统异常");
-        }
-        return resultMap;
-    }
-     */
-
-    /**
      * 评估中心审核
      * @param type   审核状态
      * @param reason 审核不通过原因

@@ -255,6 +255,7 @@ public class MidCheckController {
     }
 
 
+
     /**
      * 在提交时回显通过最终审核的常用的关联合同信息
      *
@@ -263,12 +264,12 @@ public class MidCheckController {
      */
     @PostMapping(value = "queryAllEndContractInfo")
     @ApiOperation(value = "在提交时回显通过最终审核的常用的关联合同信息【外网】")
-    public ResultMap queryAllEndContractInfo(@CookieValue(value = "token", required = false) String token, HttpServletResponse response
-    ) throws Exception {
+    public ResultMap queryAllEndContractInfo(@CookieValue(value = "token", required = false) String token, HttpServletResponse response,
+                                             @RequestParam(value = "cid",required = false) Integer cid) throws Exception {
         if (StringUtils.isEmpty(token)) {
             return resultMap.fail().message("请先登录");
         }
-        return resultMap = midCheckService.queryAllEndContractInfo(token, response);
+        return resultMap = midCheckService.queryAllEndContractInfo(token, response,cid);
     }
 
 

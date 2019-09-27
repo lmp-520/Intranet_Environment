@@ -143,8 +143,7 @@ public interface MidCheckService {
      * @param response
      * @return
      */
-    ResultMap queryAllEndContractInfo(String token, HttpServletResponse response);
-
+    ResultMap queryAllEndContractInfo(String token, HttpServletResponse response, Integer cid);
 
     /**
      * 判断中期检查状态

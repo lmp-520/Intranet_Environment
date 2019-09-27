@@ -100,12 +100,14 @@ public class GuideController {
      * 根据勾选的指南id更新相应指南申报选中状态
      * @param ids
      * @return
-     */
+
     @PostMapping(value = "updateIsSelectByIds")
     @ApiOperation(value = "根据勾选的指南id更新相应指南申报选中状态(注意:传的是指南申报id,不是汇总表id)")
     public ResultMap updateIsSelectByIds(@RequestBody List<Long> ids){
         return resultMap=guideService.updateIsSelectByIds(ids);
     }
+    */
+
 
     /**
      * 新增汇总信息实现【批量插入】

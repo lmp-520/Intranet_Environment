@@ -86,7 +86,8 @@ public interface GuideService {
      * 根据勾选的指南id获取选相应指南申报信息
      * @param
      * @return
-     */
+
     ResultMap updateIsSelectByIds(List<Long> ids);
+    */
 }
 

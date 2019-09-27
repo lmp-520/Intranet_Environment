@@ -337,10 +337,11 @@ public interface MidCheckMapper {
     int updateContractWeiZhiAnnexIdByCid(int contractWeizhiAnnexId, int cid);
 
     /**
-     * 在提交时回显通过最终审核的常用的关联合同信息[仅适用重大事项变更和中期检查两个表]
+     * 在提交时回显通过最终审核的常用的关联合同信息【仅用于进展情况报告和重大事项表】
      * @return
      */
     @Select("SELECT\n" +
+            "DISTINCT\n" +
             "cm.id,\n" +
             "cm.subject_name as subjectName,\n" +
             "cm.project_no as projectNo,\n" +
@@ -349,8 +350,28 @@ public interface MidCheckMapper {
             "cm.commitment_unit as commitmentUnit,\n" +
             "cm.approval_status as approvalStatus\n" +
             "FROM\n" +
-            "contract_manage cm,unit_contract uc\n")
+            "contract_manage cm,unit_contract uc")
     List<Map> queryAllEndContractInfo();
+
+    /**
+     * 回显通过最终审核的常用的关联合同信息【仅用于中期检查模板表和专家评估表】
+     * @return
+     */
+    @Select("SELECT\n" +
+            "DISTINCT\n" +
+            "cm.id,\n" +
+            "cm.subject_name as subjectName,\n" +
+            "cm.project_no as projectNo,\n" +
+            "cm.subjece_leader as subjeceLeader,\n" +
+            "cm.subject_contact as subjectContact,\n" +
+            "cm.commitment_unit as commitmentUnit,\n" +
+            "cm.approval_status as approvalStatus\n" +
+            "from\n" +
+            "contract_manage cm,unit_contract uc\n" +
+            "where cm.id=#{cid}")
+    List<Map> queryAllEndContractInfoByCid(@Param("cid") Integer cid);
+
+
 
 
     /**

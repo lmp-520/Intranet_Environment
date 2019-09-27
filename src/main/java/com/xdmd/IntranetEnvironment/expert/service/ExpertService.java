@@ -12,11 +12,11 @@ import javax.servlet.http.HttpServletResponse;
 public interface ExpertService {
     ResultMap query(String name, String natureWork, String professionalField, String isProvince, Integer page, Integer total) throws Exception;
 
-    ResultMap expertState(String token, HttpServletResponse response, Boolean type, String reason, Integer id) throws updateSqlException;
+    ResultMap expertState(Boolean type, String reason, Integer id) throws updateSqlException;
 
     ResultMap distributionExpertAccount(String token, HttpServletResponse response, UserInformation userInformation, MultipartFile expertFile);
 
     ResultMap expertModify(String token, HttpServletResponse response, String oldExpertFile, ExpertInformation expertInformation, MultipartFile expertFile) throws Exception;
 
-    ResultMap changeState(String token, HttpServletResponse response, Integer id, Boolean type);
+    ResultMap changeState(Integer id, Boolean type);
 }
